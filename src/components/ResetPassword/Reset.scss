@@ -1,0 +1,65 @@
+.reset-container {
+	background-color: var(--doc-white);
+	max-width: 95%;
+	.reset-form {
+		> form {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+		}
+		.link-helper {
+			color: var(--doc-pink);
+			cursor: pointer;
+			text-decoration: none;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+	.row {
+		margin-top: 10px;
+		margin-bottom: 10px;
+		width: 100%;
+		text-align: center;
+	}
+	.tick-image {
+		max-height: 90px;
+	}
+}
+.new-password-container {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--doc-white);
+	max-width: 95%;
+	max-height: 90%;
+	padding: 1.5rem;
+	overflow: auto;
+	.reset-form {
+		> form {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+		}
+		.link-helper {
+			color: var(--doc-pink);
+			cursor: pointer;
+			text-decoration: none;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+	.row {
+		margin-top: 10px;
+		margin-bottom: 10px;
+		width: 100%;
+		text-align: center;
+	}
+	.tick-image {
+		max-height: 90px;
+	}
+}

@@ -1,0 +1,28 @@
+[type='file'] {
+	height: 0px;
+	overflow: hidden;
+	width: 0px;
+}
+
+[type='file'] + label {
+	background-color: var(--doc-green);
+	border: none;
+	color: var(--doc-white);
+	cursor: pointer;
+	display: flex;
+	font-size: inherit;
+	margin-top: 1rem;
+	font-weight: 600;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 39px;
+	outline: none;
+	position: relative;
+	transition: all 0.3s;
+	vertical-align: middle;
+	height: 50px;
+	min-width: 205px;
+	width: 205px;
+	justify-content: center;
+	align-items: center;
+}

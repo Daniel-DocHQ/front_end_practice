@@ -1,0 +1,20 @@
+tr.MuiTableRow-root:nth-of-type(even) {
+	background-color: var(--doc-light-grey);
+}
+.note-parent-container {
+	width: 100%;
+	.note-container {
+		background-color: var(--doc-white);
+		color: var(--doc-dark-grey);
+		padding: 5px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		&:nth-of-type(even) {
+			background-color: var(--doc-light-grey);
+		}
+		.note-date {
+			width: 100%;
+			text-align: right;
+		}
+	}
+}

@@ -1,0 +1,31 @@
+.profile-grid {
+	padding: 58px 81px 58px 155px;
+	h3 {
+		font-size: 20px;
+		font-weight: 500;
+	}
+	.flex-wrap {
+		flex-wrap: wrap;
+	}
+	.title-col {
+		width: 35%;
+	}
+	.content-col {
+		width: 65%;
+	}
+	.subtitle-col {
+		width: 160px;
+	}
+}
+@media only screen and (max-width: 768px) {
+	.profile-grid {
+		padding: 40px 16px;
+		.flex-wrap {
+			flex-wrap: wrap;
+		}
+		.title-col,
+		.content-col {
+			width: 100%;
+		}
+	}
+}

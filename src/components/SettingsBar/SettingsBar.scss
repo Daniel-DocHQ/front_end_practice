@@ -1,0 +1,71 @@
+nav {
+  width: 100%;
+  position: relative;
+  transition: opacity 0.5s linear;
+}
+.nav-visible {
+  opacity: 1;
+}
+.nav-hidden {
+  opacity: 0;
+}
+.navigation-bar-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 70px;
+  background-color: var(--doc-dark-grey);
+  color: var(--doc-white);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+  z-index: 100;
+  max-height: 0px;
+  opacity: 0.7;
+  transition: all 0.5s linear;
+  .settings-button {
+    position: relative;
+    .settings-dropdown {
+      position: absolute;
+      top: 51px;
+      right: 0px;
+      color: var(--doc-pink);
+      z-index: 10;
+      text-align: right;
+      padding: 20px;
+      background-color: var(--doc-dark-grey);
+      visibility: hidden;
+      pointer-events: none;
+      > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        > i {
+          margin-right: 10px;
+          font-size: 20px;
+          text-align: left;
+        }
+      }
+      .MuiInput-root {
+        color: var(--doc-white);
+        svg {
+          color: var(--doc-white);
+        }
+      }
+    }
+    .active {
+      visibility: visible;
+      pointer-events: all;
+    }
+  }
+}
+.navigation-bar-container.active {
+  max-height: 70px;
+}

@@ -1,0 +1,220 @@
+:root {
+	--doc-pink: #e5014d;
+	--doc-dark-grey: #333333;
+	--doc-light-grey: #efeff0;
+	--doc-white: #ffffff;
+	--doc-green: #00bdaf;
+	--doc-error: #f44336;
+	--doc-orange: #f44336;
+	--doc-input-blue: #3f51b5;
+}
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+html {
+	height: 100%;
+	background-color: var(--doc-light-grey);
+}
+body {
+	font-family: Roboto;
+	margin: 0;
+	padding: 0;
+	a {
+		text-decoration: none;
+		color: var(--doc-pink);
+		&:hover {
+			color: var(--doc-green);
+			cursor: pointer;
+		}
+	}
+	.vista-logo {
+		filter: brightness(0) invert(1);
+	}
+	// Theme Note Editor
+	.note-editor-wrapper.rdw-editor-wrapper {
+		background-color: var(--doc-light-grey);
+		box-sizing: border-box;
+		border: 2px solid var(--doc-light-grey);
+		border-radius: 3px;
+	}
+	.note-editor.rdw-editor-main {
+		box-sizing: border-box;
+		background-color: var(--doc-white);
+		color: var(--doc-dark-grey);
+		min-height: 200px;
+		padding-left: 5px;
+		padding-right: 5px;
+		max-height: 400px;
+	}
+	.note-row {
+		background-color: var(--doc-light-grey);
+		padding: 5px 15px;
+		width: 100%;
+		box-sizing: border-box;
+		&:nth-child(even) {
+			background-color: var(--doc-white);
+		}
+	}
+	// Theme Toasts
+	.toast {
+		font-family: Roboto;
+		padding-left: 10px;
+		padding-right: 10px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		min-height: 30px;
+	}
+	.toast.toast-success {
+		background-color: var(--doc-green) !important;
+		color: var(--doc-white) !important;
+	}
+	.toast.toast-error {
+		background-color: var(--doc-error) !important;
+		color: var(--doc-white) !important;
+	}
+
+	.orange-text {
+		color: var(--doc-orange);
+	}
+	.pink-text {
+		color: var(--doc-pink);
+	}
+	.green-text {
+		color: var(--doc-green);
+	}
+	.dark-grey-text {
+		color: var(--doc-dark-grey);
+	}
+	.register-container {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background-color: var(--doc-white);
+		width: 400px;
+		max-width: 95%;
+		box-sizing: border-box;
+		padding: 10px;
+	}
+	.separator {
+		height: 2px;
+		width: 70%;
+		margin: auto;
+		background-color: var(--doc-light-grey);
+	}
+	.big-white-container {
+		border-radius: 4px;
+		background-color: var(--doc-white);
+		box-sizing: border-box;
+		margin: 25px;
+		overflow: hidden;
+		padding-bottom: 92px;
+		min-height: 80vh;
+	}
+	span.error {
+		color: var(--doc-orange);
+	}
+	p.error {
+		color: var(--doc-orange);
+		margin: 0px;
+	}
+	.no-margin {
+		margin: 0px !important;
+	}
+	.doc-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		background-color: var(--doc-white);
+		color: var(--doc-dark-grey);
+		border-radius: 4px;
+		box-sizing: border-box;
+		box-shadow: 0px 4px 36px rgba(0, 0, 0, 0.25);
+		padding: 15px;
+		margin: 10px;
+	}
+}
+// Basic flex rows
+.row {
+	width: 100%;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-top: 15px !important;
+	margin-bottom: 15px !important;
+}
+.row.space-around {
+	justify-content: space-around;
+}
+.row.space-between {
+	justify-content: space-between;
+}
+.row.center {
+	justify-content: center;
+}
+.row.flex-end {
+	justify-content: flex-end;
+}
+.row.flex-start {
+	justify-content: flex-start;
+}
+.row.items-start {
+	align-items: flex-start;
+}
+.row.items-end {
+	align-items: flex-end;
+}
+.col {
+	box-sizing: border-box;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-top: 15px !important;
+	margin-bottom: 15px !important;
+}
+
+// Material overrides
+.MuiStepIcon-root.MuiStepIcon-active {
+	color: var(--doc-green) !important;
+}
+.MuiStepIcon-root.MuiStepIcon-completed {
+	color: var(--doc-green) !important;
+}
+.MuiRadio-colorSecondary.Mui-checked {
+	color: var(--doc-green) !important;
+}
+.MuiAppBar-colorPrimary {
+	background-color: var(--doc-green) !important;
+	z-index: 1 !important;
+	.PrivateTabIndicator-colorSecondary-3 {
+		background-color: var(--doc-white);
+	}
+}
+.MuiTabs-indicator {
+	background-color: var(--doc-white) !important;
+}
+.MuiAppBar-root {
+	z-index: 1 !important;
+}
+.MuiAppBar-positionSticky {
+	z-index: 1 !important;
+}
+.MuiPickersDay-daySelected {
+	.MuiIconButton-label {
+		background-color: var(--doc-pink);
+		color: var(--doc-white);
+	}
+}
+.MuiPaper-root {
+	color: var(--doc-dark-grey) !important;
+}
+@media only screen and (max-width: 600px) {
+	.big-white-container {
+		margin: 0px !important;
+		background-color: inherit;
+	}
+	.MuiAppBar-positionSticky {
+		position: fixed !important;
+		top: 74px !important;
+	}
+}

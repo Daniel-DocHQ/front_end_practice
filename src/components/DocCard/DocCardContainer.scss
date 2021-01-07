@@ -1,0 +1,10 @@
+.doc-card-container {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: center;
+	align-items: stretch;
+	align-content: stretch;
+	max-width: 1400px;
+	margin: auto;
+}

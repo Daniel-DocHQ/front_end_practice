@@ -1,0 +1,66 @@
+.vid-box {
+	background-color: var(--doc-dark-grey);
+}
+.full-screen-nurse {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background-color: var(--doc-dark-grey);
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	border-radius: 4px;
+	box-shadow: 0px 4px 36px rgba(0, 0, 0, 0.25);
+}
+.video-container {
+	margin: 10px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: auto;
+	height: auto;
+	.outgoing-video {
+		width: 220px;
+		height: 110px;
+		position: absolute;
+		bottom: 5px;
+		right: 0px;
+		max-width: 30%;
+	}
+	.incoming-video {
+		width: 90%;
+		height: 200px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+	.controls {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		width: 100%;
+		height: 70px;
+		position: absolute;
+		bottom: 5px;
+		left: 0px;
+		max-width: 70%;
+		.control-item {
+			height: 50px;
+			width: 50px;
+			border-radius: 50%;
+			margin: 10px;
+			box-sizing: border-box;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+		}
+	}
+}

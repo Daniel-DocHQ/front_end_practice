@@ -1,0 +1,12 @@
+.MuiButtonBase-root.MuiIconButton-root.MuiPickersDay-day.MuiPickersDay-current.MuiPickersDay-dayDisabled {
+	color: var(--doc-green);
+}
+.MuiButtonBase-root.MuiIconButton-root.MuiPickersDay-day.MuiPickersDay-current {
+	color: var(--doc-green);
+}
+.MuiButtonBase-root.MuiIconButton-root.MuiPickersDay-day.MuiPickersDay-daySelected.MuiPickersDay-dayDisabled {
+	.MuiIconButton-label {
+		background-color: var(--doc-white);
+		color: var(--doc-dark-grey);
+	}
+}

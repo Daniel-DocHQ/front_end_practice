@@ -1,0 +1,14 @@
+{
+  "short_name": "My Health | DocHQ",
+  "name": "My Health | DocHQ",
+  "icons": [
+    {
+      "src": "icon-48x48.png",
+      "sizes": "48x48"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

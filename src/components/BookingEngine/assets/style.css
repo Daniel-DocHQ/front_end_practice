@@ -1,0 +1,23 @@
+.stepper {
+  border:none !important;
+  box-shadow:none !important;
+}
+.stepper__head--active .stepper__head__index {
+  background-color: #2BB8E3 !important;
+  font-size:18px
+}
+
+.stepper__head--active .stepper__head__title {
+  color: #2BB8E3;
+  font-weight:bolder;
+}
+
+.stepper__connector {
+  color:#CACACA;
+  border-left-width:2px !important;
+}
+
+.MuiButton-containedPrimary {
+  background-color: #2BB8E3 !important;
+  border-radius: 2px !important;
+}

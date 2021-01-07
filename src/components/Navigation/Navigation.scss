@@ -1,0 +1,144 @@
+// Top Navigation
+.top-navigation-container {
+	a {
+		text-decoration: none;
+		color: var(--doc-white);
+		&:hover {
+			color: var(--doc-dark-grey);
+			cursor: pointer;
+		}
+	}
+	z-index: 1150;
+	height: 74px;
+	width: 100vw;
+	align-items: center;
+	background-color: var(--doc-green);
+	color: var(--doc-light-grey);
+	padding: 0px 21px;
+	box-sizing: border-box;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+
+	.page-title {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		margin: 0px;
+		font-size: 25px;
+		line-height: 24px;
+	}
+	.practice-logo {
+		padding-left: 80px;
+		> img {
+			height: 36px;
+		}
+	}
+
+	.personal-profile {
+		color: var(--doc-light-grey);
+		font-size: 36px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-self: center;
+		text-align: center;
+		position: relative;
+		.personal-profile-actions {
+			position: absolute;
+			top: 47px;
+			right: 0px;
+			.MuiPaper-root {
+				margin: 0px !important;
+				.row.space-between {
+					margin: 0px !important;
+					.btn {
+						margin-top: 0px;
+						margin-left: 5px;
+						margin-right: 5px;
+					}
+				}
+			}
+		}
+		&:hover {
+			color: var(--doc-dark-grey);
+		}
+	}
+	.personal-profile.active {
+		color: var(--doc-dark-grey);
+	}
+}
+// Side Navigation
+
+.side-navigation-container {
+	a:hover {
+		color: var(--doc-green);
+	}
+	height: 100vh;
+	padding-top: 70px;
+	background-color: var(--doc-dark-grey);
+	color: var(--doc-white);
+	display: flex;
+	flex-direction: row;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	z-index: 9;
+	.side-navigation-menu {
+		max-width: 70px;
+		min-width: 70px;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		.side-navigation-tab {
+			height: 50px;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 24px;
+			cursor: pointer;
+		}
+		.side-navigation-tab.active {
+			color: var(--doc-green);
+		}
+	}
+	.side-navigation-content {
+		min-width: 200px;
+		width: 350px;
+		height: 100%;
+		background-color: var(--doc-white);
+		color: var(--doc-dark-grey);
+		border-right: 2px solid var(--doc-pink);
+		padding: 20px;
+		box-sizing: border-box;
+	}
+	.side-navigation-title {
+		margin-right: 20px;
+	}
+}
+// Tablet
+
+@media only screen and (max-width: 800px) {
+	.practice-logo {
+		padding-left: 30px !important;
+	}
+}
+
+// Mobile
+@media only screen and (max-width: 600px) {
+	.page-title {
+		display: none;
+	}
+	.practice-logo {
+		padding-left: 0px !important;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}

@@ -1,0 +1,48 @@
+.booking-engine {
+	.MuiInput-underline:before {
+		border-color: #f1f1f1 !important;
+	}
+	.MuiInputBase-input {
+		color: #a2a2a2 !important;
+		font-size: 12px !important;
+	}
+
+	.MuiInputLabel-formControl {
+		font-size: 12px !important;
+		font-weight: 500;
+	}
+
+	div.MuiDialog-root
+		> div.MuiDialog-container.MuiDialog-scrollPaper
+		> div
+		> div.MuiDialogContent-root.MuiPickersModal-dialog
+		> div
+		> div.MuiToolbar-root.MuiToolbar-regular.MuiPickersToolbar-toolbar.MuiPickersDatePickerRoot-toolbar.MuiToolbar-gutters
+		> button:nth-child(1)
+		> span.MuiButton-label
+		> h6 {
+		font-size: 2.1rem;
+		color: #fff;
+	}
+
+	div.MuiDialog-root
+		> div.MuiDialog-container.MuiDialog-scrollPaper
+		> div
+		> div.MuiDialogContent-root.MuiPickersModal-dialog
+		> div
+		> div.MuiToolbar-root.MuiToolbar-regular.MuiPickersToolbar-toolbar.MuiPickersDatePickerRoot-toolbar.MuiToolbar-gutters {
+		height: 140px;
+	}
+
+	body
+		> div.MuiDialog-root
+		> div.MuiDialog-container.MuiDialog-scrollPaper
+		> div
+		> div.MuiDialogContent-root.MuiPickersModal-dialog
+		> div
+		> div.MuiPickersBasePicker-pickerView
+		> div
+		> div {
+		font-size: 1.5rem;
+	}
+}

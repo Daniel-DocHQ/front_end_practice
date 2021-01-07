@@ -1,0 +1,47 @@
+.nav-bar-container {
+  top: 0px;
+  left: 0px;
+  height: 70px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: var(--doc-dark-grey);
+  .dochq-logo {
+    height: 100%;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    > img {
+      max-height: 80%;
+    }
+  }
+  .nav-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      font-size: 18px;
+      text-decoration: none;
+      color: var(--doc-white);
+      &:hover {
+        color: var(--doc-pink);
+      }
+    }
+    a.active {
+      border-bottom: 1px solid var(--doc-pink);
+      font-weight: 600;
+      &:hover {
+        color: vaR(--doc-pink);
+        border-bottom: 1px solid var(--doc-white);
+      }
+    }
+  }
+}

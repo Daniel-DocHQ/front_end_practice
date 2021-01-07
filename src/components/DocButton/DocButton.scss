@@ -1,0 +1,112 @@
+/* Button */
+@mixin btn {
+	height: 45px;
+	border: none;
+	font-size: 16px;
+	cursor: pointer;
+	min-width: 100px;
+	width: auto;
+	font-family: inherit;
+	border-radius: 4px;
+	font-weight: bold;
+	line-height: 18px;
+	padding: 12px 8px;
+}
+
+.pink {
+	@include btn;
+	background-color: var(--doc-pink);
+	border: thin var(--doc-pink) solid;
+	color: var(--doc-white);
+
+	&:hover,
+	&:active {
+		background-color: var(--doc-pink);
+		box-shadow: none;
+		border-color: var(--doc-pink);
+		opacity: 0.8;
+	}
+}
+
+.green {
+	@include btn;
+	background-color: var(--doc-green);
+	border: thin var(--doc-green) solid;
+	color: var(--doc-white);
+
+	&:hover,
+	&:active {
+		background-color: var(--doc-green);
+		box-shadow: none;
+		border-color: var(--doc-green);
+		opacity: 0.8;
+	}
+}
+
+.dark-grey {
+	@include btn;
+	background-color: var(--doc-dark-grey);
+	border: thin var(--doc-dark-grey) solid;
+	color: var(--doc-white);
+
+	&:hover,
+	&:active {
+		background-color: var(--doc-dark-grey);
+		box-shadow: none;
+		border-color: var(--doc-dark-grey);
+		color: var(--doc-white);
+		opacity: 0.8;
+	}
+}
+
+.btn.disabled {
+	@include btn;
+	background-color: var(--doc-light-grey);
+	color: var(--doc-white);
+	cursor: not-allowed;
+}
+.flat.btn.disabled {
+	@include btn;
+	color: var(--doc-dark-grey);
+	cursor: not-allowed;
+}
+.flat {
+	background-color: inherit !important;
+	border: 0px;
+	min-width: 50px !important;
+	&:hover,
+	&:active {
+		color: var(--doc-pink);
+		cursor: pointer;
+		border: 0px;
+	}
+}
+.flat.pink {
+	color: var(--doc-pink);
+
+	&:hover,
+	&:active {
+		box-shadow: none;
+		color: var(--doc-green) !important;
+		opacity: 0.8;
+	}
+}
+.flat.green {
+	color: var(--doc-green);
+	&:hover,
+	&:active {
+		color: var(--doc-pink) !important;
+		box-shadow: none;
+		opacity: 0.8;
+	}
+}
+.flat.dark-grey {
+	color: var(--doc-dark-grey);
+
+	&:hover,
+	&:active {
+		color: var(--doc-pink) !important;
+		box-shadow: none;
+		opacity: 0.8;
+	}
+}

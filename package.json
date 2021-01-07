@@ -1,0 +1,84 @@
+{
+  "name": "dochq-video-consultations",
+  "description": "ReactJS video consultations application",
+  "version": "0.1.0",
+  "engines": {
+    "node": "10.x"
+  },
+  "author": "DocH <dev@dochq.co.uk>",
+  "keywords": [
+    "react"
+  ],
+  "private": true,
+  "dependencies": {
+    "@date-io/date-fns": "1.3.x",
+    "@fortawesome/fontawesome-free": "5.13.x",
+    "@fortawesome/fontawesome-svg-core": "1.2.x",
+    "@material-ui/core": "4.11.x",
+    "@material-ui/icons": "4.9.1",
+    "@material-ui/lab": "4.0.0-alpha.56",
+    "@material-ui/pickers": "3.2.x",
+    "axios": "0.19.x",
+    "date-fns": "2.14.x",
+    "detectrtc": "1.4.0",
+    "draft-js": "0.11.x",
+    "draftjs-to-html": "0.9.x",
+    "express": "4.17.x",
+    "html-to-draftjs": "1.5.x",
+    "immutable": "^4.0.0-rc.12",
+    "jwt-decode": "3.1.x",
+    "moment": "2.29.1",
+    "node-sass": "4.14.x",
+    "react": "16.13.x",
+    "react-dom": "16.13.x",
+    "react-draft-wysiwyg": "1.14.x",
+    "react-router-dom": "5.2.x",
+    "react-scripts": "3.4.x",
+    "react-toasts": "3.0.x",
+    "simple-peer": "9.7.x",
+    "socket.io": "2.3.x",
+    "socket.io-client": "2.3.x",
+    "twilio-video": "2.6.x",
+    "react-phone-number-input": "3.0.x",
+    "webrtc-adapter": "7.6.x"
+  },
+  "devDependencies": {
+    "babel-eslint": "10.1.x",
+    "eslint": "6.6.x",
+    "eslint-config-prettier": "6.11.x",
+    "eslint-plugin-import": "2.21.x",
+    "eslint-plugin-react": "7.20.x",
+    "prettier": "1.19.x",
+    "twilio": "3.39.x",
+    "nodemon": "^2.0.6",
+    "npm-run-all": "^4.1.5",
+    "node-env-run": "^4.0.2"
+  },
+  "proxy": "http://localhost:80",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "serve": "react-scripts build && node server",
+    "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
+    "serve:production": "docker build -t website . && docker run -p 1338:80 website",
+    "server": "node-env-run server --exec nodemon",
+    "dev": "run-p server start"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  }
+}
