@@ -50,7 +50,7 @@ pipeline {
             steps {
                 sh '''
                     $(cd deploy/staging/ && kustomize edit set image microservice=$IMAGE:$(git log -n 1 --pretty=format:"%H"))&& \
-                    kustomize build ./deploy/staging | kubectl apply --namespace $NAMESPACE -o yaml --dry-run="client" --wait=true -f -
+                    kustomize build ./deploy/staging | kubectl apply --namespace $NAMESPACE -o yaml --wait=true -f -
                 '''
             }
         }
