@@ -63,7 +63,7 @@ pipeline {
             steps{
                 sh '''
                     $(cd deploy/production/ && kustomize edit set image microservice=$IMAGE:$(git log -n 1 --pretty=format:"%H"))&& \
-                    kustomize build ./deploy/production | kubectl apply --namespace $NAMESPACE -o yaml --dry-run="client" --wait=true -f -
+                    kustomize build ./deploy/production | kubectl apply --namespace $NAMESPACE -o yaml --wait=true -f -
                 '''
             }
         }
