@@ -1,0 +1,17 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: microservice
+spec:
+  tls:
+    - hosts:
+        - airportal.dochq.co.uk
+      secretName: microservice-tls
+  rules:
+    - host: airportal.dochq.co.uk
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: microservice
+              servicePort: 5000
