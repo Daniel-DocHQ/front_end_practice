@@ -45,7 +45,7 @@ pipeline {
             environment {
                 KUBECONTEXT = 'gke_dochq-production_europe-west2_dochq-staging'
                 IMAGE = 'harbor.dochq.co.uk/my-health/staging'
-                NAMESPACE="airportal-127-staging"
+                NAMESPACE="myhealth"
             }
             steps {
                 sh '''
@@ -58,7 +58,7 @@ pipeline {
             environment {
                 KUBECONTEXT = 'gke_dochq-production_europe-west2_dochq'
                 IMAGE = 'harbor.dochq.co.uk/my-health/production'
-                NAMESPACE="airportal-127-production"
+                NAMESPACE="myhealth"
             }
             steps{
                 sh '''

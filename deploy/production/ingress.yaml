@@ -5,10 +5,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - airportal.dochq.co.uk
+        - myhealth.dochq.co.uk
       secretName: microservice-tls
   rules:
-    - host: airportal.dochq.co.uk
+    - host: myhealth.dochq.co.uk
       http:
         paths:
           - path: /
