@@ -11,3 +11,4 @@ resources:
 patches:
   - path: ./deployment.yaml
   - path: ./ingress.yaml
+  - path: ./service.yaml

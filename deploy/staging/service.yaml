@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: microservice
+spec:
+  ports:
+    - port: 5000
+      targetPort: 80
+  type: ClusterIP
+
