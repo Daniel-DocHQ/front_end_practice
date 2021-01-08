@@ -6,9 +6,17 @@ spec:
   tls:
     - hosts:
         - myhealth.dochq.co.uk
+        - ui-video-consultations.dochq.co.uk
       secretName: microservice-tls
   rules:
     - host: myhealth.dochq.co.uk
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: microservice
+              servicePort: 5000
+    - host: ui-video-consultations.dochq.co.uk
       http:
         paths:
           - path: /
