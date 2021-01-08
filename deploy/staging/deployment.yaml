@@ -11,7 +11,7 @@ spec:
         - name: microservice
           image: microservice
           ports:
-            - name: "web"
+            - name: "http"
               containerPort: 80
           livenessProbe:
             httpGet:
