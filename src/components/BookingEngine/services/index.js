@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { format } from 'date-fns';
-export const bookingAPIUrl = process.env.REACT_APP_BOOKING_URL
-	? process.env.REACT_APP_BOOKING_URL
-	: `https://dochq-booking-api-staging.dochq.co.uk/`;
+export const bookingAPIUrl = process.env.REACT_APP_BOOKING_URL;
 export const SERVICES_SEARCH_URL = '_/services';
 export const LOCATION_SEARCH = 'location_search';
 export const SERVICE_TYPE = 'video_gp';

@@ -1,10 +1,7 @@
 import axios from 'axios';
 import { ddMMyyyy } from '../helpers/formatDate';
 import getURLParams from '../helpers/getURLParams';
-
-const baseURL = process.env.REACT_APP_BOOKING_URL
-	? process.env.REACT_APP_BOOKING_URL
-	: `https://dochq-booking-api-staging.dochq.co.uk`;
+const baseURL = process.env.REACT_APP_BOOKING_URL;
 
 const SERVICE_TYPE = 'video_gp';
 const bookingService = {

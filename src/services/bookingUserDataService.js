@@ -1,9 +1,5 @@
 import axios from 'axios';
-import { isValid } from 'date-fns';
-
-const baseURL = process.env.REACT_APP_BOOKING_USER_DATA_URL
-	? `${process.env.REACT_APP_BOOKING_USER_DATA_URL}`
-	: `https://services-booking-user-data-staging.dochq.co.uk`;
+const baseURL = process.env.REACT_APP_BOOKING_USER_DATA_URL;
 //{{role_id}}/slots?past=true&status=booked
 const bookingUserDataService = {
 	submitSymptomChecker,

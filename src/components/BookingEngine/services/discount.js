@@ -1,8 +1,5 @@
 import axios from 'axios';
-export const API_URL = process.env.REACT_APP_DISCOUNT_URL
-	? process.env.REACT_APP_DISCOUNT_URL
-	: `https://services-discounts-staging.dochq.co.uk`;
-
+export const API_URL = process.env.REACT_APP_DISCOUNT_URL;
 export const api = axios.create({
 	baseURL: API_URL,
 	timeout: 10000,

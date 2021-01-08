@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     TAG = sh(script: 'git log -n 1 --pretty=format:"%H"', returnStdout: true).trim()
-                    myapp = docker.build("harbor.dochq.co.uk/my-health/staging:$TAG", "--no-cache --build-arg=CI_REGISTRY_PASSWORD=$CI_REGISTRY_PASSWORD .")
+                    myapp = docker.build("harbor.dochq.co.uk/my-health/staging:$TAG", "--no-cache .")
                 }
                 script {
                     TAG = sh(script: 'git log -n 1 --pretty=format:"%H"', returnStdout: true).trim()
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     TAG = sh(script: 'git log -n 1 --pretty=format:"%H"', returnStdout: true).trim()
-                    myapp = docker.build("harbor.dochq.co.uk/my-health/production:$TAG", "--no-cache --build-arg=CI_REGISTRY_PASSWORD=$CI_REGISTRY_PASSWORD .")
+                    myapp = docker.build("harbor.dochq.co.uk/my-health/production:$TAG", "--no-cache --build-arg=DOC_ENVIRONMENT=prod .")
                 }
                 script {
                     TAG = sh(script: 'git log -n 1 --pretty=format:"%H"', returnStdout: true).trim()

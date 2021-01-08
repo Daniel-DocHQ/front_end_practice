@@ -5,9 +5,7 @@ import getURLParams from '../../../helpers/getURLParams';
 export const SERVICE_TYPE = 'video_gp';
 
 export const api = axios.create({
-	baseURL: process.env.REACT_APP_BOOKING_URL
-		? process.env.REACT_APP_BOOKING_URL
-		: `https://dochq-booking-api-staging.dochq.co.uk/`,
+    baseURL: process.env.REACT_APP_BOOKING_URL
 	timeout: 15000,
 	headers: { 'Content-Type': 'application/json' },
 });

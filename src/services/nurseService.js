@@ -1,10 +1,7 @@
 import axios from 'axios';
-const baseUrl = process.env.REACT_APP_BOOKING_URL
-	? process.env.REACT_APP_BOOKING_URL
-	: `https://dochq-booking-api-staging.dochq.co.uk`;
-const delfinUrl = process.env.REACT_APP_DELFIN_URL
-	? process.env.REACT_APP_DELFIN_URL
-	: `https://services-delfin-user-data-staging.dochq.co.uk`;
+
+const baseUrl = process.env.REACT_APP_BOOKING_URL;
+const delfinUrl = process.env.REACT_APP_DELFIN_URL;
 
 const nurseSvc = {
 	getAppointments(token) {

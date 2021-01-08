@@ -1,13 +1,11 @@
 import axios from 'axios';
 import { jwtDecode } from '../helpers/jwtDecode';
-const identitiesUrl = process.env.REACT_APP_IDENTITIES_URL || `https://services-identity-staging.dochq.co.uk`;
-const loginUrl = process.env.REACT_APP_LOGIN_URL || `https://services-login-staging.dochq.co.uk`;
-const loginBearer = process.env.REACT_APP_LOGIN_BEARER
-	? `Bearer ${process.env.REACT_APP_LOGIN_BEARER}`
-	: 'Bearer qj6WfxEpLg2WVjss';
-const identitiesBearer = process.env.REACT_APP_IDENTITIES_BEARER
-	? `Bearer ${process.env.REACT_APP_IDENTITIES_BEARER}`
-	: 'Bearer Ww8cEFh9EIGPNNRi';
+const identitiesUrl = process.env.REACT_APP_IDENTITIES_URL;
+const loginUrl = process.env.REACT_APP_LOGIN_URL;
+const loginBearer = `Bearer ${process.env.REACT_APP_LOGIN_BEARER}`;
+
+const identitiesBearer = `Bearer ${process.env.REACT_APP_IDENTITIES_BEARER}`;
+
 const authorisationSvc = {
 	login(username, password) {},
 	logout() {
