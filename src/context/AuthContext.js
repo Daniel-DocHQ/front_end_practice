@@ -10,7 +10,9 @@ export default class AuthContextProvider extends Component {
 			token: null,
 			user: null,
 			role: null,
-			role_profile: null,
+            role_profile: {
+                shipping_details: {},
+            },
 			role_data: {},
 			organisation_profile: null,
 			hra_data: null,

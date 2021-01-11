@@ -11,7 +11,8 @@ const ShippingDetails = ({ initialData, update }) => {
 	const [locality, setLocality] = useState('');
 	const [region, setRegion] = useState('');
 	const [postal_code, setPostal_code] = useState('');
-	const [isModified, setIsModified] = useState(false);
+    const [isModified, setIsModified] = useState(false);
+
 	useEffect(() => {
 		update({
 			first_name,
@@ -23,15 +24,14 @@ const ShippingDetails = ({ initialData, update }) => {
 			postal_code,
 		});
 		checkModified();
-	}, [first_name, last_name, street_address, locality, region, postal_code]);
+    }, [first_name, last_name, street_address, locality, region, postal_code]);
+
 	useEffect(() => {
 		if (typeof initialData !== 'undefined') {
 			if (typeof initialData.first_name !== 'undefined') setFirst_name(initialData.first_name);
 			if (typeof initialData.last_name !== 'undefined') setLast_name(initialData.last_name);
-			if (typeof initialData.street_address !== 'undefined')
-				setStreet_address(initialData.street_address);
-			if (typeof initialData.extended_address !== 'undefined')
-				setExtended_address(initialData.extended_address);
+			if (typeof initialData.street_address !== 'undefined') setStreet_address(initialData.street_address);
+			if (typeof initialData.extended_address !== 'undefined') setExtended_address(initialData.extended_address);
 			if (typeof initialData.locality !== 'undefined') setLocality(initialData.locality);
 			if (typeof initialData.region !== 'undefined') setRegion(initialData.region);
 			if (typeof initialData.postal_code !== 'undefined') setPostal_code(initialData.postal_code);
