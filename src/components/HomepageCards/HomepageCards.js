@@ -101,13 +101,7 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 					text='Order'
 					color='green'
 					linkSrc='/patient/order-test-kit'
-					disabled={
-						role_profile !== 'undefined' &&
-						role_profile !== null &&
-						role_profile.onboarding_complete
-							? false
-							: true
-					}
+					disabled={!!role_profile && role_profile.onboarding_complete ? false : true}
 				/>
 			),
 		},
