@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  app: myhealth-ui
+
+configMapGenerator:
+  - name: nginx-config
+    files:
+      - ./default.conf
+
+resources:
+  - git@github.com:DocHQ/microservice.git/base
+
+patchesStrategicMerge:
+  - ./deployment.yaml
+
+patches:
+  - path: ./ingress.yaml
+  - patch: |-
+      - op: replace
+        path: /spec/ports/0/port
+        value: 80
+    target: 
+      version: v1
+      kind: Service
+      name: microservice

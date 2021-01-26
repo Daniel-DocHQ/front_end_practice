@@ -1,0 +1,45 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  CI_REGISTRY_PASSWORD: ${{ secrets.CI_REGISTRY_PASSWORD }}
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  NAMESPACE: myhealth
+  IMAGE: myhealth
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - run: |-
+        gcloud --quiet auth configure-docker
+
+    # Build the Docker image
+    - name: Build
+      run: |-
+        docker build \
+        --tag gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA \
+        --build-arg=CI_REGISTRY_PASSWORD=$CI_REGISTRY_PASSWORD .
+
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |-
+        docker push gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+
+    # Deploy the Docker image to the GKE cluster
+    - name: Deploy to staging
+      env:
+        KUBECONTEXT: 'gke_dochq-production_europe-west2_dochq-staging'
+      run: |-
+        $(cd deploy/staging/ && kustomize edit set image microservice=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA) && \
+        kustomize build ./deploy/staging | kubectl apply --context $KUBECONTEXT --namespace $NAMESPACE -o yaml --wait=true  -f -
+

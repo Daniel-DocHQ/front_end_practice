@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      initContainers:
+        - name: code-loader
+          image: microservice
+          command: ['sh', '-c', 'cp -a /opt/. /code_directory']
+          volumeMounts:
+          - name: code-dir
+            mountPath: /code_directory
+        - name: react-build
+          image: node:erbium-alpine
+          command: ['sh', '-c', 'cd /usr/app/src; npm i && npm run build:$ENVIRONMENT']
+          envFrom:
+          - configMapRef:
+              name: microservice-config
+          volumeMounts:
+          - name: code-dir
+            mountPath: /usr/app/src
+      containers:
+        - $patch: replace
+        - name: nginx
+          image: nginx:alpine
+          ports:
+          - name: "web"
+            containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+          volumeMounts:
+          - name: code-dir
+            mountPath: /var/www/html
+          - name: config-volume
+            mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: code-dir
+          emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: nginx-config
+

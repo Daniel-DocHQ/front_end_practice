@@ -2,13 +2,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 commonLabels:
-  app: airpotal-ui
+  app: myhealth-ui
 
 namePrefix: production-
 
 resources:
-  - https://github.com/DocHQ/microservice/base
+  - ../base
+
 patches:
-  - path: ./deployment.yaml
   - path: ./ingress.yaml
-  - path: ./service.yaml
+configMapGenerator:
+  - name: microservice-config
+    literals:
+      - ENVIRONMENT=production
+

@@ -14,4 +14,4 @@ spec:
           - path: /
             backend:
               serviceName: microservice
-              servicePort: 5000
+              servicePort: 80
