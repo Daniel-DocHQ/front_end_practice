@@ -5,8 +5,6 @@ metadata:
 spec:
   template:
     spec:
-      imagePullSecrets:
-        - name: regcred
       initContainers:
         - name: code-loader
           image: microservice
@@ -42,7 +40,4 @@ spec:
       volumes:
         - name: code-dir
           emptyDir: {}
-        - name: config-volume
-          configMap:
-            name: nginx-config
 
