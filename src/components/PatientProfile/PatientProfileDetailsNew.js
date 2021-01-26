@@ -166,9 +166,14 @@ const ShippingInformation = ({}) => {
 				.then(result => {
 					if (result.success && result.role_profile) {
 						setRoleProfile(result.role_profile);
+					} else {
+						setIsEditable(true);
 					}
 				})
-				.catch(err => console.log('profile_not_complete'));
+				.catch(err => {
+					setIsEditable(true);
+					console.log('profile_not_complete');
+				});
 		}
 	}, []);
 	function updateErrors(isValid, field) {
