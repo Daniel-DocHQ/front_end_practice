@@ -25,8 +25,9 @@ spec:
             mountPath: /usr/app/src
       containers:
         - $patch: replace
-        - name: nginx
-          image: nginx:alpine
+        - name: node
+          image: node:erbium-alpine
+          command: ['sh', '-c', 'cd /usr/app/src; node server.js']
           ports:
           - name: "web"
             containerPort: 80
@@ -37,9 +38,7 @@ spec:
               scheme: HTTP
           volumeMounts:
           - name: code-dir
-            mountPath: /var/www/html
-          - name: config-volume
-            mountPath: /etc/nginx/conf.d
+            mountPath: /usr/app/src
       volumes:
         - name: code-dir
           emptyDir: {}
