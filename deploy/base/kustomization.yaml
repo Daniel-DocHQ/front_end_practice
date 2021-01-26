@@ -4,11 +4,6 @@ kind: Kustomization
 commonLabels:
   app: myhealth-ui
 
-configMapGenerator:
-  - name: nginx-config
-    files:
-      - ./default.conf
-
 resources:
   - git@github.com:DocHQ/microservice.git/base
 
