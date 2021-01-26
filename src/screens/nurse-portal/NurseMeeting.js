@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, memo } from 'react';
 import moment from 'moment';
-import {parse, format} from 'date-fns';
+import { parse, format } from 'date-fns';
 
 import DocButton from '../../components/DocButton/DocButton';
 import '../../assets/css/NurseMeeting.scss';
@@ -188,15 +188,15 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 		const body = formData;
 		body.medicalprofessional = `${user.first_name} ${user.last_name}`;
 
-        let currentDate = new Date();
-        const munusTime = date => {
-            const d = new Date(date);
-            const newDate = new Date(d.getTime()-60*15*1000);
-            return newDate;
-        }
+		let currentDate = new Date();
+		const munusTime = date => {
+			const d = new Date(date);
+			const newDate = new Date(d.getTime() - 60 * 15 * 1000);
+			return newDate;
+		};
 
-        body.date_sampled = formatCertificateDate(munusTime(currentDate));
-        body.date_reported = formatCertificateDate(currentDate)
+		body.date_sampled = formatCertificateDate(munusTime(currentDate));
+		body.date_reported = formatCertificateDate(currentDate);
 
 		body.security_checked = 'true';
 		let certStatuses = certificateChildren;
@@ -220,7 +220,20 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 				setCertificateChildren(certStatuses);
 			});
 	}
-
+	function getPatientData(i) {
+		if (typeof appointmentData !== 'undefined' && appointmentData !== null) {
+			if (
+				Array.isArray(appointmentData.booking_users) &&
+				typeof appointmentData.booking_users[i] !== 'undefined'
+			) {
+				return appointmentData.booking_users[i];
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
 	return (
 		<React.Fragment>
 			<DocModal
@@ -316,7 +329,13 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 					{certificateChildren.length !== 0 &&
 						certificateChildren.map((status, key) =>
 							status === 'pending' || status === 'failed' ? (
-								<CertificatesAaron key={key} submit={sendResult} i={key} statusMessage={status} />
+								<CertificatesAaron
+									key={key}
+									submit={sendResult}
+									i={key}
+									statusMessage={status}
+									patient_data={getPatientData(key - 1)}
+								/>
 							) : null
 						)}
 				</div>
@@ -328,84 +347,84 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 export default memo(NurseMeeting);
 
 const PatientData = ({ patientData, testKitId, appointmentStartTime, appointmentId }) => {
-    let dobObject = undefined;
-    if (patientData && patientData.dob) {
-        try {
-            var d = parse(patientData.dob, 'yyyy-MM-dd', new Date())
-            dobObject = format(d, 'dd/MM/yyyy')
-        } catch(err) {
-            dobObject = patientData.dob
-        }
-    }
+	let dobObject = undefined;
+	if (patientData && patientData.dob) {
+		try {
+			var d = parse(patientData.dob, 'yyyy-MM-dd', new Date());
+			dobObject = format(d, 'dd/MM/yyyy');
+		} catch (err) {
+			dobObject = patientData.dob;
+		}
+	}
 
-    return (
-        <div className='patient-notes'>
-            <h2 className='no-margin'>Patient Details</h2>
-            {patientData && patientData.first_name && (
-                <div className='row'>
-                    <p className='no-margin'>First Name:</p>
-                    <p>{patientData.first_name}</p>
-                </div>
-            )}
-            {patientData && patientData.first_name && (
-                <div className='row'>
-                    <p className='no-margin'>Last Name:</p>
-                    <p>{patientData.last_name}</p>
-                </div>
-            )}
-            {typeof dobObject !== 'undefined' && (
-            <div className='row'>
-                <p className='no-margin'>DOB:</p>
-                <p>{dobObject}</p>
-            </div>
-            )}
-            {patientData && typeof patientData.sex !== 'undefined' && (
-                <div className='row'>
-                    <p className='no-margin'>Sex:</p>
-                    <p>{patientData.sex}</p>
-                </div>
-            )}
-            {patientData && patientData.postal_code && (
-                <div className='row'>
-                    <p className='no-margin'>Post Code:</p>
-                    <p>{patientData.postal_code}</p>
-                </div>
-            )}
-            {patientData && patientData.email && (
-                <div className='row'>
-                    <p className='no-margin'>Email:</p>
-                    <p>{patientData.email}</p>
-                </div>
-            )}
-            {patientData && patientData.phone && (
-                <div className='row'>
-                    <p className='no-margin'>Phone Number:</p>
-                    <p>{patientData.phone}</p>
-                </div>
-            )}
-            <div className='row'>
-                <p className='no-margin'>Test Kit Id:</p>
-                <p className='no-margin'>{testKitId || 'unknown'}</p>
-            </div>
-            {appointmentStartTime && (
-                <React.Fragment>
-                    <h2 className='no-margin'>Appointment Details</h2>
-                    <div className='row'>
-                        <p className='no-margin'>Appointment Start Time:</p>
-                        <p className='no-margin'> {appointmentStartTime}</p>
-                    </div>
-                </React.Fragment>
-            )}
+	return (
+		<div className='patient-notes'>
+			<h2 className='no-margin'>Patient Details</h2>
+			{patientData && patientData.first_name && (
+				<div className='row'>
+					<p className='no-margin'>First Name:</p>
+					<p>{patientData.first_name}</p>
+				</div>
+			)}
+			{patientData && patientData.first_name && (
+				<div className='row'>
+					<p className='no-margin'>Last Name:</p>
+					<p>{patientData.last_name}</p>
+				</div>
+			)}
+			{typeof dobObject !== 'undefined' && (
+				<div className='row'>
+					<p className='no-margin'>DOB:</p>
+					<p>{dobObject}</p>
+				</div>
+			)}
+			{patientData && typeof patientData.sex !== 'undefined' && (
+				<div className='row'>
+					<p className='no-margin'>Sex:</p>
+					<p>{patientData.sex}</p>
+				</div>
+			)}
+			{patientData && patientData.postal_code && (
+				<div className='row'>
+					<p className='no-margin'>Post Code:</p>
+					<p>{patientData.postal_code}</p>
+				</div>
+			)}
+			{patientData && patientData.email && (
+				<div className='row'>
+					<p className='no-margin'>Email:</p>
+					<p>{patientData.email}</p>
+				</div>
+			)}
+			{patientData && patientData.phone && (
+				<div className='row'>
+					<p className='no-margin'>Phone Number:</p>
+					<p>{patientData.phone}</p>
+				</div>
+			)}
+			<div className='row'>
+				<p className='no-margin'>Test Kit Id:</p>
+				<p className='no-margin'>{testKitId || 'unknown'}</p>
+			</div>
+			{appointmentStartTime && (
+				<React.Fragment>
+					<h2 className='no-margin'>Appointment Details</h2>
+					<div className='row'>
+						<p className='no-margin'>Appointment Start Time:</p>
+						<p className='no-margin'> {appointmentStartTime}</p>
+					</div>
+				</React.Fragment>
+			)}
 
-            <div className='row'>
-                <p className='no-margin'>Patient Joining link:</p>
-                <p className='no-margin'>
-                    https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
-                </p>
-            </div>
-        </div>
-    )
-}
+			<div className='row'>
+				<p className='no-margin'>Patient Joining link:</p>
+				<p className='no-margin'>
+					https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
+				</p>
+			</div>
+		</div>
+	);
+};
 const RapidTest = ({ respond, testKitId }) => (
 	<React.Fragment>
 		<div className='submit-result-container' style={{ textAlign: 'center', width: '100%' }}>

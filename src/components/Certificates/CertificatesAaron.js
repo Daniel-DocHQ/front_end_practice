@@ -6,11 +6,11 @@ import {
 	Paper,
 	Radio,
 	RadioGroup,
-	Select, 
+	Select,
 	MenuItem,
 } from '@material-ui/core';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import existsInArray from '../../helpers/existsInArray';
 import DocButton from '../DocButton/DocButton';
 import MaterialCheckbox from '../FormComponents/MaterialCheckbox/MaterialCheckbox';
@@ -28,11 +28,16 @@ const CertificatesAaron = ({ patient_data, submit, i, statusMessage }) => {
 	const [security_checked, setSecurity_checked] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
 	const [result, setResult] = useState('');
-    const [passport_number, setPassportNumber] = useState('');
+	const [passport_number, setPassportNumber] = useState('');
 	// Error handling
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 	const [errors, setErrors] = useState([]);
-
+	useEffect(() => {
+		// runs on init
+		if (typeof patient_data !== 'undefined' && patient_data !== null) {
+			populate();
+		}
+	}, []);
 	function updateErrors(isValid, field) {
 		// if valid and in array remove
 		if (isValid && existsInArray(errors, field)) {
@@ -63,6 +68,10 @@ const CertificatesAaron = ({ patient_data, submit, i, statusMessage }) => {
 		}
 		if (patient_data.date_of_birth) {
 			setDob(patient_data.date_of_birth);
+		} else if (patient_data.dateOfBirth) {
+			setDob(patient_data.dateOfBirth);
+		} else if (patient_data.dob) {
+			setDob(patient_data.dob);
 		}
 	}
 	// used as the form submit function, super lazy but works a charm
@@ -78,7 +87,7 @@ const CertificatesAaron = ({ patient_data, submit, i, statusMessage }) => {
 					security_checked,
 					security_document,
 					result,
-                    passport_number,
+					passport_number,
 				},
 				i
 			);
@@ -190,19 +199,19 @@ const CertificatesAaron = ({ patient_data, submit, i, statusMessage }) => {
 					</div>
 				)}
 				<div className='row'>
-					<FormControl variant="filled" style={{width: '100%'}}>
-						<InputLabel id="security-document-label">Security Document</InputLabel>
+					<FormControl variant='filled' style={{ width: '100%' }}>
+						<InputLabel id='security-document-label'>Security Document</InputLabel>
 						<Select
-							labelId="security-document-label"
+							labelId='security-document-label'
 							id='security-document'
 							onChange={e => setSecurity_document(e.target.value)}
 							value={security_document}
 							required={true}
 							updateStatus={updateErrors}
 						>
-							<MenuItem value="Passport">Passport</MenuItem>
-							<MenuItem value="Driving Licence">Driving Licence</MenuItem>
-							<MenuItem value="National Identification">National Identification</MenuItem>
+							<MenuItem value='Passport'>Passport</MenuItem>
+							<MenuItem value='Driving Licence'>Driving Licence</MenuItem>
+							<MenuItem value='National Identification'>National Identification</MenuItem>
 						</Select>
 					</FormControl>
 				</div>
@@ -212,19 +221,19 @@ const CertificatesAaron = ({ patient_data, submit, i, statusMessage }) => {
 					</div>
 				)}
 				<div className='row'>
-					<FormControl variant="filled" style={{width: '100%'}}>
-						<InputLabel id="test-result-label">Test Result</InputLabel>
+					<FormControl variant='filled' style={{ width: '100%' }}>
+						<InputLabel id='test-result-label'>Test Result</InputLabel>
 						<Select
-							labelId="test-result-label"
+							labelId='test-result-label'
 							id='test-result'
 							onChange={e => setResult(e.target.value)}
 							value={result}
 							required={true}
 							updateStatus={updateErrors}
 						>
-							<MenuItem value="Positive">Positive</MenuItem>
-							<MenuItem value="Negative">Negative</MenuItem>
-							<MenuItem value="Invalid">Invalid</MenuItem>
+							<MenuItem value='Positive'>Positive</MenuItem>
+							<MenuItem value='Negative'>Negative</MenuItem>
+							<MenuItem value='Invalid'>Invalid</MenuItem>
 						</Select>
 					</FormControl>
 				</div>
