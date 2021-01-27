@@ -9,16 +9,22 @@ import {
 	Select,
 	MenuItem,
 } from '@material-ui/core';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import React, { useEffect, useState } from 'react';
 import existsInArray from '../../helpers/existsInArray';
 import DocButton from '../DocButton/DocButton';
 import MaterialCheckbox from '../FormComponents/MaterialCheckbox/MaterialCheckbox';
 import EmailInputElement from '../FormComponents/EmailInput';
 import TextInputElement from '../FormComponents/TextInputElement';
-import DateFnsUtils from '@date-io/date-fns';
+import bookingService from '../../services/bookingService';
+import { formatCertificateDate } from '../../helpers/formatDate';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { ToastsStore } from 'react-toasts';
+import { Alert } from '@material-ui/lab';
 
-const CertificatesAaron = ({ patient_data, submit, i, statusMessage }) => {
+const CertificatesAaron = ({ patient_data, appointmentId }) => {
+	const { user, token } = useContext(AuthContext);
 	// Form fields
 	const [forename, setForename] = useState('');
 	const [surname, setSurname] = useState('');
@@ -32,9 +38,11 @@ const CertificatesAaron = ({ patient_data, submit, i, statusMessage }) => {
 	// Error handling
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 	const [errors, setErrors] = useState([]);
+	const [status, setStatus] = useState(); // { severity, message }
+	const [isLoading, setIsLoading] = useState(false);
 	useEffect(() => {
 		// runs on init
-		if (typeof patient_data !== 'undefined' && patient_data !== null) {
+		if (!!patient_data) {
 			populate();
 		}
 	}, []);
@@ -77,35 +85,73 @@ const CertificatesAaron = ({ patient_data, submit, i, statusMessage }) => {
 	// used as the form submit function, super lazy but works a charm
 	function proceed() {
 		if (errors.length === 0) {
-			submit(
-				{
-					forename,
-					surname,
-					email,
-					dob,
-					sex,
-					security_checked,
-					security_document,
-					result,
-					passport_number,
-				},
-				i
-			);
+			sendResult({
+				forename,
+				surname,
+				email,
+				dob,
+				sex,
+				security_checked,
+				security_document,
+				result,
+				passport_number,
+			});
 		} else {
 			setAttemptedSubmit(true);
 		}
 	}
+	function sendResult(formData) {
+		setIsLoading(true);
+		const body = formData;
+		body.medicalprofessional = `${user.first_name} ${user.last_name}`;
+
+		let currentDate = new Date();
+		const minus15mins = date => {
+			const d = new Date(date);
+			const newDate = new Date(d.getTime() - 60 * 15 * 1000);
+			return newDate;
+		};
+
+		body.date_sampled = formatCertificateDate(minus15mins(currentDate));
+		body.date_reported = formatCertificateDate(currentDate);
+
+		body.security_checked = 'true';
+		bookingService
+			.sendResult(token, appointmentId, body)
+			.then(result => {
+				if (result.success) {
+					ToastsStore.success('Generated certificate');
+					setStatus({ severity: 'success', message: 'Successfully generated certificate.' });
+					setIsLoading(false);
+				} else {
+					ToastsStore.error('Failed to generate certificate');
+					setStatus({
+						severity: 'error',
+						message: 'Failed to generate certificate, please try again.',
+					});
+					setIsLoading(false);
+				}
+			})
+			.catch(() => {
+				ToastsStore.error('Failed to generate certificate');
+				setStatus({
+					severity: 'error',
+					message: 'Failed to generate certificate, please try again.',
+				});
+				setIsLoading(false);
+			});
+	}
 	return (
 		<React.Fragment>
-			<Paper style={{ padding: '20px', width: '350px' }}>
+			<Paper style={{ padding: '20px', width: '350px', marginTop: '10px' }}>
 				<div className='row space-between'>
 					<h3 className='no-margin'>Certificate Form</h3>
 				</div>
-				{typeof patient_data !== 'undefined' && (
+				{/* {typeof patient_data !== 'undefined' && (
 					<div className='row flex-end'>
 						<DocButton text='Autofill with Patient data' color='green' onClick={populate} />
 					</div>
-				)}
+				)} */}
 				<div className='row'>
 					<TextInputElement
 						value={forename}
@@ -258,25 +304,21 @@ const CertificatesAaron = ({ patient_data, submit, i, statusMessage }) => {
 						<p className='error'>Enter patient passport number</p>
 					</div>
 				)}
-				{statusMessage !== 'pending' && (
+				{!!status && !!status.severity && !!status.message && !isLoading && (
 					<div className='row center'>
-						{statusMessage === 'success' ? (
-							<p style={{ border: '2px solid var(--doc-green)' }}>
-								Successfully generated certificate
-							</p>
-						) : (
-							<p className='error'>Failed to generate certificate</p>
-						)}
+						<Alert severity={status.severity}>{status.message}</Alert>
 					</div>
 				)}
-				<div className='row flex-end'>
-					<DocButton
-						text='Submit'
-						color='green'
-						onClick={proceed}
-						disabled={statusMessage === 'success'}
-					/>
-				</div>
+				{isLoading && (
+					<div className='row center'>
+						<LoadingSpinner />
+					</div>
+				)}
+				{!!status && !!status.severity && status.severity === 'success' ? null : (
+					<div className='row flex-end'>
+						<DocButton text='Submit' color='green' onClick={proceed} />
+					</div>
+				)}
 			</Paper>
 		</React.Fragment>
 	);

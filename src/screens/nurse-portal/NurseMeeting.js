@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useContext, memo } from 'react';
-import moment from 'moment';
+import React, { useState, useEffect, memo, useCallback } from 'react';
 import { parse, format } from 'date-fns';
-
 import DocButton from '../../components/DocButton/DocButton';
 import '../../assets/css/NurseMeeting.scss';
 
@@ -15,7 +13,6 @@ import DocModal from '../../components/DocModal/DocModal';
 import Box from '../../components/TwilioVideo/Box';
 import EditorWrapper from '../../components/EditorWrapper/EditorWrapper';
 import CertificatesAaron from '../../components/Certificates/CertificatesAaron';
-import bookingUserDataService from '../../services/bookingUserDataService';
 import { formatCertificateDate } from '../../helpers/formatDate';
 import bookingService from '../../services/bookingService';
 
@@ -35,7 +32,7 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 	const [patientTestResults, setPatientTestResults] = useState();
 	const [endCall, setEndCall] = useState(false);
 	const [imgVisible, setImgVisible] = useState(false);
-	const [certificateChildren, setCertificateChildren] = useState([]);
+	const [displayCertificates, setDisplayCertificates] = useState(false);
 	useEffect(() => {
 		if (endCall) {
 			setTimeout(setEndCall(false), 3000);
@@ -177,63 +174,6 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 			})
 			.catch(() => ToastsStore.error(`Failed to update test kit status`));
 	}
-
-	function certificateAddChild() {
-		if (certificateChildren.length < 4) {
-			setCertificateChildren([...certificateChildren, 'pending']);
-		}
-	}
-
-	function sendResult(formData, key) {
-		const body = formData;
-		body.medicalprofessional = `${user.first_name} ${user.last_name}`;
-
-		let currentDate = new Date();
-		const munusTime = date => {
-			const d = new Date(date);
-			const newDate = new Date(d.getTime() - 60 * 15 * 1000);
-			return newDate;
-		};
-
-		body.date_sampled = formatCertificateDate(munusTime(currentDate));
-		body.date_reported = formatCertificateDate(currentDate);
-
-		body.security_checked = 'true';
-		let certStatuses = certificateChildren;
-		bookingService
-			.sendResult(token, appointmentId, body)
-			.then(result => {
-				if (result.success) {
-					certStatuses[key] = 'success';
-					ToastsStore.success('Generated certificate');
-					setCertificateChildren(certStatuses);
-				} else {
-					certStatuses[key] = 'failed';
-					ToastsStore.error('Failed to generate certificate');
-					setCertificateChildren(certStatuses);
-				}
-			})
-			.catch(() => {
-				ToastsStore.error('Failed to generate certificate');
-				certStatuses[key] = 'failed';
-				console.log(certStatuses, key, certStatuses[key]);
-				setCertificateChildren(certStatuses);
-			});
-	}
-	function getPatientData(i) {
-		if (typeof appointmentData !== 'undefined' && appointmentData !== null) {
-			if (
-				Array.isArray(appointmentData.booking_users) &&
-				typeof appointmentData.booking_users[i] !== 'undefined'
-			) {
-				return appointmentData.booking_users[i];
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
 	return (
 		<React.Fragment>
 			<DocModal
@@ -286,7 +226,7 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 										<DocButton
 											text='Issue Certificate'
 											color='pink'
-											onClick={certificateAddChild}
+											onClick={() => setDisplayCertificates(true)}
 										/>
 										<DocModal
 											title={isRapidTest ? 'Test Result' : 'Sample Taken'}
@@ -315,29 +255,25 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 											}
 										/>
 									</div>
-									{certificateChildren.length === 3 && (
-										<div className='row no-margin'>
-											<p className='error'>Maximum 3 certificates per appointment</p>
-										</div>
-									)}
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className='row space-around' style={{ flexWrap: 'wrap' }}>
-					{certificateChildren.length !== 0 &&
-						certificateChildren.map((status, key) =>
-							status === 'pending' || status === 'failed' ? (
-								<CertificatesAaron
-									key={key}
-									submit={sendResult}
-									i={key}
-									statusMessage={status}
-									patient_data={getPatientData(key - 1)}
-								/>
-							) : null
-						)}
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'space-around',
+						flexWrap: 'wrap',
+						alignItems: 'flex-start !important',
+					}}
+				>
+					{displayCertificates &&
+						!!appointmentData &&
+						!!appointmentData.booking_users &&
+						appointmentData.booking_users.map((user, i) => (
+							<CertificatesAaron key={i} patient_data={user} appointmentId={appointmentId} />
+						))}
 				</div>
 			</div>
 		</React.Fragment>
