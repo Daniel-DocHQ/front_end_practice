@@ -10,6 +10,7 @@ const bookingUserDataService = {
 	getRoleProfile,
 	createRoleProfile,
 	updateProfileData,
+	createShippingDetails,
 	submitHealthAssessment,
 	getTestResultHistory,
 	getOrganisationRoleProfile,
@@ -309,6 +310,48 @@ function updateProfileData(auth_token, body) {
 				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
 		} else if (typeof auth_token === 'undefined') {
 			reject({ success: false, error: 'Unable to authenticate user.', authenticated: false });
+		} else {
+			resolve({ success: false, error: 'Missing Details' });
+		}
+	});
+}
+
+function createShippingDetails(auth_token, body) {
+	function isValid(obj) {
+		return (
+			obj &&
+			obj.role_id &&
+			obj.organisation_profile_id &&
+			obj.shipping_details &&
+			obj.shipping_details.name &&
+			obj.shipping_details.address_1 &&
+			obj.shipping_details.city &&
+			obj.shipping_details.county &&
+			obj.shipping_details.postcode
+		);
+	}
+	return new Promise((resolve, reject) => {
+		if (auth_token && body && isValid(body)) {
+			axios({
+				url: `${baseURL}/roles/shipping`,
+				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },
+				data: body,
+				method: 'post',
+			})
+				.then(response => {
+					if (response.status === 200 || response.data.status === 'ok') {
+						resolve({ success: true, role_profile: response.data });
+					} else {
+						// TODO what other responses will they send?!
+						reject({
+							success: false,
+							error: 'An error occurred',
+						});
+					}
+				})
+				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+		} else if (typeof auth_token === 'undefined') {
+			reject({ success: false, error: 'Unable to create role profile.', authenticated: false });
 		} else {
 			resolve({ success: false, error: 'Missing Details' });
 		}

@@ -210,10 +210,32 @@ const ShippingInformation = ({}) => {
 							message: 'Error saving shipping details',
 						});
 					});
-			} else {
+			} else if (
+				!!role_profile &&
+				!!role_profile.shipping_details &&
+				!!role_profile.shipping_details.name
+			) {
 				body.shipping_details.id = shipping_details.id;
 				bookingUserDataService
 					.updateProfileData(token, body)
+					.then(result => {
+						if (result.success && result.role_profile) {
+							setRoleProfile(result.role_profile);
+							setStatus({
+								severity: 'success',
+								message: 'Successfully saved shipping details',
+							});
+						}
+					})
+					.catch(() => {
+						setStatus({
+							severity: 'error',
+							message: 'Error saving shipping details',
+						});
+					});
+			} else {
+				bookingUserDataService
+					.createShippingDetails(token, body)
 					.then(result => {
 						if (result.success && result.role_profile) {
 							setRoleProfile(result.role_profile);

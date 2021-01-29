@@ -79,11 +79,9 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 					color='green'
 					linkSrc='/patient/symptom-checker'
 					disabled={
-						role_profile !== 'undefined' &&
-						role_profile !== null &&
-						role_profile.onboarding_complete
-							? false
-							: true
+						!!role_profile &&
+						typeof role_profile.onboarding_complete !== 'undefined' &&
+						!role_profile.onboarding_complete
 					}
 				/>
 			),
@@ -101,7 +99,11 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 					text='Order'
 					color='green'
 					linkSrc='/patient/order-test-kit'
-					disabled={!!role_profile && role_profile.onboarding_complete ? false : true}
+					disabled={
+						!!role_profile &&
+						typeof role_profile.onboarding_complete !== 'undefined' &&
+						!role_profile.onboarding_complete
+					}
 				/>
 			),
 		},
@@ -119,11 +121,9 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 					color='green'
 					linkSrc='/authenticated/book'
 					disabled={
-						role_profile !== 'undefined' &&
-						role_profile !== null &&
-						role_profile.onboarding_complete
-							? false
-							: true
+						!!role_profile &&
+						typeof role_profile.onboarding_complete !== 'undefined' &&
+						!role_profile.onboarding_complete
 					}
 				/>
 			),
@@ -139,11 +139,9 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 					color='green'
 					linkSrc='/patient/test-results'
 					disabled={
-						role_profile !== 'undefined' &&
-						role_profile !== null &&
-						role_profile.onboarding_complete
-							? false
-							: true
+						!!role_profile &&
+						typeof role_profile.onboarding_complete !== 'undefined' &&
+						!role_profile.onboarding_complete
 					}
 				/>
 			),
