@@ -148,7 +148,7 @@ const PersonalInformation = () => {
 const ShippingInformation = ({}) => {
 	const { token, role_profile, setRoleProfile } = useContext(AuthContext);
 	const shipping_details = { ...role_profile.shipping_details };
-	const [isEditable, setIsEditable] = useState(false);
+	const [isEditable, setIsEditable] = useState(typeof shipping_details === 'undefined');
 	const [address_1, setAddress_1] = useState(
 		shipping_details.street_address || shipping_details.address_1 || ''
 	);
@@ -159,6 +159,16 @@ const ShippingInformation = ({}) => {
 	const [errors, setErrors] = useState([]);
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 	const [status, setStatus] = useState(false);
+	useEffect(() => {
+		if (!!shipping_details && Object.keys(shipping_details).length < 1) {
+			if (!!shipping_details.street_address) setAddress_1(shipping_details.street_address);
+			if (!!shipping_details.address_1) setAddress_1(shipping_details.address_1);
+			if (!!shipping_details.address_2) setAddress_2(shipping_details.address_2);
+			if (!!shipping_details.city) setCity(shipping_details.city);
+			if (!!shipping_details.county) setCounty(shipping_details.county);
+			if (!!shipping_details.postcode) setPostcode(shipping_details.postcode);
+		}
+	}, []);
 	useEffect(() => {
 		if (typeof role_profile === 'undefined' || role_profile === null) {
 			bookingUserDataService
