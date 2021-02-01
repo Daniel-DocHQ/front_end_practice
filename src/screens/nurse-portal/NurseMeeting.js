@@ -13,8 +13,8 @@ import DocModal from '../../components/DocModal/DocModal';
 import Box from '../../components/TwilioVideo/Box';
 import EditorWrapper from '../../components/EditorWrapper/EditorWrapper';
 import CertificatesAaron from '../../components/Certificates/CertificatesAaron';
-import { formatCertificateDate } from '../../helpers/formatDate';
-import bookingService from '../../services/bookingService';
+import VerifyPatients from '../../components/VerifyPatients.js/VerifyPatients';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 	const [newNotes, setNewNotes] = useState('');
@@ -33,6 +33,10 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 	const [endCall, setEndCall] = useState(false);
 	const [imgVisible, setImgVisible] = useState(false);
 	const [displayCertificates, setDisplayCertificates] = useState(false);
+	const [hasVerifiedPatients, setHasVerifiedPatients] = useState(false);
+	const verifiedPatients = useCallback(() => {
+		setHasVerifiedPatients(true);
+	}, []);
 	useEffect(() => {
 		if (endCall) {
 			setTimeout(setEndCall(false), 3000);
@@ -107,7 +111,7 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 						result && result.appointment && result.appointment.type === 'video_gp'
 					);
 					setAppointmentStartTime(new Date(result.appointment.start_time).toLocaleTimeString());
-					setPatientData(result.appointment.booking_user);
+					setPatientData(result.appointment.booking_users);
 					if (result.appointment.booking_user.email) {
 						getPatientTestResults(result.appointment.booking_user.email);
 					}
@@ -193,70 +197,80 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 					)}
 					<div className='doc-container' style={{ width: '40%' }}>
 						<div className={`patient-notes-container ${isVideo ? '' : 'face-to-face'}`}>
-							<PatientData
-								patientData={patientData}
-								testKitId={testKitId}
-								appointmentStartTime={appointmentStartTime}
-								appointmentId={appointmentId}
-							/>
-							<div className='appointment-notes'>
-								<div className='row space-between'>
-									<h2 className='no-margin'>Appointment Notes</h2>
-									<DocButton text='Submit Notes' color='green' onClick={updateNotes} />
-								</div>
-								<EditorWrapper updateContent={setNewNotes} />
-								{!captureDisabled && (
-									<div className='row space-between'>
-										<h3 className='no-margin'>Captured Image: </h3>
-										{typeof imageSrc === 'undefined' && <p>No image taken</p>}
-										{typeof imageSrc !== 'undefined' && (
-											<img
-												src={imageSrc}
-												className='expanding-image'
-												style={{ maxWidth: '100px' }}
-												alt='Patients test kit'
-												onClick={() => setImgVisible(true)}
-											/>
+							{hasVerifiedPatients ? (
+								<React.Fragment>
+									<PatientData
+										patientData={patientData}
+										testKitId={testKitId}
+										appointmentStartTime={appointmentStartTime}
+										appointmentId={appointmentId}
+									/>
+									<div className='appointment-notes'>
+										<div className='row space-between'>
+											<h2 className='no-margin'>Appointment Notes</h2>
+											<DocButton text='Submit Notes' color='green' onClick={updateNotes} />
+										</div>
+										<EditorWrapper updateContent={setNewNotes} />
+										{!captureDisabled && (
+											<div className='row space-between'>
+												<h3 className='no-margin'>Captured Image: </h3>
+												{typeof imageSrc === 'undefined' && <p>No image taken</p>}
+												{typeof imageSrc !== 'undefined' && (
+													<img
+														src={imageSrc}
+														className='expanding-image'
+														style={{ maxWidth: '100px' }}
+														alt='Patients test kit'
+														onClick={() => setImgVisible(true)}
+													/>
+												)}
+												<DocButton text='Upload Image' color='green' onClick={uploadImage} />
+											</div>
 										)}
-										<DocButton text='Upload Image' color='green' onClick={uploadImage} />
+										<div className='appointment-buttons'>
+											<div className='row'>
+												<DocButton
+													text='Issue Certificate'
+													color='pink'
+													onClick={() => setDisplayCertificates(true)}
+												/>
+												<DocModal
+													title={isRapidTest ? 'Test Result' : 'Sample Taken'}
+													isVisible={isVisible}
+													onClose={() => {
+														setIsVisible(false);
+													}}
+													content={
+														isRapidTest ? (
+															<RapidTest
+																testKitId={testKitId}
+																respond={value => {
+																	updateTestKit(value);
+																	setIsVisible(false);
+																}}
+															/>
+														) : (
+															<SampleTaken
+																testKitId={testKitId}
+																respond={value => {
+																	updateTestKit(value);
+																	setIsVisible(false);
+																}}
+															/>
+														)
+													}
+												/>
+											</div>
+										</div>
 									</div>
-								)}
-								<div className='appointment-buttons'>
-									<div className='row'>
-										<DocButton
-											text='Issue Certificate'
-											color='pink'
-											onClick={() => setDisplayCertificates(true)}
-										/>
-										<DocModal
-											title={isRapidTest ? 'Test Result' : 'Sample Taken'}
-											isVisible={isVisible}
-											onClose={() => {
-												setIsVisible(false);
-											}}
-											content={
-												isRapidTest ? (
-													<RapidTest
-														testKitId={testKitId}
-														respond={value => {
-															updateTestKit(value);
-															setIsVisible(false);
-														}}
-													/>
-												) : (
-													<SampleTaken
-														testKitId={testKitId}
-														respond={value => {
-															updateTestKit(value);
-															setIsVisible(false);
-														}}
-													/>
-												)
-											}
-										/>
-									</div>
+								</React.Fragment>
+							) : !!patientData ? (
+								<VerifyPatients patients={patientData} updateParent={verifiedPatients} />
+							) : (
+								<div className='row center'>
+									<LoadingSpinner />
 								</div>
-							</div>
+							)}
 						</div>
 					</div>
 				</div>
@@ -354,7 +368,7 @@ const PatientData = ({ patientData, testKitId, appointmentStartTime, appointment
 
 			<div className='row'>
 				<p className='no-margin'>Patient Joining link:</p>
-				<p className='no-margin'>
+				<p className='no-margin' style={{ wordBreak: 'break-all' }}>
 					https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
 				</p>
 			</div>
