@@ -40,6 +40,9 @@ const CertificatesAaron = ({ patient_data, appointmentId }) => {
 	const [errors, setErrors] = useState([]);
 	const [status, setStatus] = useState(); // { severity, message }
 	const [isLoading, setIsLoading] = useState(false);
+
+	const [canCreateCertificate, setCanCreateCertificate] = useState(true);
+
 	useEffect(() => {
 		// runs on init
 		if (!!patient_data) {
@@ -84,7 +87,7 @@ const CertificatesAaron = ({ patient_data, appointmentId }) => {
 	}
 	// used as the form submit function, super lazy but works a charm
 	function proceed() {
-		if (errors.length === 0) {
+		if (errors.length === 0 && canCreateCertificate) {
 			sendResult({
 				forename,
 				surname,
@@ -123,6 +126,7 @@ const CertificatesAaron = ({ patient_data, appointmentId }) => {
 					ToastsStore.success('Generated certificate');
 					setStatus({ severity: 'success', message: 'Successfully generated certificate.' });
 					setIsLoading(false);
+					setCanCreateCertificate(false);
 				} else {
 					ToastsStore.error('Failed to generate certificate');
 					setStatus({
@@ -314,7 +318,26 @@ const CertificatesAaron = ({ patient_data, appointmentId }) => {
 						<LoadingSpinner />
 					</div>
 				)}
-				{!!status && !!status.severity && status.severity === 'success' ? null : (
+				{!!status && !!status.severity && status.severity === 'success' ? (
+					canCreateCertificate ? (
+						<div className='row flex-end'>
+							<DocButton text='Submit' color='green' onClick={proceed} />
+						</div>
+					) : (
+						<div className='row flex-end'>
+							<DocButton
+								text='Reissue Certificate'
+								color='pink'
+								flat
+								onClick={() => {
+									setCanCreateCertificate(true);
+									setStatus();
+								}}
+								style={{ textDecoration: 'underline', textDecorationColor: 'var(--doc-pink)' }}
+							/>
+						</div>
+					)
+				) : (
 					<div className='row flex-end'>
 						<DocButton text='Submit' color='green' onClick={proceed} />
 					</div>
