@@ -146,13 +146,14 @@ const PersonalInformation = () => {
 	);
 };
 const ShippingInformation = ({}) => {
-	const { token, role_profile, setRoleProfile } = useContext(AuthContext);
-	const shipping_details = { ...role_profile.shipping_details };
-	const [isEditable, setIsEditable] = useState(typeof shipping_details === 'undefined');
-	const [address_1, setAddress_1] = useState(
-		shipping_details.street_address || shipping_details.address_1 || ''
+	const { user, roles, organisation_profile, token, role_profile, setRoleProfile } = useContext(
+		AuthContext
 	);
-	const [address_2, setAddress_2] = useState(shipping_details.address_2 || '');
+	const shipping_details =
+		!!role_profile && !!role_profile.shipping_details ? { ...role_profile.shipping_details } : {};
+	const [isEditable, setIsEditable] = useState(!!shipping_details);
+	const [address_1, setAddress_1] = useState('');
+	const [address_2, setAddress_2] = useState('');
 	const [city, setCity] = useState(shipping_details.city || '');
 	const [county, setCounty] = useState(shipping_details.county || '');
 	const [postcode, setPostcode] = useState(shipping_details.postcode || '');
@@ -168,6 +169,8 @@ const ShippingInformation = ({}) => {
 			if (!!shipping_details.county) setCounty(shipping_details.county);
 			if (!!shipping_details.postcode) setPostcode(shipping_details.postcode);
 		}
+		if (!!organisation_profile && !!organisation_profile.id)
+			shipping_details.organisation_profile_id = organisation_profile.id;
 	}, []);
 	useEffect(() => {
 		if (typeof role_profile === 'undefined' || role_profile === null) {
@@ -203,15 +206,22 @@ const ShippingInformation = ({}) => {
 	function proceed() {
 		if (errors.length === 0) {
 			const body = {
-				shipping_details: { address_1, address_2, city, county, postcode },
+				shipping_details: { ...shipping_details, address_1, address_2, city, county, postcode },
 			};
-			if (typeof role_profile === 'undefined' || role_profile === null) {
+			if (!!roles && !!roles[0] && !!roles[0].id) body.role_id = roles[0].id;
+			if (!!user && !!user.id) body.user_id = user.id;
+			if (!!organisation_profile && !!organisation_profile.id)
+				body.organisation_profile_id = organisation_profile.id;
+			if (!!role_profile) {
 				bookingUserDataService
 					.createRoleProfile(token, body)
 					.then(result => {
 						if (result.success && result.role_profile) {
 							setRoleProfile(result.role_profile);
-							setStatus({ severity: 'success', message: 'Successfully saved shipping details' });
+							setStatus({
+								severity: 'success',
+								message: 'Successfully saved shipping details',
+							});
 						}
 					})
 					.catch(() => {

@@ -40,7 +40,11 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 	];
 	const cards = [
 		{
-			display: typeof role_profile !== 'undefined',
+			display: !!role_profile
+				? true
+				: !!role_profile.shipping_details && Object.keys(role_profile.shipping_details).length === 0
+				? true
+				: false,
 			title: 'Shipping Info',
 			icon: <img src={ShippingIcon} alt='Complete Profile' />,
 			content: 'Please complete your profile with shipping information to order your test kit.',

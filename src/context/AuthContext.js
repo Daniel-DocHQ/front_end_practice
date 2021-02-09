@@ -10,10 +10,8 @@ export default class AuthContextProvider extends Component {
 			token: null,
 			user: null,
 			role: null,
-            role_profile: {
-                shipping_details: {},
-            },
-			role_data: {},
+			role_profile: null,
+			role_data: null,
 			organisation_profile: null,
 			hra_data: null,
 		};
@@ -29,7 +27,13 @@ export default class AuthContextProvider extends Component {
 
 		function logout() {
 			localStorage.clear();
-			this.setState({ isAuthenticated: false, token: null, user: null, role: null });
+			this.setState({
+				isAuthenticated: false,
+				token: null,
+				user: null,
+				role: null,
+				role_data: null,
+			});
 			window.localStorage.clear();
 		}
 		function setToken(token) {
