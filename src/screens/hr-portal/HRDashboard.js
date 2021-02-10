@@ -5,17 +5,9 @@ import { AuthContext } from '../../context/AuthContext';
 import bookingUserDataService from '../../services/bookingUserDataService';
 import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 import HomepageCards from '../../components/HomepageCards/HomepageCards';
-import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
-const appBarTheme = createMuiTheme({
-	overrides: {
-		MuiTabs: {
-			root: {
-				color: 'var(--doc-white) !important',
-			},
-		},
-	},
-});
+import { appBarTheme } from '../../helpers/themes/appBarTheme';
+
 const HRDashboard = ({}) => {
 	const { role_profile, setRoleProfile, token, organisation_profile } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 export const AuthContext = React.createContext();
 
 export default class AuthContextProvider extends Component {
@@ -10,6 +10,9 @@ export default class AuthContextProvider extends Component {
 			token: null,
 			user: null,
 			role: null,
+			role_profile: {
+			},
+			role_data: {},
 			role_profile: null,
 			role_data: null,
 			organisation_profile: null,
@@ -126,3 +129,7 @@ export default class AuthContextProvider extends Component {
 		);
 	}
 }
+export const useToken = () => {
+	const { token } = useContext(AuthContext);
+	return token;
+};

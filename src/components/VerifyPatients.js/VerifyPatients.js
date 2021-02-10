@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import DocButton from '../DocButton/DocButton';
 
 const VerifyPatients = ({ patients, updateParent }) => {

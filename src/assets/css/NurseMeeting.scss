@@ -1,7 +1,17 @@
 .patient-notes-container {
 	flex: 1;
 	padding: 1rem;
-
+	align-self: flex-start;
+	.tab-container {
+		min-height: 70vh;
+		background-color: var(--doc-white);
+		border-radius: 5px;
+		overflow: hidden;
+		.tab-content-container {
+			margin-top: 20px;
+			padding: 10px;
+		}
+	}
 	.appointment-notes {
 		display: flex;
 		flex-direction: column;

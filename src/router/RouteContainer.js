@@ -22,9 +22,9 @@ import { StepperContainer } from '../components/BookingEngine/Stepper';
 import Unsupported from '../screens/Unsupported';
 import Meeting from '../screens/Meeting';
 import NurseDashboard from '../screens/nurse-portal/NurseDashboard';
-import NurseMeeting from '../screens/nurse-portal/NurseMeeting';
 
 import BookingEngine from '../components/BookingEngineAuthed/BookingEngine';
+import NurseMeeting2 from '../screens/nurse-portal/NurseMeeting2';
 const { isSupported } = require('twilio-video');
 
 const RouteContainer = () => {
@@ -155,12 +155,12 @@ const RouteHandler = () => {
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/video-appointment' requiredRole='practitioner'>
 				<Layout title='Video Appointment'>
-					<NurseMeeting isVideo={true} {...ctx} />
+					<NurseMeeting2 isVideo={true} {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/face-to-face-appointment' requiredRole='practitioner'>
 				<Layout title='Appointment'>
-					<NurseMeeting isVideo={false} {...ctx} />
+					<NurseMeeting2 isVideo={false} {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<Route path='/practitioner/*'>

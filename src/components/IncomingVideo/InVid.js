@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { AppointmentContext } from '../../context/AppointmentContext';
 import './IncomingVideo.scss';
 
-const InVid = ({ updateImageData, takePhoto, isPhotoMode, participant }) => {
+const InVid = ({ takePhoto, isPhotoMode, participant }) => {
+	const { storeImage } = useContext(AppointmentContext);
 	const containerRef = useRef();
 	const [takingPhoto, setTakingPhoto] = useState(false);
 	const canvasRef = useRef();
@@ -16,13 +18,10 @@ const InVid = ({ updateImageData, takePhoto, isPhotoMode, participant }) => {
 	}
 
 	function handleCapture() {
-		console.log('captured inc');
 		console.log(canvasRef, canvasRef.current, videoRef, videoRef.current);
 		const context = canvasRef.current.getContext('2d');
 		context.drawImage(videoRef.current, 0, 0, 1280, 720);
-		localStorage.setItem('appointmentImage', canvasRef.current.toDataURL('image/webp'));
-		console.log(canvasRef.current.toDataURL('image/webp'));
-		updateImageData(canvasRef.current.toDataURL('image/webp'));
+		storeImage(canvasRef.current.toDataURL('image/webp'));
 	}
 
 	const trackpubsToTracks = trackMap =>

@@ -22,9 +22,11 @@ import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import { ToastsStore } from 'react-toasts';
 import { Alert } from '@material-ui/lab';
+import { useAppointmentId } from '../../context/AppointmentContext';
 
-const CertificatesAaron = ({ patient_data, appointmentId }) => {
+const CertificatesAaron = ({ patient_data }) => {
 	const { user, token } = useContext(AuthContext);
+	const appointmentId = useAppointmentId();
 	// Form fields
 	const [forename, setForename] = useState('');
 	const [surname, setSurname] = useState('');
@@ -87,7 +89,10 @@ const CertificatesAaron = ({ patient_data, appointmentId }) => {
 	}
 	// used as the form submit function, super lazy but works a charm
 	function proceed() {
-		if (errors.length === 0 && canCreateCertificate) {
+		if (
+			canCreateCertificate &&
+			(errors.length === 0 || (errors.length === 1 && errors.includes('security-document')))
+		) {
 			sendResult({
 				forename,
 				surname,
@@ -299,7 +304,7 @@ const CertificatesAaron = ({ patient_data, appointmentId }) => {
 						label='Passport number'
 						onChange={setPassportNumber}
 						inputProps={{ minLength: '5' }}
-						required={true}
+						required={false}
 						updateStatus={updateErrors}
 					/>
 				</div>
