@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import FullScreenOverlay from '../components/FullScreenOverlay/FullScreenOverlay';
 import DocButton from '../components/DocButton/DocButton';
-import { evaluateDevice } from '../helpers/utils';
 import { Redirect } from 'react-router-dom';
 import { PatientHeader } from '../components/VideoCall/TwillioVideoCall';
 import Box from '../components/TwilioVideo/Box';
@@ -15,12 +14,6 @@ class Meeting extends React.Component {
 		};
 		this.isVista = window.location.href.includes('vista');
 		this.displayContent = this.displayContent.bind(this);
-	}
-	componentWillMount() {
-		const evaluation = evaluateDevice();
-		if (evaluation && evaluation.isWebRTCSupported) {
-			this.setState({ isWebRTCSupported: evaluation.isWebRTCSupported });
-		}
 	}
 	displayContent() {
 		if (this.state.questionsVisible) {
@@ -39,7 +32,6 @@ class Meeting extends React.Component {
 	render() {
 		return (
 			<React.Fragment>
-				{this.state.isWebRTCSupported === false ? <Redirect to='/unsupported-browser' /> : null}
 				{this.state.questionsVisible ? (
 					<React.Fragment>
 						<PatientHeader isVista={this.isVista} />
