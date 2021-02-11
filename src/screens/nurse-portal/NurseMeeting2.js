@@ -191,7 +191,7 @@ const AppointmentActions = () => {
 
 	return (
 		<div className='appointment-notes'>
-			<div className='row'>
+			<div className='row space-between'>
 				<p className='no-margin'>Patient Joining link:</p>
 				<p className='no-margin' style={{ wordBreak: 'break-all' }}>
 					https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
