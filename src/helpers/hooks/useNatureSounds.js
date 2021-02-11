@@ -5,7 +5,7 @@ const styles = {
 		position: 'absolute',
 		zIndex: '4200',
 		right: '20px',
-		bottom: '20px',
+		top: '90px',
 	},
 	toggleButton: {
 		height: '50px',
