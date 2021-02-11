@@ -6,6 +6,7 @@ import InVid from '../IncomingVideo/InVid';
 import OutVid from '../OutgoingVideo/OutVid';
 import Video from 'twilio-video';
 import { Redirect } from 'react-router-dom';
+import useNatureSounds from '../../helpers/hooks/useNatureSounds';
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
 const vistaLogo = require('../../assets/images/vista-logo.png');
@@ -13,6 +14,8 @@ const vistaLogo = require('../../assets/images/vista-logo.png');
 const { isSupported } = require('twilio-video');
 
 function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, captureDisabled }) {
+	const sound = useNatureSounds();
+	const [isSoundPlayable, setIsSoundPlayable] = useState(!isNurse);
 	const [isPhotoMode, setIsPhotoMode] = useState(false);
 	const [takePhoto, setTakePhoto] = useState(false);
 	const [message, setMessage] = useState(
@@ -36,6 +39,7 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 	const [isMuted, setIsMuted] = useState(false);
 	useEffect(() => {
 		const participantConnected = participant => {
+			if (isSoundPlayable) setIsSoundPlayable(false);
 			setMessage(isNurse ? 'Patient Connected' : 'Medical Professional Connected');
 			setParticipants(prevParticipants => [...prevParticipants, participant]);
 		};
@@ -88,6 +92,7 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 	};
 	return isSupported ? (
 		<React.Fragment>
+			{isSoundPlayable && <>{sound}</>}
 			<div className='video-call-container'>
 				<React.Fragment>
 					{typeof isNurse !== 'undefined' && !isNurse ? <PatientHeader /> : null}
