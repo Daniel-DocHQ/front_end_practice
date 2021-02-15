@@ -20,6 +20,18 @@ const PastAppointmentTable = ({ appointments, refresh }) => {
 	const [isVisible, setIsVisible] = useState(false);
 	const [visibleId, setVisibleId] = useState();
 
+	function isDataValidEnoughToDisplay(obj) {
+		return (
+			!!obj &&
+			!!obj.booking_user &&
+			!!obj.booking_user.first_name &&
+			!!obj.booking_user.last_name &&
+			!!obj.type &&
+			!!obj.start_time &&
+			!!obj.id
+		);
+	}
+
 	return (
 		<React.Fragment>
 			<div>
@@ -49,24 +61,25 @@ const PastAppointmentTable = ({ appointments, refresh }) => {
 							{typeof appointments !== 'undefined' &&
 								typeof appointments === 'object' &&
 								appointments.length > 0 &&
-								appointments.map(appointment => (
-									<TableRow key={appointment.id}>
-										<TableCell align='left'>
-											{`${appointment.booking_user.first_name} ${appointment.booking_user.last_name}`}
-										</TableCell>
-										<TableCell align='center' style={styles.smallCol}>
-											{appointment.type}
-										</TableCell>
-										<TableCell align='center' style={styles.medCol}>
-											{new Date(appointment.start_time).toLocaleDateString()}
-										</TableCell>
-										<TableCell align='center' style={styles.smallCol}>
-											<LinkButton
-												text='Join'
-												color='green'
-												linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
-											/>
-											{/* {appointment && typeof appointment.notes !== 'undefined' ? (
+								appointments.map(appointment =>
+									isDataValidEnoughToDisplay(appointment) ? (
+										<TableRow key={appointment.id}>
+											<TableCell align='left'>
+												{`${appointment.booking_user.first_name} ${appointment.booking_user.last_name}`}
+											</TableCell>
+											<TableCell align='center' style={styles.smallCol}>
+												{appointment.type}
+											</TableCell>
+											<TableCell align='center' style={styles.medCol}>
+												{new Date(appointment.start_time).toLocaleDateString()}
+											</TableCell>
+											<TableCell align='center' style={styles.smallCol}>
+												<LinkButton
+													text='Join'
+													color='green'
+													linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+												/>
+												{/* {appointment && typeof appointment.notes !== 'undefined' ? (
 												<DocButton
 													text='View'
 													color='green'
@@ -85,9 +98,10 @@ const PastAppointmentTable = ({ appointments, refresh }) => {
 											) : (
 												<p>No Notes</p>
 											)} */}
-										</TableCell>
-									</TableRow>
-								))}
+											</TableCell>
+										</TableRow>
+									) : null
+								)}
 							{typeof appointments !== 'object' || appointments.length === 0 ? (
 								<TableRow>
 									<TableCell>
