@@ -9,6 +9,7 @@ export default class AppointmentContextProvider extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			type: null,
 			appointmentId: null,
 			booking_users: null,
 			appointmentDetails: null,
@@ -45,13 +46,14 @@ export default class AppointmentContextProvider extends Component {
 					if (result.success && result.appointment) {
 						const isCaptureDisabled =
 							result && result.appointment && result.appointment.type === 'video_gp';
-						const { booking_users, testing_kit_id, appointmentId: id } = result.appointment;
+						const { booking_users, testing_kit_id, type, appointmentId: id } = result.appointment;
 						this.setState({
 							isCaptureDisabled,
 							booking_users,
 							testing_kit_id,
 							appointmentDetails: result.appointment,
 							appointmentId,
+							type,
 						});
 						ToastsStore.success(`Found appointment details`);
 					} else {
@@ -135,6 +137,7 @@ export default class AppointmentContextProvider extends Component {
 		return (
 			<AppointmentContext.Provider
 				value={{
+					type: this.state.type,
 					appointmentId: this.state.appointmentId,
 					booking_users: this.state.booking_users,
 					appointmentDetails: this.state.appointmentDetails,
@@ -153,6 +156,10 @@ export default class AppointmentContextProvider extends Component {
 export const useAppointmentId = () => {
 	const { appointmentId } = useContext(AppointmentContext);
 	return appointmentId;
+};
+export const useAppointmentType = () => {
+	const { type } = useContext(AppointmentContext);
+	return type;
 };
 export const useAppointmentDetails = () => {
 	const { appointmentDetails } = useContext(AppointmentContext);

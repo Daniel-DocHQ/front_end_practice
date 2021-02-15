@@ -43,6 +43,21 @@
 	}
 }
 
+.red {
+	@include btn;
+	background-color: var(--doc-red);
+	border: thin var(--doc-red) solid;
+	color: var(--doc-white);
+
+	&:hover,
+	&:active {
+		background-color: var(--doc-red);
+		box-shadow: none;
+		border-color: var(--doc-red);
+		opacity: 0.8;
+	}
+}
+
 .dark-grey {
 	@include btn;
 	background-color: var(--doc-dark-grey);

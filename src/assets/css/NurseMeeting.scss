@@ -4,19 +4,22 @@
 	align-self: flex-start;
 	.tab-container {
 		min-height: 70vh;
+		display: flex;
+		flex-direction: column;
 		background-color: var(--doc-white);
 		border-radius: 5px;
 		overflow: hidden;
 		max-width: 40vw;
-		.tab-content-container {
-			margin-top: 20px;
-			padding: 10px;
-		}
+		padding: 20px;
 	}
 	.appointment-notes {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+	}
+	.tab-row-text {
+		margin: 0;
+		margin-top: 1em;
 	}
 	.appointment-buttons {
 		width: 100%;

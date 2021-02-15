@@ -245,7 +245,7 @@ const CertificatesAaron = ({ patient_data }) => {
 					<MaterialCheckbox
 						value={security_checked}
 						onChange={setSecurity_checked}
-						labelComponent='Security check completed'
+						labelComponent='ID document checked'
 					/>
 				</div>
 				{attemptedSubmit && !security_checked && (
@@ -276,6 +276,22 @@ const CertificatesAaron = ({ patient_data }) => {
 					</div>
 				)}
 				<div className='row'>
+					<TextInputElement
+						value={passport_number}
+						id='passport-number'
+						label='Passport number'
+						onChange={setPassportNumber}
+						inputProps={{ minLength: '5' }}
+						required={false}
+						updateStatus={updateErrors}
+					/>
+				</div>
+				{attemptedSubmit && errors.includes('passport number') && (
+					<div className='row no-margin'>
+						<p className='error'>Enter patient passport number</p>
+					</div>
+				)}
+				<div className='row'>
 					<FormControl variant='filled' style={{ width: '100%' }}>
 						<InputLabel id='test-result-label'>Test Result</InputLabel>
 						<Select
@@ -295,22 +311,6 @@ const CertificatesAaron = ({ patient_data }) => {
 				{attemptedSubmit && errors.includes('test result') && (
 					<div className='row no-margin'>
 						<p className='error'>You must enter a result</p>
-					</div>
-				)}
-				<div className='row'>
-					<TextInputElement
-						value={passport_number}
-						id='passport-number'
-						label='Passport number'
-						onChange={setPassportNumber}
-						inputProps={{ minLength: '5' }}
-						required={false}
-						updateStatus={updateErrors}
-					/>
-				</div>
-				{attemptedSubmit && errors.includes('passport number') && (
-					<div className='row no-margin'>
-						<p className='error'>Enter patient passport number</p>
 					</div>
 				)}
 				{!!status && !!status.severity && !!status.message && !isLoading && (

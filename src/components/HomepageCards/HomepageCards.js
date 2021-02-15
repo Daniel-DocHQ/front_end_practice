@@ -42,7 +42,7 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 		{
 			display: !!role_profile
 				? true
-				: !!role_profile.shipping_details && Object.keys(role_profile.shipping_details).length === 0
+				: !!role_profile && !!role_profile.shipping_details && Object.keys(role_profile.shipping_details).length === 0
 				? true
 				: false,
 			title: 'Shipping Info',

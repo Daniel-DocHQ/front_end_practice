@@ -240,21 +240,6 @@ function releaseAppointment(auth_token, slot_id) {
 	});
 }
 function sendResult(auth_token, appointment_id, body) {
-	function isValid(obj) {
-		return (
-			obj &&
-			obj.forename &&
-			obj.surname &&
-			obj.email &&
-			obj.dob &&
-			obj.sex &&
-			obj.security_checked &&
-			obj.security_document &&
-			obj.result &&
-			obj.medicalprofessional &&
-			obj.passport_number
-		);
-	}
 	return new Promise((resolve, reject) => {
 		body.supervisor = 'Dr. Khaled Helmy';
 		body.gmc = '2271298';
@@ -263,7 +248,7 @@ function sendResult(auth_token, appointment_id, body) {
 		body.product = 'Roche Rapid Antigen';
 		body.type = 'SARS-CoV-2';
 		body.metadata = { ...body };
-		if (auth_token && appointment_id && isValid(body)) {
+		if (auth_token && appointment_id) {
 			axios({
 				url: `${baseURL}/${appointment_id}/booking-users`,
 				method: 'PUT',
