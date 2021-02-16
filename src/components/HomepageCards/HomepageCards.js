@@ -16,8 +16,6 @@ const HomepageCards = () => {
 	const roleName = useRoleName();
 	const role_profile = useRoleProfile();
 	const organisation_profile = useOrgProfile();
-	const postComplete =
-		!!role_profile && !!role_profile.onboarding_complete && role_profile.onboarding_complete;
 	const hasShippingDetails =
 		!!role_profile &&
 		!!role_profile.shipping_details &&
@@ -57,8 +55,8 @@ const HomepageCards = () => {
 			content: 'Please complete your profile with shipping information to order your test kit.',
 			actions: (
 				<LinkButton
-					text={postComplete ? 'View' : 'Complete'}
-					color={postComplete ? 'green' : 'pink'}
+					text={onboardingComplete ? 'View' : 'Complete'}
+					color={onboardingComplete ? 'green' : 'pink'}
 					linkSrc='/patient/profile'
 				/>
 			),
@@ -70,9 +68,9 @@ const HomepageCards = () => {
 			content: `Please complete your profile with some information about your health.`,
 			actions: (
 				<LinkButton
-					text={postComplete ? 'View' : 'Complete'}
-					color={postComplete ? 'green' : 'pink'}
-					linkSrc={postComplete ? '/patient/profile' : '/patient/health-assessment'}
+					text={onboardingComplete ? 'View' : 'Complete'}
+					color={onboardingComplete ? 'green' : 'pink'}
+					linkSrc={onboardingComplete ? '/patient/profile' : '/patient/health-assessment'}
 				/>
 			),
 		},
