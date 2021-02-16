@@ -41,11 +41,13 @@ const ProfileRow = ({ title, content }) => (
 const PersonalInformation = () => {
 	const { token, user, setUser, setRole } = useContext(AuthContext);
 	const [isEditable, setIsEditable] = useState(false);
-	const [first_name, setFirst_name] = useState(user.first_name || '');
-	const [last_name, setLast_name] = useState(user.last_name || '');
-	const [date_of_birth, setDateOfBirth] = useState(user.date_of_birth || '');
-	const [email, setEmail] = useState(user.email || '');
-	const [telephone, setTelephone] = useState(user.telephone || '');
+	const [first_name, setFirst_name] = useState(!!user && !!user.first_name ? user.first_name : '');
+	const [last_name, setLast_name] = useState(!!user && !!user.last_name ? user.last_name : '');
+	const [date_of_birth, setDateOfBirth] = useState(
+		!!user && !!user.date_of_birth ? user.date_of_birth : new Date()
+	);
+	const [email, setEmail] = useState(!!user && !!user.email ? user.email : '');
+	const [telephone, setTelephone] = useState(!!user && !!user.telephone ? user.telephone : '');
 	const [errors, setErrors] = useState([]);
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
@@ -56,13 +58,8 @@ const PersonalInformation = () => {
 				.then(result => {
 					if (result.success && result.user) {
 						setUser(result.user);
-						if (
-							result.user &&
-							typeof result.user.roles !== 'undefined' &&
-							typeof result.user.roles[0] !== 'undefined' &&
-							typeof result.user.roles[0].name !== 'undefined'
-						) {
-							setRole(result.user.roles[0].name);
+						if (!!result.user && !!result.user.roles && !!result.user.roles[0]) {
+							setRole(result.user.roles[0]);
 						}
 					}
 				})
@@ -419,33 +416,6 @@ const HRAView = () => {
 					<h3 className='no-margin'>About You</h3>
 				</div>
 				<div>
-					<p>No data to display</p>
-				</div>
-			</div>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>Your Health</h3>
-				</div>
-				<div>
-					<p>No data to display</p>
-				</div>
-			</div>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>Family Health</h3>
-				</div>
-				<div>
-					<p>No data to display</p>
-				</div>
-			</div>
-		</React.Fragment>
-	) : (
-		<React.Fragment>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>About You</h3>
-				</div>
-				<div>
 					<div className='row' style={{ flexWrap: 'wrap' }}>
 						<TextInputElement
 							label='Height (cm)'
@@ -648,6 +618,33 @@ const HRAView = () => {
 							onChange={() => null}
 						/>
 					</div>
+				</div>
+			</div>
+		</React.Fragment>
+	) : (
+		<React.Fragment>
+			<div className='row items-start'>
+				<div className='subtitle-col'>
+					<h3 className='no-margin'>About You</h3>
+				</div>
+				<div>
+					<p>No data to display</p>
+				</div>
+			</div>
+			<div className='row items-start'>
+				<div className='subtitle-col'>
+					<h3 className='no-margin'>Your Health</h3>
+				</div>
+				<div>
+					<p>No data to display</p>
+				</div>
+			</div>
+			<div className='row items-start'>
+				<div className='subtitle-col'>
+					<h3 className='no-margin'>Family Health</h3>
+				</div>
+				<div>
+					<p>No data to display</p>
 				</div>
 			</div>
 		</React.Fragment>
