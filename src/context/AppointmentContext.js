@@ -157,10 +157,6 @@ export const useAppointmentId = () => {
 	const { appointmentId } = useContext(AppointmentContext);
 	return appointmentId;
 };
-export const useAppointmentType = () => {
-	const { type } = useContext(AppointmentContext);
-	return type;
-};
 export const useAppointmentDetails = () => {
 	const { appointmentDetails } = useContext(AppointmentContext);
 	return appointmentDetails;

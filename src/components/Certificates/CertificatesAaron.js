@@ -32,7 +32,7 @@ const CertificatesAaron = ({ patient_data }) => {
 	const [surname, setSurname] = useState('');
 	const [email, setEmail] = useState('');
 	const [dob, setDob] = useState('');
-	const [sex, setSex] = useState();
+	const [sex, setSex] = useState('');
 	const [security_checked, setSecurity_checked] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
 	const [result, setResult] = useState('');
@@ -45,19 +45,19 @@ const CertificatesAaron = ({ patient_data }) => {
 
 	const [canCreateCertificate, setCanCreateCertificate] = useState(true);
 
-	function isFieldsValid(obj) {
+	function isValid(obj) {
 		return (
-			obj &&
-			obj.forename &&
-			obj.surname &&
-			obj.email &&
-			obj.dob &&
-			obj.sex &&
-			obj.security_checked &&
-			obj.security_document &&
-			obj.result &&
-			obj.medicalprofessional &&
-			obj.passport_number
+			!!obj &&
+			!!obj.forename &&
+			!!obj.surname &&
+			!!obj.email &&
+			!!obj.dob &&
+			!!obj.sex &&
+			!!obj.security_checked &&
+			!!obj.security_document &&
+			!!obj.result &&
+			!!obj.medicalprofessional &&
+			!!obj.passport_number
 		);
 	}
 
@@ -106,7 +106,7 @@ const CertificatesAaron = ({ patient_data }) => {
 	// used as the form submit function, super lazy but works a charm
 	function proceed() {
 		if (
-			canCreateCertificate && isFieldsValid() &&
+			canCreateCertificate && isValid() &&
 			(errors.length === 0 || (errors.length === 1 && errors.includes('security-document')))
 		) {
 			sendResult({
