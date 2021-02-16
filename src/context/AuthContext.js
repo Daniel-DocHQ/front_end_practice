@@ -93,10 +93,6 @@ export const useRoleProfile = () => {
 	const { role_profile } = useContext(AuthContext);
 	return role_profile;
 };
-export const useRoleProfile = () => {
-	const { role_profile } = useContext(AuthContext);
-	return role_profile;
-};
 export const useUser = () => {
 	const { user } = useContext(AuthContext);
 	return user;

@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
+import { useRoleName } from '../context/AuthContext';
 import getURLParams from '../helpers/getURLParams';
 import authorisationSvc from '../services/authorisationService';
 import bookingUserDataService from '../services/bookingUserDataService';
 
 const VerifyToken = props => {
 	const [isLoading, setIsLoading] = useState(true);
+	const roleName = useRoleName();
 	useEffect(() => {
 		// runs on page load
 		localStorage.clear();

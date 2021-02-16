@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { AuthContext, useOrgProfile } from '../context/AuthContext';
+import { AuthContext, useAuthenticated, useOrgProfile, useRoleName } from '../context/AuthContext';
 
 function PrivateRoute({ children, requiredRole, requiredFlag, ...rest }) {
 	const contextValue = useContext(AuthContext);

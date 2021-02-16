@@ -85,7 +85,12 @@ const HomepageCards = () => {
 			icon: <img src={symptomCheckerIcon} alt='Symptom Checker' />,
 			content: 'Every day you need to complete a symptom checker questionnaire with us.',
 			actions: (
-				<LinkButton text='Complete' color='green' linkSrc='/patient/symptom-checker' disabled={} />
+				<LinkButton
+					text='Complete'
+					color='green'
+					linkSrc='/patient/symptom-checker'
+					disabled={!onboardingComplete}
+				/>
 			),
 		},
 		{
