@@ -1,4 +1,5 @@
 import React from 'react';
+import { useOrgProfile, useRoleName, useRoleProfile } from '../../context/AuthContext';
 import LinkButton from '../DocButton/LinkButton';
 import DocCard from '../DocCard/DocCard';
 import DocCardContainer from '../DocCard/DocCardContainer';
@@ -11,8 +12,18 @@ const HealthProfileIcon = require('../../assets/images/icons/homepage-health-pro
 const TestKitIcon = require('../../assets/images/icons/homepage-test-kit.svg');
 const BookAppointmentIcon = require('../../assets/images/icons/homepage-book-appointment.svg');
 
-const HomepageCards = ({ role, role_profile, organisation_profile }) => {
-	const postComplete = role_profile !== null && role_profile.onboarding_complete === true;
+const HomepageCards = () => {
+	const roleName = useRoleName();
+	const role_profile = useRoleProfile();
+	const organisation_profile = useOrgProfile();
+	const postComplete =
+		!!role_profile && !!role_profile.onboarding_complete && role_profile.onboarding_complete;
+	const hasShippingDetails =
+		!!role_profile &&
+		!!role_profile.shipping_details &&
+		Object.keys(role_profile.shipping_details).length > 0;
+	const onboardingComplete =
+		!!role_profile && !!role_profile.onboarding_complete && !role_profile.onboarding_complete;
 
 	const adminCards = [
 		{
@@ -40,11 +51,7 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 	];
 	const cards = [
 		{
-			display: !!role_profile
-				? true
-				: !!role_profile.shipping_details && Object.keys(role_profile.shipping_details).length === 0
-				? true
-				: false,
+			display: !hasShippingDetails,
 			title: 'Shipping Info',
 			icon: <img src={ShippingIcon} alt='Complete Profile' />,
 			content: 'Please complete your profile with shipping information to order your test kit.',
@@ -57,7 +64,7 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 			),
 		},
 		{
-			display: typeof role_profile !== 'undefined',
+			display: !!role_profile,
 			title: 'Health Profile',
 			icon: <img src={HealthProfileIcon} alt='Complete Health Assessment' />,
 			content: `Please complete your profile with some information about your health.`,
@@ -71,30 +78,21 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 		},
 		{
 			display:
-				typeof organisation_profile !== 'undefined' &&
-				organisation_profile !== null &&
-				organisation_profile.daily_check === true,
+				!!organisation_profile &&
+				!!organisation_profile.daily_check &&
+				organisation_profile.daily_check,
 			title: 'Symptom Checker',
 			icon: <img src={symptomCheckerIcon} alt='Symptom Checker' />,
 			content: 'Every day you need to complete a symptom checker questionnaire with us.',
 			actions: (
-				<LinkButton
-					text='Complete'
-					color='green'
-					linkSrc='/patient/symptom-checker'
-					disabled={
-						!!role_profile &&
-						typeof role_profile.onboarding_complete !== 'undefined' &&
-						!role_profile.onboarding_complete
-					}
-				/>
+				<LinkButton text='Complete' color='green' linkSrc='/patient/symptom-checker' disabled={} />
 			),
 		},
 		{
 			display:
-				typeof organisation_profile !== 'undefined' &&
-				organisation_profile !== null &&
-				organisation_profile.order_kit === true,
+				!!organisation_profile &&
+				!!organisation_profile.order_kit &&
+				organisation_profile.order_kit,
 			title: 'Order Home Test Kit',
 			icon: <img src={TestKitIcon} alt='Order Test Kit' />,
 			content: 'You must order a Home Test Kit at least 8 working days prior to your procedure.',
@@ -103,19 +101,15 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 					text='Order'
 					color='green'
 					linkSrc='/patient/order-test-kit'
-					disabled={
-						!!role_profile &&
-						typeof role_profile.onboarding_complete !== 'undefined' &&
-						!role_profile.onboarding_complete
-					}
+					disabled={onboardingComplete}
 				/>
 			),
 		},
 		{
 			display:
-				typeof organisation_profile !== 'undefined' &&
-				organisation_profile !== null &&
-				organisation_profile.order_kit === true,
+				!!organisation_profile &&
+				!!organisation_profile.order_kit &&
+				organisation_profile.order_kit,
 			title: 'Book an Appointment',
 			icon: <img src={BookAppointmentIcon} alt='Order Test Kit' />,
 			content: 'Please book a video appointment to take your swab sample.',
@@ -124,11 +118,7 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 					text='Book'
 					color='green'
 					linkSrc='/authenticated/book'
-					disabled={
-						!!role_profile &&
-						typeof role_profile.onboarding_complete !== 'undefined' &&
-						!role_profile.onboarding_complete
-					}
+					disabled={onboardingComplete}
 				/>
 			),
 		},
@@ -142,11 +132,7 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 					text='View'
 					color='green'
 					linkSrc='/patient/test-results'
-					disabled={
-						!!role_profile &&
-						typeof role_profile.onboarding_complete !== 'undefined' &&
-						!role_profile.onboarding_complete
-					}
+					disabled={onboardingComplete}
 				/>
 			),
 		},
@@ -159,7 +145,7 @@ const HomepageCards = ({ role, role_profile, organisation_profile }) => {
 		},
 	];
 
-	return role === 'manager' ? (
+	return roleName === 'manager' ? (
 		<DocCardContainer>
 			{adminCards.map(({ display, title, icon, content, actions }, i) =>
 				display === true ? (
