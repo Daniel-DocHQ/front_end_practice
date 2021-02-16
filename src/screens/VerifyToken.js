@@ -37,6 +37,8 @@ const VerifyToken = props => {
 									userData.value.user
 								) {
 									props.setUser(userData.value.user);
+									if (!!userData.value.user.roles && !!userData.value.user.roles[0])
+										props.setRole(userData.value.user.roles[0]);
 								}
 								if (
 									orgProfileData.status === 'fulfilled' &&
@@ -54,9 +56,8 @@ const VerifyToken = props => {
 								} else {
 									console.log('profile_not_complete');
 								}
-								setIsLoading(false);
 							})
-							.catch(() => console.log('error'));
+							.catch(() => setIsLoading(false));
 					} else {
 						ToastsStore.error('Invalid login token');
 					}
@@ -71,7 +72,7 @@ const VerifyToken = props => {
 			return '/login';
 		}
 	};
-	return !isLoading ? <Redirect to={pathname} /> : <React.Fragment></React.Fragment>;
+	return !!roleName ? <Redirect to={pathname} /> : <React.Fragment></React.Fragment>;
 };
 
 export default VerifyToken;
