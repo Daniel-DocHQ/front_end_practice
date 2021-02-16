@@ -8,7 +8,7 @@ import existsInArray from '../../helpers/existsInArray';
 import './PatientProfileDetails.scss';
 import MaterialCheckbox from '../MaterialCheckbox/MaterialCheckbox';
 import PhoneNumber from '../FormComponents/PhoneNumber/PhoneNumber';
-import { AuthContext, useToken } from '../../context/AuthContext';
+import { AuthContext, useToken, useUser } from '../../context/AuthContext';
 import bookingUserDataService from '../../services/bookingUserDataService';
 import authorisationSvc from '../../services/authorisationService';
 import Alert from '@material-ui/lab/Alert';
@@ -39,7 +39,9 @@ const ProfileRow = ({ title, content }) => (
 );
 
 const PersonalInformation = () => {
-	const { token, user, setUser, setRole } = useContext(AuthContext);
+	const { setUser, setRole } = useContext(AuthContext);
+	const token = useToken();
+	const user = useUser();
 	const [isEditable, setIsEditable] = useState(false);
 	const [first_name, setFirst_name] = useState(!!user && !!user.first_name ? user.first_name : '');
 	const [last_name, setLast_name] = useState(!!user && !!user.last_name ? user.last_name : '');
@@ -52,7 +54,7 @@ const PersonalInformation = () => {
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
 	useEffect(() => {
-		if (typeof user === 'undefined' || user === null) {
+		if (!!user) {
 			authorisationSvc
 				.getUser(token)
 				.then(result => {
@@ -66,6 +68,15 @@ const PersonalInformation = () => {
 				.catch(err => console.log('error fetching user'));
 		}
 	}, []);
+	useEffect(() => {
+		if (!!user) {
+			if (!!user.first_name) setFirst_name(user.first_name);
+			if (!!user.last_name) setLast_name(user.last_name);
+			if (!!user.email) setEmail(user.email);
+			if (!!user.telephone) setTelephone(user.telephone);
+			if (!!user.date_of_birth) setDateOfBirth(user.date_of_birth);
+		}
+	}, [user]);
 	function updateErrors(isValid, field) {
 		// if valid and in array remove
 		if (isValid && existsInArray(errors, field)) {
