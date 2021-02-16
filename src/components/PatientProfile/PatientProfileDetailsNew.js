@@ -8,7 +8,7 @@ import existsInArray from '../../helpers/existsInArray';
 import './PatientProfileDetails.scss';
 import MaterialCheckbox from '../MaterialCheckbox/MaterialCheckbox';
 import PhoneNumber from '../FormComponents/PhoneNumber/PhoneNumber';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext, useToken } from '../../context/AuthContext';
 import bookingUserDataService from '../../services/bookingUserDataService';
 import authorisationSvc from '../../services/authorisationService';
 import Alert from '@material-ui/lab/Alert';
@@ -396,16 +396,15 @@ const ShippingInformation = ({}) => {
 	);
 };
 const HRAView = () => {
-	const { token, hra_data, setHRAData } = useContext(AuthContext);
+	const token = useToken();
+	const [hra_data, setHRAData] = useState();
 	useEffect(() => {
-		if (typeof hra_data === 'undefined' || hra_data === null) {
+		if (!!token) {
 			bookingUserDataService
 				.getHRAData(token)
 				.then(result => {
 					if (result.success && result.hra_data) {
 						setHRAData(result.hra_data);
-						console.log(result.hra_data);
-					} else {
 					}
 				})
 				.catch(() => console.log('err'));
@@ -413,7 +412,7 @@ const HRAView = () => {
 	}, []);
 
 	// Display only
-	return typeof hra_data === 'undefined' || hra_data === null ? (
+	return !!hra_data ? (
 		<React.Fragment>
 			<div className='row items-start'>
 				<div className='subtitle-col'>

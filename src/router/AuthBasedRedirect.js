@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { useAuthenticated, useRoleName } from '../context/AuthContext';
 
 const AuthBasedRedirect = () => {
-	const { role, isAuthenticated } = useContext(AuthContext);
+	const isAuthenticated = useAuthenticated();
+	const roleName = useRoleName();
 	function pathname() {
-		if (typeof role !== 'undefined' && isAuthenticated) {
-			return `/${role}/dashboard`;
+		if (!!roleName && isAuthenticated) {
+			return `/${roleName}/dashboard`;
 		} else {
 			return '/login';
 		}

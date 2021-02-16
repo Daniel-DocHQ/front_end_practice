@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, useAuthenticated, useOrgProfile, useRoleName } from '../context/AuthContext';
 
 function PrivateRoute({ children, requiredRole, requiredFlag, ...rest }) {
 	const contextValue = useContext(AuthContext);
+	const isAuthenticated = useAuthenticated();
+	const roleName = useRoleName();
+	const organisation_profile = useOrgProfile();
 	const pathname = () => {
-		if (typeof contextValue.role !== 'undefined' && contextValue.isAuthenticated) {
-			return `/${contextValue.role}/dashboard`;
+		if (!!roleName && isAuthenticated) {
+			return `/${roleName}/dashboard`;
 		} else {
 			return '/login';
 		}
@@ -31,19 +34,20 @@ function PrivateRoute({ children, requiredRole, requiredFlag, ...rest }) {
 				if (
 					typeof requiredFlag !== 'undefined' &&
 					typeof requiredRole !== 'undefined' &&
-					contextValue.isAuthenticated &&
-					typeof contextValue.organisation_profile !== 'undefined' &&
-					contextValue.organisation_profile[requiredFlag]
+					isAuthenticated &&
+					!!organisation_profile &&
+					!!organisation_profile[requiredFlag] &&
+					organisation_profile[requiredFlag]
 				) {
 					return addProps();
 				} else if (
 					typeof requiredFlag === 'undefined' &&
 					requiredRole === 'manager' &&
-					contextValue.isAuthenticated &&
-					contextValue.role === 'manager'
+					isAuthenticated &&
+					roleName === 'manager'
 				) {
 					return addProps();
-				} else if (contextValue.isAuthenticated && typeof requiredFlag === 'undefined') {
+				} else if (isAuthenticated && typeof requiredFlag === 'undefined') {
 					return addProps();
 				} else {
 					return <Redirect to={{ pathname }} />;
