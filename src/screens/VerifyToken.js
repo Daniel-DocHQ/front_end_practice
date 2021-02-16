@@ -6,17 +6,14 @@ import authorisationSvc from '../services/authorisationService';
 import bookingUserDataService from '../services/bookingUserDataService';
 
 const VerifyToken = props => {
-	const [params, setParams] = useState(getURLParams(window.location.href));
 	const [isLoading, setIsLoading] = useState(true);
-	const [roleName, setRoleName] = useState('');
-	const [onlyRunOnce, setOnlyRunOnce] = useState(true);
 	useEffect(() => {
 		// runs on page load
 		localStorage.clear();
 	}, []);
 	useEffect(() => {
-		if (typeof params['token'] !== 'undefined' && onlyRunOnce) {
-			setOnlyRunOnce(false);
+		const params = getURLParams(window.location.href);
+		if (!!params && !!params['token']) {
 			authorisationSvc
 				.getJWT(params['token'])
 				.then(result => {
@@ -37,9 +34,6 @@ const VerifyToken = props => {
 									userData.value.success &&
 									userData.value.user
 								) {
-									console.log('setting role', userData.value.user.roles[0].name);
-									props.setRole(userData.value.user.roles[0].name);
-									setRoleName(userData.value.user.roles[0].name);
 									props.setUser(userData.value.user);
 								}
 								if (
@@ -67,7 +61,7 @@ const VerifyToken = props => {
 				})
 				.catch(err => ToastsStore.error('Invalid login token'));
 		}
-	}, [params, setParams, isLoading, setIsLoading]);
+	}, []);
 	const pathname = () => {
 		if (typeof roleName !== 'undefined' && roleName !== null) {
 			return `/${roleName}/dashboard`;
