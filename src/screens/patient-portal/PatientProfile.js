@@ -13,11 +13,11 @@ export default class PatientProfile extends React.Component {
 
 		this.state = {
 			profile_data: {
-                phone: '',
+				phone: '',
 				first_name: '',
 				last_name: '',
 				email: '',
-				street_address: '',
+				address_1: '',
 				city: '',
 				county: '',
 				postcode: '',

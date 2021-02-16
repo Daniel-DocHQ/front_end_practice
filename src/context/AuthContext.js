@@ -19,6 +19,7 @@ export default class AuthContextProvider extends Component {
 		this.setRole = setRole.bind(this);
 		this.setRoleProfile = setRoleProfile.bind(this);
 		this.setOrgProfile = setOrgProfile.bind(this);
+
 		this.clearState = clearState.bind(this);
 
 		function clearState() {
@@ -39,7 +40,12 @@ export default class AuthContextProvider extends Component {
 			this.setState({ token, isAuthenticated: true });
 		}
 		function setUser(user) {
-			this.setState({ user });
+			const obj = {};
+			obj.user = user;
+			if (!!user && !!user.roles && !!user.roles[0]) {
+				obj.role = user.roles[0];
+			}
+			this.setState(obj);
 		}
 		function setRole(role) {
 			this.setState({ role });
