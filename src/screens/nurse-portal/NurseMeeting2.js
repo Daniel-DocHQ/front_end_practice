@@ -331,88 +331,90 @@ const AddressVerification = ({
     updateParent,
     appointmentId,
 }) => (
-    <div className='tab-container'>
-        <PatientDetails
-            fullData
-            patient={patient}
-            patients={patients}
-            title='Address Verification'
-            appointmentId={appointmentId}
-        />
-        <div className='row no-margin'>
-            <h4>Do you confirm that the patient's current address is the same as the one displayed above?</h4>
-        </div>
-        <div className='row flex-end'>
-            <DocButton text='Modify' color='red' style={{ marginRight: 25 }} />
-            <DocButton text='Confirm' color='green' onClick={updateParent} />
-        </div>
-    </div>
+	<Grid className='tab-container' container direction='column' justify='space-between'>
+		<Grid item>
+			<PatientDetails
+				fullData
+				patient={patient}
+				patients={patients}
+				title='Address Verification'
+				appointmentId={appointmentId}
+			/>
+		</Grid>
+		<Grid item>
+			<div className='row no-margin'>
+				<h4>Do you confirm that the patient's current address is the same as the one displayed above?</h4>
+			</div>
+			<div className='row flex-end'>
+				<DocButton text='Modify' color='red' style={{ marginRight: 25 }} />
+				<DocButton text='Confirm' color='green' onClick={updateParent} />
+			</div>
+		</Grid>
+	</Grid>
 );
 
 const VideoAppointmentDetails = ({ patient, appointmentDetails, updateParent }) => (
-    <div className='tab-container'>
-        <Grid container direction='column' justify='space-between'>
-            <Grid item>
-                {!!patient ? (
-                    <React.Fragment>
-                        <div className='row space-between'>
-                            <h3 className='no-margin'>Patient Details</h3>
-                        </div>
-                        <div className='column'>
-                            {!!patient.first_name && !!patient.last_name && (
-                                <div className='row space-between no-margin'>
-                                    <p className='no-margin'>Full Name:</p>
-                                    <p className='no-margin'>{patient.first_name} {patient.last_name}</p>
-                                </div>
-                            )}
-                            {!!patient.dob && (
-                                <div className='row space-between no-margin'>
-                                    <p className='no-margin'>DOB:</p>
-                                    <p>{format(new Date(patient.dob), 'dd-MM-yyyy')}</p>
-                                </div>
-                            )}
-                            {!!patient.postal_code && (
-                                <div className='row space-between no-margin'>
-                                    <p className='no-margin'>Post Code:</p>
-                                    <p className='no-margin'>{patient.postal_code}</p>
-                                </div>
-                            )}
-                        </div>
-                    </React.Fragment>
-                ) : null}
-                {!!appointmentDetails ? (
-                    <React.Fragment>
-                        <div className='row'>
-                            <h3 className='no-margin'>Appointment Details</h3>
-                        </div>
-                        <div className='column'>
-                            {!!appointmentDetails.start_time && (
-                                <div className='row space-between no-margin'>
-                                    <p className='no-margin'>Start Time:</p>
-                                    <p className='no-margin'>{format(new Date(appointmentDetails.start_time), 'p')}</p>
-                                </div>
-                            )}
-                            {!!appointmentDetails.start_time && !!appointmentDetails.end_time && (
-                                <div className='row space-between no-margin'>
-                                    <p className='no-margin'>Duration:</p>
-                                    <p>{differenceInMinutes(new Date(appointmentDetails.end_time), new Date(appointmentDetails.start_time))} mins</p>
-                                </div>
-                            )}
-                        </div>
-                    </React.Fragment>
-                ) : null}
-            </Grid>
-            <Grid item>
-                <div className='row no-margin'>
-                    <h4>I confirm I have verified the identity of the patient I am speaking to.</h4>
-                </div>
-                <div className='row flex-end'>
-                    <DocButton text='Reject' color='red' style={{ marginRight: 25 }} />
-                    <DocButton text='Confirm' color='green' onClick={updateParent} />
-                </div>
-            </Grid>
-        </Grid>
-    </div>
+	<Grid className='tab-container' container direction='column' justify='space-between'>
+		<Grid item>
+			{!!patient ? (
+				<React.Fragment>
+					<div className='row space-between'>
+						<h3 className='no-margin'>Patient Details</h3>
+					</div>
+					<div className='column'>
+						{!!patient.first_name && !!patient.last_name && (
+							<div className='row space-between no-margin'>
+								<p className='no-margin'>Full Name:</p>
+								<p className='no-margin'>{patient.first_name} {patient.last_name}</p>
+							</div>
+						)}
+						{!!patient.dob && (
+							<div className='row space-between no-margin'>
+								<p className='no-margin'>DOB:</p>
+								<p>{format(new Date(patient.dob), 'dd-MM-yyyy')}</p>
+							</div>
+						)}
+						{!!patient.postal_code && (
+							<div className='row space-between no-margin'>
+								<p className='no-margin'>Post Code:</p>
+								<p className='no-margin'>{patient.postal_code}</p>
+							</div>
+						)}
+					</div>
+				</React.Fragment>
+			) : null}
+			{!!appointmentDetails ? (
+				<React.Fragment>
+					<div className='row'>
+						<h3 className='no-margin'>Appointment Details</h3>
+					</div>
+					<div className='column'>
+						{!!appointmentDetails.start_time && (
+							<div className='row space-between no-margin'>
+								<p className='no-margin'>Start Time:</p>
+								<p className='no-margin'>{format(new Date(appointmentDetails.start_time), 'p')}</p>
+							</div>
+						)}
+						{!!appointmentDetails.start_time && !!appointmentDetails.end_time && (
+							<div className='row space-between no-margin'>
+								<p className='no-margin'>Duration:</p>
+								<p>{differenceInMinutes(new Date(appointmentDetails.end_time), new Date(appointmentDetails.start_time))} mins</p>
+							</div>
+						)}
+					</div>
+				</React.Fragment>
+			) : null}
+		</Grid>
+		<Grid item>
+			<div className='row no-margin'>
+				<h4>I confirm I have verified the identity of the patient I am speaking to.</h4>
+			</div>
+			<div className='row flex-end'>
+				<DocButton text='Reject' color='red' style={{ marginRight: 25 }} />
+				<DocButton text='Confirm' color='green' onClick={updateParent} />
+			</div>
+		</Grid>
+	</Grid>
 );
 
 const PatientIdVerification = ({
@@ -454,44 +456,50 @@ const PatientIdVerification = ({
 	}
 
     return (
-        <div className='tab-container'>
-            <PatientDetails
-                fullData
-                patient={patient}
-                patients={patients}
-                title='Patient Details'
-                appointmentId={appointmentId}
-            />
-            <div className='row space-between'>
-                <h3 className='no-margin'>Patient ID Verification</h3>
-            </div>
-            <div className='row'>
-                <MaterialCheckbox
-                    value={security_checked}
-                    onChange={setSecurity_checked}
-                    labelComponent='Customer security check completed'
-                />
-            </div>
-            <div className='row'>
-                <FormControl variant='filled' style={{ width: '100%' }}>
-                    <InputLabel id='security-document-label'>Security Document</InputLabel>
-                    <Select
-                        labelId='security-document-label'
-                        id='security-document'
-                        onChange={e => setSecurity_document(e.target.value)}
-                        value={security_document}
-                        required={true}
-                    >
-                        <MenuItem value='Passport'>Passport</MenuItem>
-                        <MenuItem value='Driving Licence'>Driving Licence</MenuItem>
-                        <MenuItem value='National Identification'>National Identification</MenuItem>
-                    </Select>
-                </FormControl>
-            </div>
-            <div className='row flex-end'>
-                <DocButton text='Submit' color='green' onClick={proceed} />
-            </div>
-        </div>
+		<Grid className='tab-container' container direction='column' justify='space-between'>
+			<Grid item>
+				<PatientDetails
+					fullData
+					patient={patient}
+					patients={patients}
+					title='Patient Details'
+					appointmentId={appointmentId}
+				/>
+			</Grid>
+			<Grid item>
+				<div className='row space-between'>
+					<h3 className='no-margin'>Patient ID Verification</h3>
+				</div>
+				<div className='row'>
+					<MaterialCheckbox
+						value={security_checked}
+						onChange={setSecurity_checked}
+						labelComponent='Customer security check completed'
+					/>
+				</div>
+				<div className='row'>
+					<FormControl variant='filled' style={{ width: '100%' }}>
+						<InputLabel id='security-document-label'>Security Document</InputLabel>
+						<Select
+							labelId='security-document-label'
+							id='security-document'
+							onChange={e => setSecurity_document(e.target.value)}
+							value={security_document}
+							required={true}
+						>
+							<MenuItem value='Passport'>Passport</MenuItem>
+							<MenuItem value='Driving Licence'>Driving Licence</MenuItem>
+							<MenuItem value='National Identification'>National Identification</MenuItem>
+						</Select>
+					</FormControl>
+				</div>
+			</Grid>
+			<Grid item>
+				<div className='row flex-end'>
+					<DocButton text='Submit' color='green' onClick={proceed} />
+				</div>
+			</Grid>
+		</Grid>
     );
 };
 

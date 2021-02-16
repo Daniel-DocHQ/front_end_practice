@@ -45,6 +45,22 @@ const CertificatesAaron = ({ patient_data }) => {
 
 	const [canCreateCertificate, setCanCreateCertificate] = useState(true);
 
+	function isFieldsValid(obj) {
+		return (
+			obj &&
+			obj.forename &&
+			obj.surname &&
+			obj.email &&
+			obj.dob &&
+			obj.sex &&
+			obj.security_checked &&
+			obj.security_document &&
+			obj.result &&
+			obj.medicalprofessional &&
+			obj.passport_number
+		);
+	}
+
 	useEffect(() => {
 		// runs on init
 		if (!!patient_data) {
@@ -90,7 +106,7 @@ const CertificatesAaron = ({ patient_data }) => {
 	// used as the form submit function, super lazy but works a charm
 	function proceed() {
 		if (
-			canCreateCertificate &&
+			canCreateCertificate && isFieldsValid() &&
 			(errors.length === 0 || (errors.length === 1 && errors.includes('security-document')))
 		) {
 			sendResult({
@@ -270,7 +286,7 @@ const CertificatesAaron = ({ patient_data }) => {
 						</Select>
 					</FormControl>
 				</div>
-				{attemptedSubmit && typeof security_document !== 'undefined' && (
+				{attemptedSubmit && security_document === '' && (
 					<div className='row no-margin'>
 						<p className='error'>You must confirm enter a security document</p>
 					</div>
