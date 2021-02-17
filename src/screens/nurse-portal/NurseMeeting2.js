@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useContext } from 'react';
 import AppointmentContextProvider, {
 	AppointmentContext,
 	useAppointmentDetails,
@@ -15,6 +15,7 @@ import {
 	InputLabel,
 	Select,
 	Typography,
+	Tooltip,
 } from '@material-ui/core';
 import { format, differenceInMinutes } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
@@ -76,6 +77,12 @@ const TabContainer = ({ isJoined }) => {
 		setValue((oldValue) => oldValue + 1);
 	});
 
+	useEffect(() => {
+		if (isJoined && value === 0 && type === APPOINTMENT_TYPES.vista) {
+			increaseStep();
+		}
+	}, [isJoined]);
+
 	return (
 		type === APPOINTMENT_TYPES.tui ? (
 			<div className='tab-container' style={{ minHeight: 'unset' }}>
@@ -101,7 +108,6 @@ const TabContainer = ({ isJoined }) => {
 				{value === 0 && (
 					<VideoAppointmentDetails
 						patient={patient}
-						isJoined={isJoined}
 						appointmentDetails={appointmentDetails}
 						updateParent={increaseStep}
 					/>
@@ -139,95 +145,106 @@ const PatientDetails = ({
     patients = [],
     appointmentId,
 	isSpaceBetweenPhoneBox,
-}) => (
-    <React.Fragment>
-        <div className='row no-margin'>
-            <h3 className='no-margin'>{title}</h3>
-        </div>
-        <div className='column'>
-            {patients.length > 1 ? (
-                patients.map((item, indx) => (
-                    !!item.last_name && !!item.first_name && (
-                        <div key={indx} className='row space-between no-margin'>
-                            <p className='tab-row-text'>Full Name Client {indx + 1}:</p>
-                            <p className='tab-row-text'>{item.first_name} {item.last_name}</p>
-                        </div>
-                    )
-                ))
-            ) : (
-                !!patient.first_name && !!patient.last_name && (
-                    <div className='row space-between no-margin'>
-                        <p className='tab-row-text'>Full Name:</p>
-                        <p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
-                    </div>
-                )
-            )}
-            {!!patient.dob && !fullData && (
-                <div className='row space-between no-margin'>
-                    <p className='tab-row-text'>DOB:</p>
-                    <p className='tab-row-text'>{format(new Date(patient.dob), 'dd-MM-yyyy')}</p>
-                </div>
-            )}
-            {!!patient.street_address && fullData && (
-                <div className='row space-between no-margin'>
-                    <p className='tab-row-text'>Address Line 1:</p>
-                    <p className='tab-row-text'>Wessex House</p>
-                </div>
-            )}
-            {!!patient.extended_address && fullData && (
-                <div className='row space-between no-margin'>
-                    <p className='tab-row-text'>Address Line 2:</p>
-                    <p className='tab-row-text'>{patient.extended_address}</p>
-                </div>
-            )}
-            {!!patient.region && fullData && (
-                <div className='row space-between no-margin'>
-                    <p className='tab-row-text'>Town:</p>
-                    <p className='tab-row-text'>{patient.region}</p>
-                </div>
-            )}
-            {!!patient.country && fullData && (
-                <div className='row space-between no-margin'>
-                    <p className='tab-row-text'>Country:</p>
-                    <p className='tab-row-text'>{patient.country}</p>
-                </div>
-            )}
-            {!!patient.postal_code && fullData && (
-                <div className='row space-between no-margin'>
-                    <p className='tab-row-text'>Post Code:</p>
-                    <p className='tab-row-text'>{patient.postal_code}</p>
-                </div>
-            )}
-			<div className={isSpaceBetweenPhoneBox && 'padding-box'}>
+}) => {
+	const linkRef = useRef(null);
+
+	return (
+		<React.Fragment>
+			<div className='row no-margin'>
+				<h3 className='no-margin'>{title}</h3>
+			</div>
+			<div className='column'>
 				{patients.length > 1 ? (
 					patients.map((item, indx) => (
-						!!item.phone && (
+						!!item.last_name && !!item.first_name && (
 							<div key={indx} className='row space-between no-margin'>
-								<p className='tab-row-text'>Phone No Client {indx + 1}:</p>
-								<p className='tab-row-text'>{item.phone}</p>
+								<p className='tab-row-text'>Full Name Client {indx + 1}:</p>
+								<p className='tab-row-text'>{item.first_name} {item.last_name}</p>
 							</div>
 						)
 					))
 				) : (
-					!!patient.phone && (
+					!!patient.first_name && !!patient.last_name && (
 						<div className='row space-between no-margin'>
-							<p className='tab-row-text'>Phone No:</p>
-							<p className='tab-row-text'>{patient.phone} </p>
+							<p className='tab-row-text'>Full Name:</p>
+							<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
 						</div>
 					)
 				)}
-				<div className='row space-between no-margin'>
-					<p className='tab-row-text'>
-						Patient Joining link:
-					</p>
-					<Typography className='no-margin' noWrap>
-						https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
-					</Typography>
+				{!!patient.dob && !fullData && (
+					<div className='row space-between no-margin'>
+						<p className='tab-row-text'>DOB:</p>
+						<p className='tab-row-text'>{format(new Date(patient.dob), 'dd-MM-yyyy')}</p>
+					</div>
+				)}
+				{!!patient.street_address && fullData && (
+					<div className='row space-between no-margin'>
+						<p className='tab-row-text'>Address Line 1:</p>
+						<p className='tab-row-text'>{patient.street_address}</p>
+					</div>
+				)}
+				{!!patient.extended_address && fullData && (
+					<div className='row space-between no-margin'>
+						<p className='tab-row-text'>Address Line 2:</p>
+						<p className='tab-row-text'>{patient.extended_address}</p>
+					</div>
+				)}
+				{!!patient.region && fullData && (
+					<div className='row space-between no-margin'>
+						<p className='tab-row-text'>Town:</p>
+						<p className='tab-row-text'>{patient.region}</p>
+					</div>
+				)}
+				{!!patient.country && fullData && (
+					<div className='row space-between no-margin'>
+						<p className='tab-row-text'>Country:</p>
+						<p className='tab-row-text'>{patient.country}</p>
+					</div>
+				)}
+				{!!patient.postal_code && fullData && (
+					<div className='row space-between no-margin'>
+						<p className='tab-row-text'>Post Code:</p>
+						<p className='tab-row-text'>{patient.postal_code}</p>
+					</div>
+				)}
+				<div className={isSpaceBetweenPhoneBox && 'padding-box'}>
+					{patients.length > 1 ? (
+						patients.map((item, indx) => (
+							!!item.phone && (
+								<div key={indx} className='row space-between no-margin'>
+									<p className='tab-row-text'>Phone No Client {indx + 1}:</p>
+									<p className='tab-row-text'>{item.phone}</p>
+								</div>
+							)
+						))
+					) : (
+						!!patient.phone && (
+							<div className='row space-between no-margin'>
+								<p className='tab-row-text'>Phone No:</p>
+								<p className='tab-row-text'>{patient.phone}</p>
+							</div>
+						)
+					)}
+					<div className='row space-between no-margin'>
+						<p className='tab-row-text'>
+							Patient Joining link:
+						</p>
+						<Tooltip title="Click to copy">
+							<Typography
+								noWrap
+								ref={linkRef}
+								onClick={() => copyToClipboard(linkRef)}
+								className='no-margin patient-link-text'
+							>
+								https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
+							</Typography>
+						</Tooltip>
+					</div>
 				</div>
 			</div>
-        </div>
-    </React.Fragment>
-);
+		</React.Fragment>
+	);
+};
 
 const SubmitPatientResult = ({
 	patient,
@@ -238,23 +255,35 @@ const SubmitPatientResult = ({
 	} = useContext(AppointmentContext);
 	const { token } = useContext(AuthContext);
 	const [showNotes, setShowNotes] = useState(false);
+	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
+	const [kidIdSubmitted, setKidIdSubmitted] = useState(false);
 	// Fields
 	const [notes, setNotes] = useState();
 	const [sampleTaken, setSampleTaken] = useState();
 	const [kidId, setKidId] = useState();
+	const [appointmentNotes, setAppointmentNotes] = useState();
+
+	const isSampleTakenRejected = sampleTaken === 'rejected';
 
 	function updateKidId() {
 		if (kidId) {
 			sendResult({
 				kidId,
+				result: '',
 			});
+			ToastsStore.success('Success');
+			setKidIdSubmitted(true);
 		}
 	}
 
 	function sendSampleTaken() {
 		if (sampleTaken) {
 			sendResult({
-				kidId,
+				result: '',
+				...(isSampleTakenRejected && {
+					reject_notes: notes,
+				}),
+				sampleTaken,
 			});
 		}
 	}
@@ -294,48 +323,101 @@ const SubmitPatientResult = ({
 							<TextInputElement
 								id='kid-id'
 								value={kidId}
-								label='KID ID'
+								placeholder='Eg: 20P456632'
 								onChange={setKidId}
-								required={false}
+								disabled={kidIdSubmitted}
+								required
 							/>
 						</div>
 						<div className='row flex-end'>
-							<DocButton text='Modify' color='green' onClick={updateKidId} />
-						</div>
-					</Grid>
-					<Grid item>
-						<div className='row space-between'>
-							<h3 className='no-margin'>Sample Taken</h3>
-						</div>
-						<div style={{ paddingLeft: 10 }}>
-							<FormControl component='fieldset'>
-								<RadioGroup
-									aria-label='sample-taken'
-									name='sample-taken'
-									value={sampleTaken}
-									onChange={e => setSampleTaken(e.target.value)}
-								>
-									<FormControlLabel value='valid' control={<Radio />} label='Valid' />
-									<FormControlLabel value='invalid' control={<Radio />} label='Invalid' />
-									<FormControlLabel value='rejected' control={<Radio />} label='Rejected' />
-								</RadioGroup>
-							</FormControl>
-						</div>
-						<div className='row flex-end'>
-							<DocButton text='Submit' color='green' onClick={sendSampleTaken} />
-						</div>
-						<div className='row space-between'>
-							<h2 className='no-margin'>Notes</h2>
 							<DocButton
+								text={kidIdSubmitted ? 'Modify' : 'Submit'}
 								color='green'
-								text={showNotes ? 'Submit' : 'Add'}
-								onClick={() => showNotes ? updateNotes(notes) : setShowNotes(true)}
+								onClick={() => kidIdSubmitted ? setKidIdSubmitted(false) : updateKidId()}
 							/>
 						</div>
-						{showNotes && (
-							<EditorWrapper updateContent={setNotes} />
-						)}
 					</Grid>
+					{kidIdSubmitted && (
+						<Grid item>
+							<div className='row space-between'>
+								<h3 className='no-margin'>Sample Taken</h3>
+							</div>
+							<div style={{ paddingLeft: 10 }}>
+								<FormControl component='fieldset'>
+									<RadioGroup
+										aria-label='sample-taken'
+										name='sample-taken'
+										value={sampleTaken}
+										style={{ display: 'inline' }}
+										onChange={e => setSampleTaken(e.target.value)}
+									>
+										<FormControlLabel value='valid' control={<Radio />} label='Valid' />
+										<FormControlLabel value='invalid' control={<Radio />} label='Invalid' />
+										<FormControlLabel value='rejected' control={<Radio />} label='Rejected' />
+									</RadioGroup>
+								</FormControl>
+							</div>
+							{sampleTaken !== 'rejected' && (
+								<div className='row flex-end'>
+									<DocButton text='Submit' color='green' onClick={sendSampleTaken} />
+								</div>
+							)}
+							<div className='row space-between'>
+								<h2 className='no-margin'>Notes</h2>
+								{!showNotes && (
+									<DocButton
+										color='green'
+										text='Add'
+										onClick={() => setShowNotes(true)}
+									/>
+								)}
+							</div>
+							{(showNotes || isSampleTakenRejected) && (
+								<React.Fragment>
+									<EditorWrapper
+										placeholder={isSampleTakenRejected
+											? 'Add Reason for Rejection\nThis notes will be sent to the client'
+											: ''}
+										updateContent={setNotes}
+									/>
+									<div className='row flex-end'>
+										<DocButton
+											color='green'
+											text='Submit'
+											disabled={isSampleTakenRejected ? !notes : false}
+											onClick={() => isSampleTakenRejected ? sendSampleTaken() : updateNotes(notes)}
+										/>
+									</div>
+								</React.Fragment>
+							)}
+							{isSampleTakenRejected && (
+								<React.Fragment>
+									<div className='row space-between'>
+										<h2 className='no-margin'>Appointment Notes</h2>
+										{!showAppointmentNotes && (
+											<DocButton
+												color='green'
+												text='Add'
+												onClick={() => setShowAppointmentNotes(true)}
+											/>
+										)}
+									</div>
+									{showAppointmentNotes && (
+										<React.Fragment>
+											<EditorWrapper updateContent={setAppointmentNotes} />
+											<div className='row flex-end'>
+												<DocButton
+													color='green'
+													text='Submit'
+													onClick={() => updateNotes(appointmentNotes)}
+												/>
+											</div>
+										</React.Fragment>
+									)}
+								</React.Fragment>
+							)}
+						</Grid>
+					)}
 				</Grid>
 			</div>
 		</div>
@@ -380,9 +462,7 @@ const AddressVerification = ({
 
 const VideoAppointmentDetails = ({
 	patient,
-	isJoined,
 	appointmentDetails,
-	updateParent,
 }) => (
 	<div className='tab-container'>
 		<div className='tab-content'>
@@ -396,19 +476,19 @@ const VideoAppointmentDetails = ({
 							<div className='column'>
 								{!!patient.first_name && !!patient.last_name && (
 									<div className='row space-between no-margin'>
-										<p className='no-margin'>Full Name:</p>
-										<p className='no-margin'>{patient.first_name} {patient.last_name}</p>
+										<p className='tab-row-text'>Full Name:</p>
+										<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
 									</div>
 								)}
 								{!!patient.dob && (
 									<div className='row space-between no-margin'>
-										<p className='no-margin'>DOB:</p>
+										<p className='tab-row-text'>DOB:</p>
 										<p>{format(new Date(patient.dob), 'dd-MM-yyyy')}</p>
 									</div>
 								)}
 								{!!patient.postal_code && (
 									<div className='row space-between no-margin'>
-										<p className='no-margin'>Post Code:</p>
+										<p className='tab-row-text'>Post Code:</p>
 										<p className='no-margin'>{patient.postal_code}</p>
 									</div>
 								)}
@@ -437,17 +517,6 @@ const VideoAppointmentDetails = ({
 						</div>
 					) : null}
 				</Grid>
-				{isJoined && (
-					<Grid item>
-						<div className='row no-margin'>
-							<h4>I confirm I have verified the identity of the patient I am speaking to.</h4>
-						</div>
-						<div className='row flex-end'>
-							<DocButton text='Reject' color='pink' style={{ marginRight: 25 }} />
-							<DocButton text='Confirm' color='green' onClick={updateParent} />
-						</div>
-					</Grid>
-				)}
 			</Grid>
 		</div>
 	</div>
@@ -464,13 +533,13 @@ const PatientIdVerification = ({
 	const [security_document, setSecurity_document] = useState('');
 
     function proceed() {
-		updateParent();
-		// if (security_document) {
-		// 	sendResult({
-		// 		security_checked,
-		// 		security_document,
-		// 	});
-		// }
+		if (security_document) {
+			sendResult({
+				result: '',
+				security_checked,
+				security_document,
+			});
+		}
 	}
 
     function sendResult(formData) {
@@ -555,6 +624,7 @@ const AppointmentActions = ({
 		uploadImage,
 		img,
 	} = useContext(AppointmentContext);
+	const linkRef = useRef(null);
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
 
@@ -614,20 +684,38 @@ const AppointmentActions = ({
 					</div>
 					<div className='row space-between'>
 						<p className='no-margin'>Patient Joining link:</p>
-						<Typography className='no-margin' noWrap>
-							https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
-						</Typography>
+						<Tooltip title="Click to copy">
+							<Typography
+								noWrap
+								ref={linkRef}
+								onClick={() => copyToClipboard(linkRef)}
+								className='no-margin patient-link-text'
+							>
+								https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
+							</Typography>
+						</Tooltip>
 					</div>
 					<div className='row space-between'>
-						<h2 className='no-margin'>Appointment Notes</h2>
-						<DocButton
-							color='green'
-							text={showNotes ?  'Submit Notes' : 'Add'}
-							onClick={() => showNotes ? updateNotes(notes) : setShowNotes(true)}
-						/>
+						<h3 className='no-margin'>Appointment Notes</h3>
+						{!showNotes && (
+							<DocButton
+								color='green'
+								text='Add'
+								onClick={() => setShowNotes(true)}
+							/>
+						)}
 					</div>
 					{showNotes && (
-						<EditorWrapper updateContent={setNotes} />
+						<React.Fragment>
+							<EditorWrapper updateContent={setNotes} />
+							<div className='row flex-end'>
+								<DocButton
+									color='green'
+									text='Submit'
+									onClick={() => updateNotes(notes)}
+								/>
+							</div>
+						</React.Fragment>
 					)}
 					{!!isCaptureDisabled && isCaptureDisabled && (
 						<div className='row space-between'>
@@ -653,6 +741,16 @@ const AppointmentActions = ({
 			</div>
 		</div>
 	);
+};
+
+const copyToClipboard = (ref) => {
+	window.getSelection().removeAllRanges();
+	var range = document.createRange();
+	range.selectNode(ref.current);
+	window.getSelection().addRange(range);
+	document.execCommand("copy");
+	window.getSelection().removeAllRanges();
+	ToastsStore.success('Copied');
 };
 
 const CertificatesContainer = () => {
