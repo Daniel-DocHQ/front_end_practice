@@ -252,7 +252,6 @@ function createRoleProfile(auth_token, body) {
 			obj.shipping_details.postcode
 		);
 	}
-	console.log(body);
 	return new Promise((resolve, reject) => {
 		if (auth_token && body) {
 			axios({
