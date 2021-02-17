@@ -31,13 +31,11 @@ const RouteContainer = () => {
 	return (
 		<React.Fragment>
 			<ToastsContainer store={ToastsStore} />
-			<AuthContextProvider>
-				<Router>
-					<Switch>
-						<RouteHandler />
-					</Switch>
-				</Router>
-			</AuthContextProvider>
+			<Router>
+				<Switch>
+					<RouteHandler />
+				</Switch>
+			</Router>
 		</React.Fragment>
 	);
 };
