@@ -253,8 +253,7 @@ function createRoleProfile(auth_token, body) {
 		);
 	}
 	return new Promise((resolve, reject) => {
-		console.log(isValid(body));
-		if (auth_token && body && isValid(body)) {
+		if (auth_token && body) {
 			axios({
 				url: `${baseURL}/roles`,
 				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },
@@ -320,8 +319,6 @@ function createShippingDetails(auth_token, body) {
 	function isValid(obj) {
 		return (
 			obj &&
-			obj.role_id &&
-			obj.organisation_profile_id &&
 			obj.shipping_details &&
 			obj.shipping_details.name &&
 			obj.shipping_details.address_1 &&
@@ -330,8 +327,9 @@ function createShippingDetails(auth_token, body) {
 			obj.shipping_details.postcode
 		);
 	}
+	console.log(body);
 	return new Promise((resolve, reject) => {
-		if (auth_token && body && isValid(body)) {
+		if (auth_token && body) {
 			axios({
 				url: `${baseURL}/roles/shipping`,
 				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },

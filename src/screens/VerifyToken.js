@@ -1,22 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
+import { useRoleName } from '../context/AuthContext';
 import getURLParams from '../helpers/getURLParams';
 import authorisationSvc from '../services/authorisationService';
 import bookingUserDataService from '../services/bookingUserDataService';
 
 const VerifyToken = props => {
-	const [params, setParams] = useState(getURLParams(window.location.href));
 	const [isLoading, setIsLoading] = useState(true);
-	const [roleName, setRoleName] = useState('');
-	const [onlyRunOnce, setOnlyRunOnce] = useState(true);
+	const roleName = useRoleName();
 	useEffect(() => {
 		// runs on page load
 		localStorage.clear();
 	}, []);
 	useEffect(() => {
-		if (typeof params['token'] !== 'undefined' && onlyRunOnce) {
-			setOnlyRunOnce(false);
+		const params = getURLParams(window.location.href);
+		if (!!params && !!params['token']) {
 			authorisationSvc
 				.getJWT(params['token'])
 				.then(result => {
@@ -37,10 +36,9 @@ const VerifyToken = props => {
 									userData.value.success &&
 									userData.value.user
 								) {
-									console.log('setting role', userData.value.user.roles[0].name);
-									props.setRole(userData.value.user.roles[0].name);
-									setRoleName(userData.value.user.roles[0].name);
 									props.setUser(userData.value.user);
+									if (!!userData.value.user.roles && !!userData.value.user.roles[0])
+										props.setRole(userData.value.user.roles[0]);
 								}
 								if (
 									orgProfileData.status === 'fulfilled' &&
@@ -58,16 +56,15 @@ const VerifyToken = props => {
 								} else {
 									console.log('profile_not_complete');
 								}
-								setIsLoading(false);
 							})
-							.catch(() => console.log('error'));
+							.catch(() => setIsLoading(false));
 					} else {
 						ToastsStore.error('Invalid login token');
 					}
 				})
 				.catch(err => ToastsStore.error('Invalid login token'));
 		}
-	}, [params, setParams, isLoading, setIsLoading]);
+	}, []);
 	const pathname = () => {
 		if (typeof roleName !== 'undefined' && roleName !== null) {
 			return `/${roleName}/dashboard`;
@@ -75,7 +72,7 @@ const VerifyToken = props => {
 			return '/login';
 		}
 	};
-	return !isLoading ? <Redirect to={pathname} /> : <React.Fragment></React.Fragment>;
+	return !!roleName ? <Redirect to={pathname} /> : <React.Fragment></React.Fragment>;
 };
 
 export default VerifyToken;

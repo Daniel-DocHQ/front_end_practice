@@ -8,7 +8,13 @@ import existsInArray from '../../helpers/existsInArray';
 import './PatientProfileDetails.scss';
 import MaterialCheckbox from '../MaterialCheckbox/MaterialCheckbox';
 import PhoneNumber from '../FormComponents/PhoneNumber/PhoneNumber';
-import { AuthContext } from '../../context/AuthContext';
+import {
+	AuthContext,
+	useOrgProfile,
+	useRoleProfile,
+	useToken,
+	useUser,
+} from '../../context/AuthContext';
 import bookingUserDataService from '../../services/bookingUserDataService';
 import authorisationSvc from '../../services/authorisationService';
 import Alert from '@material-ui/lab/Alert';
@@ -39,36 +45,44 @@ const ProfileRow = ({ title, content }) => (
 );
 
 const PersonalInformation = () => {
-	const { token, user, setUser, setRole } = useContext(AuthContext);
+	const { setUser, setRole } = useContext(AuthContext);
+	const token = useToken();
+	const user = useUser();
 	const [isEditable, setIsEditable] = useState(false);
-	const [first_name, setFirst_name] = useState(user.first_name || '');
-	const [last_name, setLast_name] = useState(user.last_name || '');
-	const [date_of_birth, setDateOfBirth] = useState(user.date_of_birth || '');
-	const [email, setEmail] = useState(user.email || '');
-	const [telephone, setTelephone] = useState(user.telephone || '');
+	const [first_name, setFirst_name] = useState(!!user && !!user.first_name ? user.first_name : '');
+	const [last_name, setLast_name] = useState(!!user && !!user.last_name ? user.last_name : '');
+	const [date_of_birth, setDateOfBirth] = useState(
+		!!user && !!user.date_of_birth ? user.date_of_birth : new Date()
+	);
+	const [email, setEmail] = useState(!!user && !!user.email ? user.email : '');
+	const [telephone, setTelephone] = useState(!!user && !!user.telephone ? user.telephone : '');
 	const [errors, setErrors] = useState([]);
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
 	useEffect(() => {
-		if (typeof user === 'undefined' || user === null) {
+		if (!!user) {
 			authorisationSvc
 				.getUser(token)
 				.then(result => {
 					if (result.success && result.user) {
 						setUser(result.user);
-						if (
-							result.user &&
-							typeof result.user.roles !== 'undefined' &&
-							typeof result.user.roles[0] !== 'undefined' &&
-							typeof result.user.roles[0].name !== 'undefined'
-						) {
-							setRole(result.user.roles[0].name);
+						if (!!result.user && !!result.user.roles && !!result.user.roles[0]) {
+							setRole(result.user.roles[0]);
 						}
 					}
 				})
 				.catch(err => console.log('error fetching user'));
 		}
 	}, []);
+	useEffect(() => {
+		if (!!user) {
+			if (!!user.first_name) setFirst_name(user.first_name);
+			if (!!user.last_name) setLast_name(user.last_name);
+			if (!!user.email) setEmail(user.email);
+			if (!!user.telephone) setTelephone(user.telephone);
+			if (!!user.date_of_birth) setDateOfBirth(user.date_of_birth);
+		}
+	}, [user]);
 	function updateErrors(isValid, field) {
 		// if valid and in array remove
 		if (isValid && existsInArray(errors, field)) {
@@ -146,12 +160,21 @@ const PersonalInformation = () => {
 	);
 };
 const ShippingInformation = ({}) => {
-	const { user, roles, organisation_profile, token, role_profile, setRoleProfile } = useContext(
-		AuthContext
-	);
+	const {
+		token,
+		user,
+		role_profile,
+		role,
+		organisation_profile,
+		setRoleProfile,
+		setRole,
+		setUser,
+	} = useContext(AuthContext);
 	const shipping_details =
 		!!role_profile && !!role_profile.shipping_details ? { ...role_profile.shipping_details } : {};
-	const [isEditable, setIsEditable] = useState(!!shipping_details);
+	const [isEditable, setIsEditable] = useState(
+		typeof shipping_details === 'undefined' || shipping_details === null
+	);
 	const [address_1, setAddress_1] = useState('');
 	const [address_2, setAddress_2] = useState('');
 	const [city, setCity] = useState(shipping_details.city || '');
@@ -161,21 +184,24 @@ const ShippingInformation = ({}) => {
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 	const [status, setStatus] = useState(false);
 	useEffect(() => {
-		if (!!shipping_details && Object.keys(shipping_details).length > 0) {
-			if (!!shipping_details.street_address) setAddress_1(shipping_details.street_address);
-			if (!!shipping_details.address_1) setAddress_1(shipping_details.address_1);
-			if (!!shipping_details.address_2) setAddress_2(shipping_details.address_2);
-			if (!!shipping_details.city) setCity(shipping_details.city);
-			if (!!shipping_details.county) setCounty(shipping_details.county);
-			if (!!shipping_details.postcode) setPostcode(shipping_details.postcode);
+		if (!!role_profile && !!role_profile.shipping_details) {
+			if (!!role_profile.shipping_details.address_1)
+				setAddress_1(role_profile.shipping_details.address_1);
+			if (!!role_profile.shipping_details.address_2)
+				setAddress_2(role_profile.shipping_details.address_2);
+			if (!!role_profile.shipping_details.city) setCity(role_profile.shipping_details.city);
+			if (!!role_profile.shipping_details.county) setCounty(role_profile.shipping_details.county);
+			if (!!role_profile.shipping_details.postcode)
+				setPostcode(role_profile.shipping_details.postcode);
+			setIsEditable(false);
 		} else {
 			setIsEditable(true);
 		}
 		if (!!organisation_profile && !!organisation_profile.id)
 			shipping_details.organisation_profile_id = organisation_profile.id;
-	}, []);
+	}, [role_profile]);
 	useEffect(() => {
-		if (typeof role_profile === 'undefined' || role_profile === null) {
+		if (!!role_profile) {
 			bookingUserDataService
 				.getRoleProfile(token)
 				.then(result => {
@@ -189,6 +215,20 @@ const ShippingInformation = ({}) => {
 					setIsEditable(true);
 					console.log('profile_not_complete');
 				});
+		}
+		if (!!user || !!role) {
+			authorisationSvc
+				.getUser(token)
+				.then(result => {
+					const obj = {};
+					if (result.success && !!result.user) {
+						setUser(result.user);
+						if (!!result.user && !!result.user.roles && !!result.user.roles[0]) {
+							setRole(result.role);
+						}
+					}
+				})
+				.catch(() => console.log('error getting user'));
 		}
 	}, []);
 	function updateErrors(isValid, field) {
@@ -206,33 +246,26 @@ const ShippingInformation = ({}) => {
 		// if invalid and in array, ignore
 	}
 	function proceed() {
+		const body = {
+			shipping_details: { ...shipping_details, address_1, address_2, city, county, postcode },
+		};
+		if (
+			!!user &&
+			!!user.id &&
+			!!user.roles &&
+			!!user.roles[0] &&
+			!!user.roles[0].id &&
+			!!user.roles[0].organisation_id &&
+			!!user.first_name &&
+			!!user.last_name
+		) {
+			body.role_id = user.roles[0].id;
+			body.organisation_profile_id = user.roles[0].organisation_id;
+			body.user_id = user.id;
+			body.name = `${user.first_name} ${user.last_name}`;
+		}
 		if (errors.length === 0) {
-			const body = {
-				shipping_details: { ...shipping_details, address_1, address_2, city, county, postcode },
-			};
-			if (!!roles && !!roles[0] && !!roles[0].id) body.role_id = roles[0].id;
-			if (!!user && !!user.id) body.user_id = user.id;
-			if (!!organisation_profile && !!organisation_profile.id)
-				body.organisation_profile_id = organisation_profile.id;
-			if (!!role_profile) {
-				bookingUserDataService
-					.createRoleProfile(token, body)
-					.then(result => {
-						if (result.success && result.role_profile) {
-							setRoleProfile(result.role_profile);
-							setStatus({
-								severity: 'success',
-								message: 'Successfully saved shipping details',
-							});
-						}
-					})
-					.catch(() => {
-						setStatus({
-							severity: 'error',
-							message: 'Error saving shipping details',
-						});
-					});
-			} else if (
+			if (
 				!!role_profile &&
 				!!role_profile.shipping_details &&
 				!!role_profile.shipping_details.name
@@ -257,7 +290,7 @@ const ShippingInformation = ({}) => {
 					});
 			} else {
 				bookingUserDataService
-					.createShippingDetails(token, body)
+					.createRoleProfile(token, body)
 					.then(result => {
 						if (result.success && result.role_profile) {
 							setRoleProfile(result.role_profile);
@@ -306,7 +339,7 @@ const ShippingInformation = ({}) => {
 					label='Address Line 2'
 					onChange={setAddress_2}
 					autoComplete='shipping address-line2'
-					pattern={new RegExp(/^[a-zA-Z0-9 ]+$/)}
+					pattern={new RegExp(/^[a-zA-Z0-9 ]/)}
 					inputProps={{ minLength: '1' }}
 					updateStatus={updateErrors}
 					disabled={!isEditable}
@@ -396,16 +429,15 @@ const ShippingInformation = ({}) => {
 	);
 };
 const HRAView = () => {
-	const { token, hra_data, setHRAData } = useContext(AuthContext);
+	const token = useToken();
+	const [hra_data, setHRAData] = useState();
 	useEffect(() => {
-		if (typeof hra_data === 'undefined' || hra_data === null) {
+		if (!!token) {
 			bookingUserDataService
 				.getHRAData(token)
 				.then(result => {
 					if (result.success && result.hra_data) {
 						setHRAData(result.hra_data);
-						console.log(result.hra_data);
-					} else {
 					}
 				})
 				.catch(() => console.log('err'));
@@ -413,34 +445,7 @@ const HRAView = () => {
 	}, []);
 
 	// Display only
-	return typeof hra_data === 'undefined' || hra_data === null ? (
-		<React.Fragment>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>About You</h3>
-				</div>
-				<div>
-					<p>No data to display</p>
-				</div>
-			</div>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>Your Health</h3>
-				</div>
-				<div>
-					<p>No data to display</p>
-				</div>
-			</div>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>Family Health</h3>
-				</div>
-				<div>
-					<p>No data to display</p>
-				</div>
-			</div>
-		</React.Fragment>
-	) : (
+	return !!hra_data ? (
 		<React.Fragment>
 			<div className='row items-start'>
 				<div className='subtitle-col'>
@@ -649,6 +654,33 @@ const HRAView = () => {
 							onChange={() => null}
 						/>
 					</div>
+				</div>
+			</div>
+		</React.Fragment>
+	) : (
+		<React.Fragment>
+			<div className='row items-start'>
+				<div className='subtitle-col'>
+					<h3 className='no-margin'>About You</h3>
+				</div>
+				<div>
+					<p>No data to display</p>
+				</div>
+			</div>
+			<div className='row items-start'>
+				<div className='subtitle-col'>
+					<h3 className='no-margin'>Your Health</h3>
+				</div>
+				<div>
+					<p>No data to display</p>
+				</div>
+			</div>
+			<div className='row items-start'>
+				<div className='subtitle-col'>
+					<h3 className='no-margin'>Family Health</h3>
+				</div>
+				<div>
+					<p>No data to display</p>
 				</div>
 			</div>
 		</React.Fragment>
