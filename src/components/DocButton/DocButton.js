@@ -7,11 +7,11 @@ const DocButton = ({ color, onClick, text, type, style, disabled, nomargin, flat
 			: typeof style !== 'undefined' && typeof nomargin === 'undefined'
 			? { ...style }
 			: {};
-	return disabled === true ? (
+	return disabled ? (
 		<React.Fragment>
 			<button
 				type={type || 'button'}
-				className={`btn ${typeof color !== 'undefined' ? color : ''} ${
+				className={`btn disabled ${
 					typeof flat !== 'undefined' ? 'flat' : ''
 				}`}
 				onClick={onClick}

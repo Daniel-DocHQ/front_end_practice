@@ -33,6 +33,7 @@ const CertificatesAaron = ({ patient_data }) => {
 	const [email, setEmail] = useState('');
 	const [dob, setDob] = useState('');
 	const [sex, setSex] = useState('');
+	const [reject_notes, setReject_notes] = useState('');
 	const [security_checked, setSecurity_checked] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
 	const [result, setResult] = useState('');
@@ -44,6 +45,7 @@ const CertificatesAaron = ({ patient_data }) => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [canCreateCertificate, setCanCreateCertificate] = useState(true);
+	const isResultRejected = result === 'Rejected';
 
 	function isValid(obj) {
 		return (
@@ -57,7 +59,8 @@ const CertificatesAaron = ({ patient_data }) => {
 			!!obj.security_document &&
 			!!obj.result &&
 			!!obj.medicalprofessional &&
-			!!obj.passport_number
+			!!obj.passport_number &&
+			(isResultRejected ? !!obj.reject_notes : true)
 		);
 	}
 
@@ -106,7 +109,7 @@ const CertificatesAaron = ({ patient_data }) => {
 	// used as the form submit function, super lazy but works a charm
 	function proceed() {
 		if (
-			canCreateCertificate && isValid() &&
+			canCreateCertificate &&
 			(errors.length === 0 || (errors.length === 1 && errors.includes('security-document')))
 		) {
 			sendResult({
@@ -119,13 +122,13 @@ const CertificatesAaron = ({ patient_data }) => {
 				security_document,
 				result,
 				passport_number,
+				...(isResultRejected && { reject_notes }),
 			});
 		} else {
 			setAttemptedSubmit(true);
 		}
 	}
 	function sendResult(formData) {
-		setIsLoading(true);
 		const body = formData;
 		body.medicalprofessional = `${user.first_name} ${user.last_name}`;
 
@@ -138,33 +141,36 @@ const CertificatesAaron = ({ patient_data }) => {
 
 		body.date_sampled = formatCertificateDate(minus15mins(currentDate));
 		body.date_reported = formatCertificateDate(currentDate);
-
 		body.security_checked = 'true';
-		bookingService
-			.sendResult(token, appointmentId, body)
-			.then(result => {
-				if (result.success) {
-					ToastsStore.success('Generated certificate');
-					setStatus({ severity: 'success', message: 'Successfully generated certificate.' });
-					setIsLoading(false);
-					setCanCreateCertificate(false);
-				} else {
+
+		if (isValid(body)) {
+			setIsLoading(true);
+			bookingService
+				.sendResult(token, appointmentId, body)
+				.then(result => {
+					if (result.success) {
+						ToastsStore.success('Generated certificate');
+						setStatus({ severity: 'success', message: 'Successfully generated certificate.' });
+						setIsLoading(false);
+						setCanCreateCertificate(false);
+					} else {
+						ToastsStore.error('Failed to generate certificate');
+						setStatus({
+							severity: 'error',
+							message: 'Failed to generate certificate, please try again.',
+						});
+						setIsLoading(false);
+					}
+				})
+				.catch(() => {
 					ToastsStore.error('Failed to generate certificate');
 					setStatus({
 						severity: 'error',
 						message: 'Failed to generate certificate, please try again.',
 					});
 					setIsLoading(false);
-				}
-			})
-			.catch(() => {
-				ToastsStore.error('Failed to generate certificate');
-				setStatus({
-					severity: 'error',
-					message: 'Failed to generate certificate, please try again.',
 				});
-				setIsLoading(false);
-			});
+		}
 	}
 	return (
 		<React.Fragment>
@@ -185,7 +191,7 @@ const CertificatesAaron = ({ patient_data }) => {
 						onChange={setForename}
 						pattern={new RegExp(/^[a-zA-Z ]+$/)}
 						inputProps={{ minLength: '2' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -202,7 +208,7 @@ const CertificatesAaron = ({ patient_data }) => {
 						onChange={setSurname}
 						pattern={new RegExp(/^[a-zA-Z ]+$/)}
 						inputProps={{ minLength: '2' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -227,7 +233,7 @@ const CertificatesAaron = ({ patient_data }) => {
 						onChange={setDob}
 						pattern={new RegExp(/^[0-3][1-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$/)}
 						inputProps={{ minLength: '2' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -277,7 +283,7 @@ const CertificatesAaron = ({ patient_data }) => {
 							id='security-document'
 							onChange={e => setSecurity_document(e.target.value)}
 							value={security_document}
-							required={true}
+							required
 							updateStatus={updateErrors}
 						>
 							<MenuItem value='Passport'>Passport</MenuItem>
@@ -315,12 +321,13 @@ const CertificatesAaron = ({ patient_data }) => {
 							id='test-result'
 							onChange={e => setResult(e.target.value)}
 							value={result}
-							required={true}
+							required
 							updateStatus={updateErrors}
 						>
 							<MenuItem value='Positive'>Positive</MenuItem>
 							<MenuItem value='Negative'>Negative</MenuItem>
 							<MenuItem value='Invalid'>Invalid</MenuItem>
+							<MenuItem value='Rejected'>Reject</MenuItem>
 						</Select>
 					</FormControl>
 				</div>
@@ -328,6 +335,22 @@ const CertificatesAaron = ({ patient_data }) => {
 					<div className='row no-margin'>
 						<p className='error'>You must enter a result</p>
 					</div>
+				)}
+				{isResultRejected && (
+					<React.Fragment>
+						<div className='row space-between'>
+							<FormLabel component='legend'>Rejection Notes *</FormLabel>
+						</div>
+						<TextInputElement
+							rows={4}
+							required
+							multiline
+							id='reject-notes'
+							value={reject_notes}
+							onChange={setReject_notes}
+							placeholder='Add Reason for Rejection. This notes will be sent to the client'
+						/>
+					</React.Fragment>
 				)}
 				{!!status && !!status.severity && !!status.message && !isLoading && (
 					<div className='row center'>

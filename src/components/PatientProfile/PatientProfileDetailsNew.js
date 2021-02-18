@@ -115,7 +115,7 @@ const PersonalInformation = () => {
 					autoComplete='given-name'
 					pattern={new RegExp(/^[a-zA-Z ]+$/)}
 					inputProps={{ minLength: '2' }}
-					required={true}
+					required
 					disabled={!isEditable}
 					style={{ width: '300px', maxWidth: '90%', marginRight: '10px', marginTop: '20px' }}
 				/>
@@ -126,7 +126,7 @@ const PersonalInformation = () => {
 					onChange={setLast_name}
 					autoComplete='family-name'
 					pattern={new RegExp(/^[a-zA-Z ]+$/)}
-					required={true}
+					required
 					disabled={!isEditable}
 					style={{ width: '300px', maxWidth: '90%', marginTop: '20px' }}
 				/>
@@ -135,7 +135,7 @@ const PersonalInformation = () => {
 				<DateOfBirth
 					onChange={setDateOfBirth}
 					value={new Date(date_of_birth).getTime()}
-					required={true}
+					required
 					disabled={!isEditable}
 				/>
 			</div>
@@ -322,7 +322,7 @@ const ShippingInformation = ({}) => {
 					autoComplete='shipping address-line1'
 					pattern={new RegExp(/^[a-zA-Z0-9 ]+$/)}
 					inputProps={{ minLength: '1' }}
-					required={true}
+					required
 					updateStatus={updateErrors}
 					disabled={!isEditable}
 				/>
@@ -359,7 +359,7 @@ const ShippingInformation = ({}) => {
 					autoComplete='shipping locality'
 					pattern={new RegExp(/^[A-Za-z ]+$/)}
 					inputProps={{ minLength: '3' }}
-					required={true}
+					required
 					updateStatus={updateErrors}
 					disabled={!isEditable}
 				/>
@@ -378,7 +378,7 @@ const ShippingInformation = ({}) => {
 					autoComplete='shipping region'
 					pattern={new RegExp(/[a-zA-Z ]+$/)}
 					inputProps={{ minLength: '3' }}
-					required={true}
+					required
 					updateStatus={updateErrors}
 					disabled={!isEditable}
 				/>
@@ -401,7 +401,7 @@ const ShippingInformation = ({}) => {
 						)
 					}
 					inputProps={{ maxLength: '8' }}
-					required={true}
+					required
 					updateStatus={updateErrors}
 					disabled={!isEditable}
 				/>

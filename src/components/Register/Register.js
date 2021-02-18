@@ -156,7 +156,7 @@ const Register = ({ role, setRole, setRoleData, setToken, setIsAuthenticated, se
 							autoComplete='given-name'
 							pattern={new RegExp(/^[a-zA-Z ]+$/)}
 							inputProps={{ minLength: '2' }}
-							required={true}
+							required
 							updateStatus={updateErrors}
 						/>
 					</div>
@@ -174,7 +174,7 @@ const Register = ({ role, setRole, setRoleData, setToken, setIsAuthenticated, se
 							autoComplete='family-name'
 							pattern={new RegExp(/^[a-zA-Z ]+$/)}
 							inputProps={{ minLength: '2' }}
-							required={true}
+							required
 							updateStatus={updateErrors}
 						/>
 					</div>
@@ -199,7 +199,7 @@ const Register = ({ role, setRole, setRoleData, setToken, setIsAuthenticated, se
 							onChange={setPassword}
 							autoComplete='new-password'
 							inputProps={{ minLength: '7' }}
-							required={true}
+							required
 							type='password'
 							updateStatus={updateErrors}
 						/>
@@ -214,7 +214,7 @@ const Register = ({ role, setRole, setRoleData, setToken, setIsAuthenticated, se
 						<DateOfBirth
 							onChange={setDateOfBirth}
 							value={dateOfBirth}
-							required={true}
+							required
 							updateStatus={updateErrors}
 						/>
 					</div>

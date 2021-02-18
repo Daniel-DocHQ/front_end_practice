@@ -152,7 +152,7 @@ const PatientProfileDetails = ({
 						autoComplete='given-name'
 						pattern={new RegExp(/^[a-zA-Z ]+$/)}
 						inputProps={{ minLength: '2' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 						disabled
 					/>
@@ -165,7 +165,7 @@ const PatientProfileDetails = ({
 						onChange={setLast_name}
 						autoComplete='family-name'
 						pattern={new RegExp(/^[a-zA-Z ]+$/)}
-						required={true}
+						required
 						updateStatus={updateErrors}
 						disabled
 					/>
@@ -181,7 +181,7 @@ const PatientProfileDetails = ({
 						onChange={settelephone}
 						autoComplete='teletelephone'
 						inputProps={{ minLength: '1' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -194,7 +194,7 @@ const PatientProfileDetails = ({
 						autoComplete='shipping address-line1'
 						pattern={new RegExp(/^[a-zA-Z0-9 ]+$/)}
 						inputProps={{ minLength: '1' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -212,7 +212,7 @@ const PatientProfileDetails = ({
 						autoComplete='shipping locality'
 						pattern={new RegExp(/^[A-Za-z ]+$/)}
 						inputProps={{ minLength: '3' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -230,7 +230,7 @@ const PatientProfileDetails = ({
 						autoComplete='shipping region'
 						pattern={new RegExp(/[a-zA-Z ]+$/)}
 						inputProps={{ minLength: '3' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -252,7 +252,7 @@ const PatientProfileDetails = ({
 							)
 						}
 						inputProps={{ maxLength: '8' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
