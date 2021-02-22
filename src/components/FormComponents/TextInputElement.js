@@ -64,7 +64,7 @@ const TextInputElement = ({
 			value={value}
 			variant='filled'
 			inputProps={inputProps}
-			required
+			required={required}
 			{...rest}
 			style={allStyles}
 		/>

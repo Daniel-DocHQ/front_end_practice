@@ -33,6 +33,7 @@ export default class EditorWrapper extends Component {
 		return (
 			<div>
 				<Editor
+					placeholder={this.props.placeholder}
 					editorState={this.state.editorState}
 					wrapperClassName='note-editor-wrapper'
 					editorClassName='note-editor'

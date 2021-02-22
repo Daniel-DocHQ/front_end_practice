@@ -32,7 +32,8 @@ const CertificatesAaron = ({ patient_data }) => {
 	const [surname, setSurname] = useState('');
 	const [email, setEmail] = useState('');
 	const [dob, setDob] = useState('');
-	const [sex, setSex] = useState();
+	const [sex, setSex] = useState('');
+	const [reject_notes, setReject_notes] = useState('');
 	const [security_checked, setSecurity_checked] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
 	const [result, setResult] = useState('');
@@ -44,6 +45,24 @@ const CertificatesAaron = ({ patient_data }) => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [canCreateCertificate, setCanCreateCertificate] = useState(true);
+	const isResultRejected = result === 'Rejected';
+
+	function isValid(obj) {
+		return (
+			!!obj &&
+			!!obj.forename &&
+			!!obj.surname &&
+			!!obj.email &&
+			!!obj.dob &&
+			!!obj.sex &&
+			!!obj.security_checked &&
+			!!obj.security_document &&
+			!!obj.result &&
+			!!obj.medicalprofessional &&
+			!!obj.passport_number &&
+			(isResultRejected ? !!obj.reject_notes : true)
+		);
+	}
 
 	useEffect(() => {
 		// runs on init
@@ -103,13 +122,13 @@ const CertificatesAaron = ({ patient_data }) => {
 				security_document,
 				result,
 				passport_number,
+				...(isResultRejected && { reject_notes }),
 			});
 		} else {
 			setAttemptedSubmit(true);
 		}
 	}
 	function sendResult(formData) {
-		setIsLoading(true);
 		const body = formData;
 		body.medicalprofessional = `${user.first_name} ${user.last_name}`;
 
@@ -122,33 +141,36 @@ const CertificatesAaron = ({ patient_data }) => {
 
 		body.date_sampled = formatCertificateDate(minus15mins(currentDate));
 		body.date_reported = formatCertificateDate(currentDate);
-
 		body.security_checked = 'true';
-		bookingService
-			.sendResult(token, appointmentId, body)
-			.then(result => {
-				if (result.success) {
-					ToastsStore.success('Generated certificate');
-					setStatus({ severity: 'success', message: 'Successfully generated certificate.' });
-					setIsLoading(false);
-					setCanCreateCertificate(false);
-				} else {
+
+		if (isValid(body)) {
+			setIsLoading(true);
+			bookingService
+				.sendResult(token, appointmentId, body)
+				.then(result => {
+					if (result.success) {
+						ToastsStore.success('Generated certificate');
+						setStatus({ severity: 'success', message: 'Successfully generated certificate.' });
+						setIsLoading(false);
+						setCanCreateCertificate(false);
+					} else {
+						ToastsStore.error('Failed to generate certificate');
+						setStatus({
+							severity: 'error',
+							message: 'Failed to generate certificate, please try again.',
+						});
+						setIsLoading(false);
+					}
+				})
+				.catch(() => {
 					ToastsStore.error('Failed to generate certificate');
 					setStatus({
 						severity: 'error',
 						message: 'Failed to generate certificate, please try again.',
 					});
 					setIsLoading(false);
-				}
-			})
-			.catch(() => {
-				ToastsStore.error('Failed to generate certificate');
-				setStatus({
-					severity: 'error',
-					message: 'Failed to generate certificate, please try again.',
 				});
-				setIsLoading(false);
-			});
+		}
 	}
 	return (
 		<React.Fragment>
@@ -169,7 +191,7 @@ const CertificatesAaron = ({ patient_data }) => {
 						onChange={setForename}
 						pattern={new RegExp(/^[a-zA-Z ]+$/)}
 						inputProps={{ minLength: '2' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -186,7 +208,7 @@ const CertificatesAaron = ({ patient_data }) => {
 						onChange={setSurname}
 						pattern={new RegExp(/^[a-zA-Z ]+$/)}
 						inputProps={{ minLength: '2' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -211,7 +233,7 @@ const CertificatesAaron = ({ patient_data }) => {
 						onChange={setDob}
 						pattern={new RegExp(/^[0-3][1-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$/)}
 						inputProps={{ minLength: '2' }}
-						required={true}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -245,7 +267,7 @@ const CertificatesAaron = ({ patient_data }) => {
 					<MaterialCheckbox
 						value={security_checked}
 						onChange={setSecurity_checked}
-						labelComponent='Security check completed'
+						labelComponent='ID document checked'
 					/>
 				</div>
 				{attemptedSubmit && !security_checked && (
@@ -261,7 +283,7 @@ const CertificatesAaron = ({ patient_data }) => {
 							id='security-document'
 							onChange={e => setSecurity_document(e.target.value)}
 							value={security_document}
-							required={true}
+							required
 							updateStatus={updateErrors}
 						>
 							<MenuItem value='Passport'>Passport</MenuItem>
@@ -270,31 +292,9 @@ const CertificatesAaron = ({ patient_data }) => {
 						</Select>
 					</FormControl>
 				</div>
-				{attemptedSubmit && typeof security_document !== 'undefined' && (
+				{attemptedSubmit && security_document === '' && (
 					<div className='row no-margin'>
 						<p className='error'>You must confirm enter a security document</p>
-					</div>
-				)}
-				<div className='row'>
-					<FormControl variant='filled' style={{ width: '100%' }}>
-						<InputLabel id='test-result-label'>Test Result</InputLabel>
-						<Select
-							labelId='test-result-label'
-							id='test-result'
-							onChange={e => setResult(e.target.value)}
-							value={result}
-							required={true}
-							updateStatus={updateErrors}
-						>
-							<MenuItem value='Positive'>Positive</MenuItem>
-							<MenuItem value='Negative'>Negative</MenuItem>
-							<MenuItem value='Invalid'>Invalid</MenuItem>
-						</Select>
-					</FormControl>
-				</div>
-				{attemptedSubmit && errors.includes('test result') && (
-					<div className='row no-margin'>
-						<p className='error'>You must enter a result</p>
 					</div>
 				)}
 				<div className='row'>
@@ -312,6 +312,45 @@ const CertificatesAaron = ({ patient_data }) => {
 					<div className='row no-margin'>
 						<p className='error'>Enter patient passport number</p>
 					</div>
+				)}
+				<div className='row'>
+					<FormControl variant='filled' style={{ width: '100%' }}>
+						<InputLabel id='test-result-label'>Test Result</InputLabel>
+						<Select
+							labelId='test-result-label'
+							id='test-result'
+							onChange={e => setResult(e.target.value)}
+							value={result}
+							required
+							updateStatus={updateErrors}
+						>
+							<MenuItem value='Positive'>Positive</MenuItem>
+							<MenuItem value='Negative'>Negative</MenuItem>
+							<MenuItem value='Invalid'>Invalid</MenuItem>
+							<MenuItem value='Rejected'>Reject</MenuItem>
+						</Select>
+					</FormControl>
+				</div>
+				{attemptedSubmit && errors.includes('test result') && (
+					<div className='row no-margin'>
+						<p className='error'>You must enter a result</p>
+					</div>
+				)}
+				{isResultRejected && (
+					<React.Fragment>
+						<div className='row space-between'>
+							<FormLabel component='legend'>Rejection Notes *</FormLabel>
+						</div>
+						<TextInputElement
+							rows={4}
+							required
+							multiline
+							id='reject-notes'
+							value={reject_notes}
+							onChange={setReject_notes}
+							placeholder='Add Reason for Rejection. This notes will be sent to the client'
+						/>
+					</React.Fragment>
 				)}
 				{!!status && !!status.severity && !!status.message && !isLoading && (
 					<div className='row center'>

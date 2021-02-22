@@ -1,22 +1,43 @@
 .patient-notes-container {
 	flex: 1;
-	padding: 1rem;
+	padding: 10px;
 	align-self: flex-start;
 	.tab-container {
-		min-height: 70vh;
+		height: 70vh;
+		display: flex;
+		overflow: scroll;
+		flex-direction: column;
 		background-color: var(--doc-white);
 		border-radius: 5px;
 		overflow: hidden;
 		max-width: 40vw;
-		.tab-content-container {
-			margin-top: 20px;
-			padding: 10px;
+		padding: 15px;
+		.tab-content {
+			height: 100%;
+   			overflow: scroll;
+		}
+		.full-height {
+			min-height: 100%;
 		}
 	}
 	.appointment-notes {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+	}
+	.tab-row-text {
+		margin: 0;
+		margin-top: 10px;
+	}
+	.title-info {
+		font-weight: bold;
+	}
+	.patient-link-text {
+		max-width: 200px;
+		cursor: pointer;
+	}
+	.padding-top-box {
+		padding-top: 30px;
 	}
 	.appointment-buttons {
 		width: 100%;

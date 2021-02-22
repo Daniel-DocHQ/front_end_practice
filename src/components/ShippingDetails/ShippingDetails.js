@@ -98,7 +98,7 @@ const ShippingDetails = ({ initialData, update }) => {
 							autoComplete='given-name'
 							pattern={new RegExp(/^[a-zA-Z ]+$/)}
 							inputProps={{ minLength: '2' }}
-							required={true}
+							required
 						/>
 					</div>
 					<div className='row'>
@@ -109,7 +109,7 @@ const ShippingDetails = ({ initialData, update }) => {
 							onChange={setLast_name}
 							autoComplete='family-name'
 							pattern={new RegExp(/^[a-zA-Z ]+$/)}
-							required={true}
+							required
 						/>
 					</div>
 					<div className='row'>
@@ -124,7 +124,7 @@ const ShippingDetails = ({ initialData, update }) => {
 							autoComplete='shipping address-line1'
 							pattern={new RegExp(/^[a-zA-Z0-9 ]+$/)}
 							inputProps={{ minLength: '1' }}
-							required={true}
+							required
 						/>
 					</div>
 					<div className='row'>
@@ -136,7 +136,7 @@ const ShippingDetails = ({ initialData, update }) => {
 							autoComplete='shipping locality'
 							pattern={new RegExp(/^[A-Za-z ]+$/)}
 							inputProps={{ minLength: '3' }}
-							required={true}
+							required
 						/>
 					</div>
 					<div className='row'>
@@ -148,7 +148,7 @@ const ShippingDetails = ({ initialData, update }) => {
 							autoComplete='shipping region'
 							pattern={new RegExp(/[a-zA-Z ]+$/)}
 							inputProps={{ minLength: '3' }}
-							required={true}
+							required
 						/>
 					</div>
 
@@ -165,7 +165,7 @@ const ShippingDetails = ({ initialData, update }) => {
 								)
 							}
 							inputProps={{ maxLength: '8' }}
-							required={true}
+							required
 						/>
 					</div>
 					{isModified && (

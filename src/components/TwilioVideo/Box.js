@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import getURLParams from '../../helpers/getURLParams';
 import DocButton from '../DocButton/DocButton';
 import './box-test.scss';
 import TwillioVideoCall, { PatientHeader } from '../VideoCall/TwillioVideoCall';
 import FullScreenOverlay from '../FullScreenOverlay/FullScreenOverlay';
 
-const Box = ({ isNurse, updateImageData, captureDisabled }) => {
+const Box = ({
+	isNurse,
+	updateImageData,
+	captureDisabled,
+	videoCallToken,
+	setVideoCallToken,
+}) => {
 	const params = getURLParams(window.location.href);
-	const [token, setToken] = useState();
 	const handleSubmit = useCallback(
 		async event => {
 			event.preventDefault();
@@ -21,15 +26,15 @@ const Box = ({ isNurse, updateImageData, captureDisabled }) => {
 					'Content-Type': 'application/json',
 				},
 			}).then(res => res.json());
-			setToken(data.token);
+			setVideoCallToken(data.token);
 		},
 		[params, isNurse]
 	);
-	return token ? (
+	return videoCallToken ? (
 		<div className='vid-box'>
 			<TwillioVideoCall
 				isNurse={isNurse}
-				token={token}
+				token={videoCallToken}
 				appointmentId={params['appointmentId']}
 				updateImageData={updateImageData}
 				captureDisabled={captureDisabled}
@@ -50,7 +55,7 @@ const Box = ({ isNurse, updateImageData, captureDisabled }) => {
 							}}
 						>
 							<h2>You are ready for your appointment</h2>
-							<DocButton text='Join Appointment' onClick={handleSubmit} color='green' />
+							<DocButton text='Join Appointment' onClick={() => setVideoCallToken('token')} color='green' />
 						</div>
 					}
 				/>
@@ -64,7 +69,7 @@ const Box = ({ isNurse, updateImageData, captureDisabled }) => {
 						}}
 					>
 						<h2>You are ready for your appointment</h2>
-						<DocButton text='Join Appointment' onClick={handleSubmit} color='green' />
+						<DocButton text='Join Appointment' onClick={() => setVideoCallToken('token')}  color='green' />
 					</div>
 				</div>
 			)}
