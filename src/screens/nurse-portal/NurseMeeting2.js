@@ -146,6 +146,42 @@ const PatientDetails = ({
 	isSpaceBetweenPhoneBox,
 }) => {
 	const linkRef = useRef(null);
+	const isManyPatients = patients.length > 1;
+
+	const addressDataBlock = () => (
+		<React.Fragment>
+			{!!patient.street_address && fullData && (
+				<div className='row space-between no-margin'>
+					<p className='tab-row-text title-info'>Address Line 1:</p>
+					<p className='tab-row-text'>{patient.street_address}</p>
+				</div>
+			)}
+			{!!patient.extended_address && fullData && (
+				<div className='row space-between no-margin'>
+					<p className='tab-row-text title-info'>Address Line 2:</p>
+					<p className='tab-row-text'>{patient.extended_address}</p>
+				</div>
+			)}
+			{!!patient.region && fullData && (
+				<div className='row space-between no-margin'>
+					<p className='tab-row-text title-info'>Town:</p>
+					<p className='tab-row-text'>{patient.region}</p>
+				</div>
+			)}
+			{!!patient.country && fullData && (
+				<div className='row space-between no-margin'>
+					<p className='tab-row-text title-info'>Country:</p>
+					<p className='tab-row-text'>{patient.country}</p>
+				</div>
+			)}
+			{!!patient.postal_code && fullData && (
+				<div className='row space-between no-margin'>
+					<p className='tab-row-text title-info'>Post Code:</p>
+					<p className='tab-row-text'>{patient.postal_code}</p>
+				</div>
+			)}
+		</React.Fragment>
+	);
 
 	return (
 		<React.Fragment>
@@ -153,11 +189,11 @@ const PatientDetails = ({
 				<h3 className='no-margin'>{title}</h3>
 			</div>
 			<div className='column'>
-				{patients.length > 1 ? (
+				{isManyPatients ? (
 					patients.map((item, indx) => (
 						!!item.last_name && !!item.first_name && (
 							<div key={indx} className='row space-between no-margin'>
-								<p className='tab-row-text'>Full Name Client {indx + 1}:</p>
+								<p className='tab-row-text title-info'>Full Name Client {indx + 1}:</p>
 								<p className='tab-row-text'>{item.first_name} {item.last_name}</p>
 							</div>
 						)
@@ -165,53 +201,26 @@ const PatientDetails = ({
 				) : (
 					!!patient.first_name && !!patient.last_name && (
 						<div className='row space-between no-margin'>
-							<p className='tab-row-text'>Full Name:</p>
+							<p className='tab-row-text title-info'>Full Name:</p>
 							<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
 						</div>
 					)
 				)}
 				{!!patient.dob && !fullData && (
 					<div className='row space-between no-margin'>
-						<p className='tab-row-text'>DOB:</p>
+						<p className='tab-row-text title-info'>DOB:</p>
 						<p className='tab-row-text'>{format(new Date(patient.dob), 'dd-MM-yyyy')}</p>
 					</div>
 				)}
-				{!!patient.street_address && fullData && (
-					<div className='row space-between no-margin'>
-						<p className='tab-row-text'>Address Line 1:</p>
-						<p className='tab-row-text'>{patient.street_address}</p>
-					</div>
+				{!isManyPatients && (
+					addressDataBlock()
 				)}
-				{!!patient.extended_address && fullData && (
-					<div className='row space-between no-margin'>
-						<p className='tab-row-text'>Address Line 2:</p>
-						<p className='tab-row-text'>{patient.extended_address}</p>
-					</div>
-				)}
-				{!!patient.region && fullData && (
-					<div className='row space-between no-margin'>
-						<p className='tab-row-text'>Town:</p>
-						<p className='tab-row-text'>{patient.region}</p>
-					</div>
-				)}
-				{!!patient.country && fullData && (
-					<div className='row space-between no-margin'>
-						<p className='tab-row-text'>Country:</p>
-						<p className='tab-row-text'>{patient.country}</p>
-					</div>
-				)}
-				{!!patient.postal_code && fullData && (
-					<div className='row space-between no-margin'>
-						<p className='tab-row-text'>Post Code:</p>
-						<p className='tab-row-text'>{patient.postal_code}</p>
-					</div>
-				)}
-				<div className={isSpaceBetweenPhoneBox && 'padding-box'}>
-					{patients.length > 1 ? (
+				<div className={isSpaceBetweenPhoneBox && 'padding-top-box'}>
+					{isManyPatients ? (
 						patients.map((item, indx) => (
 							!!item.phone && (
 								<div key={indx} className='row space-between no-margin'>
-									<p className='tab-row-text'>Phone No Client {indx + 1}:</p>
+									<p className='tab-row-text title-info'>Phone No Client {indx + 1}:</p>
 									<p className='tab-row-text'>{item.phone}</p>
 								</div>
 							)
@@ -219,13 +228,13 @@ const PatientDetails = ({
 					) : (
 						!!patient.phone && (
 							<div className='row space-between no-margin'>
-								<p className='tab-row-text'>Phone No:</p>
+								<p className='tab-row-text title-info'>Phone No:</p>
 								<p className='tab-row-text'>{patient.phone}</p>
 							</div>
 						)
 					)}
 					<div className='row space-between no-margin'>
-						<p className='tab-row-text'>
+						<p className='tab-row-text title-info'>
 							Patient Joining link:
 						</p>
 						<Tooltip title="Click to copy">
@@ -240,6 +249,11 @@ const PatientDetails = ({
 						</Tooltip>
 					</div>
 				</div>
+				{isManyPatients && (
+					<div className={isSpaceBetweenPhoneBox && 'padding-top-box'}>
+						{addressDataBlock()}
+					</div>
+				)}
 			</div>
 		</React.Fragment>
 	);
@@ -321,7 +335,7 @@ const SubmitPatientResult = ({
 							appointmentId={appointmentId}
 						/>
 					</Grid>
-					<Grid item className='padding-box'>
+					<Grid item className='padding-top-box'>
 						<div className='row space-between'>
 							<h3 className='no-margin'>Enter KID ID</h3>
 						</div>
@@ -338,7 +352,8 @@ const SubmitPatientResult = ({
 						<div className='row flex-end'>
 							<DocButton
 								text={kidIdModifyMode ? 'Modify' : 'Submit'}
-								color='green'
+								color={kidId ? 'green' : 'disabled'}
+								disabled={!kidId}
 								onClick={() => {
 									if (kidIdModifyMode) {
 										setKidIdModifyMode(false);
@@ -371,7 +386,12 @@ const SubmitPatientResult = ({
 							</div>
 							{isSampleTakenValid && (
 								<div className='row flex-end'>
-									<DocButton text='Submit' color='green' onClick={sendSampleTaken} />
+									<DocButton
+										text='Submit'
+										disabled={!sampleTaken}
+										onClick={sendSampleTaken}
+										color={!!sampleTaken ? 'green' : 'disabled'}
+									/>
 								</div>
 							)}
 							<div className='row space-between'>
@@ -405,9 +425,9 @@ const SubmitPatientResult = ({
 									/>
 									<div className='row flex-end'>
 										<DocButton
-											color='green'
 											text='Submit'
 											disabled={isSampleTakenNotValid ? !notes : false}
+											color={isSampleTakenNotValid && !notes ? 'disabled' : 'green'}
 											onClick={() => (isSampleTakenNotValid ? sendSampleTaken() : updateNotes(notes))}
 										/>
 									</div>
@@ -472,7 +492,6 @@ const AddressVerification = ({
 	function isValid() {
 		return (
 			!!addressLine1 &&
-			!!addressLine2 &&
 			!!town &&
 			!!country &&
 			!!postCode
@@ -509,7 +528,12 @@ const AddressVerification = ({
 	return (
 		<div className='tab-container'>
 			<div className='tab-content'>
-				<Grid container direction='column' justify='space-between' className='full-height'>
+				<Grid
+					container
+					direction='column'
+					justify='space-between'
+					className='full-height'
+				>
 					<Grid item>
 						<PatientDetails
 							fullData
@@ -522,7 +546,7 @@ const AddressVerification = ({
 					</Grid>
 					{modifyMode && (
 						<Grid item>
-							<div className='row space-between'>
+							<div className='row space-between padding-top-box'>
 								<h3 className='no-margin'>New Address</h3>
 							</div>
 							<div className='row'>
@@ -536,7 +560,6 @@ const AddressVerification = ({
 							</div>
 							<div className='row'>
 								<TextInputElement
-									required
 									value={addressLine2}
 									id='address-line-2'
 									label='Address Line 2'
@@ -573,16 +596,16 @@ const AddressVerification = ({
 							<div className='row flex-end'>
 								<DocButton
 									text='Save'
-									color='green'
 									onClick={proceed}
 									disabled={!isValid()}
+									color={isValid() ? 'green' : 'disabled'}
 								/>
 							</div>
 						</Grid>
 					)}
 					{(isJoined && !modifyMode) && (
 						<Grid item>
-							<div className='row no-margin'>
+							<div className='row no-margin padding-top-box'>
 								<h4>Do you confirm that the patient's current address is the same as the one displayed above?</h4>
 							</div>
 							<div className='row flex-end'>
@@ -618,19 +641,19 @@ const VideoAppointmentDetails = ({
 							<div className='column'>
 								{!!patient.first_name && !!patient.last_name && (
 									<div className='row space-between no-margin'>
-										<p className='tab-row-text'>Full Name:</p>
+										<p className='tab-row-text title-info'>Full Name:</p>
 										<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
 									</div>
 								)}
 								{!!patient.dob && (
 									<div className='row space-between no-margin'>
-										<p className='tab-row-text'>DOB:</p>
+										<p className='tab-row-text title-info'>DOB:</p>
 										<p>{format(new Date(patient.dob), 'dd-MM-yyyy')}</p>
 									</div>
 								)}
 								{!!patient.postal_code && (
 									<div className='row space-between no-margin'>
-										<p className='tab-row-text'>Post Code:</p>
+										<p className='tab-row-text title-info'>Post Code:</p>
 										<p className='no-margin'>{patient.postal_code}</p>
 									</div>
 								)}
@@ -645,13 +668,13 @@ const VideoAppointmentDetails = ({
 							<div className='column'>
 								{!!appointmentDetails.start_time && (
 									<div className='row space-between no-margin'>
-										<p className='no-margin'>Start Time:</p>
+										<p className='no-margin title-info'>Start Time:</p>
 										<p className='no-margin'>{format(new Date(appointmentDetails.start_time), 'p')}</p>
 									</div>
 								)}
 								{!!appointmentDetails.start_time && !!appointmentDetails.end_time && (
 									<div className='row space-between no-margin'>
-										<p className='no-margin'>Duration:</p>
+										<p className='no-margin title-info'>Duration:</p>
 										<p>{differenceInMinutes(new Date(appointmentDetails.end_time), new Date(appointmentDetails.start_time))} mins</p>
 									</div>
 								)}
@@ -670,7 +693,7 @@ const PatientIdVerification = ({
     updateParent,
     appointmentId,
 }) => {
-    const { user, token } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
     const [security_checked, setSecurity_checked] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
 
@@ -681,7 +704,6 @@ const PatientIdVerification = ({
 					result: '',
 					security_checked,
 					security_document,
-					medicalprofessional: `${user.first_name} ${user.last_name}`
 				})
 				.then(result => {
 					if (result.success) {
@@ -740,7 +762,12 @@ const PatientIdVerification = ({
 					</Grid>
 					<Grid item>
 						<div className='row flex-end'>
-							<DocButton text='Submit' color='green' onClick={proceed} />
+							<DocButton
+								text='Submit'
+								onClick={proceed}
+								disabled={!security_document}
+								color={!!security_document ? 'green' : 'disabled'}
+							/>
 						</div>
 					</Grid>
 				</Grid>
@@ -764,6 +791,7 @@ const AppointmentActions = ({
 	const linkRef = useRef(null);
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
+	const [kitProvider, setKitProvider] = useState();
 
 	return (
 		<div className='tab-container'>
@@ -778,19 +806,19 @@ const AppointmentActions = ({
 								<div key={indx} style={{ paddingBottom: 10 }}>
 									{!!item.first_name && !!item.last_name && (
 										<div className='row space-between no-margin'>
-											<p className='tab-row-text'>Full Name {indx + 1}:</p>
+											<p className='tab-row-text title-info'>Full Name {indx + 1}:</p>
 											<p className='tab-row-text'>{item.first_name} {item.last_name}</p>
 										</div>
 									)}
 									{!!item.phone && (
 										<div className='row space-between no-margin'>
-											<p className='tab-row-text'>Phone No:</p>
+											<p className='tab-row-text title-info'>Phone No:</p>
 											<p className='tab-row-text'>{item.phone}</p>
 										</div>
 									)}
 									{!!item.email && (
 										<div className='row space-between no-margin'>
-											<p className='tab-row-text'>Email Address:</p>
+											<p className='tab-row-text title-info'>Email Address:</p>
 											<p className='tab-row-text'>{item.email}</p>
 										</div>
 									)}
@@ -800,19 +828,19 @@ const AppointmentActions = ({
 							<React.Fragment>
 								{!!patient.first_name && !!patient.last_name && (
 									<div className='row space-between no-margin'>
-										<p className='tab-row-text'>Full Name:</p>
+										<p className='tab-row-text title-info'>Full Name:</p>
 										<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
 									</div>
 								)}
 								{!!patient.phone && (
 									<div className='row space-between no-margin'>
-										<p className='tab-row-text'>Phone No:</p>
+										<p className='tab-row-text title-info'>Phone No:</p>
 										<p className='tab-row-text'>{patient.phone}</p>
 									</div>
 								)}
 								{!!patient.email && (
 									<div className='row space-between no-margin'>
-										<p className='tab-row-text'>Email Address:</p>
+										<p className='tab-row-text title-info'>Email Address:</p>
 										<p className='tab-row-text'>{patient.email}</p>
 									</div>
 								)}
@@ -820,7 +848,7 @@ const AppointmentActions = ({
 						)}
 					</div>
 					<div className='row space-between'>
-						<p className='tab-row-text'>Patient Joining link:</p>
+						<p className='tab-row-text title-info'>Patient Joining link:</p>
 						<Tooltip title="Click to copy">
 							<Typography
 								noWrap
@@ -860,6 +888,30 @@ const AppointmentActions = ({
 							</div>
 						</React.Fragment>
 					)}
+					<Grid
+						container
+						alignItems="center"
+						justify="space-between"
+						style={{ padding: '30px 0'}}
+					>
+						<Grid item xs={6}>
+							<h3 className='no-margin'>Kit Provider</h3>
+						</Grid>
+						<Grid item xs={6}>
+							<FormControl variant='filled' style={{ width: '100%' }}>
+								<InputLabel id='kid-provider-label'>Kit Provider</InputLabel>
+								<Select
+									labelId='kid-provider-label'
+									id='kid-provider'
+									onChange={e => setKitProvider(e.target.value)}
+									value={kitProvider}
+									required
+								>
+									<MenuItem value='Roche Test Kit'>Roche Test Kit</MenuItem>
+								</Select>
+							</FormControl>
+						</Grid>
+					</Grid>
 					{!!isCaptureDisabled && isCaptureDisabled && (
 						<div className='row space-between'>
 							<h3 className='no-margin'>Captured Image: </h3>

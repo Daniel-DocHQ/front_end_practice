@@ -29,12 +29,15 @@
 		margin: 0;
 		margin-top: 10px;
 	}
+	.title-info {
+		font-weight: bold;
+	}
 	.patient-link-text {
 		max-width: 200px;
 		cursor: pointer;
 	}
-	.padding-box {
-		padding: 30px 0;
+	.padding-top-box {
+		padding-top: 30px;
 	}
 	.appointment-buttons {
 		width: 100%;

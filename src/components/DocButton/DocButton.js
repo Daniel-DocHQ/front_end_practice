@@ -11,7 +11,7 @@ const DocButton = ({ color, onClick, text, type, style, disabled, nomargin, flat
 		<React.Fragment>
 			<button
 				type={type || 'button'}
-				className={`btn disabled ${
+				className={`btn ${typeof color !== 'undefined' ? color : ''} ${
 					typeof flat !== 'undefined' ? 'flat' : ''
 				}`}
 				onClick={onClick}
