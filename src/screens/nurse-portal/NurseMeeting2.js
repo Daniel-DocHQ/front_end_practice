@@ -37,6 +37,7 @@ const APPOINTMENT_TYPES = {
 const NurseMeeting2 = ({ isVideo }) => {
 	const token = useToken();
 	const [videoCallToken, setVideoCallToken] = useState();
+	const [kitProvider, setKitProvider] = useState();
 
 	return (
 		<AppointmentContextProvider token={token}>
@@ -53,17 +54,25 @@ const NurseMeeting2 = ({ isVideo }) => {
 					</div>
 				)}
 				<div className={`patient-notes-container ${isVideo ? '' : 'face-to-face'}`}>
-					<TabContainer isJoined={!!videoCallToken} />
+					<TabContainer
+						kitProvider={kitProvider}
+						isJoined={!!videoCallToken}
+						setKitProvider={setKitProvider}
+					/>
 				</div>
 			</div>
-			<CertificatesContainer />
+			<CertificatesContainer kitProvider={kitProvider} />
 		</AppointmentContextProvider>
 	);
 };
 
 export default NurseMeeting2;
 
-const TabContainer = ({ isJoined }) => {
+const TabContainer = ({
+	isJoined,
+	kitProvider,
+	setKitProvider,
+}) => {
 	const [value, setValue] = React.useState(0);
 	const {
 		type,
@@ -99,6 +108,8 @@ const TabContainer = ({ isJoined }) => {
 						patient={patient}
 						patients={patients}
 						appointmentId={appointmentId}
+						kitProvider={kitProvider}
+						setKitProvider={setKitProvider}
 					/>
 				)}
 			</div>
@@ -780,6 +791,8 @@ const AppointmentActions = ({
 	patient,
 	patients = [],
 	appointmentId,
+	kitProvider,
+	setKitProvider,
 }) => {
 	const {
 		isCaptureDisabled,
@@ -791,7 +804,6 @@ const AppointmentActions = ({
 	const linkRef = useRef(null);
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
-	const [kitProvider, setKitProvider] = useState();
 
 	return (
 		<div className='tab-container'>
@@ -859,6 +871,9 @@ const AppointmentActions = ({
 								https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
 							</Typography>
 						</Tooltip>
+					</div>
+					<div className='row no-margin' style={{ paddingTop: '30px'}}>
+						<h3 className='no-margin'>Appointment Actions</h3>
 					</div>
 					<div className='row space-between'>
 						<h3 className='no-margin'>Appointment Notes</h3>
@@ -929,7 +944,12 @@ const AppointmentActions = ({
 					)}
 					<div className='appointment-buttons'>
 						<div className='row'>
-							<DocButton text='Create Certificate' color='pink' onClick={toggleDisplayCertificates} />
+							<DocButton
+								disabled={!kitProvider}
+								text='Create Certificate'
+								onClick={toggleDisplayCertificates}
+								color={!!kitProvider ? 'pink' : 'disabled'}
+							/>
 						</div>
 					</div>
 				</div>
@@ -948,7 +968,7 @@ const copyToClipboard = (ref) => {
 	ToastsStore.success('Copied');
 };
 
-const CertificatesContainer = () => {
+const CertificatesContainer = ({ kitProvider }) => {
 	const { displayCertificates, booking_users } = useContext(AppointmentContext);
 	return displayCertificates ? (
 		<div
@@ -960,7 +980,11 @@ const CertificatesContainer = () => {
 			}}
 		>
 			{!!booking_users &&
-				booking_users.map((user, i) => <CertificatesAaron key={i} patient_data={user} />)}
+				booking_users.map((user, i) => <CertificatesAaron
+					key={i}
+					patient_data={user}
+					kitProvider={kitProvider}
+				/>)}
 		</div>
 	) : null;
 };

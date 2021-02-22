@@ -24,7 +24,7 @@ import { ToastsStore } from 'react-toasts';
 import { Alert } from '@material-ui/lab';
 import { useAppointmentId } from '../../context/AppointmentContext';
 
-const CertificatesAaron = ({ patient_data }) => {
+const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }) => {
 	const { user, token } = useContext(AuthContext);
 	const appointmentId = useAppointmentId();
 	// Form fields
@@ -36,6 +36,7 @@ const CertificatesAaron = ({ patient_data }) => {
 	const [reject_notes, setReject_notes] = useState('');
 	const [security_checked, setSecurity_checked] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
+	const [kitProvider, setKitProvider] = useState('');
 	const [result, setResult] = useState('');
 	const [passport_number, setPassportNumber] = useState('');
 	// Error handling
@@ -60,6 +61,7 @@ const CertificatesAaron = ({ patient_data }) => {
 			!!obj.result &&
 			!!obj.medicalprofessional &&
 			!!obj.passport_number &&
+			!!obj.kitProvider &&
 			(isResultRejected ? !!obj.reject_notes : true)
 		);
 	}
@@ -92,6 +94,9 @@ const CertificatesAaron = ({ patient_data }) => {
 		if (patient_data.last_name) {
 			setSurname(patient_data.last_name);
 		}
+		if (!!preselectedKidProvider) {
+			setKitProvider(preselectedKidProvider);
+		}
 		if (patient_data.email) {
 			setEmail(patient_data.email);
 		}
@@ -122,6 +127,7 @@ const CertificatesAaron = ({ patient_data }) => {
 				security_document,
 				result,
 				passport_number,
+				kitProvider,
 				...(isResultRejected && { reject_notes }),
 			});
 		} else {
@@ -130,7 +136,7 @@ const CertificatesAaron = ({ patient_data }) => {
 	}
 	function sendResult(formData) {
 		const body = formData;
-		body.medicalprofessional = `${user.first_name} ${user.last_name}`;
+		body.medicalprofessional = (!!user && !!user.first_name && !!user.last_name) ? `${user.first_name} ${user.last_name}` : '';
 
 		let currentDate = new Date();
 		const minus15mins = date => {
@@ -313,6 +319,20 @@ const CertificatesAaron = ({ patient_data }) => {
 						<p className='error'>Enter patient passport number</p>
 					</div>
 				)}
+				<div className='row'>
+					<FormControl variant='filled' style={{ width: '100%' }}>
+						<InputLabel id='kid-provider-label'>Kit Provider</InputLabel>
+						<Select
+							labelId='kid-provider-label'
+							id='kid-provider'
+							onChange={e => setKitProvider(e.target.value)}
+							value={kitProvider}
+							required
+						>
+							<MenuItem value='Roche Test Kit'>Roche Test Kit</MenuItem>
+						</Select>
+					</FormControl>
+				</div>
 				<div className='row'>
 					<FormControl variant='filled' style={{ width: '100%' }}>
 						<InputLabel id='test-result-label'>Test Result</InputLabel>
