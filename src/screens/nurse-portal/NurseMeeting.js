@@ -16,9 +16,10 @@ import CertificatesAaron from '../../components/Certificates/CertificatesAaron';
 import VerifyPatients from '../../components/VerifyPatients.js/VerifyPatients';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
-const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
+const NurseMeeting = ({ isVideo, isAuthenticated, token, role }) => {
 	const [newNotes, setNewNotes] = useState('');
 	const [imageSrc, setImageSrc] = useState();
+	const [videoCallToken, setVideoCallToken] = useState();
 	const [gotAppointmentData, setGotAppointmentData] = useState(false);
 	const [appointmentData, setAppointmentData] = useState();
 	const [captureDisabled, setCaptureDisabled] = useState(false);
@@ -189,7 +190,13 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 				<div className='row flex-start'>
 					{isVideo && (
 						<div className='patient-video'>
-							<Box isNurse={true} updateImageData={setImageSrc} captureDisabled={captureDisabled} />
+							<Box
+								isNurse={true}
+								videoCallToken={videoCallToken}
+								updateImageData={setImageSrc}
+								captureDisabled={captureDisabled}
+								setVideoCallToken={setVideoCallToken}
+							/>
 						</div>
 					)}
 					<div className='doc-container' style={{ width: '40%' }}>
