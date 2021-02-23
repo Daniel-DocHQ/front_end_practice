@@ -11,7 +11,7 @@ import existsInArray from '../../helpers/existsInArray';
 import authorisationSvc from '../../services/authorisationService';
 const logo = require('../../assets/images/icons/dochq-logo-rect.svg');
 
-const Register = ({ role, setRole, setRoleData, setToken, setIsAuthenticated, setUser, props }) => {
+const Register = ({ role, setRole, setRoleData, setToken, setIsAuthenticated, setUser }) => {
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const [email, setEmail] = useState('');

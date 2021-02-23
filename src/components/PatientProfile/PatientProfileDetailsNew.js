@@ -1,17 +1,14 @@
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import DocButton from '../DocButton/DocButton';
 import DateOfBirth from '../FormComponents/DateOfBirth';
 import EmailInputElement from '../FormComponents/EmailInput';
 import TextInputElement from '../FormComponents/TextInputElement';
 import existsInArray from '../../helpers/existsInArray';
 import './PatientProfileDetails.scss';
-import MaterialCheckbox from '../MaterialCheckbox/MaterialCheckbox';
 import PhoneNumber from '../FormComponents/PhoneNumber/PhoneNumber';
 import {
 	AuthContext,
-	useOrgProfile,
-	useRoleProfile,
 	useToken,
 	useUser,
 } from '../../context/AuthContext';
@@ -19,15 +16,15 @@ import bookingUserDataService from '../../services/bookingUserDataService';
 import authorisationSvc from '../../services/authorisationService';
 import Alert from '@material-ui/lab/Alert';
 
-const PatientProfileDetailsNew = () => {
+const PatientProfileDetailsNew = ({ textPersonalInfo }) => {
 	return (
-		<React.Fragment>
-			<div className='profile-grid'>
-				<ProfileRow title='Personal Information' content={<PersonalInformation />} />
-				<ProfileRow title='Shipping Information' content={<ShippingInformation />} />
-				<ProfileRow title='Health Profile' content={<HRAView />} />
-			</div>
-		</React.Fragment>
+		<div className='profile-grid'>
+			<ProfileRow
+				title='Personal Information'
+				content={<PersonalInformation textPersonalInfo={textPersonalInfo} />}
+			/>
+			<ProfileRow title='Shipping Information' content={<ShippingInformation />} />
+		</div>
 	);
 };
 
@@ -44,7 +41,7 @@ const ProfileRow = ({ title, content }) => (
 	</React.Fragment>
 );
 
-const PersonalInformation = () => {
+const PersonalInformation = ({ textPersonalInfo }) => {
 	const { setUser, setRole } = useContext(AuthContext);
 	const token = useToken();
 	const user = useUser();
@@ -104,7 +101,30 @@ const PersonalInformation = () => {
 			setAttemptedSubmit(true);
 		}
 	}
-	return (
+	return textPersonalInfo ? (
+		<React.Fragment>
+			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+				<p className='title-info'>First Name:</p>
+				<p>{first_name}</p>
+			</div>
+			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+				<p className='title-info'>Last Name:</p>
+				<p>{last_name}</p>
+			</div>
+			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+				<p className='title-info'>Date of Birth:</p>
+				<p>{format(new Date(date_of_birth), 'dd-MM-yyyy')}</p>
+			</div>
+			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+				<p className='title-info'>Email:</p>
+				<p>{email}</p>
+			</div>
+			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+				<p className='title-info'>Phone:</p>
+				<p>{telephone}</p>
+			</div>
+		</React.Fragment>
+	) : (
 		<React.Fragment>
 			<div className='row flex-start' style={{ flexWrap: 'wrap' }}>
 				<TextInputElement
@@ -164,11 +184,8 @@ const ShippingInformation = ({}) => {
 		token,
 		user,
 		role_profile,
-		role,
 		organisation_profile,
 		setRoleProfile,
-		setRole,
-		setUser,
 	} = useContext(AuthContext);
 	const shipping_details =
 		!!role_profile && !!role_profile.shipping_details ? { ...role_profile.shipping_details } : {};
@@ -200,37 +217,7 @@ const ShippingInformation = ({}) => {
 		if (!!organisation_profile && !!organisation_profile.id)
 			shipping_details.organisation_profile_id = organisation_profile.id;
 	}, [role_profile]);
-	useEffect(() => {
-		if (!!role_profile) {
-			bookingUserDataService
-				.getRoleProfile(token)
-				.then(result => {
-					if (result.success && result.role_profile) {
-						setRoleProfile(result.role_profile);
-					} else {
-						setIsEditable(true);
-					}
-				})
-				.catch(err => {
-					setIsEditable(true);
-					console.log('profile_not_complete');
-				});
-		}
-		if (!!user || !!role) {
-			authorisationSvc
-				.getUser(token)
-				.then(result => {
-					const obj = {};
-					if (result.success && !!result.user) {
-						setUser(result.user);
-						if (!!result.user && !!result.user.roles && !!result.user.roles[0]) {
-							setRole(result.role);
-						}
-					}
-				})
-				.catch(() => console.log('error getting user'));
-		}
-	}, []);
+
 	function updateErrors(isValid, field) {
 		// if valid and in array remove
 		if (isValid && existsInArray(errors, field)) {
@@ -268,7 +255,7 @@ const ShippingInformation = ({}) => {
 			if (
 				!!role_profile &&
 				!!role_profile.shipping_details &&
-				!!role_profile.shipping_details.name
+				!!role_profile.shipping_details.address_1
 			) {
 				body.shipping_details.id = shipping_details.id;
 				bookingUserDataService
@@ -341,15 +328,9 @@ const ShippingInformation = ({}) => {
 					autoComplete='shipping address-line2'
 					pattern={new RegExp(/^[a-zA-Z0-9 ]/)}
 					inputProps={{ minLength: '1' }}
-					updateStatus={updateErrors}
 					disabled={!isEditable}
 				/>
 			</div>
-			{attemptedSubmit && errors.includes('address line 2') && (
-				<div className='row no-margin'>
-					<p className='error'>Enter the second line of your address</p>
-				</div>
-			)}
 			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
 				<TextInputElement
 					value={city}
@@ -424,264 +405,6 @@ const ShippingInformation = ({}) => {
 				) : (
 					<DocButton text='Edit' color='green' onClick={() => setIsEditable(true)} />
 				)}
-			</div>
-		</React.Fragment>
-	);
-};
-const HRAView = () => {
-	const token = useToken();
-	const [hra_data, setHRAData] = useState();
-	useEffect(() => {
-		if (!!token) {
-			bookingUserDataService
-				.getHRAData(token)
-				.then(result => {
-					if (result.success && result.hra_data) {
-						setHRAData(result.hra_data);
-					}
-				})
-				.catch(() => console.log('err'));
-		}
-	}, []);
-
-	// Display only
-	return !!hra_data ? (
-		<React.Fragment>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>About You</h3>
-				</div>
-				<div>
-					<div className='row' style={{ flexWrap: 'wrap' }}>
-						<TextInputElement
-							label='Height (cm)'
-							value={hra_data.height}
-							onChange={() => null}
-							placeholder='Height (cm)'
-							type='number'
-							inputProps={{ min: 1, max: 300, step: 1 }}
-							disabled={true}
-							style={{ width: '200px', marginRight: '20px', marginTop: '20px' }}
-						/>
-						<TextInputElement
-							label='Weight (kg)'
-							value={hra_data.weight}
-							onChange={() => null}
-							placeholder='Weight (kg)'
-							type='number'
-							inputProps={{ min: 20, max: 250 }}
-							disabled={true}
-							style={{ width: '200px', marginTop: '20px' }}
-						/>
-					</div>
-					<div className='row'>
-						<FormControl component='fieldset'>
-							<FormLabel component='legend'>Sex *</FormLabel>
-							<RadioGroup
-								style={{ display: 'inline' }}
-								aria-label='sex'
-								name='sex'
-								value={hra_data.sex}
-								onChange={() => null}
-							>
-								<FormControlLabel value='Female' control={<Radio />} label='Female' />
-								<FormControlLabel value='Male' control={<Radio />} label='Male' />
-							</RadioGroup>
-						</FormControl>
-					</div>
-					<div className='row'>
-						<FormControl component='fieldset'>
-							<FormLabel component='legend'>Do you smoke?</FormLabel>
-							<RadioGroup
-								style={{ display: 'inline' }}
-								aria-label='sex'
-								name='smoking'
-								value={hra_data.smoking}
-								onChange={() => null}
-								disabled={true}
-							>
-								<FormControlLabel value={true} control={<Radio />} label='Yes' />
-								<FormControlLabel value={false} control={<Radio />} label='No' />
-							</RadioGroup>
-						</FormControl>
-					</div>
-				</div>
-			</div>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>Your Health</h3>
-				</div>
-
-				<div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(1)}
-							labelComponent='Active Cancer'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(2)}
-							labelComponent='Disease or medicines that weaken the immune system'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(3)}
-							labelComponent='Diabetes'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(4)}
-							labelComponent='Cardiovascular disease'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(5)}
-							labelComponent='History of chronic lung disease'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(6)}
-							labelComponent='History of chronic liver disease'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(7)}
-							labelComponent='History of chronic kidney disease'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={hra_data.health_conditions === null}
-							labelComponent='none'
-							onChange={() => null}
-						/>
-					</div>
-				</div>
-			</div>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>Family Health</h3>
-				</div>
-
-				<div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={
-								hra_data.family_health_conditions !== null &&
-								hra_data.family_health_conditions.includes(1)
-							}
-							labelComponent='Active Cancer'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={
-								hra_data.family_health_conditions !== null &&
-								hra_data.family_health_conditions.includes(2)
-							}
-							labelComponent='Disease or medicines that weaken the immune system'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={
-								hra_data.family_health_conditions !== null &&
-								hra_data.family_health_conditions.includes(3)
-							}
-							labelComponent='Diabetes'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={
-								hra_data.family_health_conditions !== null &&
-								hra_data.family_health_conditions.includes(4)
-							}
-							labelComponent='Cardiovascular disease'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={
-								hra_data.family_health_conditions !== null &&
-								hra_data.family_health_conditions.includes(5)
-							}
-							labelComponent='History of chronic lung disease'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={
-								hra_data.family_health_conditions !== null &&
-								hra_data.family_health_conditions.includes(6)
-							}
-							labelComponent='History of chronic liver disease'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={
-								hra_data.family_health_conditions !== null &&
-								hra_data.family_health_conditions.includes(7)
-							}
-							labelComponent='History of chronic kidney disease'
-							onChange={() => null}
-						/>
-					</div>
-					<div className='row'>
-						<MaterialCheckbox
-							value={hra_data.family_health_conditions === null}
-							labelComponent='none'
-							onChange={() => null}
-						/>
-					</div>
-				</div>
-			</div>
-		</React.Fragment>
-	) : (
-		<React.Fragment>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>About You</h3>
-				</div>
-				<div>
-					<p>No data to display</p>
-				</div>
-			</div>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>Your Health</h3>
-				</div>
-				<div>
-					<p>No data to display</p>
-				</div>
-			</div>
-			<div className='row items-start'>
-				<div className='subtitle-col'>
-					<h3 className='no-margin'>Family Health</h3>
-				</div>
-				<div>
-					<p>No data to display</p>
-				</div>
 			</div>
 		</React.Fragment>
 	);

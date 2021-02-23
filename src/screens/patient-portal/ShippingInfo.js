@@ -3,11 +3,10 @@ import PatientProfileDetailsNew from '../../components/PatientProfile/PatientPro
 import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 
 export default class PatientProfile extends React.Component {
-
 	render() {
 		return (
 			<BigWhiteContainer>
-				<PatientProfileDetailsNew />
+				<PatientProfileDetailsNew textPersonalInfo />
 			</BigWhiteContainer>
 		);
 	}

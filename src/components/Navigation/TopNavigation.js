@@ -11,7 +11,8 @@ const docIcon = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const vistaLogo = require('../../assets/images/vista-logo.png');
 const TopNavigation = ({ title, ...rest }) => {
 	const [isActive, setIsActive] = useState(false);
-	const { isAuthenticated, user, role, logout } = useContext(AuthContext);
+	const { isAuthenticated, user, logout } = useContext(AuthContext);
+	const role = !!user && !!user.roles ? user.roles[0].name : '';
 	let history = useHistory();
 	const isVista = window.location.href.includes('vista');
 	const logoutAndRedirect = () => {
@@ -74,6 +75,13 @@ const TopNavigation = ({ title, ...rest }) => {
 											flat
 											text='My Account'
 											linkSrc='/patient/profile'
+											style={{ fontSize: '16px' }}
+											color='dark-grey'
+										/>
+										<LinkButton
+											flat
+											text='My Health Profile'
+											linkSrc='/patient/health-assessment'
 											style={{ fontSize: '16px' }}
 											color='dark-grey'
 										/>

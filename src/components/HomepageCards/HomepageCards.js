@@ -57,12 +57,12 @@ const HomepageCards = () => {
 				<LinkButton
 					text={onboardingComplete ? 'View' : 'Complete'}
 					color={onboardingComplete ? 'green' : 'pink'}
-					linkSrc='/patient/profile'
+					linkSrc='/patient/shipping-info'
 				/>
 			),
 		},
 		{
-			display: !!role_profile,
+			display: !onboardingComplete,
 			title: 'Health Profile',
 			icon: <img src={HealthProfileIcon} alt='Complete Health Assessment' />,
 			content: `Please complete your profile with some information about your health.`,
@@ -70,7 +70,7 @@ const HomepageCards = () => {
 				<LinkButton
 					text={onboardingComplete ? 'View' : 'Complete'}
 					color={onboardingComplete ? 'green' : 'pink'}
-					linkSrc={onboardingComplete ? '/patient/profile' : '/patient/health-assessment'}
+					linkSrc='/patient/health-assessment'
 				/>
 			),
 		},
@@ -92,10 +92,7 @@ const HomepageCards = () => {
 			),
 		},
 		{
-			display:
-				!!organisation_profile &&
-				!!organisation_profile.order_kit &&
-				organisation_profile.order_kit,
+			display: true,
 			title: 'Order Home Test Kit',
 			icon: <img src={TestKitIcon} alt='Order Test Kit' />,
 			content: 'You must order a Home Test Kit at least 8 working days prior to your procedure.',
@@ -104,15 +101,12 @@ const HomepageCards = () => {
 					text='Order'
 					color='green'
 					linkSrc='/patient/order-test-kit'
-					disabled={onboardingComplete}
+					disabled={!onboardingComplete}
 				/>
 			),
 		},
 		{
-			display:
-				!!organisation_profile &&
-				!!organisation_profile.order_kit &&
-				organisation_profile.order_kit,
+			display: true,
 			title: 'Book an Appointment',
 			icon: <img src={BookAppointmentIcon} alt='Order Test Kit' />,
 			content: 'Please book a video appointment to take your swab sample.',
@@ -121,7 +115,7 @@ const HomepageCards = () => {
 					text='Book'
 					color='green'
 					linkSrc='/authenticated/book'
-					disabled={onboardingComplete}
+					disabled={!onboardingComplete}
 				/>
 			),
 		},
@@ -135,7 +129,7 @@ const HomepageCards = () => {
 					text='View'
 					color='green'
 					linkSrc='/patient/test-results'
-					disabled={onboardingComplete}
+					disabled={!onboardingComplete}
 				/>
 			),
 		},
