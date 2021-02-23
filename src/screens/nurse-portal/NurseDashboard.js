@@ -45,11 +45,6 @@ const NurseDashboard = props => {
 				if (data.success) {
 					setGotAppointments(true);
 					setAppointments(data.appointments);
-					ToastsStore.success(
-						`Found ${
-							typeof data.appointments === 'object' ? data.appointments.length : 0
-						} future appointments`
-					);
 				} else if (!data.authenticated) {
 					history.push('/login');
 				} else {
@@ -64,11 +59,6 @@ const NurseDashboard = props => {
 			.then(data => {
 				if (data.success && data.appointments) {
 					setPastAppointments(data.appointments);
-					ToastsStore.success(
-						`Found ${
-							typeof data.appointments === 'object' ? data.appointments.length : 0
-						} past appointments`
-					);
 				} else if (!data.success && !data.authenticated) {
 					history.push('/login');
 				} else {

@@ -89,11 +89,6 @@ export default class CompanyResults extends Component {
 				.then(result => {
 					if (result.success && result.symptom_history) {
 						this.setState({ symptom_history: result.symptom_history });
-						ToastsStore.success(
-							`Found ${
-								typeof result.symptom_history === 'object' ? result.symptom_history.length : 0
-							} employees results`
-						);
 					} else {
 						ToastsStore.error('Error fetching results');
 					}

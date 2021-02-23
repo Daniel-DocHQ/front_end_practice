@@ -10,6 +10,7 @@ import UserSignUps from '../screens/hr-portal/UserSignUps';
 import LoginScreen from '../screens/nurse-portal/LoginScreen';
 import PatientDashboard from '../screens/patient-portal/PatientDashboard';
 import PatientProfile from '../screens/patient-portal/PatientProfile';
+import ShippingInfo from '../screens/patient-portal/ShippingInfo';
 import SymptomChecker from '../screens/patient-portal/SymptomChecker';
 import ResultsScreen from '../screens/patient-portal/ResultsScreen.js';
 import AuthBasedRedirect from './AuthBasedRedirect';
@@ -96,13 +97,18 @@ const RouteHandler = () => {
 					<PatientProfile />
 				</Layout>
 			</PrivateRoute>
+			<PrivateRoute path='/patient/shipping-info' requiredRole='patient'>
+				<Layout title='Shipping Info'>
+					<ShippingInfo />
+				</Layout>
+			</PrivateRoute>
 			<PrivateRoute path='/patient/symptom-checker' requiredRole='patient'>
 				<Layout title='Symptom Checker'>
 					<SymptomChecker />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/patient/health-assessment' requiredRole='patient'>
-				<Layout title='Health profile'>
+				<Layout title='My Health profile'>
 					<PatientHealthAssessment />
 				</Layout>
 			</PrivateRoute>

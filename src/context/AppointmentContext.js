@@ -55,7 +55,6 @@ export default class AppointmentContextProvider extends Component {
 							appointmentId,
 							type,
 						});
-						ToastsStore.success(`Found appointment details`);
 					} else {
 						ToastsStore.error(`Cannot find appointment details`);
 					}

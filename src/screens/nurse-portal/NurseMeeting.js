@@ -127,7 +127,6 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 					} else {
 						// TODO handle missing test kit type
 					}
-					ToastsStore.success(`Found appointment notes`);
 				} else {
 					ToastsStore.error(`Cannot find appointment notes`);
 				}
@@ -140,7 +139,6 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 			.then(result => {
 				if (result.success && result.appointments) {
 					setPatientNotes(result.appointments);
-					ToastsStore.success(`Found past appointment notes`);
 				} else {
 					ToastsStore.error(`Cannot find past appointment notes`);
 				}
@@ -153,7 +151,6 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role, user }) => {
 			.then(result => {
 				if (result.success && result.test_results) {
 					setPatientTestResults(result.test_results);
-					ToastsStore.success(`Found past test results`);
 				} else {
 					ToastsStore.error(`Cannot find past test results`);
 				}

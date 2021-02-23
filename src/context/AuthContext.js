@@ -1,4 +1,7 @@
 import React, { Component, useContext } from 'react';
+import authorisationSvc from '../services/authorisationService';
+import bookingUserDataService from '../services/bookingUserDataService';
+
 export const AuthContext = React.createContext();
 
 export default class AuthContextProvider extends Component {
@@ -44,6 +47,7 @@ export default class AuthContextProvider extends Component {
 			obj.user = user;
 			if (!!user && !!user.roles && !!user.roles[0]) {
 				obj.role = user.roles[0];
+				this.setState({role: user.roles[0]});
 			}
 			this.setState(obj);
 		}
@@ -58,9 +62,22 @@ export default class AuthContextProvider extends Component {
 		}
 	}
 	componentWillMount() {
-		if (localStorage.getItem('auth_token')) {
-			this.state.token = localStorage.getItem('auth_token');
+		const authToken = localStorage.getItem('auth_token');
+		if (authToken) {
+			this.state.token = authToken;
 			this.state.isAuthenticated = true;
+			authorisationSvc.getUser(authToken).then(resp => {
+				if (resp.success && resp.user) {
+					this.setUser(resp.user);
+				}
+			});
+			bookingUserDataService
+				.getRoleProfile(authToken)
+				.then(result => {
+					if (result.success && result.role_profile) {
+						this.setRoleProfile(result.role_profile);
+					}
+				})
 		}
 	}
 
