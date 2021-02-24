@@ -1,7 +1,7 @@
-import React from 'react';
-import { useOrgProfile, useRoleName, useRoleProfile } from '../../context/AuthContext';
+import React, { useEffect, useState } from 'react';
 import LinkButton from '../DocButton/LinkButton';
 import DocCard from '../DocCard/DocCard';
+import bookingUserDataService from '../../services/bookingUserDataService';
 import DocCardContainer from '../DocCard/DocCardContainer';
 
 const completeProfileIcon = require('../../assets/images/icons/completeProfile.svg');
@@ -12,16 +12,31 @@ const HealthProfileIcon = require('../../assets/images/icons/homepage-health-pro
 const TestKitIcon = require('../../assets/images/icons/homepage-test-kit.svg');
 const BookAppointmentIcon = require('../../assets/images/icons/homepage-book-appointment.svg');
 
-const HomepageCards = () => {
-	const roleName = useRoleName();
-	const role_profile = useRoleProfile();
-	const organisation_profile = useOrgProfile();
+const HomepageCards = ({
+	role,
+	token,
+	role_profile,
+	organisation_profile,
+}) => {
+	const [orders, setOrders] = useState();
+	const hasOrders = !!orders;
 	const hasShippingDetails =
 		!!role_profile &&
 		!!role_profile.shipping_details &&
 		Object.keys(role_profile.shipping_details).length > 0;
 	const onboardingComplete =
-		!!role_profile && !!role_profile.onboarding_complete && !role_profile.onboarding_complete;
+		!!role_profile && !!role_profile.onboarding_complete && role_profile.onboarding_complete;
+
+	useEffect(() => {
+		if(!!token) {
+			bookingUserDataService.getOrdersProfile(token)
+				.then(result => {
+					if (result.success && result.orders) {
+						setOrders(result.orders);
+					}
+				});
+		}
+	}, []);
 
 	const adminCards = [
 		{
@@ -115,7 +130,7 @@ const HomepageCards = () => {
 					text='Book'
 					color='green'
 					linkSrc='/authenticated/book'
-					disabled={!onboardingComplete}
+					disabled={!(onboardingComplete && hasOrders)}
 				/>
 			),
 		},
@@ -129,7 +144,7 @@ const HomepageCards = () => {
 					text='View'
 					color='green'
 					linkSrc='/patient/test-results'
-					disabled={!onboardingComplete}
+					disabled={!(onboardingComplete && hasOrders)}
 				/>
 			),
 		},
@@ -142,7 +157,7 @@ const HomepageCards = () => {
 		},
 	];
 
-	return roleName === 'manager' ? (
+	return role === 'manager' ? (
 		<DocCardContainer>
 			{adminCards.map(({ display, title, icon, content, actions }, i) =>
 				display === true ? (
