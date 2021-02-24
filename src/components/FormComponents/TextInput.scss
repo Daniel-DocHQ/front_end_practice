@@ -1,0 +1,14 @@
+.MuiFilledInput-underline.Mui-error:after {
+	border-bottom-color: var(--doc-pink) !important;
+}
+
+.MuiFormLabel-root.Mui-focused {
+	color: var(--doc-green) !important;
+}
+.MuiFilledInput-underline:after {
+	border-bottom-color: var(--doc-green) !important;
+}
+
+.MuiFormLabel-root.Mui-error {
+	color: var(--doc-pink) !important;
+}
