@@ -39,12 +39,14 @@ const HRDashboard = ({}) => {
 				<div id='here-to-pad' style={{ height: '92px', width: '100%' }}></div>
 				{activeTab === 0 ? (
 					<HomepageCards
+						token={token}
 						role='manager'
 						role_profile={role_profile}
 						organisation_profile={organisation_profile}
 					/>
 				) : (
 					<HomepageCards
+						token={token}
 						role='patient'
 						role_profile={role_profile}
 						organisation_profile={organisation_profile}

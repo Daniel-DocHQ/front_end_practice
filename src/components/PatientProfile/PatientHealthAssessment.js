@@ -149,9 +149,7 @@ const PatientHealthAssessment = () => {
 		bookingUserDataService
 			.submitHealthAssessment(token, body)
 			.then(result => {
-				if (result && result.success) {
-					ToastsStore.success('Submitted health assessment');
-				} else {
+				if (!result && result.success) {
 					ToastsStore.error('Failed to submit health assessment');
 				}
 			})

@@ -16,6 +16,7 @@ const bookingUserDataService = {
 	getOrganisationRoleProfile,
 	orderKit,
 	getHRAData,
+	getOrdersProfile,
 };
 
 function submitSymptomChecker(auth_token, body) {
@@ -472,6 +473,41 @@ function getOrganisationRoleProfile(auth_token) {
 						resolve({ success: true, organisation_profile: response.data });
 					} else if (response.status === 204) {
 						resolve({ success: true, organisation_profile: [] });
+					} else if (response.status === 403) {
+						reject({
+							success: false,
+							error: 'Unable to authenticate user.',
+							authenticated: false,
+						});
+					} else {
+						// TODO what other responses will they send?!
+						reject({
+							success: false,
+							error: 'An error occurred',
+						});
+					}
+				})
+				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+		} else if (typeof auth_token === 'undefined') {
+			reject({ success: false, error: 'Unable to authenticate user.', authenticated: false });
+		} else {
+			resolve({ success: false, error: 'Missing Details' });
+		}
+	});
+}
+function getOrdersProfile(auth_token) {
+	return new Promise((resolve, reject) => {
+		if (auth_token) {
+			axios({
+				url: `${baseURL}/orders`,
+				method: 'get',
+				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },
+			})
+				.then(response => {
+					if (response.status === 200 || response.data.status === 'ok') {
+						resolve({ success: true, orders: response.data });
+					} else if (response.status === 204) {
+						resolve({ success: true, orders: [] });
 					} else if (response.status === 403) {
 						reject({
 							success: false,

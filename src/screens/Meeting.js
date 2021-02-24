@@ -46,7 +46,7 @@ class Meeting extends React.Component {
 				) : (
 					<Box
 						isNurse={false}
-						videoCallToken={this.state.token}
+						videoCallToken={this.state.videoCallToken}
 						setVideoCallToken={this.setVideoCallToken}
 					/>
 				)}

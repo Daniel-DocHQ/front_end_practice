@@ -90,7 +90,6 @@ const Register = ({ role, setRole, setRoleData, setToken, setIsAuthenticated, se
 																if (result.success && result.token) {
 																	setToken(result.token);
 																	setIsAuthenticated(true);
-																	ToastsStore.success('Logged In');
 																	history.push(
 																		`/${
 																			role === 'patient'

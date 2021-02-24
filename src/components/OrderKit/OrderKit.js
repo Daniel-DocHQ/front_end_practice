@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { DocCalendarSpecial } from '../FormComponents/DocCalendar/DocCalendar';
@@ -8,11 +8,13 @@ import DocAlertBox from '../DocAlertBox/DocAlertBox';
 import bookingUserDataService from '../../services/bookingUserDataService';
 import { calc7thWorkingDay } from '../../helpers/calcWorkingDays';
 import { addDays } from 'date-fns';
-
 import LinkButton from '../DocButton/LinkButton';
+import { AuthContext } from '../../context/AuthContext';
+
 const tick = require('../../assets/images/icons/circled-tick.svg');
 
-const OrderKit = ({ role_profile, token, user, role }) => {
+const OrderKit = () => {
+	const { role_profile, token, user, role } = useContext(AuthContext);
 	const lastDay = calc7thWorkingDay(new Date());
 	const [activeStep, setActiveStep] = useState(0);
 	const [selectedDate, setSelectedDate] = useState(new Date());
@@ -41,9 +43,6 @@ const OrderKit = ({ role_profile, token, user, role }) => {
 				});
 		}
 	}
-	function confirm() {
-		placeOrder();
-	}
 
 	function renderSteps() {
 		switch (activeStep) {
@@ -52,7 +51,7 @@ const OrderKit = ({ role_profile, token, user, role }) => {
 					<Step1
 						date={selectedDate}
 						updateDate={setSelectedDate}
-						confirm={confirm}
+						confirm={placeOrder}
 						userSetDate={userSetDate}
 					/>
 				);
