@@ -1,5 +1,5 @@
 import { Paper } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { firstCharUpper } from '../../helpers/firstCharUpper';
 
 const PatientHealthAssessmentDetails = ({ health_assessment }) => {

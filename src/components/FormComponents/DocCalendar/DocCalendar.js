@@ -192,7 +192,7 @@ export const DocCalendarSpecial = ({ label, date, updateDate, maxDate, enablePas
 						value={date}
 						onChange={updateDate}
 						variant='static'
-						maxDate={typeof maxDate === 'undefined' ? null : maxDate}
+						maxDate={maxDate}
 						disablePast={typeof enablePast === 'undefined' ? true : false}
 						shouldDisableDate={date => {
 							if (new Date(date).getTime() <= new Date(lastDay).getTime()) {

@@ -71,6 +71,10 @@
 	> input:indeterminate {
 		background-color: var(--doc-green);
 	}
+	> input:disabled + span::before {
+		border-color: var(--doc-gray) !important;
+		background-color: var(--doc-gray) !important;
+	}
 	> input:checked + span::before,
 	> input:indeterminate + span::before {
 		border-color: var(--doc-green);

@@ -6,7 +6,6 @@ import { formatOrderDate } from '../../helpers/formatDate';
 import DocButton from '../DocButton/DocButton';
 import DocAlertBox from '../DocAlertBox/DocAlertBox';
 import bookingUserDataService from '../../services/bookingUserDataService';
-import { calc7thWorkingDay } from '../../helpers/calcWorkingDays';
 import { addDays } from 'date-fns';
 import LinkButton from '../DocButton/LinkButton';
 import { AuthContext } from '../../context/AuthContext';
@@ -15,12 +14,12 @@ const tick = require('../../assets/images/icons/circled-tick.svg');
 
 const OrderKit = () => {
 	const { role_profile, token, user, role } = useContext(AuthContext);
-	const lastDay = calc7thWorkingDay(new Date());
 	const [activeStep, setActiveStep] = useState(0);
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [isSuccessful, setIsSuccessful] = useState();
 	const [userSetDate, setUserSetDate] = useState(false);
 	const steps = ['Select Appointment Date', 'Confirmation'];
+	console.log(selectedDate);
 
 	function placeOrder() {
 		if (selectedDate && role_profile && role_profile.id && token) {
@@ -65,7 +64,6 @@ const OrderKit = () => {
 						role={role}
 					/>
 				);
-				break;
 		}
 	}
 	return (
@@ -109,7 +107,6 @@ const Step1 = ({ date, updateDate, confirm }) => (
 			<DocCalendarSpecial
 				label='Select Date'
 				date={date}
-				maxDate={addDays(new Date(), 40)}
 				updateDate={updateDate}
 				shouldDisableDates={true}
 			/>

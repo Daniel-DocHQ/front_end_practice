@@ -6,7 +6,7 @@ export default class PatientProfile extends React.Component {
 	render() {
 		return (
 			<BigWhiteContainer>
-				<PatientProfileDetailsNew textPersonalInfo />
+				<PatientProfileDetailsNew />
 			</BigWhiteContainer>
 		);
 	}

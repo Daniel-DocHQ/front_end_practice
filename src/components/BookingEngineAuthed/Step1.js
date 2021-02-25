@@ -91,7 +91,7 @@ const datePickerTheme = createMuiTheme({
 const Step1 = ({ appointments, availableDates, date, updateDate, selectedSlot, updateSlot }) => {
 	const today = new Date();
 	const in40days = new Date(today.setDate(today.getDate() + 40));
-	function disableDates(date) {
+	function disableDates(date) {  
 		const day = availableDates.filter(item => datesAreSameDay(item.date, date));
 		return day && day.length === 1 && typeof day[0].has_appointments !== 'undefined'
 			? !day[0].has_appointments
