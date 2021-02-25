@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import { useState } from 'react';
+import './TextInput.scss';
+
 const TextInputElement = ({
 	value,
 	onChange,
