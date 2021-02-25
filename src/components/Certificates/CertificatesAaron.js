@@ -150,6 +150,10 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 		body.security_checked = 'true';
 
 		if (isValid(body)) {
+			if (kitProvider === 'Roche Test Kit') {
+				body.specificity = '96.52%';
+				body.sensitivity = '99.68%';
+			}
 			setIsLoading(true);
 			bookingService
 				.sendResult(token, appointmentId, body)
