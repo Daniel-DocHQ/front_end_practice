@@ -1,18 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Paper } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import existsInArray from '../../helpers/existsInArray';
 import DocButton from '../DocButton/DocButton';
-import DateOfBirth from '../FormComponents/DateOfBirth';
-import EmailInputElement from '../FormComponents/EmailInput';
-import TextInputElement from '../FormComponents/TextInputElement';
-import LinkButton from '../DocButton/LinkButton';
-import AuthContext from  '../../context/AuthContext.js';
 
 const PatientProfileDetails = ({
 	initialData,
 	saveChanges,
-	profile_complete,
 	onboarding_complete,
     role,
 }) => {

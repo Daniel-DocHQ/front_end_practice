@@ -9,21 +9,56 @@ import './PatientProfileDetails.scss';
 import PhoneNumber from '../FormComponents/PhoneNumber/PhoneNumber';
 import {
 	AuthContext,
-	useToken,
-	useUser,
 } from '../../context/AuthContext';
 import bookingUserDataService from '../../services/bookingUserDataService';
 import authorisationSvc from '../../services/authorisationService';
 import Alert from '@material-ui/lab/Alert';
 
-const PatientProfileDetailsNew = ({ textPersonalInfo }) => {
+const PatientProfileDetailsNew = () => {
+	const {
+		setRole,
+		setUser,
+		token,
+		user,
+		role_profile,
+		organisation_profile,
+		setRoleProfile,
+	} = useContext(AuthContext);
+	const shipping_details =
+		!!role_profile && !!role_profile.shipping_details ? { ...role_profile.shipping_details } : {};
+	const [isEditable, setIsEditable] = useState(
+		typeof shipping_details === 'undefined' || shipping_details === null
+	);
+
 	return (
 		<div className='profile-grid'>
 			<ProfileRow
 				title='Personal Information'
-				content={<PersonalInformation textPersonalInfo={textPersonalInfo} />}
+				content={
+					<PersonalInformation
+						isEditable={isEditable}
+						setRole={setRole}
+						setUser={setUser}
+						token={token}
+						user={user}
+					/>
+				}
 			/>
-			<ProfileRow title='Shipping Information' content={<ShippingInformation />} />
+			<ProfileRow
+				title='Shipping Information'
+				content={
+					<ShippingInformation
+						token={token}
+						user={user}
+						isEditable={isEditable}
+						setIsEditable={setIsEditable}
+						role_profile={role_profile}
+						shipping_details={shipping_details}
+						organisation_profile={organisation_profile}
+						setRoleProfile={setRoleProfile}
+					/>
+				}
+			/>
 		</div>
 	);
 };
@@ -41,11 +76,13 @@ const ProfileRow = ({ title, content }) => (
 	</React.Fragment>
 );
 
-const PersonalInformation = ({ textPersonalInfo }) => {
-	const { setUser, setRole } = useContext(AuthContext);
-	const token = useToken();
-	const user = useUser();
-	const [isEditable, setIsEditable] = useState(false);
+const PersonalInformation = ({
+	user,
+	token,
+	setRole,
+	setUser,
+	isEditable,
+}) => {
 	const [first_name, setFirst_name] = useState(!!user && !!user.first_name ? user.first_name : '');
 	const [last_name, setLast_name] = useState(!!user && !!user.last_name ? user.last_name : '');
 	const [date_of_birth, setDateOfBirth] = useState(
@@ -101,7 +138,60 @@ const PersonalInformation = ({ textPersonalInfo }) => {
 			setAttemptedSubmit(true);
 		}
 	}
-	return textPersonalInfo ? (
+	return isEditable ? (
+		<React.Fragment>
+			<div className='row flex-start' style={{ flexWrap: 'wrap' }}>
+				<TextInputElement
+					value={first_name}
+					id='shipping-first_name'
+					label='First Name'
+					onChange={setFirst_name}
+					autoComplete='given-name'
+					pattern={new RegExp(/^[a-zA-Z ]+$/)}
+					inputProps={{ minLength: '2' }}
+					required
+					disabled
+					style={{ width: '300px', maxWidth: '90%', marginRight: '10px', marginTop: '20px' }}
+				/>
+				<TextInputElement
+					value={last_name}
+					id='shipping-last_name'
+					label='Last Name'
+					onChange={setLast_name}
+					autoComplete='family-name'
+					pattern={new RegExp(/^[a-zA-Z ]+$/)}
+					required
+					disabled
+					style={{ width: '300px', maxWidth: '90%', marginTop: '20px' }}
+				/>
+			</div>
+			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
+				<DateOfBirth
+					onChange={setDateOfBirth}
+					value={new Date(date_of_birth).getTime()}
+					required
+					disabled
+				/>
+			</div>
+			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
+				<EmailInputElement value={email} onChange={setEmail} disabled={true} />
+			</div>
+			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
+				<PhoneNumber value={telephone} onChange={setTelephone} required disabled={!isEditable} />
+			</div>
+			{/* <div className='row flex-end'>
+				{isEditable ? (
+					<DocButton
+						text='Save'
+						color='pink'
+						onClick={() => console.log('save personal profile')}
+					/>
+				) : (
+					<DocButton text='Edit' color='green' onClick={() => setIsEditable(true)} />
+				)}
+			</div> */}
+		</React.Fragment>
+	) : (
 		<React.Fragment>
 			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
 				<p className='title-info'>First Name:</p>
@@ -124,74 +214,18 @@ const PersonalInformation = ({ textPersonalInfo }) => {
 				<p>{telephone}</p>
 			</div>
 		</React.Fragment>
-	) : (
-		<React.Fragment>
-			<div className='row flex-start' style={{ flexWrap: 'wrap' }}>
-				<TextInputElement
-					value={first_name}
-					id='shipping-first_name'
-					label='First Name'
-					onChange={setFirst_name}
-					autoComplete='given-name'
-					pattern={new RegExp(/^[a-zA-Z ]+$/)}
-					inputProps={{ minLength: '2' }}
-					required
-					disabled={!isEditable}
-					style={{ width: '300px', maxWidth: '90%', marginRight: '10px', marginTop: '20px' }}
-				/>
-				<TextInputElement
-					value={last_name}
-					id='shipping-last_name'
-					label='Last Name'
-					onChange={setLast_name}
-					autoComplete='family-name'
-					pattern={new RegExp(/^[a-zA-Z ]+$/)}
-					required
-					disabled={!isEditable}
-					style={{ width: '300px', maxWidth: '90%', marginTop: '20px' }}
-				/>
-			</div>
-			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
-				<DateOfBirth
-					onChange={setDateOfBirth}
-					value={new Date(date_of_birth).getTime()}
-					required
-					disabled={!isEditable}
-				/>
-			</div>
-			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
-				<EmailInputElement value={email} onChange={setEmail} disabled={true} />
-			</div>
-			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
-				<PhoneNumber value={telephone} onChange={setTelephone} required disabled={!isEditable} />
-			</div>
-			{/* <div className='row flex-end'>
-				{isEditable ? (
-					<DocButton
-						text='Save'
-						color='pink'
-						onClick={() => console.log('save personal profile')}
-					/>
-				) : (
-					<DocButton text='Edit' color='green' onClick={() => setIsEditable(true)} />
-				)}
-			</div> */}
-		</React.Fragment>
 	);
 };
-const ShippingInformation = ({}) => {
-	const {
-		token,
-		user,
-		role_profile,
-		organisation_profile,
-		setRoleProfile,
-	} = useContext(AuthContext);
-	const shipping_details =
-		!!role_profile && !!role_profile.shipping_details ? { ...role_profile.shipping_details } : {};
-	const [isEditable, setIsEditable] = useState(
-		typeof shipping_details === 'undefined' || shipping_details === null
-	);
+const ShippingInformation = ({
+	organisation_profile,
+	user,
+	token,
+	role_profile,
+	shipping_details,
+	isEditable,
+	setIsEditable,
+	setRoleProfile,
+}) => {
 	const [address_1, setAddress_1] = useState('');
 	const [address_2, setAddress_2] = useState('');
 	const [city, setCity] = useState(shipping_details.city || '');
@@ -300,104 +334,126 @@ const ShippingInformation = ({}) => {
 	}
 	return (
 		<React.Fragment>
-			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
-				<TextInputElement
-					value={address_1}
-					id='shipping-address_1'
-					label='Address Line 1'
-					onChange={setAddress_1}
-					autoComplete='shipping address-line1'
-					pattern={new RegExp(/^[a-zA-Z0-9 ]+$/)}
-					inputProps={{ minLength: '1' }}
-					required
-					updateStatus={updateErrors}
-					disabled={!isEditable}
-				/>
-			</div>
-			{attemptedSubmit && errors.includes('address line 1') && (
-				<div className='row no-margin'>
-					<p className='error'>Enter the first line of your address</p>
-				</div>
-			)}
-			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
-				<TextInputElement
-					value={address_2}
-					id='shipping-address_2'
-					label='Address Line 2'
-					onChange={setAddress_2}
-					autoComplete='shipping address-line2'
-					pattern={new RegExp(/^[a-zA-Z0-9 ]/)}
-					inputProps={{ minLength: '1' }}
-					disabled={!isEditable}
-				/>
-			</div>
-			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
-				<TextInputElement
-					value={city}
-					id='shipping-locality'
-					label='Town'
-					onChange={setCity}
-					autoComplete='shipping locality'
-					pattern={new RegExp(/^[A-Za-z ]+$/)}
-					inputProps={{ minLength: '3' }}
-					required
-					updateStatus={updateErrors}
-					disabled={!isEditable}
-				/>
-			</div>
-			{attemptedSubmit && errors.includes('town') && (
-				<div className='row no-margin'>
-					<p className='error'>Enter your town</p>
-				</div>
-			)}
-			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
-				<TextInputElement
-					value={county}
-					id='shipping-region'
-					label='County'
-					onChange={setCounty}
-					autoComplete='shipping region'
-					pattern={new RegExp(/[a-zA-Z ]+$/)}
-					inputProps={{ minLength: '3' }}
-					required
-					updateStatus={updateErrors}
-					disabled={!isEditable}
-				/>
-			</div>
-			{attemptedSubmit && errors.includes('county') && (
-				<div className='row no-margin'>
-					<p className='error'>Enter your county</p>
-				</div>
-			)}
-			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
-				<TextInputElement
-					value={postcode}
-					id='shipping-postcode'
-					label='Postcode'
-					onChange={setPostcode}
-					autoComplete='shipping postal_code'
-					pattern={
-						new RegExp(
-							/([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})/
-						)
-					}
-					inputProps={{ maxLength: '8' }}
-					required
-					updateStatus={updateErrors}
-					disabled={!isEditable}
-				/>
-			</div>
-			{attemptedSubmit && errors.includes('postcode') && (
-				<div className='row no-margin'>
-					<p className='error'>Enter your postcode</p>
-				</div>
-			)}
-			{status !== false && (
-				<div className='row'>
-					<Alert variant='outlined' severity={status.severity}>
-						{status.message}
-					</Alert>
-				</div>
+			{isEditable ? (
+				<React.Fragment>
+					<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
+						<TextInputElement
+							value={address_1}
+							id='shipping-address_1'
+							label='Address Line 1'
+							onChange={setAddress_1}
+							autoComplete='shipping address-line1'
+							pattern={new RegExp(/^[a-zA-Z0-9 ]+$/)}
+							inputProps={{ minLength: '1' }}
+							required
+							updateStatus={updateErrors}
+						/>
+					</div>
+					{attemptedSubmit && errors.includes('address line 1') && (
+						<div className='row no-margin'>
+							<p className='error'>Enter the first line of your address</p>
+						</div>
+					)}
+					<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
+						<TextInputElement
+							value={address_2}
+							id='shipping-address_2'
+							label='Address Line 2'
+							onChange={setAddress_2}
+							autoComplete='shipping address-line2'
+							pattern={new RegExp(/^[a-zA-Z0-9 ]/)}
+							inputProps={{ minLength: '1' }}
+						/>
+					</div>
+					<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
+						<TextInputElement
+							value={city}
+							id='shipping-locality'
+							label='Town'
+							onChange={setCity}
+							autoComplete='shipping locality'
+							pattern={new RegExp(/^[A-Za-z ]+$/)}
+							inputProps={{ minLength: '3' }}
+							required
+							updateStatus={updateErrors}
+						/>
+					</div>
+					{attemptedSubmit && errors.includes('town') && (
+						<div className='row no-margin'>
+							<p className='error'>Enter your town</p>
+						</div>
+					)}
+					<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
+						<TextInputElement
+							value={county}
+							id='shipping-region'
+							label='County'
+							onChange={setCounty}
+							autoComplete='shipping region'
+							pattern={new RegExp(/[a-zA-Z ]+$/)}
+							inputProps={{ minLength: '3' }}
+							required
+							updateStatus={updateErrors}
+						/>
+					</div>
+					{attemptedSubmit && errors.includes('county') && (
+						<div className='row no-margin'>
+							<p className='error'>Enter your county</p>
+						</div>
+					)}
+					<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
+						<TextInputElement
+							value={postcode}
+							id='shipping-postcode'
+							label='Postcode'
+							onChange={setPostcode}
+							autoComplete='shipping postal_code'
+							pattern={
+								new RegExp(
+									/([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})/
+								)
+							}
+							inputProps={{ maxLength: '8' }}
+							required
+							updateStatus={updateErrors}
+						/>
+					</div>
+					{attemptedSubmit && errors.includes('postcode') && (
+						<div className='row no-margin'>
+							<p className='error'>Enter your postcode</p>
+						</div>
+					)}
+				</React.Fragment>
+			) : (
+				<React.Fragment>
+					<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+						<p className='title-info'>Address Line 1:</p>
+						<p>{address_1}</p>
+					</div>
+					<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+						<p className='title-info'>Address Line 2:</p>
+						<p>{address_2}</p>
+					</div>
+					<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+						<p className='title-info'>Town:</p>
+						<p>{city}</p>
+					</div>
+					<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+						<p className='title-info'>County:</p>
+						<p>{county}</p>
+					</div>
+					<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+						<p className='title-info'>Postcode:</p>
+						<p>{postcode}</p>
+					</div>
+					{status !== false && (
+						<div className='row'>
+							<Alert variant='outlined' severity={status.severity}>
+								{status.message}
+							</Alert>
+						</div>
+					)}
+				</React.Fragment>
 			)}
 			<div className='row flex-end'>
 				{isEditable ? (

@@ -34,7 +34,6 @@ const PatientHealthAssessment = () => {
 	const [error, setError] = useState(false);
 	const steps = ['About You', 'Your Health', 'Family Health', 'Result'];
 	const [sentResult, setSentResult] = useState(false);
-
 	useEffect(() => {
 		if (!!token) {
 			bookingUserDataService
@@ -57,31 +56,40 @@ const PatientHealthAssessment = () => {
 	}, [activeStep, setActiveStep]);
 
 	function updateHealthConditions(value, field, isFamily) {
+		console.log(healthConditions, value, field);
+		let newConditions;
 		if (isFamily) {
 			if (familyHealthConditions.length === 0) {
-				let newConditions = familyHealthConditions;
+				newConditions = [...familyHealthConditions];
 				newConditions.push(field);
 				setFamilyHealthConditions(newConditions);
 			} else if (value && !existsInArray(familyHealthConditions, field)) {
-				let newConditions = familyHealthConditions;
-				newConditions.push(field);
-
+				if (field === 8) {
+					newConditions = [];
+				} else {
+					newConditions = [...familyHealthConditions.filter(item => item !== 8)];
+					newConditions.push(field);
+				}
 				setFamilyHealthConditions(newConditions);
 			} else if (!value && existsInArray(familyHealthConditions, field)) {
-				const newConditions = familyHealthConditions.filter(item => item !== field);
+				newConditions = familyHealthConditions.filter(item => item !== field);
 				setFamilyHealthConditions(newConditions);
 			}
 		} else {
 			if (healthConditions.length === 0) {
-				let newConditions = healthConditions;
+				newConditions = [...healthConditions];
 				newConditions.push(field);
 				setHealthConditions(newConditions);
 			} else if (value && !existsInArray(healthConditions, field)) {
-				let newConditions = healthConditions;
-				newConditions.push(field);
+				if (field === 8) {
+					newConditions = [];
+				} else {
+					newConditions = [...healthConditions.filter(item => item !== 8)];
+					newConditions.push(field);
+				}
 				setHealthConditions(newConditions);
 			} else if (!value && existsInArray(healthConditions, field)) {
-				const newConditions = healthConditions.filter(item => item !== field);
+				newConditions = healthConditions.filter(item => item !== field);
 				setHealthConditions(newConditions);
 			}
 		}
@@ -143,8 +151,8 @@ const PatientHealthAssessment = () => {
 			height: parseFloat(height),
 			weight: parseFloat(weight),
 			smoking: smoking === 'true' ? true : false,
-			health_conditions: healthConditions,
-			family_health_conditions: familyHealthConditions,
+			health_conditions: healthConditions[0] === 8 ? [] : healthConditions,
+			family_health_conditions: familyHealthConditions[0] === 8 ? [] : familyHealthConditions,
 		};
 		bookingUserDataService
 			.submitHealthAssessment(token, body)
@@ -170,58 +178,21 @@ const PatientHealthAssessment = () => {
 									<h3 className='no-margin'>About You</h3>
 								</div>
 								<div>
-									<div className='row' style={{ flexWrap: 'wrap' }}>
-										<TextInputElement
-											label='Height (cm)'
-											value={hra_data.height}
-											onChange={() => null}
-											placeholder='Height (cm)'
-											type='number'
-											inputProps={{ min: 1, max: 300, step: 1 }}
-											disabled={true}
-											style={{ width: '200px', marginRight: '20px', marginTop: '20px' }}
-										/>
-										<TextInputElement
-											label='Weight (kg)'
-											value={hra_data.weight}
-											onChange={() => null}
-											placeholder='Weight (kg)'
-											type='number'
-											inputProps={{ min: 20, max: 250 }}
-											disabled={true}
-											style={{ width: '200px', marginTop: '20px' }}
-										/>
+									<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+										<p className='title-info'>Height (cm):</p>
+										<p>{hra_data.height}</p>
 									</div>
-									<div className='row'>
-										<FormControl component='fieldset'>
-											<FormLabel component='legend'>Sex *</FormLabel>
-											<RadioGroup
-												style={{ display: 'inline' }}
-												aria-label='sex'
-												name='sex'
-												value={hra_data.sex}
-												onChange={() => null}
-											>
-												<FormControlLabel value='Female' control={<Radio />} label='Female' />
-												<FormControlLabel value='Male' control={<Radio />} label='Male' />
-											</RadioGroup>
-										</FormControl>
+									<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+										<p className='title-info'>Weight (kg):</p>
+										<p>{hra_data.weight}</p>
 									</div>
-									<div className='row'>
-										<FormControl component='fieldset'>
-											<FormLabel component='legend'>Do you smoke?</FormLabel>
-											<RadioGroup
-												style={{ display: 'inline' }}
-												aria-label='sex'
-												name='smoking'
-												value={hra_data.smoking}
-												onChange={() => null}
-												disabled={true}
-											>
-												<FormControlLabel value={true} control={<Radio />} label='Yes' />
-												<FormControlLabel value={false} control={<Radio />} label='No' />
-											</RadioGroup>
-										</FormControl>
+									<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+										<p className='title-info'>Sex:</p>
+										<p>{hra_data.sex}</p>
+									</div>
+									<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+										<p className='title-info'>Do you smoke?:</p>
+										<p>{!!hra_data.smoking ? 'Yes' : 'No'}</p>
 									</div>
 								</div>
 							</div>
@@ -235,6 +206,7 @@ const PatientHealthAssessment = () => {
 										<MaterialCheckbox
 											value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(1)}
 											labelComponent='Active Cancer'
+											disabled
 											onChange={() => null}
 										/>
 									</div>
@@ -243,6 +215,7 @@ const PatientHealthAssessment = () => {
 											value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(2)}
 											labelComponent='Disease or medicines that weaken the immune system'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -250,6 +223,7 @@ const PatientHealthAssessment = () => {
 											value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(3)}
 											labelComponent='Diabetes'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -257,6 +231,7 @@ const PatientHealthAssessment = () => {
 											value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(4)}
 											labelComponent='Cardiovascular disease'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -264,6 +239,7 @@ const PatientHealthAssessment = () => {
 											value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(5)}
 											labelComponent='History of chronic lung disease'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -271,6 +247,7 @@ const PatientHealthAssessment = () => {
 											value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(6)}
 											labelComponent='History of chronic liver disease'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -278,13 +255,15 @@ const PatientHealthAssessment = () => {
 											value={hra_data.health_conditions !== null && hra_data.health_conditions.includes(7)}
 											labelComponent='History of chronic kidney disease'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
 										<MaterialCheckbox
 											value={hra_data.health_conditions === null}
-											labelComponent='none'
+											labelComponent='None of the above'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 								</div>
@@ -303,6 +282,7 @@ const PatientHealthAssessment = () => {
 											}
 											labelComponent='Active Cancer'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -313,6 +293,7 @@ const PatientHealthAssessment = () => {
 											}
 											labelComponent='Disease or medicines that weaken the immune system'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -323,6 +304,7 @@ const PatientHealthAssessment = () => {
 											}
 											labelComponent='Diabetes'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -333,6 +315,7 @@ const PatientHealthAssessment = () => {
 											}
 											labelComponent='Cardiovascular disease'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -343,6 +326,7 @@ const PatientHealthAssessment = () => {
 											}
 											labelComponent='History of chronic lung disease'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -353,6 +337,7 @@ const PatientHealthAssessment = () => {
 											}
 											labelComponent='History of chronic liver disease'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
@@ -363,13 +348,15 @@ const PatientHealthAssessment = () => {
 											}
 											labelComponent='History of chronic kidney disease'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 									<div className='row'>
 										<MaterialCheckbox
 											value={hra_data.family_health_conditions === null}
-											labelComponent='none'
+											labelComponent='None of the above'
 											onChange={() => null}
+											disabled
 										/>
 									</div>
 								</div>
@@ -540,6 +527,15 @@ const HealthConditions = ({ healthConditions, update, nextStep, backStep, isFami
 							labelComponent='Cardiovascular Disease'
 						/>
 					</li>
+					<li>
+						<MaterialCheckbox
+							value={healthConditions.find(item => item === 8)}
+							onChange={val => {
+								update(val, 8, isFamily);
+							}}
+							labelComponent='None of the above'
+						/>
+					</li>
 				</ul>
 			</div>
 			<div className='row'>
@@ -616,6 +612,15 @@ const HealthConditions = ({ healthConditions, update, nextStep, backStep, isFami
 								update(val, 7, isFamily);
 							}}
 							labelComponent='History of chronic kidney disease'
+						/>
+					</li>
+					<li>
+						<MaterialCheckbox
+							value={healthConditions.find(item => item === 8)}
+							onChange={val => {
+								update(val, 8, isFamily);
+							}}
+							labelComponent='None of the above'
 						/>
 					</li>
 				</ul>
