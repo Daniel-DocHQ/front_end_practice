@@ -9,7 +9,7 @@ class Meeting extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			step: 1,
+			step: 3,
 			videoCallToken: '',
 			questionsVisible: true,
 		};
