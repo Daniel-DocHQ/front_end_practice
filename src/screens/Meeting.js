@@ -5,6 +5,7 @@ import { PatientHeader } from '../components/VideoCall/TwillioVideoCall';
 import DocModal from '../components/DocModal/DocModal';
 import LinkButton from '../components/DocButton/LinkButton';
 import Box from '../components/TwilioVideo/Box';
+import AppointmentContextProvider from '../context/AppointmentContext';
 
 class Meeting extends React.Component {
 	constructor(props) {
@@ -36,7 +37,7 @@ class Meeting extends React.Component {
 	}
 	render() {
 		return (
-			<React.Fragment>
+			<AppointmentContextProvider>
 				{this.state.questionsVisible ? (
 					<React.Fragment>
 						<PatientHeader isVista={this.isVista} />
@@ -52,7 +53,7 @@ class Meeting extends React.Component {
 						setVideoCallToken={this.setVideoCallToken}
 					/>
 				)}
-			</React.Fragment>
+			</AppointmentContextProvider>
 		);
 	}
 }

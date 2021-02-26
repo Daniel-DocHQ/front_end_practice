@@ -21,7 +21,9 @@ const InVid = ({ takePhoto, isPhotoMode, participant }) => {
 		console.log(canvasRef, canvasRef.current, videoRef, videoRef.current);
 		const context = canvasRef.current.getContext('2d');
 		context.drawImage(videoRef.current, 0, 0, 1280, 720);
-		storeImage(canvasRef.current.toDataURL('image/webp'));
+		if (storeImage) {
+			storeImage(canvasRef.current.toDataURL('image/webp'));
+		}
 	}
 
 	const trackpubsToTracks = trackMap =>
