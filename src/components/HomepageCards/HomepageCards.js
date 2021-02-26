@@ -107,10 +107,14 @@ const HomepageCards = ({
 			),
 		},
 		{
-			display: true,
+			display: !hasOrders,
 			title: 'Order Home Test Kit',
 			icon: <img src={TestKitIcon} alt='Order Test Kit' />,
-			content: 'You must order a Home Test Kit at least 8 working days prior to your procedure.',
+			content: (
+				<React.Fragment>
+					<p>You must order a Home Test Kit at least <span className='pink-text'>8 working days prior</span> to your procedure.</p>
+				</React.Fragment>
+			),
 			actions: (
 				<LinkButton
 					text='Order'
@@ -134,6 +138,20 @@ const HomepageCards = ({
 				/>
 			),
 		},
+		// {
+		// 	display: true,
+		// 	title: 'Your Appointment',
+		// 	icon: <img src={BookAppointmentIcon} alt='Order Test Kit' />,
+		// 	content: 'You can join your video appointment from here of from the link the confirmation email.',
+		// 	actions: (
+		// 		<LinkButton
+		// 			text='Join'
+		// 			color='green'
+		// 			linkSrc='/authenticated/book'
+		// 			disabled={!(onboardingComplete && hasOrders)}
+		// 		/>
+		// 	),
+		// },
 		{
 			display: true,
 			title: 'Test Results',

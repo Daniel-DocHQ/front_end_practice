@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import './BookingEngine.scss';
-import { Stepper, Step, StepLabel, StepContent, makeStyles } from '@material-ui/core';
+import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
@@ -9,14 +9,7 @@ import DocButton from '../DocButton/DocButton';
 import bookingService from '../../services/bookingService';
 import { ddMMyyyy } from '../../helpers/formatDate';
 
-const useStyles = makeStyles({
-	activeStep: {
-		fontWeight: 'bold',
-	},
-});
-
 const BookingEngine = ({ role, token, user }) => {
-	const classes = useStyles();
 	const [activeStep, setActiveStep] = useState(0);
 	const [selectedDate, setSelectedDate] = useState();
 	const [selectedAppointment, setSelectedAppointment] = useState();
@@ -145,7 +138,7 @@ const BookingEngine = ({ role, token, user }) => {
 						}
 						start_time={selectedAppointment.start_time}
 						end_time={selectedAppointment.end_time}
-						role={role}
+						role={!!role && !!role.name ? role.name : ''}
 						isError={displayError}
 					/>
 				);
@@ -157,13 +150,7 @@ const BookingEngine = ({ role, token, user }) => {
 				<Stepper activeStep={activeStep} orientation='vertical'>
 					{steps.map((label, i) => (
 						<Step key={label}>
-							{console.log(label, activeStep, i)}
-							<StepLabel
-								classes={{ active: classes.activeStep, root: classes.activeStep }}
-								style={{ fontWeight: activeStep === i ? 'bold' : 500 }}
-							>
-								{label}
-							</StepLabel>
+							<StepLabel>{label}</StepLabel>
 							<StepContent>
 								{renderSteps()}
 								<div className='row flex-start'>

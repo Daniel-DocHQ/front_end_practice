@@ -6,7 +6,6 @@ import { formatOrderDate } from '../../helpers/formatDate';
 import DocButton from '../DocButton/DocButton';
 import DocAlertBox from '../DocAlertBox/DocAlertBox';
 import bookingUserDataService from '../../services/bookingUserDataService';
-import { addDays } from 'date-fns';
 import LinkButton from '../DocButton/LinkButton';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -19,7 +18,6 @@ const OrderKit = () => {
 	const [isSuccessful, setIsSuccessful] = useState();
 	const [userSetDate, setUserSetDate] = useState(false);
 	const steps = ['Select Appointment Date', 'Confirmation'];
-	console.log(selectedDate);
 
 	function placeOrder() {
 		if (selectedDate && role_profile && role_profile.id && token) {
