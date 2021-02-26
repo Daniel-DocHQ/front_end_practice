@@ -55,7 +55,7 @@ const Box = ({
 							}}
 						>
 							<h2>You are ready for your appointment</h2>
-							<DocButton text='Join Appointment' onClick={() => setVideoCallToken('token')} color='green' />
+							<DocButton text='Join Appointment' onClick={handleSubmit} color='green' />
 						</div>
 					}
 				/>
@@ -69,7 +69,7 @@ const Box = ({
 						}}
 					>
 						<h2>You are ready for your appointment</h2>
-						<DocButton text='Join Appointment' onClick={() => setVideoCallToken('token')}  color='green' />
+						<DocButton text='Join Appointment' onClick={handleSubmit}  color='green' />
 					</div>
 				</div>
 			)}
