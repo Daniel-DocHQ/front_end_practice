@@ -21,25 +21,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ResultsScreen = props => {
+const ResultsScreen = () => {
     const classes = useStyles();
+
     return (
-        <React.Fragment>
-            <Paper className={classes.containerPaper} >
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
-                        <Paper className={classes.paper} elevation={3}>
-                            <TestResults />
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Paper className={classes.paper} elevation={3}>
-                            <TestHelp />
-                        </Paper>
-                    </Grid>
+        <Paper className={classes.containerPaper} >
+            <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <TestResults />
+                    </Paper>
                 </Grid>
-            </Paper>
-        </React.Fragment>
+                <Grid item xs={12} md={6}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <TestHelp />
+                    </Paper>
+                </Grid>
+            </Grid>
+        </Paper>
     );
 }
 

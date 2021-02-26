@@ -114,7 +114,7 @@ const NurseDashboard = props => {
 		<React.Fragment>
 			<div className='row center'>
 				<div className='doc-container' style={{ width: '1000px', maxWidth: '90%' }}>
-					<AppointmentTable 
+					<AppointmentTable
 						releaseAppointment={releaseAppointment}
 						appointments={appointments}
 						refresh={getFutureAppointments}

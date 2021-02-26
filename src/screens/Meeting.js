@@ -3,13 +3,14 @@ import FullScreenOverlay from '../components/FullScreenOverlay/FullScreenOverlay
 import DocButton from '../components/DocButton/DocButton';
 import { PatientHeader } from '../components/VideoCall/TwillioVideoCall';
 import DocModal from '../components/DocModal/DocModal';
+import LinkButton from '../components/DocButton/LinkButton';
 import Box from '../components/TwilioVideo/Box';
 
 class Meeting extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			step: 3,
+			step: 4,
 			videoCallToken: '',
 			questionsVisible: true,
 		};
@@ -22,10 +23,11 @@ class Meeting extends React.Component {
 	displayContent() {
 		if (this.state.questionsVisible) {
 			switch (this.state.step) {
-				case 1: return <TermsConditional next={this.increaseStep} />;
-				case 2: return <DataSharingPolicies next={this.increaseStep} />;
-				case 3: return <QuietSpace next={this.increaseStep} />;
-				case 4: return <TestKit next={this.increaseStep} />;
+				case 1: return <AppointmentSummary />;
+				case 2: return <TermsConditional next={this.increaseStep} />;
+				case 3: return <DataSharingPolicies next={this.increaseStep} />;
+				case 4: return <QuietSpace next={this.increaseStep} />;
+				case 5: return <TestKit next={this.increaseStep} />;
 				default:
 					this.setState({ questionsVisible: false });
 					return null;
@@ -56,6 +58,23 @@ class Meeting extends React.Component {
 }
 
 export default Meeting;
+
+const AppointmentSummary = ({ date }) => (
+	<div>
+		<h2>Appointment Summary</h2>
+		<p><b>Selected date: </b>{date || ''}</p>
+		<p><b>Selected time: </b>{date || ''}</p>
+		<p>Please, make sure you click on this link <b>30 minutes before</b> your actual appointment.</p>
+		<p>If you need to cancel or modify your appointment, please contact us at: <b>vistasupport@dochq.co.uk</b></p>
+		<div className='row flex-end'>
+			<LinkButton
+				text='Back to Home'
+				color='green'
+				linkSrc='/patient/dashboard'
+			/>
+		</div>
+	</div>
+);
 
 const TestKit = ({ next }) => {
 	const [ready, setReady] = useState(true);

@@ -9,7 +9,7 @@ const DocCard = ({ title, icon, content, actions }) => (
 				</div>
 				<div className='doc-card-content'>
 					<h2>{title}</h2>
-					{React.isValidElement(content) ? { content } : <p>{content}</p>}
+					{React.isValidElement(content) ? content : <p>{content}</p>}
 				</div>
 			</div>
 			<div className='doc-card-actions'>{actions}</div>

@@ -10,56 +10,57 @@ import TableRow from '@material-ui/core/TableRow';
 import MuiAlert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import bookingUserDataService from '../../../services/bookingUserDataService';
 import { AuthContext } from '../../../context/AuthContext';
 import Snackbar from '@material-ui/core/Snackbar';
 
 const baseURL = process.env.REACT_APP_BOOKING_USER_DATA_URL || `https://services-booking-user-data-staging.dochq.co.uk`;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     title: {
         textAlign: 'left',
     },
 }));
 
 const TestResults = props => {
-	const { role_profile, setRoleProfile, token, organisation_profile } = useContext(AuthContext);
+	const { role_profile, token } = useContext(AuthContext);
     const classes = useStyles();
     const [rows, setRows] = useState([]);
     const [error, setError] = useState();
     const [openError, setOpenError] = useState(false);
-    
+
     function Alert(props) {
           return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
 
     useEffect(() => {
-        const testResults = new Promise((res, rej) =>{
-			axios({
-				url: `${baseURL}/roles/results?id=${role_profile.id}`,
-				method: 'get',
-				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${token}` },
-			})
-            .then(response => {
-                if (response.status === 200) res(response)
-                else rej(response)
+        if (!!token && !!role_profile && !!role_profile.id) {
+            const testResults = new Promise((res, rej) =>{
+                axios({
+                    url: `${baseURL}/roles/results?id=${role_profile.id}`,
+                    method: 'get',
+                    headers: { 'Content-type': 'application,json', Authorization: `Bearer ${token}` },
+                })
+                .then(response => {
+                    if (response.status === 200) res(response)
+                    else rej(response)
+                })
+                .catch(err => {
+                    setError("Malformed request")
+                    setOpenError(true)
+                })
             })
-            .catch(err => {
-                setError("Malformed request")
-                setOpenError(true)
-            })
-        })
 
-        testResults
-            .then(res => {
-                if (res.status === 200 && res.data !== 'undefined') {
-                        setRows(res.data)
-                    } else {
-                        setError("Malformed response")
-                        setOpenError(true)
-                    }
-            })
-    }, []);
+            testResults
+                .then(res => {
+                    if (res.status === 200 && res.data !== 'undefined') {
+                            setRows(res.data)
+                        } else {
+                            setError("Malformed response")
+                            setOpenError(true)
+                        }
+                })
+        }
+    }, [role_profile, token]);
 
     const handleClick = () => {
         setOpenError(true);
@@ -87,24 +88,36 @@ const TestResults = props => {
                 <TableHead>
                     <TableRow>
                         <TableCell>Test Date</TableCell>
-                        <TableCell align="right">Results</TableCell>
+                        <TableCell align="center">Results</TableCell>
                         <TableCell align="right">Actions</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                {rows.map((row) => (
-                    <TableRow key={row.name}>
-                    <TableCell component="th" scope="row">
-                        {moment.unix(row.sample_date).format("DD/MM/YYYY")}
-                    </TableCell>
-                    <TableCell align="right">
-                        <FormatResult result={row.result} />
-                    </TableCell>
-                    <TableCell align="right">
-                        <Button variant="contained" color="secondary" href={row.file_url} target="_blank">Download</Button>
-                    </TableCell>
+                {!!rows.length ? (
+                    rows.map((row) => (
+                        <TableRow key={row.name}>
+                            <TableCell component="th" scope="row">
+                                {moment.unix(row.sample_date).format("DD/MM/YYYY")}
+                            </TableCell>
+                            <TableCell align="center">
+                                <FormatResult result={row.result} />
+                            </TableCell>
+                            <TableCell align="right">
+                                <Button variant="contained" color="secondary" href={row.file_url} target="_blank">Download</Button>
+                            </TableCell>
+                        </TableRow>
+                    ))
+                ) : (
+                    <TableRow>
+                        <TableCell component="th" scope="row">
+                        </TableCell>
+                        <TableCell align="center">
+                            <FormatResult result='No results yet' />
+                        </TableCell>
+                        <TableCell align="right">
+                        </TableCell>
                     </TableRow>
-                ))}
+                )}
                 </TableBody>
             </Table>
         </React.Fragment>
