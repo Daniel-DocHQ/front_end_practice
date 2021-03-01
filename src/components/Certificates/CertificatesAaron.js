@@ -27,6 +27,7 @@ import { useAppointmentId } from '../../context/AppointmentContext';
 const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }) => {
 	const { user, token } = useContext(AuthContext);
 	const appointmentId = useAppointmentId();
+	const [populated, setPopulated] = useState(false);
 	// Form fields
 	const [forename, setForename] = useState('');
 	const [surname, setSurname] = useState('');
@@ -70,6 +71,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 		// runs on init
 		if (!!patient_data) {
 			populate();
+			setPopulated(true);
 		}
 	}, []);
 	function updateErrors(isValid, field) {
@@ -182,7 +184,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 				});
 		}
 	}
-	return (
+	return ((!!patient_data && populated) || (!patient_data && !populated)) &&  (
 		<React.Fragment>
 			<Paper style={{ padding: '20px', width: '350px', marginTop: '10px' }}>
 				<div className='row space-between'>
