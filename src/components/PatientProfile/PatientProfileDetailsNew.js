@@ -450,13 +450,11 @@ const ShippingInformation = ({
 						<p>{postcode}</p>
 					</div>
 					{status !== false && (
-						<React.Fragment>
-							<div className='row'>
-								<Alert variant='outlined' severity={status.severity}>
-									{status.message}
-								</Alert>
-							</div>
-						</React.Fragment>
+						<div className='row'>
+							<Alert variant='outlined' severity={status.severity}>
+								{status.message}
+							</Alert>
+						</div>
 					)}
 					{(!isEditable && isShippingInfo) && (
 						<div className='row center' style={{ width: '300px', maxWidth: '90%' }}>

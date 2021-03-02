@@ -14,7 +14,6 @@ function PrivateRoute({ children, requiredRole, requiredFlag, ...rest }) {
 			return '/login';
 		}
 	};
-	console.log(roleName,  requiredRole, requiredFlag);
 	function addProps() {
 		const childrenWithProps = React.Children.map(children, child => {
 			// checking isValidElement is the safe way and avoids a typescript error too
