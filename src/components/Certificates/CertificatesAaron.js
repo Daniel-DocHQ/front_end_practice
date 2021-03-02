@@ -161,8 +161,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 				.sendResult(token, appointmentId, body)
 				.then(result => {
 					if (result.success) {
-						ToastsStore.success('Generated certificate');
-						setStatus({ severity: 'success', message: 'Successfully generated certificate.' });
+						setStatus({ severity: 'success', message: 'Certificate successfully generated .' });
 						setIsLoading(false);
 						setCanCreateCertificate(false);
 					} else {
@@ -184,6 +183,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 				});
 		}
 	}
+	console.log(errors);
 	return ((!!patient_data && populated) || (!patient_data && !populated)) &&  (
 		<React.Fragment>
 			<Paper style={{ padding: '20px', width: '350px', marginTop: '10px' }}>
@@ -249,7 +249,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 						updateStatus={updateErrors}
 					/>
 				</div>
-				{attemptedSubmit && typeof dob === 'undefined' && (
+				{((attemptedSubmit && typeof dob === 'undefined') || errors.includes('date of birth (dd/mm/yyyy)')) && (
 					<div className='row no-margin'>
 						<p className='error'>Please enter patient date of birth - dd/mm/yyyy</p>
 					</div>
@@ -316,7 +316,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 						label='Passport number'
 						onChange={setPassportNumber}
 						inputProps={{ minLength: '5' }}
-						required={false}
+						required
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -345,6 +345,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 						<Select
 							labelId='test-result-label'
 							id='test-result'
+							label='Test Result'
 							onChange={e => setResult(e.target.value)}
 							value={result}
 							required
@@ -357,7 +358,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 						</Select>
 					</FormControl>
 				</div>
-				{attemptedSubmit && errors.includes('test result') && (
+				{attemptedSubmit && result === '' && (
 					<div className='row no-margin'>
 						<p className='error'>You must enter a result</p>
 					</div>

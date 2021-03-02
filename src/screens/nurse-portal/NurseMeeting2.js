@@ -282,14 +282,14 @@ const SubmitPatientResult = ({
 	} = useContext(AppointmentContext);
 	const { token } = useContext(AuthContext);
 	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
-	const [kidIdModifyMode, setKidIdModifyMode] = useState(false);
-	const [kidIdSubmitted, setKidIdSubmitted] = useState(false);
+	const [kitIdModifyMode, setKitIdModifyMode] = useState(false);
+	const [kitIdSubmitted, setKitIdSubmitted] = useState(false);
 	const [sampleTakenStatus, setSampleTakenStatus] = useState();
 	const [notesStatus, setNotesStatus] = useState();
 	// Fields
 	const [notes, setNotes] = useState();
 	const [sampleTaken, setSampleTaken] = useState();
-	const [kidId, setKidId] = useState();
+	const [kitId, setKitId] = useState();
 	const [appointmentNotes, setAppointmentNotes] = useState();
 
 	const isSampleTakenInvalid = sampleTaken === 'invalid';
@@ -297,14 +297,14 @@ const SubmitPatientResult = ({
 	const isSampleTakenValid = !isSampleTakenInvalid && !isSampleTakenRejected;
 	const isSampleTakenNotValid = isSampleTakenInvalid || isSampleTakenRejected;
 
-	function updateKidId() {
-		if (kidId) {
+	function updateKitId() {
+		if (kitId) {
 			sendResult({
-				kidId,
+				kitId,
 				result: '',
 			});
-			setKidIdSubmitted(true);
-			setKidIdModifyMode(true);
+			setKitIdSubmitted(true);
+			setKitIdModifyMode(true);
 		}
 	}
 
@@ -330,12 +330,13 @@ const SubmitPatientResult = ({
 			.then(result => {
 				if (isSampleTaken) {
 					if (result.success) {
-						setSampleTakenStatus({ severity: 'success', message: 'Successfully sent result' });
+						setSampleTakenStatus({ severity: 'success', message: 'Result sent successfully' });
 					} else {
 						setSampleTakenStatus({
 							severity: 'error',
 							message: 'Failed to generate certificate, please try again.',
 						});
+						ToastsStore.error('Failed');
 					}
 				}
 			})
@@ -357,34 +358,34 @@ const SubmitPatientResult = ({
 					</Grid>
 					<Grid item className='padding-top-box'>
 						<div className='row space-between'>
-							<h3 className='no-margin'>Enter KID ID</h3>
+							<h3 className='no-margin'>Enter Kit ID</h3>
 						</div>
 						<div className='row'>
 							<TextInputElement
-								id='kid-id'
-								value={kidId}
+								id='kit-id'
+								value={kitId}
 								placeholder='Eg: 20P456632'
-								onChange={setKidId}
-								disabled={kidIdModifyMode}
+								onChange={setKitId}
+								disabled={kitIdModifyMode}
 								required
 							/>
 						</div>
 						<div className='row flex-end'>
 							<DocButton
-								text={kidIdModifyMode ? 'Modify' : 'Submit'}
-								color={kidId ? 'green' : 'disabled'}
-								disabled={!kidId}
+								text={kitIdModifyMode ? 'Modify' : 'Submit'}
+								color={kitId ? 'green' : 'disabled'}
+								disabled={!kitId}
 								onClick={() => {
-									if (kidIdModifyMode) {
-										setKidIdModifyMode(false);
+									if (kitIdModifyMode) {
+										setKitIdModifyMode(false);
 									} else {
-										updateKidId();
+										updateKitId();
 									}
 								}}
 							/>
 						</div>
 					</Grid>
-					{kidIdSubmitted && (
+					{kitIdSubmitted && (
 						<Grid item>
 							<div className='row space-between'>
 								<h3 className='no-margin'>Sample Taken</h3>
@@ -475,7 +476,7 @@ const SubmitPatientResult = ({
 											text='Submit'
 											onClick={() => {
 												updateNotes(appointmentNotes);
-												setNotesStatus({ severity: 'success', message: 'Successfully updated notes' });
+												setNotesStatus({ severity: 'success', message: 'Notes updated successfully' });
 											}}
 										/>
 									</div>
@@ -540,6 +541,8 @@ const AddressVerification = ({
 				.then(result => {
 					if (result.success) {
 						updateParent();
+					} else {
+						ToastsStore.error('Failed');
 					}
 				})
 				.catch(() => {
@@ -616,7 +619,13 @@ const AddressVerification = ({
 									onChange={setPostCode}
 								/>
 							</div>
-							<div className='row flex-end'>
+							<div className='row space-between'>
+								<DocButton
+									color='pink'
+									text='Cancel'
+									style={{ marginRight: 25 }}
+									onClick={() => setModifyMode(false)}
+								/>
 								<DocButton
 									text='Save'
 									onClick={proceed}
@@ -731,6 +740,8 @@ const PatientIdVerification = ({
 				.then(result => {
 					if (result.success) {
 						updateParent();
+					} else {
+						ToastsStore.error('Failed');
 					}
 				})
 				.catch(() => {
@@ -923,10 +934,10 @@ const AppointmentActions = ({
 						</Grid>
 						<Grid item xs={6}>
 							<FormControl variant='filled' style={{ width: '100%' }}>
-								<InputLabel id='kid-provider-label'>Kit Provider</InputLabel>
+								<InputLabel id='kit-provider-label'>Kit Provider</InputLabel>
 								<Select
-									labelId='kid-provider-label'
-									id='kid-provider'
+									labelId='kit-provider-label'
+									id='kit-provider'
 									onChange={e => setKitProvider(e.target.value)}
 									value={kitProvider}
 									required
