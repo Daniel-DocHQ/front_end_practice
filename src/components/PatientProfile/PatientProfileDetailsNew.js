@@ -1,25 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Alert from '@material-ui/lab/Alert';
 import { format } from 'date-fns';
 import DocButton from '../DocButton/DocButton';
+import LinkButton from '../DocButton/LinkButton';
 import DateOfBirth from '../FormComponents/DateOfBirth';
 import EmailInputElement from '../FormComponents/EmailInput';
 import TextInputElement from '../FormComponents/TextInputElement';
 import existsInArray from '../../helpers/existsInArray';
-import './PatientProfileDetails.scss';
 import PhoneNumber from '../FormComponents/PhoneNumber/PhoneNumber';
 import {
 	AuthContext,
 } from '../../context/AuthContext';
 import bookingUserDataService from '../../services/bookingUserDataService';
 import authorisationSvc from '../../services/authorisationService';
-import Alert from '@material-ui/lab/Alert';
+import './PatientProfileDetails.scss';
 
-const PatientProfileDetailsNew = () => {
+const PatientProfileDetailsNew = ({ isShippingInfo }) => {
 	const {
 		setRole,
 		setUser,
 		token,
 		user,
+		role,
 		role_profile,
 		organisation_profile,
 		setRoleProfile,
@@ -36,7 +38,6 @@ const PatientProfileDetailsNew = () => {
 				title='Personal Information'
 				content={
 					<PersonalInformation
-						isEditable={isEditable}
 						setRole={setRole}
 						setUser={setUser}
 						token={token}
@@ -50,7 +51,9 @@ const PatientProfileDetailsNew = () => {
 					<ShippingInformation
 						token={token}
 						user={user}
+						role={!!role && !!role.name && role.name}
 						isEditable={isEditable}
+						isShippingInfo={isShippingInfo}
 						setIsEditable={setIsEditable}
 						role_profile={role_profile}
 						shipping_details={shipping_details}
@@ -220,11 +223,13 @@ const ShippingInformation = ({
 	organisation_profile,
 	user,
 	token,
+	role,
 	role_profile,
 	shipping_details,
 	isEditable,
 	setIsEditable,
 	setRoleProfile,
+	isShippingInfo,
 }) => {
 	const [address_1, setAddress_1] = useState('');
 	const [address_2, setAddress_2] = useState('');
@@ -361,8 +366,6 @@ const ShippingInformation = ({
 							label='Address Line 2'
 							onChange={setAddress_2}
 							autoComplete='shipping address-line2'
-							pattern={new RegExp(/^[a-zA-Z0-9 ]/)}
-							inputProps={{ minLength: '1' }}
 						/>
 					</div>
 					<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
@@ -447,19 +450,34 @@ const ShippingInformation = ({
 						<p>{postcode}</p>
 					</div>
 					{status !== false && (
-						<div className='row'>
-							<Alert variant='outlined' severity={status.severity}>
-								{status.message}
-							</Alert>
+						<React.Fragment>
+							<div className='row'>
+								<Alert variant='outlined' severity={status.severity}>
+									{status.message}
+								</Alert>
+							</div>
+						</React.Fragment>
+					)}
+					{(!isEditable && isShippingInfo) && (
+						<div className='row center' style={{ width: '300px', maxWidth: '90%' }}>
+							<LinkButton
+								color='green'
+								text='Back to Home'
+								linkSrc={`/${role}/dashboard`}
+							/>
 						</div>
 					)}
 				</React.Fragment>
 			)}
 			<div className='row flex-end'>
-				{isEditable ? (
-					<DocButton text='Save' color='pink' onClick={proceed} />
-				) : (
-					<DocButton text='Edit' color='green' onClick={() => setIsEditable(true)} />
+				{isShippingInfo ? (
+					isEditable ? (
+						<DocButton text='Save' color='pink' onClick={proceed} />
+					) : null
+				) : isEditable ? (
+						<DocButton text='Save' color='pink' onClick={proceed} />
+					) : (
+						<DocButton text='Edit' color='green' onClick={() => setIsEditable(true)} />
 				)}
 			</div>
 		</React.Fragment>

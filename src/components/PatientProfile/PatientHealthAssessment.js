@@ -19,9 +19,11 @@ import TextInputElement from '../FormComponents/TextInputElement';
 import MaterialCheckbox from '../MaterialCheckbox/MaterialCheckbox';
 import bookingUserDataService from '../../services/bookingUserDataService';
 import LinkButton from '../DocButton/LinkButton';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const PatientHealthAssessment = () => {
 	const { role, token } = useContext(AuthContext);
+	const [loading, setLoading] = useState(true);
 	const [hra_data, setHRAData] = useState();
 	const [smoking, setSmoking] = useState();
 	const [sex, setSex] = useState();
@@ -42,8 +44,12 @@ const PatientHealthAssessment = () => {
 					if (result.success && result.hra_data) {
 						setHRAData(result.hra_data);
 					}
+					setLoading(false);
 				})
-				.catch(() => console.log('err'));
+				.catch(() => {
+					console.log('err');
+					setLoading(false);
+				});
 		}
 	}, []);
 
@@ -56,7 +62,6 @@ const PatientHealthAssessment = () => {
 	}, [activeStep, setActiveStep]);
 
 	function updateHealthConditions(value, field, isFamily) {
-		console.log(healthConditions, value, field);
 		let newConditions;
 		if (isFamily) {
 			if (familyHealthConditions.length === 0) {
@@ -65,7 +70,7 @@ const PatientHealthAssessment = () => {
 				setFamilyHealthConditions(newConditions);
 			} else if (value && !existsInArray(familyHealthConditions, field)) {
 				if (field === 8) {
-					newConditions = [];
+					newConditions = [8];
 				} else {
 					newConditions = [...familyHealthConditions.filter(item => item !== 8)];
 					newConditions.push(field);
@@ -82,7 +87,7 @@ const PatientHealthAssessment = () => {
 				setHealthConditions(newConditions);
 			} else if (value && !existsInArray(healthConditions, field)) {
 				if (field === 8) {
-					newConditions = [];
+					newConditions = [8];
 				} else {
 					newConditions = [...healthConditions.filter(item => item !== 8)];
 					newConditions.push(field);
@@ -162,6 +167,15 @@ const PatientHealthAssessment = () => {
 				}
 			})
 			.catch(err => ToastsStore.error('Failed to submit health assessment'));
+	}
+	if (loading) {
+		return (
+			<BigWhiteContainer>
+				<div className='row center'>
+					<LoadingSpinner />
+				</div>
+			</BigWhiteContainer>
+		);
 	}
 
 	return (
@@ -539,8 +553,18 @@ const HealthConditions = ({ healthConditions, update, nextStep, backStep, isFami
 				</ul>
 			</div>
 			<div className='row'>
-				<DocButton text='Back' onClick={backStep} flat style={{ marginRight: '50px' }} />
-				<DocButton text='Next' onClick={nextStep} color='green' />
+				<DocButton
+					text='Back'
+					onClick={backStep}
+					flat
+					style={{ marginRight: '50px' }}
+				/>
+				<DocButton
+					text='Next'
+					onClick={nextStep}
+					disabled={!healthConditions.length}
+					color={!healthConditions.length ? 'disabled' : 'green'}
+				/>
 			</div>
 		</React.Fragment>
 	) : (
@@ -626,8 +650,18 @@ const HealthConditions = ({ healthConditions, update, nextStep, backStep, isFami
 				</ul>
 			</div>
 			<div className='row'>
-				<DocButton text='Back' onClick={backStep} flat style={{ marginRight: '50px' }} />
-				<DocButton text='Next' onClick={nextStep} color='green' />
+				<DocButton
+					flat
+					text='Back'
+					onClick={backStep}
+					style={{ marginRight: '50px' }}
+				/>
+				<DocButton
+					text='Next'
+					onClick={nextStep}
+					disabled={!healthConditions.length}
+					color={!healthConditions.length ? 'disabled' : 'green'}
+				/>
 			</div>
 		</React.Fragment>
 	);

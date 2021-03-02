@@ -17,6 +17,7 @@ import {
 	Typography,
 	Tooltip,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { format, differenceInMinutes } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
 import { useToken } from '../../context/AuthContext';
@@ -27,6 +28,7 @@ import CertificatesAaron from '../../components/Certificates/CertificatesAaron';
 import DocButton from '../../components/DocButton/DocButton';
 import TextInputElement from '../../components/FormComponents/TextInputElement';
 import bookingService from '../../services/bookingService';
+import getValueFromObject from '../../helpers/getValueFromObject';
 import { AuthContext } from '../../context/AuthContext';
 
 const APPOINTMENT_TYPES = {
@@ -79,7 +81,8 @@ const TabContainer = ({
 		appointmentId,
 	} = useContext(AppointmentContext);
 	const patients = useBookingUsers();
-	const patient = useBookingUser(0);
+	let patient = useBookingUser(0);
+	patient = {...patient, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})}
 	const appointmentDetails = useAppointmentDetails();
 	const increaseStep = useCallback(() => {
 		setValue((oldValue) => oldValue + 1);
@@ -278,10 +281,11 @@ const SubmitPatientResult = ({
 		updateNotes,
 	} = useContext(AppointmentContext);
 	const { token } = useContext(AuthContext);
-	const [showNotes, setShowNotes] = useState(false);
 	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
 	const [kidIdModifyMode, setKidIdModifyMode] = useState(false);
 	const [kidIdSubmitted, setKidIdSubmitted] = useState(false);
+	const [sampleTakenStatus, setSampleTakenStatus] = useState();
+	const [notesStatus, setNotesStatus] = useState();
 	// Fields
 	const [notes, setNotes] = useState();
 	const [sampleTaken, setSampleTaken] = useState();
@@ -315,23 +319,28 @@ const SubmitPatientResult = ({
 					reject_notes: notes,
 				}),
 				sampleTaken,
-			});
+			}, true);
 		}
 	}
 
-    function sendResult(formData) {
+    function sendResult(formData, isSampleTaken) {
 		const body = formData;
 		bookingService
 			.sendResult(token, appointmentId, body)
 			.then(result => {
-				if (result.success) {
-					ToastsStore.success('Success');
-				} else {
-					ToastsStore.error('Failed');
+				if (isSampleTaken) {
+					if (result.success) {
+						setSampleTakenStatus({ severity: 'success', message: 'Successfully sent result' });
+					} else {
+						setSampleTakenStatus({
+							severity: 'error',
+							message: 'Failed to generate certificate, please try again.',
+						});
+					}
 				}
 			})
 			.catch(() => {
-				ToastsStore.error('Failed');
+				console.log('error')
 			});
 	}
 
@@ -405,24 +414,13 @@ const SubmitPatientResult = ({
 									/>
 								</div>
 							)}
-							<div className='row space-between'>
-								<h3 className='no-margin'>
-									{isSampleTakenValid && (
-										'Notes'
-									)}
-									{isSampleTakenRejected && 'Rejection Notes'}
-									{isSampleTakenInvalid && 'Invalidation Notes'}
-								</h3>
-								{(!showNotes && isSampleTakenValid) && (
-									<DocButton
-										color='green'
-										text='Add'
-										onClick={() => setShowNotes(true)}
-									/>
-								)}
-							</div>
-							{(showNotes || isSampleTakenNotValid) && (
+							{isSampleTakenNotValid && (
 								<React.Fragment>
+									<div className='row space-between'>
+										<h3 className='no-margin'>
+											{isSampleTakenRejected ? 'Rejection Notes' : 'Invalidation Notes'}
+										</h3>
+									</div>
 									<TextInputElement
 										rows={4}
 										multiline
@@ -430,51 +428,68 @@ const SubmitPatientResult = ({
 										value={notes}
 										onChange={setNotes}
 										required={isSampleTakenNotValid}
-										placeholder={(isSampleTakenNotValid)
-											? `Add Reason for ${isSampleTakenRejected ? 'Rejection' : 'Invalidation'}\nThis notes will be sent to the client`
-											: ''}
+										placeholder={`Add Reason for ${isSampleTakenRejected ? 'Rejection' : 'Invalidation'}\nThis notes will be sent to the client`}
 									/>
 									<div className='row flex-end'>
 										<DocButton
 											text='Submit'
 											disabled={isSampleTakenNotValid ? !notes : false}
 											color={isSampleTakenNotValid && !notes ? 'disabled' : 'green'}
-											onClick={() => (isSampleTakenNotValid ? sendSampleTaken() : updateNotes(notes))}
+											onClick={sendSampleTaken}
 										/>
 									</div>
 								</React.Fragment>
 							)}
-							{(isSampleTakenNotValid) && (
+							{!!sampleTakenStatus && !!sampleTakenStatus.severity && !!sampleTakenStatus.message && (
+								<div className='row center'>
+									<Alert
+										variant="outlined"
+										severity={sampleTakenStatus.severity}
+									>
+									 	{sampleTakenStatus.message}
+									</Alert>
+								</div>
+							)}
+							<div className='row space-between'>
+								<h3 className='no-margin'>{isSampleTakenNotValid ? 'Appointment Notes' : 'Notes'}</h3>
+								{!showAppointmentNotes && (
+									<DocButton
+										color='green'
+										text='Add'
+										onClick={() => setShowAppointmentNotes(true)}
+									/>
+								)}
+							</div>
+							{showAppointmentNotes && (
 								<React.Fragment>
-									<div className='row space-between'>
-										<h3 className='no-margin'>Appointment Notes</h3>
-										{!showAppointmentNotes && (
-											<DocButton
-												color='green'
-												text='Add'
-												onClick={() => setShowAppointmentNotes(true)}
-											/>
-										)}
+									<TextInputElement
+										rows={4}
+										multiline
+										id='appointment-notes'
+										value={appointmentNotes}
+										onChange={setAppointmentNotes}
+									/>
+									<div className='row flex-end'>
+										<DocButton
+											color='green'
+											text='Submit'
+											onClick={() => {
+												updateNotes(appointmentNotes);
+												setNotesStatus({ severity: 'success', message: 'Successfully updated notes' });
+											}}
+										/>
 									</div>
-									{showAppointmentNotes && (
-										<React.Fragment>
-											<TextInputElement
-												rows={4}
-												multiline
-												id='appointment-notes'
-												value={appointmentNotes}
-												onChange={setAppointmentNotes}
-											/>
-											<div className='row flex-end'>
-												<DocButton
-													color='green'
-													text='Submit'
-													onClick={() => updateNotes(appointmentNotes)}
-												/>
-											</div>
-										</React.Fragment>
-									)}
 								</React.Fragment>
+							)}
+							{!!notesStatus && !!notesStatus.severity && !!notesStatus.message && (
+								<div className='row center'>
+									<Alert
+										variant="outlined"
+										severity={notesStatus.severity}
+									>
+										{notesStatus.message}
+									</Alert>
+								</div>
 							)}
 						</Grid>
 					)}
@@ -524,10 +539,7 @@ const AddressVerification = ({
 				})
 				.then(result => {
 					if (result.success) {
-						ToastsStore.success('Success');
 						updateParent();
-					} else {
-						ToastsStore.error('Failed');
 					}
 				})
 				.catch(() => {
@@ -718,10 +730,7 @@ const PatientIdVerification = ({
 				})
 				.then(result => {
 					if (result.success) {
-						ToastsStore.success('Success');
 						updateParent();
-					} else {
-						ToastsStore.error('Failed');
 					}
 				})
 				.catch(() => {

@@ -380,7 +380,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 				)}
 				{!!status && !!status.severity && !!status.message && !isLoading && (
 					<div className='row center'>
-						<Alert severity={status.severity}>{status.message}</Alert>
+						<Alert variant="outlined" severity={status.severity}>{status.message}</Alert>
 					</div>
 				)}
 				{isLoading && (

@@ -27,6 +27,8 @@ const HomepageCards = ({
 	const onboardingComplete =
 		!!role_profile && !!role_profile.onboarding_complete && role_profile.onboarding_complete;
 
+	console.log(role_profile, organisation_profile, onboardingComplete);
+
 	useEffect(() => {
 		if(!!token) {
 			bookingUserDataService.getOrdersProfile(token)

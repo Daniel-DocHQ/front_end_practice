@@ -108,16 +108,6 @@ export default class AppointmentContextProvider extends Component {
 					notes,
 					!!this.props.token ? this.props.token : !!this.state.token ? this.state.token : null
 				)
-				.then(result => {
-					if (result.success) {
-						ToastsStore.success(`Updated Notes`);
-					} else {
-						ToastsStore.error(`Failed to update notes`);
-					}
-				})
-				.catch(err => {
-					ToastsStore.error(`Failed to update notes`);
-				});
 		}
 	}
 
