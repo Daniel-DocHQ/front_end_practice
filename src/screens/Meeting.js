@@ -6,12 +6,13 @@ import DocModal from '../components/DocModal/DocModal';
 import LinkButton from '../components/DocButton/LinkButton';
 import Box from '../components/TwilioVideo/Box';
 import AppointmentContextProvider from '../context/AppointmentContext';
+import MaterialCheckbox from '../components/FormComponents/MaterialCheckbox/MaterialCheckbox';
 
 class Meeting extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			step: 4,
+			step: 2,
 			videoCallToken: '',
 			questionsVisible: true,
 		};
@@ -150,10 +151,7 @@ const TermsConditional = ({ next }) => {
 			}}
 		>
 			{ready ? (
-				<React.Fragment>
-					<h3>Do you accept T&C?</h3>
-					<h4>If you do not accept you won’t be able to do the test​</h4>
-				</React.Fragment>
+				<h3>I have read and agree to DocHQs Terms and Conditions.</h3>
 			) : (
 				<h3>Sorry you cannot attend the video appointment</h3>
 			)}
@@ -201,6 +199,7 @@ const TermsConditional = ({ next }) => {
 
 const DataSharingPolicies = ({ next }) => {
 	const [ready, setReady] = useState('');
+	const [decision, setDecision] = useState(false);
 	const [isVisible, setIsVisible] = useState(false);
 	const isReadyEmpty = ready === '';
 
@@ -214,15 +213,28 @@ const DataSharingPolicies = ({ next }) => {
 		>
 			{isReadyEmpty ? (
 				<React.Fragment>
-					<h3>Do you accept  data sharing policies?​</h3>
+					<h3>
+						I accept to share my medical data with Delphin Health Limited to show the test results also on Klarity App. (Optional)
+					​</h3>
 					<a onClick={() => setIsVisible(true)}>
 						Read here
 					</a>
+					<div className='row'>
+						<MaterialCheckbox
+							value={decision}
+							onChange={setDecision}
+							labelComponent="Share/Don't Share"
+						/>
+					</div>
 				</React.Fragment>
-			) : ( ready === 'ready' ? (
-				<h3>Thank you for agreeing to share</h3>
+			) : ( ready ? (
+				<h3>
+					Thank you for submitting your decision. DocHQ will share your medical data with Delphin Health
+				</h3>
 			) : (
-				<h3>Thank you for submitting your decision​</h3>
+				<h3 style={{ fontWeight: 500 }}>
+					Thank you for submitting your decision. DocHQ <b>will not</b> share your medical data
+				</h3>
 			))}
 			<DocModal
 				title='Data Sharing Policies'
@@ -249,20 +261,12 @@ const DataSharingPolicies = ({ next }) => {
 				}
 			/>
 			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
-				{isReadyEmpty && (
-					<DocButton
-						color='pink'
-						text='Reject'
-						onClick={() => setReady('notReady')}
-						style={{ margin: '5px' }}
-					/>
-				)}
 				<DocButton
 					color='green'
-					text={isReadyEmpty ? 'Accept' : 'Next'}
+					text={isReadyEmpty ? 'Submit' : 'Next'}
 					onClick={() => {
 						if (isReadyEmpty) {
-							setReady('ready');
+							setReady(decision);
 						} else {
 							next();
 						}

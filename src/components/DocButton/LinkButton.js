@@ -2,8 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './DocButton.scss';
 
-import PropTypes from 'prop-types';
-/* 
+/*
 	Acceptable colors - pink or green
 */
 const LinkButton = ({ text, color, linkSrc, newTab, flat, disabled, style, nomargin }) => {

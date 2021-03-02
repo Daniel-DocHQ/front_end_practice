@@ -7,7 +7,8 @@ import HomepageCards from '../../components/HomepageCards/HomepageCards';
 import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 
 const PatientDashboard = () => {
-	const { role_profile, token, organisation_profile, setRoleProfile } = useContext(AuthContext);
+	const { role_profile, token, organisation_profile, setRoleProfile, setOrgProfile } = useContext(AuthContext);
+
 	const [isLoading, setIsLoading] = useState(false);
 	useEffect(() => {
 		// run once on mount
@@ -23,6 +24,15 @@ const PatientDashboard = () => {
 			.then(result => {
 				if (result.success && result.role_profile) {
 					setRoleProfile(result.role_profile);
+					setIsLoading(false);
+				}
+			})
+			.catch(err => null);
+		bookingUserDataService.
+			getOrganisationRoleProfile(token)
+			.then(result => {
+				if (result.success && result.organisation_profile) {
+					setOrgProfile(result.organisation_profile);
 					setIsLoading(false);
 				}
 			})

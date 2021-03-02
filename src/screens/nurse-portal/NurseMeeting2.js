@@ -17,6 +17,7 @@ import {
 	Typography,
 	Tooltip,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { format, differenceInMinutes } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
 import { useToken } from '../../context/AuthContext';
@@ -27,6 +28,7 @@ import CertificatesAaron from '../../components/Certificates/CertificatesAaron';
 import DocButton from '../../components/DocButton/DocButton';
 import TextInputElement from '../../components/FormComponents/TextInputElement';
 import bookingService from '../../services/bookingService';
+import getValueFromObject from '../../helpers/getValueFromObject';
 import { AuthContext } from '../../context/AuthContext';
 
 const APPOINTMENT_TYPES = {
@@ -79,7 +81,8 @@ const TabContainer = ({
 		appointmentId,
 	} = useContext(AppointmentContext);
 	const patients = useBookingUsers();
-	const patient = useBookingUser(0);
+	let patient = useBookingUser(0);
+	patient = {...patient, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})}
 	const appointmentDetails = useAppointmentDetails();
 	const increaseStep = useCallback(() => {
 		setValue((oldValue) => oldValue + 1);
@@ -278,14 +281,15 @@ const SubmitPatientResult = ({
 		updateNotes,
 	} = useContext(AppointmentContext);
 	const { token } = useContext(AuthContext);
-	const [showNotes, setShowNotes] = useState(false);
 	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
-	const [kidIdModifyMode, setKidIdModifyMode] = useState(false);
-	const [kidIdSubmitted, setKidIdSubmitted] = useState(false);
+	const [kitIdModifyMode, setKitIdModifyMode] = useState(false);
+	const [kitIdSubmitted, setKitIdSubmitted] = useState(false);
+	const [sampleTakenStatus, setSampleTakenStatus] = useState();
+	const [notesStatus, setNotesStatus] = useState();
 	// Fields
 	const [notes, setNotes] = useState();
 	const [sampleTaken, setSampleTaken] = useState();
-	const [kidId, setKidId] = useState();
+	const [kitId, setKitId] = useState();
 	const [appointmentNotes, setAppointmentNotes] = useState();
 
 	const isSampleTakenInvalid = sampleTaken === 'invalid';
@@ -293,14 +297,14 @@ const SubmitPatientResult = ({
 	const isSampleTakenValid = !isSampleTakenInvalid && !isSampleTakenRejected;
 	const isSampleTakenNotValid = isSampleTakenInvalid || isSampleTakenRejected;
 
-	function updateKidId() {
-		if (kidId) {
+	function updateKitId() {
+		if (kitId) {
 			sendResult({
-				kidId,
+				kitId,
 				result: '',
 			});
-			setKidIdSubmitted(true);
-			setKidIdModifyMode(true);
+			setKitIdSubmitted(true);
+			setKitIdModifyMode(true);
 		}
 	}
 
@@ -315,23 +319,29 @@ const SubmitPatientResult = ({
 					reject_notes: notes,
 				}),
 				sampleTaken,
-			});
+			}, true);
 		}
 	}
 
-    function sendResult(formData) {
+    function sendResult(formData, isSampleTaken) {
 		const body = formData;
 		bookingService
 			.sendResult(token, appointmentId, body)
 			.then(result => {
-				if (result.success) {
-					ToastsStore.success('Success');
-				} else {
-					ToastsStore.error('Failed');
+				if (isSampleTaken) {
+					if (result.success) {
+						setSampleTakenStatus({ severity: 'success', message: 'Result sent successfully' });
+					} else {
+						setSampleTakenStatus({
+							severity: 'error',
+							message: 'Failed to generate certificate, please try again.',
+						});
+						ToastsStore.error('Failed');
+					}
 				}
 			})
 			.catch(() => {
-				ToastsStore.error('Failed');
+				console.log('error')
 			});
 	}
 
@@ -348,34 +358,34 @@ const SubmitPatientResult = ({
 					</Grid>
 					<Grid item className='padding-top-box'>
 						<div className='row space-between'>
-							<h3 className='no-margin'>Enter KID ID</h3>
+							<h3 className='no-margin'>Enter Kit ID</h3>
 						</div>
 						<div className='row'>
 							<TextInputElement
-								id='kid-id'
-								value={kidId}
+								id='kit-id'
+								value={kitId}
 								placeholder='Eg: 20P456632'
-								onChange={setKidId}
-								disabled={kidIdModifyMode}
+								onChange={setKitId}
+								disabled={kitIdModifyMode}
 								required
 							/>
 						</div>
 						<div className='row flex-end'>
 							<DocButton
-								text={kidIdModifyMode ? 'Modify' : 'Submit'}
-								color={kidId ? 'green' : 'disabled'}
-								disabled={!kidId}
+								text={kitIdModifyMode ? 'Modify' : 'Submit'}
+								color={kitId ? 'green' : 'disabled'}
+								disabled={!kitId}
 								onClick={() => {
-									if (kidIdModifyMode) {
-										setKidIdModifyMode(false);
+									if (kitIdModifyMode) {
+										setKitIdModifyMode(false);
 									} else {
-										updateKidId();
+										updateKitId();
 									}
 								}}
 							/>
 						</div>
 					</Grid>
-					{kidIdSubmitted && (
+					{kitIdSubmitted && (
 						<Grid item>
 							<div className='row space-between'>
 								<h3 className='no-margin'>Sample Taken</h3>
@@ -405,24 +415,13 @@ const SubmitPatientResult = ({
 									/>
 								</div>
 							)}
-							<div className='row space-between'>
-								<h3 className='no-margin'>
-									{isSampleTakenValid && (
-										'Notes'
-									)}
-									{isSampleTakenRejected && 'Rejection Notes'}
-									{isSampleTakenInvalid && 'Invalidation Notes'}
-								</h3>
-								{(!showNotes && isSampleTakenValid) && (
-									<DocButton
-										color='green'
-										text='Add'
-										onClick={() => setShowNotes(true)}
-									/>
-								)}
-							</div>
-							{(showNotes || isSampleTakenNotValid) && (
+							{isSampleTakenNotValid && (
 								<React.Fragment>
+									<div className='row space-between'>
+										<h3 className='no-margin'>
+											{isSampleTakenRejected ? 'Rejection Notes' : 'Invalidation Notes'}
+										</h3>
+									</div>
 									<TextInputElement
 										rows={4}
 										multiline
@@ -430,51 +429,68 @@ const SubmitPatientResult = ({
 										value={notes}
 										onChange={setNotes}
 										required={isSampleTakenNotValid}
-										placeholder={(isSampleTakenNotValid)
-											? `Add Reason for ${isSampleTakenRejected ? 'Rejection' : 'Invalidation'}\nThis notes will be sent to the client`
-											: ''}
+										placeholder={`Add Reason for ${isSampleTakenRejected ? 'Rejection' : 'Invalidation'}\nThis notes will be sent to the client`}
 									/>
 									<div className='row flex-end'>
 										<DocButton
 											text='Submit'
 											disabled={isSampleTakenNotValid ? !notes : false}
 											color={isSampleTakenNotValid && !notes ? 'disabled' : 'green'}
-											onClick={() => (isSampleTakenNotValid ? sendSampleTaken() : updateNotes(notes))}
+											onClick={sendSampleTaken}
 										/>
 									</div>
 								</React.Fragment>
 							)}
-							{(isSampleTakenNotValid) && (
+							{!!sampleTakenStatus && !!sampleTakenStatus.severity && !!sampleTakenStatus.message && (
+								<div className='row center'>
+									<Alert
+										variant="outlined"
+										severity={sampleTakenStatus.severity}
+									>
+									 	{sampleTakenStatus.message}
+									</Alert>
+								</div>
+							)}
+							<div className='row space-between'>
+								<h3 className='no-margin'>{isSampleTakenNotValid ? 'Appointment Notes' : 'Notes'}</h3>
+								{!showAppointmentNotes && (
+									<DocButton
+										color='green'
+										text='Add'
+										onClick={() => setShowAppointmentNotes(true)}
+									/>
+								)}
+							</div>
+							{showAppointmentNotes && (
 								<React.Fragment>
-									<div className='row space-between'>
-										<h3 className='no-margin'>Appointment Notes</h3>
-										{!showAppointmentNotes && (
-											<DocButton
-												color='green'
-												text='Add'
-												onClick={() => setShowAppointmentNotes(true)}
-											/>
-										)}
+									<TextInputElement
+										rows={4}
+										multiline
+										id='appointment-notes'
+										value={appointmentNotes}
+										onChange={setAppointmentNotes}
+									/>
+									<div className='row flex-end'>
+										<DocButton
+											color='green'
+											text='Submit'
+											onClick={() => {
+												updateNotes(appointmentNotes);
+												setNotesStatus({ severity: 'success', message: 'Notes updated successfully' });
+											}}
+										/>
 									</div>
-									{showAppointmentNotes && (
-										<React.Fragment>
-											<TextInputElement
-												rows={4}
-												multiline
-												id='appointment-notes'
-												value={appointmentNotes}
-												onChange={setAppointmentNotes}
-											/>
-											<div className='row flex-end'>
-												<DocButton
-													color='green'
-													text='Submit'
-													onClick={() => updateNotes(appointmentNotes)}
-												/>
-											</div>
-										</React.Fragment>
-									)}
 								</React.Fragment>
+							)}
+							{!!notesStatus && !!notesStatus.severity && !!notesStatus.message && (
+								<div className='row center'>
+									<Alert
+										variant="outlined"
+										severity={notesStatus.severity}
+									>
+										{notesStatus.message}
+									</Alert>
+								</div>
 							)}
 						</Grid>
 					)}
@@ -524,7 +540,6 @@ const AddressVerification = ({
 				})
 				.then(result => {
 					if (result.success) {
-						ToastsStore.success('Success');
 						updateParent();
 					} else {
 						ToastsStore.error('Failed');
@@ -604,7 +619,13 @@ const AddressVerification = ({
 									onChange={setPostCode}
 								/>
 							</div>
-							<div className='row flex-end'>
+							<div className='row space-between'>
+								<DocButton
+									color='pink'
+									text='Cancel'
+									style={{ marginRight: 25 }}
+									onClick={() => setModifyMode(false)}
+								/>
 								<DocButton
 									text='Save'
 									onClick={proceed}
@@ -718,7 +739,6 @@ const PatientIdVerification = ({
 				})
 				.then(result => {
 					if (result.success) {
-						ToastsStore.success('Success');
 						updateParent();
 					} else {
 						ToastsStore.error('Failed');
@@ -914,10 +934,10 @@ const AppointmentActions = ({
 						</Grid>
 						<Grid item xs={6}>
 							<FormControl variant='filled' style={{ width: '100%' }}>
-								<InputLabel id='kid-provider-label'>Kit Provider</InputLabel>
+								<InputLabel id='kit-provider-label'>Kit Provider</InputLabel>
 								<Select
-									labelId='kid-provider-label'
-									id='kid-provider'
+									labelId='kit-provider-label'
+									id='kit-provider'
 									onChange={e => setKitProvider(e.target.value)}
 									value={kitProvider}
 									required
