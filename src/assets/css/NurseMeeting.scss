@@ -3,7 +3,7 @@
 	padding: 10px;
 	align-self: flex-start;
 	.tab-container {
-		height: 70vh;
+		height: 66vh;
 		display: flex;
 		overflow: scroll;
 		flex-direction: column;
@@ -11,12 +11,12 @@
 		border-radius: 5px;
 		overflow: hidden;
 		max-width: 40vw;
-		padding: 15px;
+		padding: 10px;
 		.tab-content {
 			height: 100%;
    			overflow-y: auto;
 			overflow-x: hidden;
-			padding-right: 5px;
+			padding-right: 10px;
 		}
 		/* Customize website's scrollbar like Mac OS
 		Not supports in Firefox and IE */
@@ -64,7 +64,7 @@
 		cursor: pointer;
 	}
 	.padding-top-box {
-		padding-top: 30px;
+		padding-top: 20px;
 	}
 	.appointment-buttons {
 		width: 100%;
@@ -111,7 +111,7 @@
 	flex: 2;
 	margin: 10px;
 	position: relative;
-	min-height: 70vh;
+	height: 70vh;
 }
 .screen-container {
 	max-width: 95%;

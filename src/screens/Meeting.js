@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
+import {
+	FormControl,
+	FormControlLabel,
+	Radio,
+	RadioGroup,
+} from '@material-ui/core';
 import FullScreenOverlay from '../components/FullScreenOverlay/FullScreenOverlay';
 import DocButton from '../components/DocButton/DocButton';
 import { PatientHeader } from '../components/VideoCall/TwillioVideoCall';
 import DocModal from '../components/DocModal/DocModal';
 import LinkButton from '../components/DocButton/LinkButton';
 import Box from '../components/TwilioVideo/Box';
+import '../assets/css/Meeting.scss';
 import AppointmentContextProvider from '../context/AppointmentContext';
-import MaterialCheckbox from '../components/FormComponents/MaterialCheckbox/MaterialCheckbox';
 
 class Meeting extends React.Component {
 	constructor(props) {
@@ -27,9 +33,10 @@ class Meeting extends React.Component {
 			switch (this.state.step) {
 				case 1: return <AppointmentSummary />;
 				case 2: return <TermsConditional next={this.increaseStep} />;
-				case 3: return <DataSharingPolicies next={this.increaseStep} />;
-				case 4: return <QuietSpace next={this.increaseStep} />;
-				case 5: return <TestKit next={this.increaseStep} />;
+				case 3: return <DelphinDataSharingPolicies next={this.increaseStep} />;
+				case 4: return <NationalTestDataSharingPolicies next={this.increaseStep} />;
+				case 5: return <QuietSpace next={this.increaseStep} />;
+				case 6: return <TestKit next={this.increaseStep} />;
 				default:
 					this.setState({ questionsVisible: false });
 					return null;
@@ -197,10 +204,9 @@ const TermsConditional = ({ next }) => {
 	);
 };
 
-const DataSharingPolicies = ({ next }) => {
+const DelphinDataSharingPolicies = ({ next }) => {
 	const [ready, setReady] = useState('');
-	const [decision, setDecision] = useState(false);
-	const [isVisible, setIsVisible] = useState(false);
+	const [decision, setDecision] = useState();
 	const isReadyEmpty = ready === '';
 
 	return (
@@ -213,57 +219,97 @@ const DataSharingPolicies = ({ next }) => {
 		>
 			{isReadyEmpty ? (
 				<React.Fragment>
-					<h3>
+					<h3 className='padding-box'>
 						I accept to share my medical data with Delphin Health Limited to show the test results also on Klarity App. (Optional)
 					​</h3>
-					<a onClick={() => setIsVisible(true)}>
-						Read here
-					</a>
-					<div className='row'>
-						<MaterialCheckbox
-							value={decision}
-							onChange={setDecision}
-							labelComponent="Share/Don't Share"
-						/>
+					<div className='row padding-box'>
+						<FormControl component='fieldset'>
+							<RadioGroup
+								aria-label='dataSharing'
+								name='dataSharing'
+								value={decision}
+								onChange={e => setDecision(e.target.value)}
+							>
+								<FormControlLabel value='ready' control={<Radio />} label='Share' />
+								<FormControlLabel value='notReady' control={<Radio />} label="Don't Share" />
+							</RadioGroup>
+						</FormControl>
 					</div>
 				</React.Fragment>
-			) : ( ready ? (
-				<h3>
-					Thank you for submitting your decision. DocHQ will share your medical data with Delphin Health
+			) : ( ready === 'ready' ? (
+				<h3 className='padding-box'>
+					Thank you for submitting your decision. <br />DocHQ will share your medical data with Delphin Health.
 				</h3>
 			) : (
-				<h3 style={{ fontWeight: 500 }}>
-					Thank you for submitting your decision. DocHQ <b>will not</b> share your medical data
+				<h3 style={{ fontWeight: 500 }} className='padding-box'>
+					Thank you for submitting your decision. <br />DocHQ <b>will not</b> share your medical data with Delphin Health.
 				</h3>
 			))}
-			<DocModal
-				title='Data Sharing Policies'
-				isVisible={isVisible}
-				onClose={() => setIsVisible(false)}
-				content={
-					<div
-						style={{
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'center',
-						}}
-					>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, sit commodi! Laborum ex illo libero necessitatibus, inventore tenetur excepturi, odit aspernatur reprehenderit doloremque omnis quaerat explicabo fugit distinctio dolorum nemo.</p>
-						<div style={{ paddingTop: '20px', textAlign: 'center' }}>
-							<DocButton
-								color='grey'
-								text='Close'
-								onClick={() => setIsVisible(false)}
-								style={{ margin: '5px' }}
-							/>
-						</div>
-					</div>
-				}
-			/>
 			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
 				<DocButton
-					color='green'
+					color={!!decision ? 'green' : 'disabled'}
 					text={isReadyEmpty ? 'Submit' : 'Next'}
+					disabled={!decision}
+					onClick={() => {
+						if (isReadyEmpty) {
+							setReady(decision);
+						} else {
+							next();
+						}
+					}}
+					style={{ margin: '5px' }}
+				/>
+			</div>
+		</div>
+	);
+};
+
+const NationalTestDataSharingPolicies = ({ next }) => {
+	const [ready, setReady] = useState('');
+	const [decision, setDecision] = useState();
+	const isReadyEmpty = ready === '';
+
+	return (
+		<div
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+			}}
+		>
+			{isReadyEmpty ? (
+				<React.Fragment>
+					<h3 className='padding-box'>
+						I accept to share my details with my national Test and Trace App. (Optional)
+					​</h3>
+					<div className='row padding-box'>
+						<FormControl component='fieldset'>
+							<RadioGroup
+								aria-label='dataSharing'
+								name='dataSharing'
+								value={decision}
+								onChange={e => setDecision(e.target.value)}
+							>
+								<FormControlLabel value='ready' control={<Radio />} label='Share' />
+								<FormControlLabel value='notReady' control={<Radio />} label="Don't Share" />
+							</RadioGroup>
+						</FormControl>
+					</div>
+				</React.Fragment>
+			) : ( ready === 'ready' ? (
+				<h3 className='padding-box'>
+					Thank you for submitting your decision. <br />DocHQ will share your national Test and Trace App.
+				</h3>
+			) : (
+				<h3 style={{ fontWeight: 500 }} className='padding-box'>
+					Thank you for submitting your decision. <br />DocHQ <b>will not</b> share your national Test and Trace App.
+				</h3>
+			))}
+			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
+				<DocButton
+					color={!!decision ? 'green' : 'disabled'}
+					text={isReadyEmpty ? 'Submit' : 'Next'}
+					disabled={!decision}
 					onClick={() => {
 						if (isReadyEmpty) {
 							setReady(decision);

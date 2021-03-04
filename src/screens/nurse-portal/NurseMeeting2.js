@@ -87,6 +87,7 @@ const TabContainer = ({
 	const increaseStep = useCallback(() => {
 		setValue((oldValue) => oldValue + 1);
 	});
+	const isTuiType = type === APPOINTMENT_TYPES.tui;
 
 	useEffect(() => {
 		if (isJoined && value === 0 && type === APPOINTMENT_TYPES.vista) {
@@ -95,10 +96,11 @@ const TabContainer = ({
 	}, [isJoined]);
 
 	return (
-		type === APPOINTMENT_TYPES.tui ? (
+		isTuiType ? (
 			<div className='tab-container' style={{ minHeight: 'unset' }}>
 				{value === 0 && (
 					<AddressVerification
+						isTuiType
 						patient={patient}
 						patients={patients}
 						isJoined={isJoined}
@@ -157,6 +159,7 @@ const PatientDetails = ({
     fullData,
     patients = [],
     appointmentId,
+	addressBlockTitle,
 	isSpaceBetweenPhoneBox,
 }) => {
 	const linkRef = useRef(null);
@@ -164,6 +167,11 @@ const PatientDetails = ({
 
 	const addressDataBlock = () => (
 		<React.Fragment>
+			{!!addressBlockTitle && (
+				<div className='row no-margin' style={{ paddingBottom: 10 }}>
+					<h3 className='no-margin'>Address Verification</h3>
+				</div>
+			)}
 			{!!patient.street_address && fullData && (
 				<div className='row space-between no-margin'>
 					<p className='tab-row-text title-info'>Address Line 1:</p>
@@ -199,7 +207,7 @@ const PatientDetails = ({
 
 	return (
 		<React.Fragment>
-			<div className='row no-margin'>
+			<div className='row no-margin' style={{ paddingBottom: 10 }}>
 				<h3 className='no-margin'>{title}</h3>
 			</div>
 			<div className='column'>
@@ -247,7 +255,7 @@ const PatientDetails = ({
 							</div>
 						)
 					)}
-					<div className='row space-between no-margin'>
+					<div className='row space-between no-margin' style={{ padding: '20px 0' }}>
 						<p className='tab-row-text title-info'>
 							Patient Joining link:
 						</p>
@@ -504,6 +512,7 @@ const AddressVerification = ({
     patient,
     patients,
 	isJoined,
+	isTuiType,
     updateParent,
     appointmentId,
 }) => {
@@ -566,7 +575,8 @@ const AddressVerification = ({
 							patient={patient}
 							patients={patients}
 							isSpaceBetweenPhoneBox
-							title='Address Verification'
+							addressBlockTitle={isTuiType && isJoined}
+							title={isTuiType ? ( isJoined ? 'Patient Details' : 'Appointment Details') : 'Address Verification' }
 							appointmentId={appointmentId}
 						/>
 					</Grid>
@@ -822,6 +832,7 @@ const AppointmentActions = ({
 		img,
 	} = useContext(AppointmentContext);
 	const linkRef = useRef(null);
+	const [notesStatus, setNotesStatus] = useState();
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
 
@@ -918,10 +929,23 @@ const AppointmentActions = ({
 								<DocButton
 									color='green'
 									text='Submit'
-									onClick={() => updateNotes(notes)}
+									onClick={() => {
+										updateNotes(notes);
+										setNotesStatus({ severity: 'success', message: 'Notes updated successfully' });
+									}}
 								/>
 							</div>
 						</React.Fragment>
+					)}
+					{!!notesStatus && !!notesStatus.severity && !!notesStatus.message && (
+						<div className='row center'>
+							<Alert
+								variant="outlined"
+								severity={notesStatus.severity}
+							>
+								{notesStatus.message}
+							</Alert>
+						</div>
 					)}
 					<Grid
 						container
