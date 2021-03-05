@@ -16,6 +16,7 @@ import {
 	Select,
 	Typography,
 	Tooltip,
+	Divider,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { format, differenceInMinutes } from 'date-fns';
@@ -157,13 +158,14 @@ const PatientDetails = ({
     title,
     patient,
     fullData,
+	isTuiType,
     patients = [],
     appointmentId,
 	addressBlockTitle,
 	isSpaceBetweenPhoneBox,
 }) => {
 	const linkRef = useRef(null);
-	const isManyPatients = patients.length > 1;
+	const isManyPatients = patients.length > 1 || isTuiType;
 
 	const addressDataBlock = () => (
 		<React.Fragment>
@@ -272,9 +274,12 @@ const PatientDetails = ({
 					</div>
 				</div>
 				{isManyPatients && (
-					<div className={isSpaceBetweenPhoneBox && 'padding-top-box'}>
-						{addressDataBlock()}
-					</div>
+					<React.Fragment>
+						{!!addressBlockTitle && <Divider />}
+						<div className={isSpaceBetweenPhoneBox && 'padding-top-box'}>
+							{addressDataBlock()}
+						</div>
+					</React.Fragment>
 				)}
 			</div>
 		</React.Fragment>
@@ -574,6 +579,7 @@ const AddressVerification = ({
 							fullData
 							patient={patient}
 							patients={patients}
+							isTuiType={isTuiType}
 							isSpaceBetweenPhoneBox
 							addressBlockTitle={isTuiType && isJoined}
 							title={isTuiType ? ( isJoined ? 'Patient Details' : 'Appointment Details') : 'Address Verification' }
@@ -840,8 +846,8 @@ const AppointmentActions = ({
 		<div className='tab-container'>
 			<div className='tab-content'>
 				<div className='appointment-notes'>
-					<div className='row no-margin'>
-						<h3 className='no-margin'>Patient's Contact Details</h3>
+					<div className='row no-margin' style={{ paddingBottom: 10 }}>
+						<h3 className='no-margin'>Patient Details</h3>
 					</div>
 					<div className='column'>
 						{patients.length > 1 ? (
@@ -890,7 +896,7 @@ const AppointmentActions = ({
 							</React.Fragment>
 						)}
 					</div>
-					<div className='row space-between'>
+					<div className='row space-between' style={{ paddingBottom: '10px' }}>
 						<p className='tab-row-text title-info'>Patient Joining link:</p>
 						<Tooltip title="Click to copy">
 							<Typography
@@ -903,11 +909,12 @@ const AppointmentActions = ({
 							</Typography>
 						</Tooltip>
 					</div>
-					<div className='row no-margin' style={{ paddingTop: '30px'}}>
+					<Divider />
+					<div className='row no-margin' style={{ paddingTop: '20px' }}>
 						<h3 className='no-margin'>Appointment Actions</h3>
 					</div>
 					<div className='row space-between'>
-						<h3 className='no-margin'>Appointment Notes</h3>
+						<p className='no-margin'>Appointment Notes</p>
 						{!showNotes && (
 							<DocButton
 								color='green'
@@ -954,7 +961,7 @@ const AppointmentActions = ({
 						style={{ padding: '30px 0'}}
 					>
 						<Grid item xs={6}>
-							<h3 className='no-margin'>Kit Provider</h3>
+							<p className='no-margin'>Kit Provider</p>
 						</Grid>
 						<Grid item xs={6}>
 							<FormControl variant='filled' style={{ width: '100%' }}>
