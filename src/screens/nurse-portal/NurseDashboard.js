@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useContext, memo } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import AppointmentTable from '../../components/Tables/AppointmentTable';
 import PastAppointmentsTable from '../../components/Tables/PastAppointmentsTable';
-import NurseNavBar from '../../components/NurseNavBar/NurseNavBar';
-import { UserContext } from '../../context/UserContext';
 import nurseService from '../../services/nurseService';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
 import ClaimableAppointments from '../../components/Tables/ClaimableAppointments';
 import bookingService from '../../services/bookingService';
+import { Grid } from '@material-ui/core';
 
 const NurseDashboard = props => {
 	const [gotAppointments, setGotAppointments] = useState(false);
@@ -111,29 +110,25 @@ const NurseDashboard = props => {
 			.catch(() => ToastsStore.error('Error releasing appointment'));
 	}
 	return (
-		<React.Fragment>
-			<div className='row center'>
-				<div className='doc-container' style={{ width: '1000px', maxWidth: '90%' }}>
-					<AppointmentTable
-						releaseAppointment={releaseAppointment}
-						appointments={appointments}
-						refresh={getFutureAppointments}
-					/>
-				</div>
-			</div>
-			<div className='row center'>
-				<div className='doc-container' style={{ width: '1000px', maxWidth: '90%' }}>
-					<PastAppointmentsTable appointments={pastAppointments} refresh={getPastAppointments} />
-				</div>
-			</div>
-			<div className='row center'>
+		<Grid container justify="space-between">
+			<Grid item xs={6}>
 				<ClaimableAppointments
 					appointments={claimableAppointments}
 					claimAppointment={claimAppointment}
 					refresh={getClaimableAppointments}
 				/>
-			</div>
-		</React.Fragment>
+			</Grid>
+			<Grid item xs={6}>
+				<AppointmentTable
+					releaseAppointment={releaseAppointment}
+					appointments={appointments}
+					refresh={getFutureAppointments}
+				/>
+			</Grid>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<PastAppointmentsTable appointments={pastAppointments} refresh={getPastAppointments} />
+			</Grid>
+		</Grid>
 	);
 };
 

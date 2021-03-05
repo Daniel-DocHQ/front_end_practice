@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef, memo } from 'react';
-
+import React, { useEffect, useState, memo } from 'react';
 import './VideoCallAppointment.scss';
 import Controls from '../Controls/Controls';
 import InVid from '../IncomingVideo/InVid';
 import OutVid from '../OutgoingVideo/OutVid';
+import DocModal from '../DocModal/DocModal';
+import DocButton from '../DocButton/DocButton';
 import Video from 'twilio-video';
 import { Redirect } from 'react-router-dom';
 import useNatureSounds from '../../helpers/hooks/useNatureSounds';
@@ -15,6 +16,8 @@ const { isSupported } = require('twilio-video');
 
 function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, captureDisabled }) {
 	const sound = useNatureSounds();
+	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
+	const [isVideoClosed, setIsVideoClosed] = useState(false);
 	const [isSoundPlayable, setIsSoundPlayable] = useState(!isNurse);
 	const [isPhotoMode, setIsPhotoMode] = useState(false);
 	const [takePhoto, setTakePhoto] = useState(false);
@@ -76,7 +79,7 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 	}, [token]);
 
 	const handleDisconnect = () => {
-		room.disconnect();
+		isNurse ? setIsCloseCallVisible(true) : room.disconnect();
 	};
 
 	const handleToggleAudio = () => {
@@ -92,6 +95,63 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 	};
 	return isSupported ? (
 		<React.Fragment>
+			<DocModal
+				isVisible={isCloseCallVisible}
+				onClose={() => setIsCloseCallVisible(false)}
+				content={
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							alignItems: 'center',
+						}}
+					>
+						<p>Are you sure you want to end this call?</p>
+						<div className="row space-between">
+							<DocButton
+								color='green'
+								text='No'
+								onClick={() => setIsCloseCallVisible(false)}
+								style={{ marginRight: '5px' }}
+							/>
+							<DocButton
+								color='pink'
+								text='Yes'
+								onClick={() => {
+									setIsCloseCallVisible(false);
+									if(!!room) {
+										room.disconnect();
+									}
+									setIsVideoClosed(true);
+								}}
+							/>
+						</div>
+					</div>
+				}
+			/>
+			<DocModal
+				isVisible={isVideoClosed}
+				onClose={() => setIsVideoClosed(false)}
+				content={
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							alignItems: 'center',
+						}}
+					>
+						<p>Your call is closed</p>
+						<div style={{ paddingTop: '20px', textAlign: 'center' }}>
+							<DocButton
+								color='grey'
+								text='Close'
+								onClick={() => setIsVideoClosed(false)}
+								style={{ margin: '5px' }}
+							/>
+						</div>
+					</div>
+				}
+			/>
 			{isSoundPlayable && <>{sound}</>}
 			<div className='video-call-container'>
 				<React.Fragment>

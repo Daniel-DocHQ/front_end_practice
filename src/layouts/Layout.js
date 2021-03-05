@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
-import SideNavigation from '../components/Navigation/SideNavigation';
+import React, { useContext } from 'react';
 import TopNavigation from '../components/Navigation/TopNavigation';
 import { AuthContext } from '../context/AuthContext';
 
