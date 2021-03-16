@@ -12,6 +12,8 @@ const bookingService = {
 	claimAppointment,
 	releaseAppointment,
 	sendResult,
+	getAppointmentInfo,
+	updateTerms,
 };
 
 // Booking engine
@@ -266,6 +268,65 @@ function sendResult(auth_token, appointment_id, body) {
 					}
 				})
 				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+		} else if (typeof auth_token === 'undefined') {
+			reject({ success: false, error: 'Unable to authenticate user.', authenticated: false });
+		} else {
+			resolve({ success: false, error: 'Missing Details' });
+		}
+	});
+}
+function getAppointmentInfo(appointment_id) {
+	return new Promise((resolve, reject) => {
+		if (appointment_id) {
+			axios({
+				url: `${baseURL}/${appointment_id}/info`,
+				method: 'get',
+				headers: { 'Content-type': 'application,json' },
+			})
+				.then(response => {
+					if (response.status === 200 || response.data.status === 'ok') {
+						resolve({ success: true, appointments: response.data });
+					} else if (response.status === 204) {
+						resolve({ success: true, appointments: [] });
+					} else if (response.status === 403) {
+						reject({
+							success: false,
+							error: 'Unable to authenticate user.',
+							authenticated: false,
+						});
+					} else {
+						reject({
+							success: false,
+							error: 'An error occurred',
+						});
+					}
+				})
+				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+		} else {
+			resolve({ success: false, error: 'Missing Details' });
+		}
+	});
+}
+function updateTerms(appointment_id, body) {
+	return new Promise((resolve, reject) => {
+		if (appointment_id && !!body) {
+			axios({
+				url: `${baseURL}/${appointment_id}/updateterms`,
+				method: 'PUT',
+				headers: { 'Content-type': 'application,json' },
+				data: body,
+			})
+			.then(response => {
+				if (response.status === 200 || response.data.status === 'ok') {
+					resolve({ success: true });
+				} else {
+					reject({
+						success: false,
+						error: response.data.error,
+					});
+				}
+			})
+			.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
 		} else if (typeof auth_token === 'undefined') {
 			reject({ success: false, error: 'Unable to authenticate user.', authenticated: false });
 		} else {

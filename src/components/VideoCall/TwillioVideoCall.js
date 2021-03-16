@@ -195,14 +195,14 @@ export const PatientHeader = ({ isVista }) =>
 			<img src={dochqLogo} alt='DocHQ Logo' className='hide-on-sm' />
 			<img src={vistaLogo} alt='Vista Logo' className='hide-on-sm vista-logo' />
 			<img src={dochqLogoSq} alt='DocHQ Logo' className='show-on-sm' />
-			<h3>Video Consultations</h3>
+			<h3>Video Consultation</h3>
 			<div style={{ width: 150 }}/>
 		</div>
 	) : (
 		<div className='patient-header'>
 			<img src={dochqLogo} alt='DocHQ Logo' className='hide-on-sm' />
 			<img src={dochqLogoSq} alt='DocHQ Logo' className='show-on-sm' />
-			<h3>Video Consultations</h3>
+			<h3>Video Consultation</h3>
 			<div style={{ width: 150 }}/>
 		</div>
 	);
