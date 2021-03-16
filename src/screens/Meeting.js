@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	FormControl,
 	FormControlLabel,
@@ -12,80 +12,169 @@ import DocModal from '../components/DocModal/DocModal';
 import LinkButton from '../components/DocButton/LinkButton';
 import Box from '../components/TwilioVideo/Box';
 import '../assets/css/Meeting.scss';
+import bookingService from '../services/bookingService';
+import { ddMMyyyy, formatTimeSlot } from '../helpers/formatDate';
+import getURLParams from '../helpers/getURLParams';
+
 import AppointmentContextProvider from '../context/AppointmentContext';
 
-class Meeting extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			step: 2,
-			videoCallToken: '',
-			questionsVisible: true,
-		};
-		this.isVista = window.location.href.includes('vista');
-		this.displayContent = this.displayContent.bind(this);
-	}
+const Meeting = () => {
+	const isVista = window.location.href.includes('vista');
+	const params = getURLParams(window.location.href);
+	const appointmentId = params['appointmentId'];
+	const skiptime = params['skiptime'];
+	const [step, setStep] = useState(1);
+	const [isLoading, setIsLoading] = useState(true);
+	const [videoCallToken, setVideoCallToken] = useState('');
+	const [toc_accept, setToc_accept] = useState();
+	const [marketing_accept, setMarketing_accept] = useState();
+	const [isEarly, setIsEarly] = useState();
+	const [share_accept, setShare_accept] = useState();
+	const [userMedia, setUserMedia] = useState(false);
+	const [questionsVisible, setQuestionsVisible] = useState(true);
+	const [appointmentInfo, setAppointmentInfo] = useState();
+	const language = !!appointmentInfo && appointmentInfo.language;
+	const isEnglish = language === 'EN';
 
-	increaseStep = () => this.setState({ step: this.state.step + 1 });
-	setVideoCallToken = (token) => this.setState({ videoCallToken: token });
-	displayContent() {
-		if (this.state.questionsVisible) {
-			switch (this.state.step) {
-				case 1: return <AppointmentSummary />;
-				case 2: return <TermsConditional next={this.increaseStep} />;
-				case 3: return <DelphinDataSharingPolicies next={this.increaseStep} />;
-				case 4: return <NationalTestDataSharingPolicies next={this.increaseStep} />;
-				case 5: return <QuietSpace next={this.increaseStep} />;
-				case 6: return <TestKit next={this.increaseStep} />;
+	useEffect(async () => {
+		await bookingService.getAppointmentInfo(appointmentId)
+			.then(result => {
+				if (result.success && result.appointments) {
+					setAppointmentInfo(result.appointments);
+					const now = new Date();
+					const appointmentTime = new Date(result.appointments.start_time);
+					setIsEarly(Math.round((((appointmentTime.getTime() - now.getTime()) / 1000) / 60)) > 30);
+					setIsLoading(false);
+				} else {
+					// handle
+					setIsLoading(false);
+				}
+			})
+			.catch(err => console.log(err));
+	}, []);
+
+	useEffect(() => {
+		if (isEarly === false) {
+			navigator.getUserMedia({
+				video: true,
+				audio: true
+				},
+				() => setUserMedia(true),
+				() => setUserMedia(false),
+			);
+		}
+	}, [isEarly]);
+
+	const increaseStep = (value) => setStep(step + value);
+	const displayContent = () => {
+		if (questionsVisible) {
+			if ((isEarly && !skiptime)) {
+				return (
+					<AppointmentSummary
+						isVista={isVista}
+						isEnglish={isEnglish}
+						date={!!appointmentInfo && appointmentInfo.start_time}
+					/>
+				);
+			}
+
+			if (!userMedia) {
+				return (
+					<CameraMicrophoneCheck
+						isEnglish={isEnglish}
+					/>
+				);
+			}
+
+			switch (step) {
+				case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
+					setToc_accept(true);
+					increaseStep(1);
+				}} />;
+				case 2: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
+					setMarketing_accept(value);
+					isEnglish ? increaseStep(2) : increaseStep(1)
+				}} />;
+				case 3: return <NationalTestDataSharingPolicies next={(value) => {
+					setShare_accept(value);
+					increaseStep(1);
+				}} />;
+				case 4: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
+				case 5: return <TestKit isEnglish={isEnglish} next={() => {
+					increaseStep(1);
+					bookingService
+						.updateTerms(appointmentId, {
+							toc_accept,
+							marketing_accept,
+							share_accept,
+						});
+				}} />;
 				default:
-					this.setState({ questionsVisible: false });
+					setQuestionsVisible(false);
 					return null;
 			}
 		}
-	}
-	render() {
-		return (
-			<AppointmentContextProvider>
-				{this.state.questionsVisible ? (
-					<React.Fragment>
-						<PatientHeader isVista={this.isVista} />
-						<FullScreenOverlay
-							isVisible={this.state.questionsVisible}
-							content={this.displayContent()}
-						/>
-					</React.Fragment>
-				) : (
-					<Box
-						isNurse={false}
-						videoCallToken={this.state.videoCallToken}
-						setVideoCallToken={this.setVideoCallToken}
+	};
+
+	return !isLoading && (
+		<AppointmentContextProvider>
+			{questionsVisible ? (
+				<React.Fragment>
+					<PatientHeader isVista={isVista} />
+					<FullScreenOverlay
+						isVisible={questionsVisible}
+						content={displayContent()}
 					/>
-				)}
-			</AppointmentContextProvider>
-		);
-	}
+				</React.Fragment>
+			) : (
+				<Box
+					isNurse={false}
+					isEnglish={isEnglish}
+					videoCallToken={videoCallToken}
+					setVideoCallToken={setVideoCallToken}
+				/>
+			)}
+		</AppointmentContextProvider>
+	);
 }
 
 export default Meeting;
 
-const AppointmentSummary = ({ date }) => (
+const AppointmentSummary = ({ date, isVista, isEnglish }) => (
 	<div>
-		<h2>Appointment Summary</h2>
-		<p><b>Selected date: </b>{date || ''}</p>
-		<p><b>Selected time: </b>{date || ''}</p>
-		<p>Please, make sure you click on this link <b>30 minutes before</b> your actual appointment.</p>
-		<p>If you need to cancel or modify your appointment, please contact us at: <b>vistasupport@dochq.co.uk</b></p>
-		<div className='row flex-end'>
-			<LinkButton
-				text='Back to Home'
-				color='green'
-				linkSrc='/patient/dashboard'
-			/>
-		</div>
+		<h2>{isEnglish ? 'Appointment Summary' : 'Terminübersicht'}</h2>
+		<p><b>{isEnglish ? 'Selected date' : 'Ausgewähltes Datum'}: </b>{ddMMyyyy(date)}</p>
+		<p><b>{isEnglish ? 'Selected date' : 'Ausgewählte Zeit'}: </b>{formatTimeSlot(date)}</p>
+		{isEnglish ? (
+			<p>Please, make sure you click on this link at least <b>15 minutes before</b> your actual appointment.</p>
+		) : (
+			<p>	Bitte stellen Sie sicher, dass Sie mindestens <b>15 Minuten vor</b> Ihrem eigentlichen Termin auf diesen Link klicken.</p>
+		)}
+		{isVista && (
+			<>
+				<p>If you need to cancel or modify your appointment, please contact us at: <b>vistasupport@dochq.co.uk</b></p>
+				<div className='row center'>
+					<LinkButton
+						text='Back to Home'
+						color='green'
+						linkSrc='/patient/dashboard'
+					/>
+				</div>
+			</>
+		)}
 	</div>
 );
 
-const TestKit = ({ next }) => {
+const CameraMicrophoneCheck = ({ isEnglish }) => (
+	<h3>
+		{isEnglish
+			? 'Please make sure you enable your camera and microphone before the appointment.'
+			: 'Bitte stellen Sie sicher, dass Sie Ihre Kamera und Ihr Mikrofon vor dem Termin aktivieren.'
+		}
+	</h3>
+);
+
+const TestKit = ({ isEnglish, next }) => {
 	const [ready, setReady] = useState(true);
 	return (
 		<div
@@ -96,26 +185,34 @@ const TestKit = ({ next }) => {
 			}}
 		>
 			{ready ? (
-				<h3>Do you have your test kit with you?</h3>
+				<h3>{isEnglish ? 'Do you have your test kit with you?' : 'Haben Sie Ihr Testkit dabei?'}</h3>
 			) : (
-				<h3>Your test kit is required for this appointment, have you got it with you now?</h3>
+				<h3>{isEnglish
+					? 'Your test kit is required for this appointment. Have you got it with you now?'
+					: 'Ihr Testkit wird für diesen Termin benötigt. Haben Sie es jetzt bei sich?'
+				}</h3>
 			)}
 			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
 				{ready && (
 					<DocButton
 						color='pink'
-						text='No'
+						text={isEnglish ? 'No' : 'Nein'}
 						onClick={() => setReady(false)}
 						style={{ margin: '5px' }}
 					/>
 				)}
-				<DocButton color='green' text='Yes' onClick={next} style={{ margin: '5px' }} />
+				<DocButton
+					color='green'
+					text={isEnglish ? 'Yes' : 'Ja'}
+					onClick={next}
+					style={{ margin: '5px' }}
+				/>
 			</div>
 		</div>
 	);
 };
 
-const QuietSpace = ({ next }) => {
+const QuietSpace = ({ isEnglish, next }) => {
 	const [ready, setReady] = useState(true);
 	return (
 		<div
@@ -126,26 +223,31 @@ const QuietSpace = ({ next }) => {
 			}}
 		>
 			{ready ? (
-				<h3>Are you positioned in a quiet space?</h3>
+				<h3>{isEnglish ? 'Are you positioned in a quiet space?' : 'Sind Sie an einem ruhigen Ort positioniert?'}</h3>
 			) : (
-				<h3>I am in the quietest space I can find.</h3>
+				<h3>{isEnglish ? 'I am in the quietest space I can find.' : 'Ich bin in dem ruhigsten Raum, den ich finden kann.'}</h3>
 			)}
 			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
 				{ready && (
 					<DocButton
 						color='pink'
-						text='No'
+						text={isEnglish ? 'No' : 'Nein'}
 						onClick={() => setReady(false)}
 						style={{ margin: '5px' }}
 					/>
 				)}
-				<DocButton color='green' text='Yes' onClick={next} style={{ margin: '5px' }} />
+				<DocButton
+					color='green'
+					text={isEnglish ? 'Yes' : 'Ja'}
+					onClick={next}
+					style={{ margin: '5px' }}
+				/>
 			</div>
 		</div>
 	);
 };
 
-const TermsConditional = ({ next }) => {
+const TermsConditional = ({ isEnglish, next }) => {
 	const [ready, setReady] = useState(true);
 	const [isVisible, setIsVisible] = useState(false);
 
@@ -158,15 +260,15 @@ const TermsConditional = ({ next }) => {
 			}}
 		>
 			{ready ? (
-				<h3>I have read and agree to DocHQs Terms and Conditions.</h3>
+				<h3>{isEnglish ? 'I have read and agree to DocHQs Terms and Conditions.' : 'Ich habe die Allgemeinen Geschäftsbedingungen von DocHQ Limited gelesen und bin damit einverstanden.'}</h3>
 			) : (
-				<h3>Sorry you cannot attend the video appointment</h3>
+				<h3>{isEnglish ? 'Sorry you cannot attend the video appointment' : 'Leider können Sie nicht am Videotermin teilnehmen'}</h3>
 			)}
 			<a onClick={() => setIsVisible(true)}>
-				Read here
+				{isEnglish ? 'Read here' : 'Allgemeine Geschäftsbedingungen'}
 			</a>
 			<DocModal
-				title='Terms Conditions'
+				title={isEnglish ? 'Terms Conditions' : 'Terms & amp; Bedingungen'}
 				isVisible={isVisible}
 				onClose={() => setIsVisible(false)}
 				content={
@@ -177,11 +279,61 @@ const TermsConditional = ({ next }) => {
 							alignItems: 'center',
 						}}
 					>
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, sit commodi! Laborum ex illo libero necessitatibus, inventore tenetur excepturi, odit aspernatur reprehenderit doloremque omnis quaerat explicabo fugit distinctio dolorum nemo.</p>
+						{isEnglish ? (
+							<>
+								<p>
+									This online guided Covid-19 self-test is a screening method rather than a diagnostic service. It <b>does not replace</b> a consultation with a medical doctor.<br/>
+									You may find the sampling procedure unpleasant. Common reactions are sneezing, gagging and coughing.<br />
+									False negative and false positive test results are possible.<br />
+									A negative test result (no virus detected) does <b>not</b> release you from your duty to follow current government hygiene recommendations and guidelines.<br />
+									In case of a positive test result (virus detected) you and the people in your household, <b>must</b> follow the current government regulations and guidelines.<br />
+									Errors that occur during the sampling and shipment processes that are beyond the control of DocHQ Limited and their partners, can lead to delays or make a sample unreadable or invalid.<br />
+									You can find further information in the FAQ section. If you feel you need to talk to a doctor before your test, please contact customer service.<br />
+									DocHQ Limited and their partners are not liable for any damage to your or other’s health or financial property resulting from any of the above points.<br /><br /><br />
+									I hereby declare that the data I provide is correct and that I will assure that the sample/s originate exclusively from the named person/s and will be obtained in accordance with the written and verbal instructions provided during the online appointment.<br /><br /><br />
+									I give permission for DocHQ Limited to share my personal and medical data for this process with their
+									necessary partners, <b>Public Health England (PHE)</b>, any relevant regulatory authorities, and release the
+									involved doctors and medical staff from their duty of confidentiality.<br />
+									The necessarily involved partners are:<br />
+									Dr. Simon Chaplin-Rogers, Park and St Francis Surgery, Ciconia Recovery Ltd.<br />
+									In case of PCR testing, also: SYNLAB Group, 2030 Labs Limited, Oncologica UK Limited and any other
+									laboratory that DocHQ Limited will contract with in future.<br /><br />
+									<h3>All the above is MANDATORY TO ACCEPT</h3>
+								</p>
+
+							</>
+						) : (
+							<p>
+								Dieser online begleitete COVID Selbsttest ist ein Screening, <b>keine</b> medizinische oder diagnostische Dienstleistung, er <b>ersetzt keine</b> ärztliche Untersuchung.<br /><br />
+								Beim COVID Selbsttest können unangenehme körperliche Reaktionen auftreten. Falsch negative und falsch positive Testergebnisse sind möglich<br /><br />
+								Ein negatives Testergebnis (kein Virus-Nachweis) entbindet Sie nicht von den aktuell lokal gültigen Abstands- und Hygieneregeln.<br /><br />
+								Bei positivem Testergebnis (Virus nachgewiesen) sind Sie und alle mit Ihnen lebenden Personen <b>verpflichtet, den aktuell geltenden Leitlinien des lokalen Gesundheitsamtes zu folgen.</b><br /><br />
+								Fehler im Prozess der Probenentnahme und des Versandes, über die DocHQ und seine Partner keine Kontrolle haben, können zu zeitlichen Verzögerungen sowohl zur Unauswertbarkeit einer Probe führen.<br /><br />
+								Hintergrundinformationen sind in den FAQ zu finden. Bei Bedarf nach einer ärztlichen Beratung vor PCR Testung wenden Sie sich bitte an den Kundendienst.<br /><br />
+								Das Unternehmen DocHQ und seine Partner übernimmt keinerlei Haftung zu Schäden oder Schadensersatzforderungen von Kunden oder Dritten, die sich aus den genannten Punkten ergeben.<br /><br />
+								<ul>
+									<li>
+										Ich erkläre an eides statt, dass meine Angaben korrekt sind und verpflichte mich hiermit, Sorge zu tragen, dass die Probe gemäß den schriftlichen und während der Videokonferenz vom medizinischen Personal erteilten Anleitungen von ausschließlich der bezeichneten Person am angegebenen Datum gewonnen wird.
+									</li>
+									<li>
+										Ich bin einverstanden, dass DocHQ meine persönlichen und medizinischen Daten mit den für den Prozess notwendigen Parteien teilt und entbinde die an meinem Covid-19 Test beteiligten Ärzte von DocHQ diesbezüglich von der ärztlichen Schweigepflicht.<br />
+										Die notwendigerweise beteiligten Parteien sind
+										<ul>
+											<li>
+												Synlab Group (bei PCR Test)
+											</li>
+											<li>
+												Die zuständigen Gesundheitsämter und das Robert-Koch-Institut (gemäß Infektionsschutzgesetz).
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</p>
+						)}
 						<div style={{ paddingTop: '20px', textAlign: 'center' }}>
 							<DocButton
 								color='grey'
-								text='Close'
+								text={isEnglish ? 'Close' : 'Schließen'}
 								onClick={() => setIsVisible(false)}
 								style={{ margin: '5px' }}
 							/>
@@ -193,18 +345,18 @@ const TermsConditional = ({ next }) => {
 				{ready && (
 					<DocButton
 						color='pink'
-						text='Reject'
+						text={isEnglish ? 'Reject' : 'Ablehnen'}
 						onClick={() => setReady(false)}
 						style={{ margin: '5px' }}
 					/>
 				)}
-				<DocButton color='green' text='Accept' onClick={next} style={{ margin: '5px' }} />
+				<DocButton color='green' text={isEnglish ? 'Accept' : 'Zustimmen'} onClick={next} style={{ margin: '5px' }} />
 			</div>
 		</div>
 	);
 };
 
-const DelphinDataSharingPolicies = ({ next }) => {
+const DelphinDataSharingPolicies = ({ isEnglish, next }) => {
 	const [ready, setReady] = useState('');
 	const [decision, setDecision] = useState();
 	const isReadyEmpty = ready === '';
@@ -220,7 +372,10 @@ const DelphinDataSharingPolicies = ({ next }) => {
 			{isReadyEmpty ? (
 				<React.Fragment>
 					<h3 className='padding-box'>
-						I accept to share my medical data with Delphin Health Limited to show the test results also on Klarity App. (Optional)
+						{isEnglish
+							? 'I accept to share my medical data with Managed Self Limited to access the test results also on Klarity App. (Optional)'
+							: 'Ich stimme zu, dass meine medizinischen Daten mit Managed Self Limited geteilt werden, damit ich auf die Testergebnisse auch über die Klarity App zugreifen kann. (Optional)'
+						}
 					​</h3>
 					<div className='row padding-box'>
 						<FormControl component='fieldset'>
@@ -230,31 +385,45 @@ const DelphinDataSharingPolicies = ({ next }) => {
 								value={decision}
 								onChange={e => setDecision(e.target.value)}
 							>
-								<FormControlLabel value='ready' control={<Radio />} label='Share' />
-								<FormControlLabel value='notReady' control={<Radio />} label="Don't Share" />
+								<FormControlLabel
+									value='ready'
+									control={<Radio />}
+									label={isEnglish ? 'Share' : 'Daten teilen' }
+								/>
+								<FormControlLabel
+									value='notReady'
+									control={<Radio />}
+									label={isEnglish ? 'Don\'t Share' : 'Daten nicht teilen'}
+								/>
 							</RadioGroup>
 						</FormControl>
 					</div>
 				</React.Fragment>
 			) : ( ready === 'ready' ? (
 				<h3 className='padding-box'>
-					Thank you for submitting your decision. <br />DocHQ will share your medical data with Delphin Health.
+					{isEnglish
+						? 'Thank you for submitting your decision. DocHQ Limited will share your medical data with Klarity App.'
+						: 'Vielen Dank für Ihre Entscheidung. DocHQ Limited teilt Ihre medizinischen Daten mit der Klarity App.'
+					}
 				</h3>
 			) : (
 				<h3 style={{ fontWeight: 500 }} className='padding-box'>
-					Thank you for submitting your decision. <br />DocHQ <b>will not</b> share your medical data with Delphin Health.
+					{isEnglish
+						? 'Thank you for submitting your decision. DocHQ Limited will not share your medical data with Klarity App.'
+						: 'Vielen Dank für Ihre Entscheidung. DocHQ Limited gibt Ihre medizinischen Daten nicht an die Klarity App weiter.'
+					}
 				</h3>
 			))}
 			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
 				<DocButton
 					color={!!decision ? 'green' : 'disabled'}
-					text={isReadyEmpty ? 'Submit' : 'Next'}
+					text={isReadyEmpty ? (isEnglish ? 'Submit' : 'Speichern') : (isEnglish ? 'Next' : 'Nächster')}
 					disabled={!decision}
 					onClick={() => {
 						if (isReadyEmpty) {
 							setReady(decision);
 						} else {
-							next();
+							next(decision === 'ready' ? true : false);
 						}
 					}}
 					style={{ margin: '5px' }}
@@ -280,7 +449,7 @@ const NationalTestDataSharingPolicies = ({ next }) => {
 			{isReadyEmpty ? (
 				<React.Fragment>
 					<h3 className='padding-box'>
-						I accept to share my details with my national Test and Trace App. (Optional)
+						Ich erlaube die Verwertung meiner Daten inklusive Testergebnis für die Corona- Warn-App des Robert-Koch-Instituts. (Optional)
 					​</h3>
 					<div className='row padding-box'>
 						<FormControl component='fieldset'>
@@ -290,31 +459,31 @@ const NationalTestDataSharingPolicies = ({ next }) => {
 								value={decision}
 								onChange={e => setDecision(e.target.value)}
 							>
-								<FormControlLabel value='ready' control={<Radio />} label='Share' />
-								<FormControlLabel value='notReady' control={<Radio />} label="Don't Share" />
+								<FormControlLabel value='ready' control={<Radio />} label='Daten teilen' />
+								<FormControlLabel value='notReady' control={<Radio />} label="Daten nicht teilen" />
 							</RadioGroup>
 						</FormControl>
 					</div>
 				</React.Fragment>
 			) : ( ready === 'ready' ? (
 				<h3 className='padding-box'>
-					Thank you for submitting your decision. <br />DocHQ will share your national Test and Trace App.
+					Vielen Dank für Ihre Entscheidung. DocHQ Limited teilt Ihre Daten mit der Corona Warn App.
 				</h3>
 			) : (
 				<h3 style={{ fontWeight: 500 }} className='padding-box'>
-					Thank you for submitting your decision. <br />DocHQ <b>will not</b> share your national Test and Trace App.
+					Vielen Dank für Ihre Entscheidung. DocHQ Limited gibt Ihre Daten nicht an die Corona Warn App weiter.
 				</h3>
 			))}
 			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
 				<DocButton
 					color={!!decision ? 'green' : 'disabled'}
-					text={isReadyEmpty ? 'Submit' : 'Next'}
+					text={isReadyEmpty ? 'Speichern' : 'Nächster'}
 					disabled={!decision}
 					onClick={() => {
 						if (isReadyEmpty) {
 							setReady(decision);
 						} else {
-							next();
+							next(decision === 'ready' ? true : false);
 						}
 					}}
 					style={{ margin: '5px' }}

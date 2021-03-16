@@ -7,6 +7,7 @@ import FullScreenOverlay from '../FullScreenOverlay/FullScreenOverlay';
 
 const Box = ({
 	isNurse,
+	isEnglish = true,
 	updateImageData,
 	captureDisabled,
 	videoCallToken,
@@ -54,8 +55,12 @@ const Box = ({
 								alignItems: 'center',
 							}}
 						>
-							<h2>You are ready for your appointment</h2>
-							<DocButton text='Join Appointment' onClick={handleSubmit} color='green' />
+							<h2>{isEnglish ? 'You are ready for your appointment' : 'Sie sind bereit für Ihren Termin.'}</h2>
+							<DocButton
+								text={isEnglish ? 'Join Appointment' : 'Nehmen Sie am Termin teil'}
+								onClick={handleSubmit}
+								color='green'
+							/>
 						</div>
 					}
 				/>
