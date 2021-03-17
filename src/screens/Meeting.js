@@ -17,6 +17,7 @@ import { ddMMyyyy, formatTimeSlot } from '../helpers/formatDate';
 import getURLParams from '../helpers/getURLParams';
 
 import AppointmentContextProvider from '../context/AppointmentContext';
+import { is } from 'immutable';
 
 const Meeting = () => {
 	const [step, setStep] = useState(1);
@@ -88,33 +89,52 @@ const Meeting = () => {
 					/>
 				);
 			}
-
-			switch (step) {
-				case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
-					setToc_accept(true);
-					increaseStep(1);
-				}} />;
-				case 2: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
-					setMarketing_accept(value);
-					isEnglish ? increaseStep(2) : increaseStep(1)
-				}} />;
-				case 3: return <NationalTestDataSharingPolicies next={(value) => {
-					setShare_accept(value);
-					increaseStep(1);
-				}} />;
-				case 4: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
-				case 5: return <TestKit isEnglish={isEnglish} next={() => {
-					increaseStep(1);
-					bookingService
-						.updateTerms(appointmentId, {
-							toc_accept,
-							marketing_accept,
-							share_accept,
-						});
-				}} />;
-				default:
-					setQuestionsVisible(false);
-					return null;
+			if (isVista) {
+				switch (step) {
+					case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
+						setToc_accept(true);
+						increaseStep(1);
+					}} />;
+					case 2: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
+					case 3: return <TestKit isEnglish={isEnglish} next={() => {
+						increaseStep(1);
+						bookingService
+							.updateTerms(appointmentId, {
+								toc_accept,
+							});
+					}} />;
+					default:
+						setQuestionsVisible(false);
+						return null;
+				}
+			} else {
+				switch (step) {
+					case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
+						setToc_accept(true);
+						increaseStep(1);
+					}} />;
+					case 2: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
+						setMarketing_accept(value);
+						isEnglish ? increaseStep(2) : increaseStep(1)
+					}} />;
+					case 3: return <NationalTestDataSharingPolicies next={(value) => {
+						setShare_accept(value);
+						increaseStep(1);
+					}} />;
+					case 4: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
+					case 5: return <TestKit isEnglish={isEnglish} next={() => {
+						increaseStep(1);
+						bookingService
+							.updateTerms(appointmentId, {
+								toc_accept,
+								marketing_accept,
+								share_accept,
+							});
+					}} />;
+					default:
+						setQuestionsVisible(false);
+						return null;
+				}
 			}
 		}
 	};
