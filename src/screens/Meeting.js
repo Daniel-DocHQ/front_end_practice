@@ -143,7 +143,7 @@ const Meeting = () => {
 		<AppointmentContextProvider>
 			{questionsVisible ? (
 				<React.Fragment>
-					<PatientHeader isVista={isVista} />
+					<PatientHeader />
 					<FullScreenOverlay
 						isVisible={questionsVisible}
 						content={displayContent()}
