@@ -10,7 +10,6 @@ import { Redirect } from 'react-router-dom';
 import useNatureSounds from '../../helpers/hooks/useNatureSounds';
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
-const vistaLogo = require('../../assets/images/vista-logo.png');
 
 const { isSupported } = require('twilio-video');
 
@@ -189,23 +188,14 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 
 export default memo(TwillioVideoCall);
 
-export const PatientHeader = ({ isVista }) =>
-	isVista ? (
-		<div className='patient-header'>
-			<img src={dochqLogo} alt='DocHQ Logo' className='hide-on-sm' />
-			<img src={vistaLogo} alt='Vista Logo' className='hide-on-sm vista-logo' />
-			<img src={dochqLogoSq} alt='DocHQ Logo' className='show-on-sm' />
-			<h3>Video Consultation</h3>
-			<div style={{ width: 150 }}/>
-		</div>
-	) : (
-		<div className='patient-header'>
-			<img src={dochqLogo} alt='DocHQ Logo' className='hide-on-sm' />
-			<img src={dochqLogoSq} alt='DocHQ Logo' className='show-on-sm' />
-			<h3>Video Consultation</h3>
-			<div style={{ width: 150 }}/>
-		</div>
-	);
+export const PatientHeader = () => (
+	<div className='patient-header'>
+		<img src={dochqLogo} alt='DocHQ Logo' className='hide-on-sm' />
+		<img src={dochqLogoSq} alt='DocHQ Logo' className='show-on-sm' />
+		<h3>Video Consultation</h3>
+		<div style={{ width: 150 }}/>
+	</div>
+);
 
 const Message = ({ message }) => (
 	<div className='message-background'>{message || 'hello world'}</div>
