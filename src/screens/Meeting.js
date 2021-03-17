@@ -19,10 +19,6 @@ import getURLParams from '../helpers/getURLParams';
 import AppointmentContextProvider from '../context/AppointmentContext';
 
 const Meeting = () => {
-	const isVista = window.location.href.includes('vista');
-	const params = getURLParams(window.location.href);
-	const appointmentId = params['appointmentId'];
-	const skiptime = params['skiptime'];
 	const [step, setStep] = useState(1);
 	const [isLoading, setIsLoading] = useState(true);
 	const [videoCallToken, setVideoCallToken] = useState('');
@@ -33,7 +29,11 @@ const Meeting = () => {
 	const [userMedia, setUserMedia] = useState(true);
 	const [questionsVisible, setQuestionsVisible] = useState(true);
 	const [isEnglish, setIsEnglish] = useState(true);
+	const [isVista, setIsVista] = useState(false);
 	const [appointmentInfo, setAppointmentInfo] = useState();
+	const params = getURLParams(window.location.href);
+	const appointmentId = params['appointmentId'];
+	const skiptime = params['skiptime'];
 
 	useEffect(async () => {
 		await bookingService.getAppointmentInfo(appointmentId)
@@ -44,7 +44,9 @@ const Meeting = () => {
 					const appointmentTime = new Date(result.appointments.start_time);
 					setIsEarly(Math.round((((appointmentTime.getTime() - now.getTime()) / 1000) / 60)) > 30);
 					const language = !!result.appointments && result.appointments.language;
-					setIsEnglish(language === 'EN');
+					const isVistaType = (!!result.appointments && result.appointments.type) === 'video_gp';
+					setIsVista(isVistaType);
+					setIsEnglish(isVistaType ? true : language === 'EN');
 					setIsLoading(false);
 				} else {
 					// handle
