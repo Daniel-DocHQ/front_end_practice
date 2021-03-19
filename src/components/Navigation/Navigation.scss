@@ -7,9 +7,12 @@
 			color: var(--doc-dark-grey);
 			cursor: pointer;
 		}
+		.non-active-icon {
+			color: var(--doc-dark-grey) !important;
+		}
 	}
 	z-index: 1150;
-	height: 74px;
+	height: 66px;
 	width: 100vw;
 	align-items: center;
 	background-color: var(--doc-green);
@@ -30,6 +33,7 @@
 		margin: 0px;
 		font-size: 25px;
 		line-height: 24px;
+		color: var(--doc-white);
 	}
 	.practice-logo {
 		padding-left: 80px;

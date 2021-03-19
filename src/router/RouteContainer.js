@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { ToastsContainer, ToastsStore } from 'react-toasts';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+
 import PatientHealthAssessment from '../components/PatientProfile/PatientHealthAssessment';
 import Layout from '../layouts/Layout';
 import CompanyResults from '../screens/hr-portal/CompanyResults';
@@ -14,7 +14,7 @@ import ShippingInfo from '../screens/patient-portal/ShippingInfo';
 import SymptomChecker from '../screens/patient-portal/SymptomChecker';
 import ResultsScreen from '../screens/patient-portal/ResultsScreen.js';
 import AuthBasedRedirect from './AuthBasedRedirect';
-import AuthContextProvider, { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import PrivateRoute from './PrivateRoute';
 import VerifyToken from '../screens/VerifyToken';
 import HelpScreen from '../screens/HelpScreen';
@@ -23,9 +23,10 @@ import { StepperContainer } from '../components/BookingEngine/Stepper';
 import Unsupported from '../screens/Unsupported';
 import Meeting from '../screens/Meeting';
 import NurseDashboard from '../screens/nurse-portal/NurseDashboard';
-
 import BookingEngine from '../components/BookingEngineAuthed/BookingEngine';
 import NurseMeeting2 from '../screens/nurse-portal/NurseMeeting2';
+import AppointmentLiveStatus from '../screens/nurse-portal/AppointmentLiveStatus';
+
 const { isSupported } = require('twilio-video');
 
 const RouteContainer = () => {
@@ -155,6 +156,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/practitioner/dashboard' requiredRole='practitioner'>
 				<Layout title='Dashboard'>
 					<NurseDashboard {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/practitioner/live-status' requiredRole='practitioner'>
+				<Layout title='Appointments Live Status'>
+					<AppointmentLiveStatus {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/video-appointment' requiredRole='practitioner'>
