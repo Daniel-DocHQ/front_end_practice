@@ -49,9 +49,8 @@ const NurseMeeting2 = ({ isVideo }) => {
 					<div className='patient-video'>
 						<Box
 							isNurse
-							token={token}
-							captureDisabled
 							updateImageData={console.log}
+							captureDisabled
 							videoCallToken={videoCallToken}
 							setVideoCallToken={setVideoCallToken}
 						/>
@@ -77,11 +76,11 @@ const TabContainer = ({
 	kitProvider,
 	setKitProvider,
 }) => {
+	const [value, setValue] = React.useState(0);
 	const {
 		type,
 		appointmentId,
 	} = useContext(AppointmentContext);
-	const [value, setValue] = React.useState(0);
 	const patients = useBookingUsers();
 	let patient = useBookingUser(0);
 	patient = {...patient, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})}

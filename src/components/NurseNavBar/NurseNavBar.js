@@ -1,18 +1,17 @@
-import React, { memo } from 'react';
+import React, { useContext, memo } from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
-
 import DocButton from '../DocButton/DocButton';
+import authorisationSvc from '../../services/authorisationService';
 import './NurseNavBar.scss';
+import { UserContext } from '../../context/UserContext';
 
 const NurseNavBar = props => {
 	const logo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 	let history = useHistory();
-
-	const exit = () => {
+	function exit() {
 		props.logout();
 		history.push('/login');
 	}
-
 	return (
 		<React.Fragment>
 			<div className='nav-bar-container'>

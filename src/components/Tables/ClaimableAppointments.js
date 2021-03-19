@@ -7,7 +7,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DocButton from '../DocButton/DocButton';
 import './Tables.scss';
-
 const styles = {
 	tableText: {
 		fontSize: 16,

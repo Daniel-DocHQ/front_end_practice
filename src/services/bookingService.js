@@ -14,7 +14,6 @@ const bookingService = {
 	sendResult,
 	getAppointmentInfo,
 	updateTerms,
-	updateAppointmentStatus,
 };
 
 // Booking engine
@@ -197,33 +196,6 @@ function claimAppointment(auth_token, slot_id) {
 				url: `${baseURL}/${slot_id}/claim`,
 				method: 'POST',
 				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },
-			})
-				.then(response => {
-					if (response.status === 200 || response.data.status === 'ok') {
-						resolve({ success: true });
-					} else {
-						reject({
-							success: false,
-							error: response.data.error,
-						});
-					}
-				})
-				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
-		} else if (typeof auth_token === 'undefined') {
-			reject({ success: false, error: 'Unable to authenticate user.', authenticated: false });
-		} else {
-			resolve({ success: false, error: 'Missing Details' });
-		}
-	});
-}
-function updateAppointmentStatus(auth_token, slot_id, body) {
-	return new Promise((resolve, reject) => {
-		if (auth_token && slot_id) {
-			axios({
-				url: `${baseURL}/${slot_id}/status`,
-				method: 'POST',
-				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },
-				data: body,
 			})
 				.then(response => {
 					if (response.status === 200 || response.data.status === 'ok') {

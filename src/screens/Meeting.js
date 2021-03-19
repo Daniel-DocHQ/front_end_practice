@@ -17,6 +17,7 @@ import { ddMMyyyy, formatTimeSlot } from '../helpers/formatDate';
 import getURLParams from '../helpers/getURLParams';
 
 import AppointmentContextProvider from '../context/AppointmentContext';
+import { is } from 'immutable';
 
 const Meeting = () => {
 	const [step, setStep] = useState(1);
@@ -151,7 +152,6 @@ const Meeting = () => {
 			) : (
 				<Box
 					isNurse={false}
-					token={' '}
 					isEnglish={isEnglish}
 					videoCallToken={videoCallToken}
 					setVideoCallToken={setVideoCallToken}

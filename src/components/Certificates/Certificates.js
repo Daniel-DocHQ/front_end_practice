@@ -73,6 +73,7 @@ export const CertificateForm = props => {
         if (formContents.forname === "") handleError("forname", "Cannot be left empty");
         if (formContents.surname === "") handleError("surname", "Cannot be left empty");
         if (formContents.email === "") handleError("email", "Cannot be left empty");
+        console.log(errors)
     }
 
     return (

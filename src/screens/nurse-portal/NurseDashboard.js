@@ -7,7 +7,6 @@ import { ToastsStore } from 'react-toasts';
 import ClaimableAppointments from '../../components/Tables/ClaimableAppointments';
 import bookingService from '../../services/bookingService';
 import { Grid } from '@material-ui/core';
-import TodayDoctors from '../../components/Tables/TodayDoctors';
 
 const NurseDashboard = props => {
 	const [gotAppointments, setGotAppointments] = useState(false);
@@ -17,68 +16,12 @@ const NurseDashboard = props => {
 	const [appointments, setAppointments] = useState();
 	const [claimableAppointments, setClaimableAppointments] = useState();
 	const [isLoading, setIsLoading] = useState(false);
-	const doctors = [
-		{
-			first_name: 'Bruce',
-			last_name: 'Wayne',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 5,
-				seconds: 59,
-			},
-			status: 'online',
-		},
-		{
-			first_name: 'Mike',
-			last_name: 'Johnson',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 4,
-				seconds: 23,
-			},
-			status: 'offline',
-		},
-		{
-			first_name: 'Taylor',
-			last_name: 'Xavier',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 20,
-				seconds: 15,
-			},
-			status: 'offline',
-		},
-		{
-			first_name: 'Lady',
-			last_name: 'Young',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 3,
-				seconds: 10,
-			},
-			status: 'online',
-		},
-		{
-			first_name: 'Loureen',
-			last_name: 'Ling',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 15,
-				seconds: 11,
-			},
-			status: 'offline',
-		},
-	]
 
 	let history = useHistory();
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		history.push('/login');
 	}
+	// eslint-disable-next-line
 	useEffect(() => {
 		if (!isLoading) {
 			if (
@@ -184,9 +127,6 @@ const NurseDashboard = props => {
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<PastAppointmentsTable appointments={pastAppointments} refresh={getPastAppointments} />
-			</Grid>
-			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<TodayDoctors doctors={doctors} />
 			</Grid>
 		</Grid>
 	);
