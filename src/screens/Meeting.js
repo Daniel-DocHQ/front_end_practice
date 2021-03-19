@@ -27,7 +27,7 @@ const Meeting = () => {
 	const [marketing_accept, setMarketing_accept] = useState();
 	const [isEarly, setIsEarly] = useState();
 	const [share_accept, setShare_accept] = useState();
-	const [userMedia, setUserMedia] = useState(true);
+	const [userMedia, setUserMedia] = useState(false);
 	const [questionsVisible, setQuestionsVisible] = useState(true);
 	const [isEnglish, setIsEnglish] = useState(true);
 	const [isVista, setIsVista] = useState(false);
