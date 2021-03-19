@@ -189,7 +189,7 @@ body {
 }
 .MuiAppBar-colorPrimary {
 	background-color: var(--doc-green) !important;
-	z-index: 1 !important;
+	// z-index: 1 !important;
 	.PrivateTabIndicator-colorSecondary-3 {
 		background-color: var(--doc-white);
 	}
@@ -198,10 +198,10 @@ body {
 	background-color: var(--doc-white) !important;
 }
 .MuiAppBar-root {
-	z-index: 1 !important;
+	// z-index: 1 !important;
 }
 .MuiAppBar-positionSticky {
-	z-index: 1 !important;
+	// z-index: 1 !important;
 }
 .MuiPickersDay-daySelected {
 	.MuiIconButton-label {

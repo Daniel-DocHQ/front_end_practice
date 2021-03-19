@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react';
 import getURLParams from '../../helpers/getURLParams';
 import DocButton from '../DocButton/DocButton';
-import './box-test.scss';
+import bookingService from '../../services/bookingService';
 import TwillioVideoCall, { PatientHeader } from '../VideoCall/TwillioVideoCall';
 import FullScreenOverlay from '../FullScreenOverlay/FullScreenOverlay';
+import './box-test.scss';
 
 const Box = ({
+	token,
 	isNurse,
 	isEnglish = true,
 	updateImageData,
@@ -14,6 +16,7 @@ const Box = ({
 	setVideoCallToken,
 }) => {
 	const params = getURLParams(window.location.href);
+	const appointmentId = params['appointmentId'];
 	const handleSubmit = useCallback(
 		async event => {
 			event.preventDefault();
@@ -28,6 +31,10 @@ const Box = ({
 				},
 			}).then(res => res.json());
 			setVideoCallToken(data.token);
+			await bookingService
+				.updateAppointmentStatus(token, appointmentId, {
+					status: isNurse ? 'PRACTITIONER_ATTENDED' : 'PATIENT_ATTENDED',
+				});
 		},
 		[params, isNurse]
 	);
@@ -74,7 +81,7 @@ const Box = ({
 						}}
 					>
 						<h2>You are ready for your appointment</h2>
-						<DocButton text='Join Appointment' onClick={handleSubmit}  color='green' />
+						<DocButton text='Join Appointment' onClick={handleSubmit} color='green' />
 					</div>
 				</div>
 			)}
