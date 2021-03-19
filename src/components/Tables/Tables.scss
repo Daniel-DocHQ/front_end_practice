@@ -18,3 +18,23 @@ tr.MuiTableRow-root:nth-of-type(even) {
 		}
 	}
 }
+
+.circle {
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	margin: auto;
+}
+.status-waiting {
+	background-color: var(--doc-pink);
+}
+.text-status-waiting {
+	color: var(--doc-pink) !important;
+}
+.text-status-online {
+	color: var(--doc-green) !important;
+}
+.red-bold-text{
+	font-weight: 700 !important;
+	color: var(--doc-pink) !important;
+}
