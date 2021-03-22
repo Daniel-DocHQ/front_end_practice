@@ -340,7 +340,7 @@ function updateTerms(appointment_id, body) {
 		if (appointment_id && !!body) {
 			axios({
 				url: `${baseURL}/${appointment_id}/updateterms`,
-				method: 'PUT',
+				method: 'PATCH',
 				headers: { 'Content-type': 'application,json' },
 				data: body,
 			})
