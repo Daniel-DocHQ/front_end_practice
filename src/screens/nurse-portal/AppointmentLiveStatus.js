@@ -1,15 +1,12 @@
 import React, { useEffect, useState, memo } from 'react';
-import { AuthContext } from '../../context/AuthContext';
-import { useContext } from 'react';
 import LiveStatusTable from '../../components/Tables/LiveStatusTable';
-import nurseService from '../../services/nurseService';
+import adminService from '../../services/adminService';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
 
 const REQUEST_INTERVAL = 30 * 1000; // 30 seconds
 
 const AppointmentLiveStatus = props => {
-    const { user } = useContext(AuthContext);
 	const [appointments, setAppointments] = useState();
 
 	let history = useHistory();
@@ -18,6 +15,9 @@ const AppointmentLiveStatus = props => {
 	}
 
 	useEffect(() => {
+		if (!appointments) {
+			getFutureAppointments();
+		}
 		const interval = setInterval(() => {
 			if (typeof props.token !== 'undefined') {
 				getFutureAppointments();
@@ -27,7 +27,7 @@ const AppointmentLiveStatus = props => {
 	  }, []);
 
 	const getFutureAppointments = () => (
-		nurseService
+		adminService
 			.getAppointments(props.token)
 			.then(data => {
 				if (data.success) {
@@ -43,7 +43,6 @@ const AppointmentLiveStatus = props => {
 
 	return (
         <LiveStatusTable
-            user={user}
             appointments={appointments}
         />
 	);
