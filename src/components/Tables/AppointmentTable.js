@@ -1,13 +1,31 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { makeStyles } from '@material-ui/core/styles';
 import DocButton from '../DocButton/DocButton';
+import clsx from 'clsx';
 import './Tables.scss';
 import LinkButton from '../DocButton/LinkButton';
+
+const useStyles = makeStyles((theme) => ({
+	btn: {
+		fontSize: 14,
+		border: '1px solid #EFEFF0',
+		textTransform: 'none',
+	},
+	activeBtn: {
+		fontWeight: 500,
+		color: 'white',
+		background: '#00BDAF',
+	},
+}));
+
 const styles = {
 	smallCol: {
 		width: '15%',
@@ -31,33 +49,83 @@ const styles = {
 		alignItems: 'center',
 	},
 };
-const AppointmentTable = ({releaseAppointment, appointments, refresh }) => {
-	// get appointments
-	// load appointments into table row with data
-	// go to appointment
-	// add more notes to appointment
-	// potentially cancel appointment
-	// useEffect(() => {
-	// 	if (typeof redirectDetails !== 'undefined' && redirectDetails.type && redirectDetails.id) {
-	// 		history.push(
-	// 			`/practitioner/${
-	// 				redirectDetails.type === 'video_gp' ? 'video' : 'face-to-face'
-	// 			}-appointment?appointmentId=${redirectDetails.id}`
-	// 		);
-	// 		// history.push(`/nurse-appointment?appointmentId=${redirectDetails.id}`);
-	// 	}
-	// }, [redirectDetails, history]);
+
+const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
+	const classes = useStyles();
+	const [filter, setFilter] = useState('today');
+	const [filteredAppointments, setFilteredAppointments] = useState([]);
+	const today = new Date();
+	const tomorrow = new Date(today);
+	today.setHours(0,0,0,0)
+	tomorrow.setDate(tomorrow.getDate() + 1);
+	tomorrow.setHours(0,0,0,0)
+	const todayTime = today.getTime();
+	const tomorrowTime = tomorrow.getTime();
+	const todayObj = new Date();
+	const todayDate = todayObj.getDate();
+	const todayDay = todayObj.getDay();
+	const firstDayOfWeek = new Date(todayObj.setDate(todayDate - todayDay));
+	const lastDayOfWeek = new Date(firstDayOfWeek);
+	lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6);
+
+	useEffect(() => {
+		switch (filter) {
+			case 'today':
+				setFilteredAppointments([...appointments].filter((appointment) =>
+					new Date(appointment.start_time).setHours(0,0,0,0) === todayTime));
+				break;
+			case 'tomorrow':
+				setFilteredAppointments([...appointments].filter((appointment) =>
+					new Date(appointment.start_time).setHours(0,0,0,0) === tomorrowTime));
+				break;
+			case 'week':
+				setFilteredAppointments([...appointments].filter((appointment) => {
+					const appointmentDate = new Date(appointment.start_time);
+					return appointmentDate >= firstDayOfWeek && appointmentDate <= lastDayOfWeek;
+				}));
+				break;
+			default:
+				setFilteredAppointments([...appointments]);
+		}
+	}, [filter, appointments]);
 
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
-				<h3>Upcoming Appointments</h3>
-				<DocButton color='green' text='Update' onClick={refresh} />
+				<h2>Upcoming Appointments</h2>
+				<ButtonGroup aria-label="outlined primary button group">
+					<Button
+						className={clsx(
+							classes.btn,
+							{[classes.activeBtn]: filter === 'today'},
+						)}
+						onClick={() => setFilter('today')}
+					>
+						Today
+					</Button>
+					<Button
+						className={clsx(
+							classes.btn,
+							{[classes.activeBtn]: filter === 'tomorrow'},
+						)}
+						onClick={() => setFilter('tomorrow')}
+					>
+						Tomorrow
+					</Button>
+					<Button
+						className={clsx(
+							classes.btn,
+							{[classes.activeBtn]: filter === 'week'},
+						)}
+						onClick={() => setFilter('week')}
+					>
+						Current Week
+					</Button>
+				</ButtonGroup>
 			</div>
 			<TableContainer
 				style={{
 					maxWidth: '1200px',
-					maxHeight: '500px',
 					marginBottom: '40px',
 				}}
 			>
@@ -71,12 +139,10 @@ const AppointmentTable = ({releaseAppointment, appointments, refresh }) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{typeof appointments !== 'undefined' &&
-							typeof appointments === 'object' &&
-							appointments.length > 0 &&
-							appointments.map(appointment => (
+						{filteredAppointments.length > 0 &&
+							filteredAppointments.map(appointment => (
 								<TableRow key={appointment.id}>
-									<TableCell align='left' style={styles.tableText}>
+									<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
 										{`${appointment.booking_user.first_name} ${appointment.booking_user.last_name}`}
 									</TableCell>
 									{/* <TableCell align='center' style={styles.smallCol}>
@@ -88,17 +154,20 @@ const AppointmentTable = ({releaseAppointment, appointments, refresh }) => {
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 										{new Date(appointment.start_time).toLocaleTimeString()}
 									</TableCell>
-									<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
-										<LinkButton
-											text='Join'
-											color='green'
-											linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
-										/>
-										<DocButton
-											text='Release'
-											color='pink'
-											onClick={() => releaseAppointment(appointment.id)}
-										/>
+									<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
+										<div style={{ display: 'flex' }}>
+											<LinkButton
+												text='Join'
+												color='green'
+												linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+											/>
+											<DocButton
+												text='Release'
+												color='pink'
+												style={{ marginLeft: 10 }}
+												onClick={() => releaseAppointment(appointment.id)}
+											/>
+										</div>
 										{/* <DocButton
 											text='Join'
 											color='green'
@@ -111,7 +180,7 @@ const AppointmentTable = ({releaseAppointment, appointments, refresh }) => {
 									</TableCell>
 								</TableRow>
 							))}
-						{typeof appointments !== 'object' || appointments.length === 0 ? (
+						{filteredAppointments.length === 0 ? (
 							<TableRow>
 								<TableCell style={styles.tableText}>
 									<p>No appointments to display</p>

@@ -28,19 +28,16 @@ tr.MuiTableRow-root:nth-of-type(even) {
 .status-onHold {
 	background-color: var(--doc-yellow);
 }
-.status-patientAttended, .status-practitionerAttended, .status-waiting {
+.status-patientAttended, .status-practitionerAttended, .status-waiting, .status-offline {
 	background-color: var(--doc-pink);
 }
-.red-text, .text-status-waiting {
+.red-bold-text, .text-status-waiting, .text-status-practitionerAttended, .text-status-patientAttended {
+	font-weight: 700 !important;
 	color: var(--doc-pink) !important;
 }
-.status-inProgress {
+.status-inProgress, .status-online {
 	background-color: var(--doc-green);
 }
 .text-status-online {
 	color: var(--doc-green) !important;
-}
-.red-bold-text {
-	font-weight: 700 !important;
-	color: var(--doc-pink) !important;
 }
