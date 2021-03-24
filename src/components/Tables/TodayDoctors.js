@@ -38,7 +38,7 @@ const styles = {
 const TodayDoctors = ({ doctors }) => (
     <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
         <div style={styles.mainContainer}>
-            <h3>Today Doctors</h3>
+            <h2>Today Doctors</h2>
         </div>
         <TableContainer
             style={{

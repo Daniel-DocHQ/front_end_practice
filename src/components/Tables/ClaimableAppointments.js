@@ -33,12 +33,11 @@ const styles = {
 	},
 };
 
-const ClaimableAppointments = ({ claimAppointment, appointments, refresh }) => {
+const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
-				<h3>Claimable Appointments</h3>
-				<DocButton color='green' text='Update' onClick={refresh} />
+				<h2>Claimable Appointments</h2>
 			</div>
 			<TableContainer
 				style={{

@@ -59,7 +59,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
     return (
         <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
-                <h3>Live status</h3>
+                <h2>Live status</h2>
             </div>
             <TableContainer
                 style={{
@@ -90,7 +90,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                         <TableCell
                                             align='left'
                                             style={styles.tableText}
-                                            className={appointmentStatus === APPOINTMENT_STATUSES.patientAttended && 'red-text'}
+                                            className={appointmentStatus === APPOINTMENT_STATUSES.patientAttended && 'red-bold-text'}
                                         >
                                             {appointment.user_name}
                                         </TableCell>
@@ -98,7 +98,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                             align='center'
                                             className={`text-status-${appointmentStatus}`}
                                             style={{ ...styles.medCol, ...styles.tableText }}
-                                            className={appointmentStatus === APPOINTMENT_STATUSES.practitionerAttended && 'red-text'}
+                                            className={appointmentStatus === APPOINTMENT_STATUSES.practitionerAttended && 'red-bold-text'}
                                         >
                                             {`${appointment.booking_user.first_name} ${appointment.booking_user.last_name}`}
                                         </TableCell>

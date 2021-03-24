@@ -19,7 +19,7 @@ const styles = {
 	},
 	medCol: { width: '25%', maxWidth: '25%' },
 };
-const PastAppointmentTable = ({ appointments, refresh }) => {
+const PastAppointmentTable = ({ appointments }) => {
 	function isDataValidEnoughToDisplay(obj) {
 		return (
 			!!obj &&
@@ -43,8 +43,7 @@ const PastAppointmentTable = ({ appointments, refresh }) => {
 					alignItems: 'center',
 				}}
 			>
-				<h3>Past Appointments</h3>
-				<DocButton color='green' text='Update' onClick={refresh} />
+				<h2>Past Appointments</h2>
 			</div>
 			<TableContainer style={{ margin: 'auto', maxHeight: '500px' }}>
 				<Table stickyHeader>
@@ -63,7 +62,7 @@ const PastAppointmentTable = ({ appointments, refresh }) => {
 							appointments.map(appointment =>
 								isDataValidEnoughToDisplay(appointment) ? (
 									<TableRow key={appointment.id}>
-										<TableCell align='left'>
+										<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
 											{`${appointment.booking_user.first_name} ${appointment.booking_user.last_name}`}
 										</TableCell>
 										<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
