@@ -1,4 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
+import { get } from 'lodash';
+import clsx from 'clsx';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,12 +10,11 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles } from '@material-ui/core/styles';
-import DocButton from '../DocButton/DocButton';
-import clsx from 'clsx';
-import './Tables.scss';
 import LinkButton from '../DocButton/LinkButton';
+import DocButton from '../DocButton/DocButton';
+import './Tables.scss';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	btn: {
 		fontSize: 14,
 		border: '1px solid #EFEFF0',
@@ -56,9 +57,10 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 	const [filteredAppointments, setFilteredAppointments] = useState([]);
 	const today = new Date();
 	const tomorrow = new Date(today);
+	const currentMonth = new Date ().getMonth();
 	today.setHours(0,0,0,0)
 	tomorrow.setDate(tomorrow.getDate() + 1);
-	tomorrow.setHours(0,0,0,0)
+	tomorrow.setHours(0,0,0,0);
 	const todayTime = today.getTime();
 	const tomorrowTime = tomorrow.getTime();
 	const todayObj = new Date();
@@ -83,6 +85,10 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 					const appointmentDate = new Date(appointment.start_time);
 					return appointmentDate >= firstDayOfWeek && appointmentDate <= lastDayOfWeek;
 				}));
+				break;
+			case 'month':
+				setFilteredAppointments([...appointments].filter((appointment) =>
+					new Date(appointment.start_time).getMonth() === currentMonth));
 				break;
 			default:
 				setFilteredAppointments([...appointments]);
@@ -119,7 +125,16 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 						)}
 						onClick={() => setFilter('week')}
 					>
-						Current Week
+						Week
+					</Button>
+					<Button
+						className={clsx(
+							classes.btn,
+							{[classes.activeBtn]: filter === 'month'},
+						)}
+						onClick={() => setFilter('month')}
+					>
+						Month
 					</Button>
 				</ButtonGroup>
 			</div>
@@ -135,6 +150,7 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 							<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
+							<TableCell align='center' style={styles.tableText}>Test</TableCell>
 							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 						</TableRow>
 					</TableHead>
@@ -153,6 +169,9 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 										{new Date(appointment.start_time).toLocaleTimeString()}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
 									<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
 										<div style={{ display: 'flex' }}>
@@ -187,6 +206,7 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 								</TableCell>
 								<TableCell />
 								<TableCell />
+								<TableCell/>
 								<TableCell />
 							</TableRow>
 						) : null}

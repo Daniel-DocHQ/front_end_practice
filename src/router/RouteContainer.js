@@ -26,6 +26,7 @@ import NurseDashboard from '../screens/nurse-portal/NurseDashboard';
 import BookingEngine from '../components/BookingEngineAuthed/BookingEngine';
 import NurseMeeting2 from '../screens/nurse-portal/NurseMeeting2';
 import AppointmentLiveStatus from '../screens/nurse-portal/AppointmentLiveStatus';
+import RotaManagement from '../screens/nurse-portal/RotaManagement';
 
 const { isSupported } = require('twilio-video');
 
@@ -161,6 +162,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/practitioner/live-status' requiredRole='practitioner'>
 				<Layout title='Appointments Live Status'>
 					<AppointmentLiveStatus {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/practitioner/rota' requiredRole='practitioner'>
+				<Layout title='Rota Management'>
+					<RotaManagement {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/video-appointment' requiredRole='practitioner'>

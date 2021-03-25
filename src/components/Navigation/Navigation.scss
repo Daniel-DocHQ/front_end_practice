@@ -36,9 +36,9 @@
 		color: var(--doc-white);
 	}
 	.practice-logo {
-		padding-left: 80px;
+		padding-left: 4px;
 		> img {
-			height: 36px;
+			height: 42px;
 		}
 	}
 
@@ -51,6 +51,7 @@
 		align-self: center;
 		text-align: center;
 		position: relative;
+		padding-right: 12px;
 		.personal-profile-actions {
 			position: absolute;
 			top: 47px;

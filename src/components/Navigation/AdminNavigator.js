@@ -22,6 +22,8 @@ const docIcon = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const vistaLogo = require('../../assets/images/vista-logo.png');
 const live = require('../../assets/images/icons/live.svg');
 const liveActive = require('../../assets/images/icons/live-active.svg');
+const calendar = require('../../assets/images/icons/calendar.svg');
+const calendarActive = require('../../assets/images/icons/calendar-active.svg');
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -83,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         height: '100%',
         justifyContent: 'space-between',
-        padding: 25,
+        padding: 20,
     },
     logoContainer: {
         display: 'flex',
@@ -98,9 +100,7 @@ const AdminNavigator = ({
 	title,
 	isAuthenticated,
 	user,
-	role,
 	logout,
-	...rest
 }) => {
 	const classes = useStyles();
 	const theme = useTheme();
@@ -128,7 +128,7 @@ const AdminNavigator = ({
                                 [classes.hide]: open,
                             })}
                         >
-                            <MenuIcon />
+                            <MenuIcon fontSize="large" />
                         </IconButton>
                         <div className='practice-logo'>
                             <img src={docIcon} alt='DocHQ Icon' />
@@ -209,6 +209,27 @@ const AdminNavigator = ({
                             />
                         </ListItem>
                     </NavLink>
+                    {/* <NavLink
+                        activeClassName='active'
+                        to='/practitioner/rota'
+                        style={{ display: 'flex' }}
+                    >
+                        <ListItem button>
+                            <ListItemIcon>
+                                <img
+                                    alt='Vista Health'
+                                    style={{ fontSize: '36px', paddingLeft: 7 }}
+                                    src={pathname === '/practitioner/rota' ? calendarActive : calendar}
+                                />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={"Rota"}
+                                className={clsx({
+                                    [classes.blackText]: pathname !== '/practitioner/rota',
+                                })}
+                            />
+                        </ListItem>
+                    </NavLink> */}
                 </List>
             </Drawer>
         </>

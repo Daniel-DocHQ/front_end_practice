@@ -17,63 +17,63 @@ const NurseDashboard = props => {
 	const [appointments, setAppointments] = useState();
 	const [claimableAppointments, setClaimableAppointments] = useState();
 	const [isLoading, setIsLoading] = useState(false);
-	const doctors = [
-		{
-			first_name: 'Bruce',
-			last_name: 'Wayne',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 5,
-				seconds: 59,
-			},
-			status: 'online',
-		},
-		{
-			first_name: 'Mike',
-			last_name: 'Johnson',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 4,
-				seconds: 23,
-			},
-			status: 'offline',
-		},
-		{
-			first_name: 'Taylor',
-			last_name: 'Xavier',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 20,
-				seconds: 15,
-			},
-			status: 'offline',
-		},
-		{
-			first_name: 'Lady',
-			last_name: 'Young',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 3,
-				seconds: 10,
-			},
-			status: 'online',
-		},
-		{
-			first_name: 'Loureen',
-			last_name: 'Ling',
-			start_time: '2021-03-19T08:30:00Z',
-			end_time: '2021-03-19T17:00:00Z',
-			start_in: {
-				minutes: 15,
-				seconds: 11,
-			},
-			status: 'offline',
-		},
-	]
+	// const doctors = [
+	// 	{
+	// 		first_name: 'Bruce',
+	// 		last_name: 'Wayne',
+	// 		start_time: '2021-03-19T08:30:00Z',
+	// 		end_time: '2021-03-19T17:00:00Z',
+	// 		start_in: {
+	// 			minutes: 5,
+	// 			seconds: 59,
+	// 		},
+	// 		status: 'online',
+	// 	},
+	// 	{
+	// 		first_name: 'Mike',
+	// 		last_name: 'Johnson',
+	// 		start_time: '2021-03-19T08:30:00Z',
+	// 		end_time: '2021-03-19T17:00:00Z',
+	// 		start_in: {
+	// 			minutes: 4,
+	// 			seconds: 23,
+	// 		},
+	// 		status: 'offline',
+	// 	},
+	// 	{
+	// 		first_name: 'Taylor',
+	// 		last_name: 'Xavier',
+	// 		start_time: '2021-03-19T08:30:00Z',
+	// 		end_time: '2021-03-19T17:00:00Z',
+	// 		start_in: {
+	// 			minutes: 20,
+	// 			seconds: 15,
+	// 		},
+	// 		status: 'offline',
+	// 	},
+	// 	{
+	// 		first_name: 'Lady',
+	// 		last_name: 'Young',
+	// 		start_time: '2021-03-19T08:30:00Z',
+	// 		end_time: '2021-03-19T17:00:00Z',
+	// 		start_in: {
+	// 			minutes: 3,
+	// 			seconds: 10,
+	// 		},
+	// 		status: 'online',
+	// 	},
+	// 	{
+	// 		first_name: 'Loureen',
+	// 		last_name: 'Ling',
+	// 		start_time: '2021-03-19T08:30:00Z',
+	// 		end_time: '2021-03-19T17:00:00Z',
+	// 		start_in: {
+	// 			minutes: 15,
+	// 			seconds: 11,
+	// 		},
+	// 		status: 'offline',
+	// 	},
+	// ];
 
 	let history = useHistory();
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
@@ -168,26 +168,24 @@ const NurseDashboard = props => {
 	}
 	return (
 		<Grid container justify="space-between">
-			<Grid item xs={6}>
+			<Grid item xs={12} md={6}>
 				<ClaimableAppointments
 					appointments={claimableAppointments}
 					claimAppointment={claimAppointment}
-					refresh={getClaimableAppointments}
 				/>
 			</Grid>
-			<Grid item xs={6}>
+			<Grid item xs={12} md={6}>
 				<AppointmentTable
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}
-					refresh={getFutureAppointments}
 				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<PastAppointmentsTable appointments={pastAppointments} refresh={getPastAppointments} />
+				<PastAppointmentsTable appointments={pastAppointments} />
 			</Grid>
-			<Grid item xs={12} style={{ paddingTop: 20 }}>
+			{/* <Grid item xs={12} style={{ paddingTop: 20 }}>
 				<TodayDoctors doctors={doctors} />
-			</Grid>
+			</Grid> */}
 		</Grid>
 	);
 };

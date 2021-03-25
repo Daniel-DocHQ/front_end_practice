@@ -1,6 +1,6 @@
 import React from 'react';
 import { format } from 'date-fns';
-import { camelCase } from 'lodash';
+import { get, camelCase } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -72,6 +72,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
                         <TableRow>
                             <TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
                             <TableCell align='center' style={styles.tableText}>Patient Name</TableCell>
+                            <TableCell align='center' style={styles.tableText}>Test</TableCell>
                             <TableCell align='center' style={styles.tableText}>Appointment Time</TableCell>
                             <TableCell align='center' style={styles.tableText}>Status</TableCell>
                             <TableCell align='center' style={styles.tableText}>Status</TableCell>
@@ -102,6 +103,9 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                         >
                                             {`${appointment.booking_user.first_name} ${appointment.booking_user.last_name}`}
                                         </TableCell>
+                                        <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+											{get(appointment, 'booking_user.metadata.test_type', '')}
+										</TableCell>
                                         <TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
                                             {format(new Date(appointment.start_time), 'p')}
                                         </TableCell>
@@ -125,6 +129,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                 <TableCell />
                                 <TableCell />
                                 <TableCell />
+                                <TableCell/>
                             </TableRow>
                         ) : null}
                     </TableBody>

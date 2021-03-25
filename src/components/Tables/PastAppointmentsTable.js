@@ -1,13 +1,14 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
+import { get } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import DocButton from '../DocButton/DocButton';
-import './Tables.scss';
 import LinkButton from '../DocButton/LinkButton';
+import './Tables.scss';
+
 const styles = {
 	smallCol: {
 		width: '15%',
@@ -19,6 +20,7 @@ const styles = {
 	},
 	medCol: { width: '25%', maxWidth: '25%' },
 };
+
 const PastAppointmentTable = ({ appointments }) => {
 	function isDataValidEnoughToDisplay(obj) {
 		return (
@@ -52,6 +54,7 @@ const PastAppointmentTable = ({ appointments }) => {
 							<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
+							<TableCell align='center' style={styles.tableText}>Test</TableCell>
 							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 						</TableRow>
 					</TableHead>
@@ -70,6 +73,9 @@ const PastAppointmentTable = ({ appointments }) => {
 										</TableCell>
 										<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 											{new Date(appointment.start_time).toLocaleTimeString()}
+										</TableCell>
+										<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+											{get(appointment, 'booking_user.metadata.test_type', '')}
 										</TableCell>
 										<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
 											<LinkButton
@@ -105,6 +111,7 @@ const PastAppointmentTable = ({ appointments }) => {
 								<TableCell style={styles.tableText}>
 									<p>No appointments to display</p>
 								</TableCell>
+								<TableCell/>
 								<TableCell/>
 								<TableCell/>
 								<TableCell/>

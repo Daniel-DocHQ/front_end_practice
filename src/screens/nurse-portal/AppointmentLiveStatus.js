@@ -4,8 +4,6 @@ import adminService from '../../services/adminService';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
 
-const REQUEST_INTERVAL = 30 * 1000; // 30 seconds
-
 const AppointmentLiveStatus = props => {
 	const [appointments, setAppointments] = useState();
 
@@ -19,10 +17,8 @@ const AppointmentLiveStatus = props => {
 			getFutureAppointments();
 		}
 		const interval = setInterval(() => {
-			if (typeof props.token !== 'undefined') {
-				getFutureAppointments();
-			}
-		}, REQUEST_INTERVAL);
+			getFutureAppointments();
+		}, 15000);
 		return () => clearInterval(interval);
 	  }, []);
 

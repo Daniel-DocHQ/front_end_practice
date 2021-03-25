@@ -41,7 +41,12 @@ const Layout = ({ title, children }) => {
 
 	return role === 'practitioner' ? (
 		<div style={{ display: 'flex' }}>
-			<AdminNavigator isAuthenticated={isAuthenticated} title={title} />
+			<AdminNavigator
+				isAuthenticated={isAuthenticated}
+				title={title}
+				user={user}
+				logout={logout}
+			/>
 			<main className={classes.content}>
 				<div className={classes.toolbar} />
 				<div

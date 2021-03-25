@@ -1,4 +1,5 @@
 import React from 'react';
+import { get } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -51,6 +52,7 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 						<TableRow>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
+							<TableCell align='center' style={styles.tableText}>Test</TableCell>
 							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 						</TableRow>
 					</TableHead>
@@ -66,6 +68,9 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 										{new Date(appointment.start_time).toLocaleTimeString()}
 									</TableCell>
+									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{get(appointment, 'booking_user.metadata.test_type', '')}
+									</TableCell>
 									<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
 										<DocButton
 											text='Claim'
@@ -80,6 +85,7 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 								<TableCell style={styles.tableText}>
 									<p>No appointments to display</p>
 								</TableCell>
+								<TableCell/>
 								<TableCell/>
 								<TableCell/>
 							</TableRow>
