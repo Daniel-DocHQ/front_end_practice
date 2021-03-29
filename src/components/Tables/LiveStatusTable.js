@@ -84,7 +84,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
                             typeof filteredAppointments === 'object' &&
                             filteredAppointments.length > 0 &&
                             filteredAppointments.map(appointment => {
-                                const appointmentStatus = camelCase(appointment.status);
+                                const appointmentStatus = camelCase(get(appointment, 'status', ''));
 
                                 return (
                                     <TableRow key={appointment.id}>
@@ -93,7 +93,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                             style={styles.tableText}
                                             className={appointmentStatus === APPOINTMENT_STATUSES.patientAttended && 'red-bold-text'}
                                         >
-                                            {appointment.user_name}
+                                            {get(appointment, 'user_name', '')}
                                         </TableCell>
                                         <TableCell
                                             align='center'
@@ -101,16 +101,16 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                             style={{ ...styles.medCol, ...styles.tableText }}
                                             className={appointmentStatus === APPOINTMENT_STATUSES.practitionerAttended && 'red-bold-text'}
                                         >
-                                            {`${appointment.booking_user.first_name} ${appointment.booking_user.last_name}`}
+                                            {get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 											{get(appointment, 'booking_user.metadata.test_type', '')}
 										</TableCell>
                                         <TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-                                            {format(new Date(appointment.start_time), 'p')}
+                                            {format(new Date(get(appointment, 'start_time', '')), 'p')}
                                         </TableCell>
                                         <TableCell align='center' className={`text-status-${appointmentStatus}`} style={{ ...styles.smallCol, ...styles.tableText }}>
-                                            {HUMAN_STATUSES[appointmentStatus]}
+                                            {HUMAN_STATUSES[appointmentStatus] || ''}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
                                             <div className={`circle status-${appointmentStatus}`}/>

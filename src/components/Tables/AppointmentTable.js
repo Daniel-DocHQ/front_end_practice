@@ -159,16 +159,16 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 							filteredAppointments.map(appointment => (
 								<TableRow key={appointment.id}>
 									<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
-										{`${appointment.booking_user.first_name} ${appointment.booking_user.last_name}`}
+										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
 									</TableCell>
 									{/* <TableCell align='center' style={styles.smallCol}>
 										{appointment.type}
 									</TableCell> */}
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(appointment.start_time).toLocaleDateString()}
+										{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(appointment.start_time).toLocaleTimeString()}
+										{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}

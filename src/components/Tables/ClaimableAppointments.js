@@ -63,10 +63,10 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 							appointments.map(appointment => (
 								<TableRow key={appointment.id}>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(appointment.start_time).toLocaleDateString()}
+										{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(appointment.start_time).toLocaleTimeString()}
+										{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
