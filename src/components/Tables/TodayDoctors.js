@@ -1,6 +1,6 @@
 import React from 'react';
 import { format, intervalToDuration } from 'date-fns';
-import { startCase } from 'lodash';
+import { startCase, lowerCase } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -88,7 +88,7 @@ const TodayDoctors = ({ doctors }) => (
                                         {formatted} Min
                                     </TableCell>
                                     <TableCell align='center' className={isAppointmentSoon ? 'red-bold-text' : `text-status-${doctor.status}`} style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {startCase(doctor.status)}
+                                        {startCase(lowerCase(doctor.status))}
                                     </TableCell>
                                     <TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         {isDoctorOffline && (

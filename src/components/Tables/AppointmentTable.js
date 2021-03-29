@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo } from 'react';
 import { get } from 'lodash';
 import clsx from 'clsx';
 import Table from '@material-ui/core/Table';
@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import LinkButton from '../DocButton/LinkButton';
 import DocButton from '../DocButton/DocButton';
 import './Tables.scss';
+import useDateFilter from '../../helpers/hooks/useDateFilter';
 
 const useStyles = makeStyles(() => ({
 	btn: {
@@ -53,47 +54,7 @@ const styles = {
 
 const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 	const classes = useStyles();
-	const [filter, setFilter] = useState('today');
-	const [filteredAppointments, setFilteredAppointments] = useState([]);
-	const today = new Date();
-	const tomorrow = new Date(today);
-	const currentMonth = new Date ().getMonth();
-	today.setHours(0,0,0,0)
-	tomorrow.setDate(tomorrow.getDate() + 1);
-	tomorrow.setHours(0,0,0,0);
-	const todayTime = today.getTime();
-	const tomorrowTime = tomorrow.getTime();
-	const todayObj = new Date();
-	const todayDate = todayObj.getDate();
-	const todayDay = todayObj.getDay();
-	const firstDayOfWeek = new Date(todayObj.setDate(todayDate - todayDay));
-	const lastDayOfWeek = new Date(firstDayOfWeek);
-	lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6);
-
-	useEffect(() => {
-		switch (filter) {
-			case 'today':
-				setFilteredAppointments([...appointments].filter((appointment) =>
-					new Date(appointment.start_time).setHours(0,0,0,0) === todayTime));
-				break;
-			case 'tomorrow':
-				setFilteredAppointments([...appointments].filter((appointment) =>
-					new Date(appointment.start_time).setHours(0,0,0,0) === tomorrowTime));
-				break;
-			case 'week':
-				setFilteredAppointments([...appointments].filter((appointment) => {
-					const appointmentDate = new Date(appointment.start_time);
-					return appointmentDate >= firstDayOfWeek && appointmentDate <= lastDayOfWeek;
-				}));
-				break;
-			case 'month':
-				setFilteredAppointments([...appointments].filter((appointment) =>
-					new Date(appointment.start_time).getMonth() === currentMonth));
-				break;
-			default:
-				setFilteredAppointments([...appointments]);
-		}
-	}, [filter, appointments]);
+	const { filteredAppointments, filter, setFilter } = useDateFilter(appointments);
 
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>

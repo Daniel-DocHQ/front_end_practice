@@ -190,7 +190,7 @@ const AdminNavigator = ({
                     </NavLink>
                     <NavLink
                         activeClassName='active'
-                        to='/practitioner/live-status'
+                        to='/practitioner/live-dashboard'
                         style={{ display: 'flex' }}
                     >
                         <ListItem button>
@@ -198,13 +198,13 @@ const AdminNavigator = ({
                                 <img
                                     alt='Vista Health'
                                     style={{ fontSize: '36px' }}
-                                    src={pathname === '/practitioner/live-status' ? liveActive : live}
+                                    src={pathname.indexOf('live') > -1 ? liveActive : live}
                                 />
                             </ListItemIcon>
                             <ListItemText
                                 primary={"Live Appointments"}
                                 className={clsx({
-                                    [classes.blackText]: pathname !== '/practitioner/live-status',
+                                    [classes.blackText]: pathname.indexOf('live') === -1,
                                 })}
                             />
                         </ListItem>

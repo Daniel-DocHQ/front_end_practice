@@ -21,7 +21,7 @@ const styles = {
 	medCol: { width: '25%', maxWidth: '25%' },
 };
 
-const PastAppointmentTable = ({ appointments }) => (
+const PastAppointmentTable = ({ appointments = [] }) => (
 	<div className="doc-container"  style={{ height: '100%' }}>
 		<div
 			style={{
@@ -46,52 +46,49 @@ const PastAppointmentTable = ({ appointments }) => (
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{typeof appointments !== 'undefined' &&
-						typeof appointments === 'object' &&
-						appointments.length > 0 &&
-						appointments.map(appointment => (
-							<TableRow key={appointment.id}>
-								<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
-									{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
-								</TableCell>
-								<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-									{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
-								</TableCell>
-								<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-								{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
-								</TableCell>
-								<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-									{get(appointment, 'booking_user.metadata.test_type', '')}
-								</TableCell>
-								<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
-									<LinkButton
-										text='Join'
-										color='green'
-										linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
-									/>
-									{/* {appointment && typeof appointment.notes !== 'undefined' ? (
-									<DocButton
-										text='View'
-										color='green'
-										style={{
-											marginLeft: '10px',
-											marginTop: '0px',
-											marginRight: '10px',
-											boxSizing: 'border-box',
-											maxWidth: '40%',
-										}}
-										onClick={() => {
-											setVisibleId(appointment.id);
-											setIsVisible(true);
-										}}
-									/>
-								) : (
-									<p>No Notes</p>
-								)} */}
-								</TableCell>
-							</TableRow>
-						))}
-					{typeof appointments !== 'object' || appointments.length === 0 ? (
+					{appointments.length > 0 && appointments.map(appointment => (
+						<TableRow key={appointment.id}>
+							<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
+								{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
+							</TableCell>
+							<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+								{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
+							</TableCell>
+							<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+							{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
+							</TableCell>
+							<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+								{get(appointment, 'booking_user.metadata.test_type', '')}
+							</TableCell>
+							<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
+								<LinkButton
+									text='Join'
+									color='green'
+									linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+								/>
+								{/* {appointment && typeof appointment.notes !== 'undefined' ? (
+								<DocButton
+									text='View'
+									color='green'
+									style={{
+										marginLeft: '10px',
+										marginTop: '0px',
+										marginRight: '10px',
+										boxSizing: 'border-box',
+										maxWidth: '40%',
+									}}
+									onClick={() => {
+										setVisibleId(appointment.id);
+										setIsVisible(true);
+									}}
+								/>
+							) : (
+								<p>No Notes</p>
+							)} */}
+							</TableCell>
+						</TableRow>
+					))}
+					{appointments.length === 0 && (
 						<TableRow>
 							<TableCell style={styles.tableText}>
 								<p>No appointments to display</p>
@@ -101,7 +98,7 @@ const PastAppointmentTable = ({ appointments }) => (
 							<TableCell/>
 							<TableCell/>
 						</TableRow>
-					) : null}
+					)}
 				</TableBody>
 			</Table>
 		</TableContainer>

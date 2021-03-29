@@ -37,13 +37,17 @@ const APPOINTMENT_TYPES = {
 	tui: 'video_gp_tui',
 };
 
-const NurseMeeting2 = ({ isVideo }) => {
+const NurseMeeting2 = ({
+	isVideo,
+	appointmentId,
+	hideVideoAppointment,
+}) => {
 	const token = useToken();
 	const [videoCallToken, setVideoCallToken] = useState();
 	const [kitProvider, setKitProvider] = useState();
 
 	return (
-		<AppointmentContextProvider token={token}>
+		<AppointmentContextProvider token={token} appointmentId={appointmentId}>
 			<div className='row flex-start items-start'>
 				{isVideo && (
 					<div className='patient-video'>
@@ -54,6 +58,7 @@ const NurseMeeting2 = ({ isVideo }) => {
 							updateImageData={console.log}
 							videoCallToken={videoCallToken}
 							setVideoCallToken={setVideoCallToken}
+							hideVideoAppointment={hideVideoAppointment}
 						/>
 					</div>
 				)}

@@ -57,7 +57,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
     });
 
     return (
-        <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+        <div className='doc-container' style={{ justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
                 <h2>Live status</h2>
             </div>

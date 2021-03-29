@@ -113,8 +113,9 @@ export default class AppointmentContextProvider extends Component {
 
 	componentWillMount() {
 		const params = getURLParams();
-		if (!!params['appointmentId'] && !!this.props.token) {
-			this.getAppointmentDetails(params['appointmentId'], this.props.token);
+		const appointmentId = params['appointmentId'] || this.props.appointmentId;
+		if (!!appointmentId && !!this.props.token) {
+			this.getAppointmentDetails(appointmentId, this.props.token);
 		}
 		if (!!this.props.token) this.state.token = this.props.token;
 	}

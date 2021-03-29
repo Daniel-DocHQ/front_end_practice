@@ -1,16 +1,49 @@
-import React, { useEffect, useState, memo } from 'react';
-import LiveStatusTable from '../../components/Tables/LiveStatusTable';
-import adminService from '../../services/adminService';
+import React, { useEffect, useState, useContext, memo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
+import { Grid } from '@material-ui/core';
+import LiveStatusTable from '../../components/Tables/LiveStatusTable';
+import { AuthContext } from '../../context/AuthContext';
+import adminService from '../../services/adminService';
+import LiveDoctorsTable from '../../components/Tables/LiveDoctorsTable';
 
-const AppointmentLiveStatus = props => {
+const AppointmentLiveStatus = () => {
+	const { token } = useContext(AuthContext);
 	const [appointments, setAppointments] = useState();
+	const doctors = [
+		{
+			first_name: 'Bruce',
+			last_name: 'Wayne',
+			status: 'online',
+			patients: 2,
+		},
+		{
+			first_name: 'Mike',
+			last_name: 'Johnson',
+			status: 'offline',
+			patients: 1,
+		},
+		{
+			first_name: 'Taylor',
+			last_name: 'Xavier',
+			status: 'offline',
+			patients: 3,
+		},
+		{
+			first_name: 'Lady',
+			last_name: 'Young',
+			status: 'online',
+			patients: 0,
+		},
+		{
+			first_name: 'Loureen',
+			last_name: 'Ling',
+			status: 'offline',
+			patients: 3,
+		},
+	];
 
 	let history = useHistory();
-	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
-		history.push('/login');
-	}
 
 	useEffect(() => {
 		if (!appointments) {
@@ -24,7 +57,7 @@ const AppointmentLiveStatus = props => {
 
 	const getFutureAppointments = () => (
 		adminService
-			.getAppointments(props.token)
+			.getAppointments(token)
 			.then(data => {
 				if (data.success) {
 					setAppointments(data.appointments);
@@ -38,9 +71,14 @@ const AppointmentLiveStatus = props => {
     );
 
 	return (
-        <LiveStatusTable
-            appointments={appointments}
-        />
+		<Grid container>
+			<Grid item xs={12}>
+				<LiveStatusTable
+					appointments={appointments}
+				/>
+				<LiveDoctorsTable doctors={doctors} />
+			</Grid>
+		</Grid>
 	);
 };
 
