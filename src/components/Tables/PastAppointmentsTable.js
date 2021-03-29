@@ -23,7 +23,6 @@ const styles = {
 
 const PastAppointmentsTable = ({ appointments = [] }) => (
 	<div className="doc-container"  style={{ height: '100%' }}>
-		{console.log(appointments)}
 		<div
 			style={{
 				width: '100%',
