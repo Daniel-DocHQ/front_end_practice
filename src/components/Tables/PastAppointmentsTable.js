@@ -21,7 +21,7 @@ const styles = {
 	medCol: { width: '25%', maxWidth: '25%' },
 };
 
-const PastAppointmentTable = ({ appointments = [] }) => (
+const PastAppointmentsTable = ({ appointments = [] }) => (
 	<div className="doc-container"  style={{ height: '100%' }}>
 		<div
 			style={{
@@ -46,7 +46,7 @@ const PastAppointmentTable = ({ appointments = [] }) => (
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{appointments.length > 0 && appointments.map(appointment => (
+					{(typeof appointments === 'object' && !!appointments.length) ? appointments.map(appointment => (
 						<TableRow key={appointment.id}>
 							<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
 								{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
@@ -87,8 +87,7 @@ const PastAppointmentTable = ({ appointments = [] }) => (
 							)} */}
 							</TableCell>
 						</TableRow>
-					))}
-					{appointments.length === 0 && (
+					)) : (
 						<TableRow>
 							<TableCell style={styles.tableText}>
 								<p>No appointments to display</p>
@@ -145,4 +144,4 @@ const PatientNotesContent = ({ appointment }) => {
 	) : null;
 };
 
-export default memo(PastAppointmentTable);
+export default memo(PastAppointmentsTable);
