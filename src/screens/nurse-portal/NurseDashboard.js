@@ -132,7 +132,7 @@ const NurseDashboard = props => {
 				if (result.success && result.claimable_appointments) {
 					setGotClaimable(true);
 					setClaimableAppointments(result.claimable_appointments);
-				} else {
+				} else if (!result.success) {
 					ToastsStore.error('Unable to load claimable appointments');
 				}
 			})
