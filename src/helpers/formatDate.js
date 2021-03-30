@@ -8,9 +8,6 @@ export function formatTimeSlot(date) {
 	const dString = d.split(':');
 	return `${dString[0]}:${dString[1]}${dString[0] < 12 ? ' AM' : ' PM'}`;
 }
-export function formatCertificateDate(date) {
-    return format(new Date(date), 'dd/MM/yyyy HH:mm')
-}
 export function formatOrderDate(date) {
 	const d = new Date(date);
 	const dString = d.toString().split(' ');
