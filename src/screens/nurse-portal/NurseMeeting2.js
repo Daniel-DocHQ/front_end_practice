@@ -32,9 +32,9 @@ import bookingService from '../../services/bookingService';
 import getValueFromObject from '../../helpers/getValueFromObject';
 import { AuthContext } from '../../context/AuthContext';
 
-const APPOINTMENT_TYPES = {
-	vista: 'video_gp',
-	tui: 'video_gp_tui',
+const TEST_TYPES = {
+	pcr: 'PCR',
+	antigen: 'Antigen',
 };
 
 const NurseMeeting2 = ({
@@ -83,7 +83,7 @@ const TabContainer = ({
 	setKitProvider,
 }) => {
 	const {
-		type,
+		test_type,
 		appointmentId,
 	} = useContext(AppointmentContext);
 	const [value, setValue] = React.useState(0);
@@ -94,20 +94,20 @@ const TabContainer = ({
 	const increaseStep = useCallback(() => {
 		setValue((oldValue) => oldValue + 1);
 	});
-	const isTuiType = type === APPOINTMENT_TYPES.tui;
+	const isAntigenType = test_type === TEST_TYPES.antigen;
 
 	useEffect(() => {
-		if (isJoined && value === 0 && type === APPOINTMENT_TYPES.vista) {
+		if (isJoined && value === 0 && test_type === TEST_TYPES.pcr) {
 			increaseStep();
 		}
 	}, [isJoined]);
 
 	return (
-		isTuiType ? (
+		isAntigenType ? (
 			<div className='tab-container' style={{ minHeight: 'unset' }}>
 				{value === 0 && (
 					<AddressVerification
-						isTuiType
+						isAntigenType
 						patient={patient}
 						patients={patients}
 						isJoined={isJoined}
@@ -164,14 +164,14 @@ const PatientDetails = ({
     title,
     patient,
     fullData,
-	isTuiType,
+	isAntigenType,
     patients = [],
     appointmentId,
 	addressBlockTitle,
 	isSpaceBetweenPhoneBox,
 }) => {
 	const linkRef = useRef(null);
-	const isManyPatients = patients.length > 1 || isTuiType;
+	const isManyPatients = patients.length > 1 || isAntigenType;
 
 	const addressDataBlock = () => (
 		<React.Fragment>
@@ -523,7 +523,7 @@ const AddressVerification = ({
     patient,
     patients,
 	isJoined,
-	isTuiType,
+	isAntigenType,
     updateParent,
     appointmentId,
 }) => {
@@ -585,10 +585,10 @@ const AddressVerification = ({
 							fullData
 							patient={patient}
 							patients={patients}
-							isTuiType={isTuiType}
+							isAntigenType={isAntigenType}
 							isSpaceBetweenPhoneBox
-							addressBlockTitle={isTuiType && isJoined}
-							title={isTuiType ? ( isJoined ? 'Patient Details' : 'Appointment Details') : 'Address Verification' }
+							addressBlockTitle={isAntigenType && isJoined}
+							title={isAntigenType ? ( isJoined ? 'Patient Details' : 'Appointment Details') : 'Address Verification' }
 							appointmentId={appointmentId}
 						/>
 					</Grid>
