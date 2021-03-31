@@ -1,6 +1,9 @@
 tr.MuiTableRow-root:nth-of-type(even) {
 	background-color: var(--doc-light-grey);
 }
+.noneBackground {
+	background-color: unset !important;
+}
 .note-parent-container {
 	width: 100%;
 	.note-container {

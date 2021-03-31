@@ -1,7 +1,6 @@
 import React, { useEffect, useState, memo } from 'react';
 import adminService from '../../services/adminService';
 import { useHistory } from 'react-router-dom';
-import { ToastsStore } from 'react-toasts';
 import RotaPastAppointmentsTable from '../../components/Tables/RotaPastAppointmentsTable';
 
 const RotaManagement = props => {
