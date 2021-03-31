@@ -188,7 +188,7 @@ const AdminNavigator = ({
                             />
                         </ListItem>
                     </NavLink>
-                    <NavLink
+                    {/* <NavLink
                         activeClassName='active'
                         to='/practitioner/live-dashboard'
                         style={{ display: 'flex' }}
@@ -229,7 +229,7 @@ const AdminNavigator = ({
                                 })}
                             />
                         </ListItem>
-                    </NavLink>
+                    </NavLink> */}
                 </List>
             </Drawer>
         </>

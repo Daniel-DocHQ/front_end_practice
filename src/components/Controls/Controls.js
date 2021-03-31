@@ -12,7 +12,7 @@ const Controls = ({
 	captureDisabled,
 }) => (
 	<>
-		<div className="top-container">
+		{/* <div className="top-container">
 			{isNurse && (
 				<>
 					<div className='control-item' onClick={handlePause}>
@@ -23,7 +23,7 @@ const Controls = ({
 					</div>
 				</>
 			)}
-		</div>
+		</div> */}
 		<div className="controls-container">
 			{!isMuted && !isPhotoMode && (
 				<div className='control-item' onClick={updateMuted}>
