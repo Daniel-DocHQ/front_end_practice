@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { get, camelCase } from 'lodash';
 import Table from '@material-ui/core/Table';
@@ -49,6 +49,31 @@ const HUMAN_STATUSES = {
     practitionerAttended: 'Doctor Waiting',
 };
 
+const msToHMS = (ms) => {
+    let seconds = ms / 1000;
+    seconds = seconds % 3600;
+    let minutes = parseInt( seconds / 60 );
+    seconds = Math.round(seconds % 60);
+
+    return  (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+}
+
+const Timer = ({ statusLastUpdated, currentTime }) => {
+    const [counter, setCounter] = useState(0);
+    const [timeDifference, setTimeDifference] = useState((currentTime - statusLastUpdated));
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setTimeDifference(timeDifference + 1000);
+            setCounter((prev) => prev + 1);
+		}, 1000);
+		return () => clearInterval(interval);
+	  }, [counter]);
+
+	return msToHMS(timeDifference);
+};
+
+
 const LiveStatusTable = ({ appointments = [] }) => {
     const currentTime = new Date().getTime();
     const filteredAppointments = appointments.filter(({ status, start_time }) => {
@@ -74,6 +99,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
                             <TableCell align='center' style={styles.tableText}>Patient Name</TableCell>
                             <TableCell align='center' style={styles.tableText}>Test</TableCell>
                             <TableCell align='center' style={styles.tableText}>Appointment Time</TableCell>
+                            <TableCell align='center' style={styles.tableText}>Timer</TableCell>
                             <TableCell align='center' style={styles.tableText}>Status</TableCell>
                             <TableCell align='center' style={styles.tableText}>Status</TableCell>
                             <TableCell align='right' style={styles.tableText}>Actions</TableCell>
@@ -85,12 +111,12 @@ const LiveStatusTable = ({ appointments = [] }) => {
                             filteredAppointments.length > 0 &&
                             filteredAppointments.map(appointment => {
                                 const appointmentStatus = camelCase(get(appointment, 'status', ''));
-
+                                const statusLastUpdated = get(appointment, 'status_last_updated', '');
                                 return (
                                     <TableRow key={appointment.id}>
                                         <TableCell
                                             align='left'
-                                            style={styles.tableText}
+                                            style={{ ...styles.medCol, ...styles.tableText }}
                                             className={appointmentStatus === APPOINTMENT_STATUSES.patientAttended && 'red-bold-text'}
                                         >
                                             {get(appointment, 'user_name', '')}
@@ -106,10 +132,13 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                         <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 											{get(appointment, 'booking_user.metadata.test_type', '')}
 										</TableCell>
-                                        <TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+                                        <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
                                             {format(new Date(get(appointment, 'start_time', '')), 'p')}
                                         </TableCell>
-                                        <TableCell align='center' className={`text-status-${appointmentStatus}`} style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            {!!statusLastUpdated && <Timer statusLastUpdated={new Date(statusLastUpdated).getTime()} currentTime={currentTime} />}
+                                        </TableCell>
+                                        <TableCell align='center' className={`text-status-${appointmentStatus}`} style={{ ...styles.medCol, ...styles.tableText }}>
                                             {HUMAN_STATUSES[appointmentStatus] || ''}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
@@ -138,5 +167,6 @@ const LiveStatusTable = ({ appointments = [] }) => {
         </div>
     );
 };
+
 
 export default LiveStatusTable;

@@ -159,12 +159,12 @@ const RouteHandler = () => {
 					<NurseDashboard {...ctx} />
 				</Layout>
 			</PrivateRoute>
-			{/* <PrivateRoute path='/practitioner/live-dashboard' requiredRole='practitioner'>
+			<PrivateRoute path='/practitioner/live-dashboard' requiredRole='practitioner'>
 				<Layout title='Live Dashboard'>
 					<LiveDashboard {...ctx} />
 				</Layout>
 			</PrivateRoute>
-			<PrivateRoute path='/practitioner/rota' requiredRole='practitioner'>
+			{/* <PrivateRoute path='/practitioner/rota' requiredRole='practitioner'>
 				<Layout title='Rota Management'>
 					<RotaManagement {...ctx} />
 				</Layout>
