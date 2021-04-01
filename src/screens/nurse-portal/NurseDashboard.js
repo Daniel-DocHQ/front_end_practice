@@ -16,64 +16,8 @@ const NurseDashboard = props => {
 	const [pastAppointments, setPastAppointments] = useState();
 	const [appointments, setAppointments] = useState();
 	const [claimableAppointments, setClaimableAppointments] = useState();
+	const [todayDoctors, setTodayDoctors] = useState();
 	const [isLoading, setIsLoading] = useState(false);
-	// const doctors = [
-	// 	{
-	// 		first_name: 'Bruce',
-	// 		last_name: 'Wayne',
-	// 		start_time: '2021-03-19T08:30:00Z',
-	// 		end_time: '2021-03-19T17:00:00Z',
-	// 		start_in: {
-	// 			minutes: 5,
-	// 			seconds: 59,
-	// 		},
-	// 		status: 'online',
-	// 	},
-	// 	{
-	// 		first_name: 'Mike',
-	// 		last_name: 'Johnson',
-	// 		start_time: '2021-03-19T08:30:00Z',
-	// 		end_time: '2021-03-19T17:00:00Z',
-	// 		start_in: {
-	// 			minutes: 4,
-	// 			seconds: 23,
-	// 		},
-	// 		status: 'offline',
-	// 	},
-	// 	{
-	// 		first_name: 'Taylor',
-	// 		last_name: 'Xavier',
-	// 		start_time: '2021-03-19T08:30:00Z',
-	// 		end_time: '2021-03-19T17:00:00Z',
-	// 		start_in: {
-	// 			minutes: 20,
-	// 			seconds: 15,
-	// 		},
-	// 		status: 'offline',
-	// 	},
-	// 	{
-	// 		first_name: 'Lady',
-	// 		last_name: 'Young',
-	// 		start_time: '2021-03-19T08:30:00Z',
-	// 		end_time: '2021-03-19T17:00:00Z',
-	// 		start_in: {
-	// 			minutes: 3,
-	// 			seconds: 10,
-	// 		},
-	// 		status: 'online',
-	// 	},
-	// 	{
-	// 		first_name: 'Loureen',
-	// 		last_name: 'Ling',
-	// 		start_time: '2021-03-19T08:30:00Z',
-	// 		end_time: '2021-03-19T17:00:00Z',
-	// 		start_in: {
-	// 			minutes: 15,
-	// 			seconds: 11,
-	// 		},
-	// 		status: 'offline',
-	// 	},
-	// ];
 
 	let history = useHistory();
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
@@ -89,11 +33,18 @@ const NurseDashboard = props => {
 			) {
 				getFutureAppointments();
 				getPastAppointments();
+				getTodayDoctors();
 				getClaimableAppointments();
 				setIsLoading(true);
 			}
 		}
 	});
+	useEffect(() => {
+		const interval = setInterval(() => {
+			getTodayDoctors();
+		}, 15000);
+		return () => clearInterval(interval);
+	}, []);
 	function getFutureAppointments() {
 		nurseService
 			.getAppointments(props.token)
@@ -101,6 +52,20 @@ const NurseDashboard = props => {
 				if (data.success) {
 					setGotAppointments(true);
 					setAppointments(data.appointments);
+				} else if (!data.authenticated) {
+					history.push('/login');
+				} else {
+					ToastsStore.error('Error fetching appointments');
+				}
+			})
+			.catch(err => ToastsStore.error('Error fetching appointments'));
+	}
+	function getTodayDoctors() {
+		nurseService
+			.getTodayDoctors(props.token)
+			.then(data => {
+				if (data.success) {
+					setTodayDoctors(data.appointments);
 				} else if (!data.authenticated) {
 					history.push('/login');
 				} else {
@@ -183,9 +148,9 @@ const NurseDashboard = props => {
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<PastAppointmentsTable appointments={pastAppointments} />
 			</Grid>
-			{/* <Grid item xs={12} style={{ paddingTop: 20 }}>
-				<TodayDoctors doctors={doctors} />
-			</Grid> */}
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<TodayDoctors doctors={todayDoctors} />
+			</Grid>
 		</Grid>
 	);
 };
