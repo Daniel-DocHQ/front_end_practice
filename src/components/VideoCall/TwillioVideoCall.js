@@ -99,7 +99,7 @@ function TwillioVideoCall({
 		if (!!hideVideoAppointment) {
 			hideVideoAppointment();
 		}
-		// room.disconnect();
+		room.disconnect();
 	}
 
 	const handleToggleAudio = () => {
@@ -143,7 +143,7 @@ function TwillioVideoCall({
 										if (!!hideVideoAppointment) {
 											hideVideoAppointment();
 										}
-										{/* room.disconnect(); */}
+										room.disconnect();
 									}
 									setIsVideoClosed(true);
 								}}
