@@ -1,4 +1,5 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, { useEffect, useState, memo, useContext } from 'react';
+import { get } from 'lodash';
 import './VideoCallAppointment.scss';
 import Controls from '../Controls/Controls';
 import InVid from '../IncomingVideo/InVid';
@@ -9,6 +10,7 @@ import Video from 'twilio-video';
 import { Redirect } from 'react-router-dom';
 import bookingService from '../../services/bookingService';
 import useNatureSounds from '../../helpers/hooks/useNatureSounds';
+import { AppointmentContext, useBookingUsers } from '../../context/AppointmentContext';
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
 
@@ -24,24 +26,32 @@ function TwillioVideoCall({
 	hideVideoAppointment,
 }) {
 	const sound = useNatureSounds();
+	const { storeImage, displayCertificates } = useContext(AppointmentContext);
+	const [bookingUsers, setBookingUsers] = useState([...useBookingUsers()]);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
 	const [isSoundPlayable, setIsSoundPlayable] = useState(!isNurse);
-	const [isPhotoMode, setIsPhotoMode] = useState(false);
 	const [takePhoto, setTakePhoto] = useState(false);
+	const currentBookingUserName = `${get(bookingUsers, '[0].first_name', '')} ${get(bookingUsers, '[0].last_name', '')}`;
 	const [message, setMessage] = useState(
 		isNurse
 			? 'Your patient will be with you shortly'
 			: 'Your medical practitioner will be with you shortly'
 	);
 	function capturePhoto() {
-		if (isPhotoMode) {
-			setTakePhoto(true);
-		}
+		setTakePhoto(true);
 		setTimeout(() => {
 			setTakePhoto(false);
 		}, 100);
 	}
+	const uploadImageForUser = (img) => {
+		if (!!bookingUsers.length) {
+			storeImage(img);
+			const newBookingUsers = [...bookingUsers];
+			newBookingUsers.shift();
+			setBookingUsers(newBookingUsers);
+		}
+	};
 	function updateImage(data) {
 		updateImageData(data);
 	}
@@ -181,14 +191,13 @@ function TwillioVideoCall({
 					{typeof isNurse !== 'undefined' && !isNurse ? <PatientHeader /> : null}
 					<Controls
 						isMuted={isMuted}
-						isPhotoMode={isPhotoMode}
 						updateMuted={handleToggleAudio}
-						updatePhotoMode={setIsPhotoMode}
 						capturePhoto={capturePhoto}
 						handlePause={handlePause}
 						isNurse={typeof isNurse !== 'undefined' ? isNurse : false}
 						handleDisconnect={handleDisconnect}
-						captureDisabled={captureDisabled}
+						currentBookingUserName={currentBookingUserName}
+						captureDisabled={captureDisabled || !bookingUsers.length || !displayCertificates}
 					/>
 					<React.Fragment>
 						{room && <OutVid participant={room.localParticipant} />}
@@ -198,7 +207,7 @@ function TwillioVideoCall({
 									participant={participant}
 									updateImageData={updateImage}
 									takePhoto={takePhoto}
-									isPhotoMode={isPhotoMode}
+									storeImage={uploadImageForUser}
 								/>
 							))}
 					</React.Fragment>

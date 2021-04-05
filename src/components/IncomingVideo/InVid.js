@@ -1,29 +1,32 @@
+import { Grid } from '@material-ui/core';
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { AppointmentContext } from '../../context/AppointmentContext';
+import DocButton from '../DocButton/DocButton';
 import './IncomingVideo.scss';
 
-const InVid = ({ takePhoto, isPhotoMode, participant }) => {
-	const { storeImage } = useContext(AppointmentContext);
+const InVid = ({ takePhoto, participant, storeImage }) => {
 	const containerRef = useRef();
-	const [takingPhoto, setTakingPhoto] = useState(false);
 	const canvasRef = useRef();
 	const [isHidden, setIsHidden] = useState(false);
+	const [bufferPhoto, setBufferPhoto] = useState();
 	const [videoTracks, setVideoTracks] = useState([]);
 	const [audioTracks, setAudioTracks] = useState([]);
 	const videoRef = useRef();
 	const audioRef = useRef();
-	if (takePhoto && takingPhoto !== true) {
-		setTakingPhoto(true);
-		handleCapture();
-	}
+
+	useEffect(() => {
+		if (takePhoto) {
+			handleCapture();
+		}
+	}, [takePhoto]);
+
+
+	const cleanBufferPhoto = () => setBufferPhoto();
 
 	function handleCapture() {
 		console.log(canvasRef, canvasRef.current, videoRef, videoRef.current);
 		const context = canvasRef.current.getContext('2d');
 		context.drawImage(videoRef.current, 0, 0, 1280, 720);
-		if (storeImage) {
-			storeImage(canvasRef.current.toDataURL('image/webp'));
-		}
+		setBufferPhoto(canvasRef.current.toDataURL('image/webp'));
 	}
 
 	const trackpubsToTracks = trackMap =>
@@ -96,23 +99,54 @@ const InVid = ({ takePhoto, isPhotoMode, participant }) => {
 					)}
 				</div> */}
 				<div
-					className={`video-and-overlay ${isPhotoMode ? 'photo' : ''} ${
-						isHidden && !isPhotoMode ? 'hidden-video' : ''
+					className={`video-and-overlay ${
+						isHidden ? 'hidden-video' : ''
 					}`}
 					onClick={() => setIsHidden(!isHidden)}
 				>
 					<video className='answer-video' ref={videoRef} autoPlay playsInline></video>
 					<audio ref={audioRef} autoPlay={true} />
-					{isPhotoMode && (
-						<React.Fragment>
-							<div className='overlay-outline'>
-								<div className='box left'></div>
-								<div className='box center'></div>
-								<div className='box right'></div>
-							</div>
-						</React.Fragment>
-					)}
 				</div>
+				{!!bufferPhoto && (
+					<div className="captured-image-box">
+						<p className="captured-text">Captured Image:</p>
+						<Grid container justify="space-between" spacing={2}>
+							<Grid item xs={6}>
+								<img className="captured-img" src={bufferPhoto} />
+							</Grid>
+							<Grid item container direction="column" justify="space-between" xs={6}>
+								<Grid item>
+									<DocButton
+										flat
+										text='Cancel'
+										color='white'
+										style={{ width: '100%' }}
+										onClick={cleanBufferPhoto}
+									/>
+								</Grid>
+								<Grid item>
+									<DocButton
+										text='Take another one'
+										color='green'
+										style={{ width: '100%', margin: '10px 0px' }}
+										onClick={cleanBufferPhoto}
+									/>
+								</Grid>
+								<Grid item>
+									<DocButton
+										text='Upload image'
+										color='green'
+										style={{ width: '100%' }}
+										onClick={() => {
+											storeImage(bufferPhoto);
+											cleanBufferPhoto();
+										}}
+									/>
+								</Grid>
+							</Grid>
+						</Grid>
+					</div>
+				)}
 			</div>
 			<canvas ref={canvasRef} width={1280} height={720} style={{ display: 'none' }} />
 		</React.Fragment>
