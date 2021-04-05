@@ -19,7 +19,6 @@ import {
 	Tooltip,
 	Divider,
 } from '@material-ui/core';
-import { get } from 'lodash';
 import { Alert } from '@material-ui/lab';
 import { format, differenceInMinutes } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
