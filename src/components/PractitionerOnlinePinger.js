@@ -4,14 +4,19 @@ import { AuthContext } from '../context/AuthContext';
 import REQUEST_INTERVAL from '../helpers/requestInterval';
 
 const PractitionerOnlinePinger = () => {
-	const { user, token } = useContext(AuthContext);
+	const { user, token, logout } = useContext(AuthContext);
 	const role = !!user && !!user.roles ? user.roles[0].name : '';
     const isPractitioner = role === 'practitioner';
 
     useEffect(() => {
 		const interval = setInterval(() => {
             if (isPractitioner) {
-                nurseService.updateLastOnline(token);
+                nurseService.updateLastOnline(token)
+				.catch(({ response: { status }}) => {
+					if (status === 401) {
+						logout();
+					}
+				});
             }
 		}, REQUEST_INTERVAL);
 		return () => clearInterval(interval);

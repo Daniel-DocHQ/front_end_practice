@@ -1,6 +1,4 @@
-import React, { Component, useContext, useEffect } from 'react';
-import nurseService from '../services/nurseService';
-import REQUEST_INTERVAL from '../helpers/requestInterval';
+import React, { Component, useContext } from 'react';
 import authorisationSvc from '../services/authorisationService';
 import bookingUserDataService from '../services/bookingUserDataService';
 
@@ -71,6 +69,8 @@ export default class AuthContextProvider extends Component {
 			authorisationSvc.getUser(authToken).then(resp => {
 				if (resp.success && resp.user) {
 					this.setUser(resp.user);
+				} else {
+					this.logout();
 				}
 			});
 			bookingUserDataService
