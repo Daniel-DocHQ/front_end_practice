@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, { useEffect, useState, memo, useContext } from 'react';
 import AppointmentTable from '../../components/Tables/AppointmentTable';
 import PastAppointmentsTable from '../../components/Tables/PastAppointmentsTable';
 import nurseService from '../../services/nurseService';
@@ -8,8 +8,10 @@ import ClaimableAppointments from '../../components/Tables/ClaimableAppointments
 import bookingService from '../../services/bookingService';
 import { Grid } from '@material-ui/core';
 import TodayDoctors from '../../components/Tables/TodayDoctors';
+import { AuthContext } from '../../context/AuthContext';
 
 const NurseDashboard = props => {
+	const { logout } = useContext(AuthContext);
 	const [gotAppointments, setGotAppointments] = useState(false);
 	const [gotPastAppointments, setGotPastAppointments] = useState(false);
 	const [gotClaimable, setGotClaimable] = useState(false);
@@ -18,10 +20,14 @@ const NurseDashboard = props => {
 	const [claimableAppointments, setClaimableAppointments] = useState();
 	const [todayDoctors, setTodayDoctors] = useState();
 	const [isLoading, setIsLoading] = useState(false);
-
 	let history = useHistory();
-	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
+
+	const logoutUser = () => {
+		logout();
 		history.push('/login');
+	};
+	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
+		logoutUser();
 	}
 	useEffect(() => {
 		if (!isLoading) {
@@ -53,7 +59,7 @@ const NurseDashboard = props => {
 					setGotAppointments(true);
 					setAppointments(data.appointments);
 				} else if (!data.authenticated) {
-					history.push('/login');
+					logoutUser();
 				} else {
 					ToastsStore.error('Error fetching appointments');
 				}
@@ -67,7 +73,7 @@ const NurseDashboard = props => {
 				if (data.success) {
 					setTodayDoctors(data.appointments);
 				} else if (!data.authenticated) {
-					history.push('/login');
+					logoutUser();
 				} else {
 					ToastsStore.error('Error fetching appointments');
 				}
@@ -81,7 +87,7 @@ const NurseDashboard = props => {
 				if (data.success && data.appointments) {
 					setPastAppointments(data.appointments);
 				} else if (!data.success && !data.authenticated) {
-					history.push('/login');
+					logoutUser();
 				} else {
 					ToastsStore.error('Error fetching appointments');
 				}
@@ -101,7 +107,14 @@ const NurseDashboard = props => {
 					ToastsStore.error('Unable to load claimable appointments');
 				}
 			})
-			.catch(() => ToastsStore.error('Unable to load claimable appointments'));
+			.catch(({ status }) => {
+				if (status === 401) {
+					logoutUser();
+					ToastsStore.error('Token expired');
+				} else {
+					ToastsStore.error('Unable to load claimable appointments');
+				}
+			});
 	}
 	function claimAppointment(slot_id) {
 		bookingService

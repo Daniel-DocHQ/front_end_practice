@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
     AppBar,
@@ -8,6 +8,7 @@ import {
     makeStyles,
 } from '@material-ui/core';
 import AppointmentLiveStatus from './AppointmentLiveStatus';
+import { AuthContext } from '../../context/AuthContext';
 import MyRooms from './MyRooms';
 
 const useStyles = makeStyles((theme) => ({
