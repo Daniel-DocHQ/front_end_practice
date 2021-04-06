@@ -10,6 +10,7 @@ export default class AppointmentContextProvider extends Component {
 		super(props);
 		this.state = {
 			type: null,
+			test_type: null,
 			appointmentId: null,
 			booking_users: null,
 			appointmentDetails: null,
@@ -46,13 +47,14 @@ export default class AppointmentContextProvider extends Component {
 					if (result.success && result.appointment) {
 						const isCaptureDisabled =
 							result && result.appointment && result.appointment.type === 'video_gp';
-						const { booking_users, testing_kit_id, type, appointmentId: id } = result.appointment;
+						const { booking_users, testing_kit_id, type, appointmentId: id, booking_user: { metadata: { test_type }} } = result.appointment;
 						this.setState({
 							isCaptureDisabled,
 							booking_users,
 							testing_kit_id,
 							appointmentDetails: result.appointment,
 							appointmentId,
+							test_type,
 							type,
 						});
 					} else {
@@ -113,8 +115,9 @@ export default class AppointmentContextProvider extends Component {
 
 	componentWillMount() {
 		const params = getURLParams();
-		if (!!params['appointmentId'] && !!this.props.token) {
-			this.getAppointmentDetails(params['appointmentId'], this.props.token);
+		const appointmentId = params['appointmentId'] || this.props.appointmentId;
+		if (!!appointmentId && !!this.props.token) {
+			this.getAppointmentDetails(appointmentId, this.props.token);
 		}
 		if (!!this.props.token) this.state.token = this.props.token;
 	}
@@ -127,6 +130,7 @@ export default class AppointmentContextProvider extends Component {
 			<AppointmentContext.Provider
 				value={{
 					type: this.state.type,
+					test_type: this.state.test_type,
 					appointmentId: this.state.appointmentId,
 					booking_users: this.state.booking_users,
 					appointmentDetails: this.state.appointmentDetails,

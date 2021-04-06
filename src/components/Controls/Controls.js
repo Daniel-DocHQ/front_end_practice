@@ -8,10 +8,23 @@ const Controls = ({
 	capturePhoto,
 	isNurse,
 	handleDisconnect,
+	handlePause,
 	captureDisabled,
 }) => (
-	<React.Fragment>
-		<div className={`controls-container`}>
+	<>
+		{/* <div className="top-container">
+			{isNurse && (
+				<>
+					<div className='control-item' onClick={handlePause}>
+						<i className='fa fa-pause'></i>
+					</div>
+					<div className='control-item'>
+						<i className='fas fa-comment-alt'></i>
+					</div>
+				</>
+			)}
+		</div> */}
+		<div className="controls-container">
 			{!isMuted && !isPhotoMode && (
 				<div className='control-item' onClick={updateMuted}>
 					<i className='fa fa-microphone'></i>
@@ -42,7 +55,7 @@ const Controls = ({
 				</div>
 			) : null}
 		</div>
-	</React.Fragment>
+	</>
 );
 
 export default Controls;

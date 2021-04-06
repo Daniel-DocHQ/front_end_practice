@@ -7,6 +7,7 @@ import { ToastsStore } from 'react-toasts';
 import ClaimableAppointments from '../../components/Tables/ClaimableAppointments';
 import bookingService from '../../services/bookingService';
 import { Grid } from '@material-ui/core';
+import TodayDoctors from '../../components/Tables/TodayDoctors';
 
 const NurseDashboard = props => {
 	const [gotAppointments, setGotAppointments] = useState(false);
@@ -15,13 +16,13 @@ const NurseDashboard = props => {
 	const [pastAppointments, setPastAppointments] = useState();
 	const [appointments, setAppointments] = useState();
 	const [claimableAppointments, setClaimableAppointments] = useState();
+	const [todayDoctors, setTodayDoctors] = useState();
 	const [isLoading, setIsLoading] = useState(false);
 
 	let history = useHistory();
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		history.push('/login');
 	}
-	// eslint-disable-next-line
 	useEffect(() => {
 		if (!isLoading) {
 			if (
@@ -32,11 +33,18 @@ const NurseDashboard = props => {
 			) {
 				getFutureAppointments();
 				getPastAppointments();
+				getTodayDoctors();
 				getClaimableAppointments();
 				setIsLoading(true);
 			}
 		}
 	});
+	useEffect(() => {
+		const interval = setInterval(() => {
+			getTodayDoctors();
+		}, 15000);
+		return () => clearInterval(interval);
+	}, []);
 	function getFutureAppointments() {
 		nurseService
 			.getAppointments(props.token)
@@ -44,6 +52,20 @@ const NurseDashboard = props => {
 				if (data.success) {
 					setGotAppointments(true);
 					setAppointments(data.appointments);
+				} else if (!data.authenticated) {
+					history.push('/login');
+				} else {
+					ToastsStore.error('Error fetching appointments');
+				}
+			})
+			.catch(err => ToastsStore.error('Error fetching appointments'));
+	}
+	function getTodayDoctors() {
+		nurseService
+			.getTodayDoctors(props.token)
+			.then(data => {
+				if (data.success) {
+					setTodayDoctors(data.appointments);
 				} else if (!data.authenticated) {
 					history.push('/login');
 				} else {
@@ -75,7 +97,7 @@ const NurseDashboard = props => {
 				if (result.success && result.claimable_appointments) {
 					setGotClaimable(true);
 					setClaimableAppointments(result.claimable_appointments);
-				} else {
+				} else if (!result.success) {
 					ToastsStore.error('Unable to load claimable appointments');
 				}
 			})
@@ -111,22 +133,23 @@ const NurseDashboard = props => {
 	}
 	return (
 		<Grid container justify="space-between">
-			<Grid item xs={6}>
+			<Grid item xs={12} md={6}>
 				<ClaimableAppointments
 					appointments={claimableAppointments}
 					claimAppointment={claimAppointment}
-					refresh={getClaimableAppointments}
 				/>
 			</Grid>
-			<Grid item xs={6}>
+			<Grid item xs={12} md={6}>
 				<AppointmentTable
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}
-					refresh={getFutureAppointments}
 				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<PastAppointmentsTable appointments={pastAppointments} refresh={getPastAppointments} />
+				<PastAppointmentsTable appointments={pastAppointments} />
+			</Grid>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<TodayDoctors doctors={todayDoctors} />
 			</Grid>
 		</Grid>
 	);

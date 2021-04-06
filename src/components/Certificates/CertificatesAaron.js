@@ -16,13 +16,18 @@ import MaterialCheckbox from '../FormComponents/MaterialCheckbox/MaterialCheckbo
 import EmailInputElement from '../FormComponents/EmailInput';
 import TextInputElement from '../FormComponents/TextInputElement';
 import bookingService from '../../services/bookingService';
-import { formatCertificateDate } from '../../helpers/formatDate';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import { ToastsStore } from 'react-toasts';
 import { Alert } from '@material-ui/lab';
 import { useAppointmentId } from '../../context/AppointmentContext';
+
+const minus15mins = date => {
+	const d = new Date(date);
+	const newDate = new Date(d.getTime() - 60 * 15 * 1000);
+	return newDate;
+};
 
 const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }) => {
 	const { user, token } = useContext(AuthContext);
@@ -139,16 +144,9 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 	function sendResult(formData) {
 		const body = formData;
 		body.medicalprofessional = (!!user && !!user.first_name && !!user.last_name) ? `${user.first_name} ${user.last_name}` : '';
-
 		let currentDate = new Date();
-		const minus15mins = date => {
-			const d = new Date(date);
-			const newDate = new Date(d.getTime() - 60 * 15 * 1000);
-			return newDate;
-		};
-
-		body.date_sampled = formatCertificateDate(minus15mins(currentDate));
-		body.date_reported = formatCertificateDate(currentDate);
+		body.date_sampled = minus15mins(currentDate).toISOString();
+		body.date_reported = currentDate.toISOString();
 		body.security_checked = 'true';
 
 		if (isValid(body)) {

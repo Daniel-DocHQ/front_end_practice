@@ -1,6 +1,9 @@
 tr.MuiTableRow-root:nth-of-type(even) {
 	background-color: var(--doc-light-grey);
 }
+.noneBackground {
+	background-color: unset !important;
+}
 .note-parent-container {
 	width: 100%;
 	.note-container {
@@ -17,4 +20,27 @@ tr.MuiTableRow-root:nth-of-type(even) {
 			text-align: right;
 		}
 	}
+}
+
+.circle {
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	margin: auto;
+}
+.status-onHold {
+	background-color: var(--doc-yellow);
+}
+.status-patientAttended, .status-practitionerAttended, .status-waiting, .status-offline {
+	background-color: var(--doc-pink);
+}
+.red-bold-text, .text-status-waiting, .text-status-practitionerAttended, .text-status-patientAttended {
+	font-weight: 700 !important;
+	color: var(--doc-pink) !important;
+}
+.status-inProgress, .status-online {
+	background-color: var(--doc-green);
+}
+.text-status-online {
+	color: var(--doc-green) !important;
 }

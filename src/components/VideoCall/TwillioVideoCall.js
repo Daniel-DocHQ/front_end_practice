@@ -7,14 +7,22 @@ import DocModal from '../DocModal/DocModal';
 import DocButton from '../DocButton/DocButton';
 import Video from 'twilio-video';
 import { Redirect } from 'react-router-dom';
+import bookingService from '../../services/bookingService';
 import useNatureSounds from '../../helpers/hooks/useNatureSounds';
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
-const vistaLogo = require('../../assets/images/vista-logo.png');
 
 const { isSupported } = require('twilio-video');
 
-function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, captureDisabled }) {
+function TwillioVideoCall({
+	isNurse,
+	updateImageData,
+	token,
+	appointmentId,
+	captureDisabled,
+	authToken,
+	hideVideoAppointment,
+}) {
 	const sound = useNatureSounds();
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
@@ -40,6 +48,10 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 	const [room, setRoom] = useState(null);
 	const [participants, setParticipants] = useState([]);
 	const [isMuted, setIsMuted] = useState(false);
+
+	const updateAppointmentStatus = (status) =>
+		bookingService.updateAppointmentStatus(authToken, appointmentId, { status });
+
 	useEffect(() => {
 		const participantConnected = participant => {
 			if (isSoundPlayable) setIsSoundPlayable(false);
@@ -82,6 +94,14 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 		isNurse ? setIsCloseCallVisible(true) : room.disconnect();
 	};
 
+	const handlePause = async () => {
+		await updateAppointmentStatus('ON_HOLD');
+		if (!!hideVideoAppointment) {
+			hideVideoAppointment();
+		}
+		room.disconnect();
+	}
+
 	const handleToggleAudio = () => {
 		room.localParticipant.audioTracks.forEach(track => {
 			if (track.track.isEnabled) {
@@ -89,7 +109,6 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 			} else {
 				track.track.enable();
 			}
-			console.log(track.track.isEnabled);
 			setIsMuted(!track.track.isEnabled);
 		});
 	};
@@ -117,9 +136,13 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 							<DocButton
 								color='pink'
 								text='Yes'
-								onClick={() => {
+								onClick={async () => {
 									setIsCloseCallVisible(false);
 									if(!!room) {
+										await updateAppointmentStatus('COMPLETED');
+										if (!!hideVideoAppointment) {
+											hideVideoAppointment();
+										}
 										room.disconnect();
 									}
 									setIsVideoClosed(true);
@@ -162,6 +185,7 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 						updateMuted={handleToggleAudio}
 						updatePhotoMode={setIsPhotoMode}
 						capturePhoto={capturePhoto}
+						handlePause={handlePause}
 						isNurse={typeof isNurse !== 'undefined' ? isNurse : false}
 						handleDisconnect={handleDisconnect}
 						captureDisabled={captureDisabled}
@@ -189,23 +213,14 @@ function TwillioVideoCall({ isNurse, updateImageData, token, appointmentId, capt
 
 export default memo(TwillioVideoCall);
 
-export const PatientHeader = ({ isVista }) =>
-	isVista ? (
-		<div className='patient-header'>
-			<img src={dochqLogo} alt='DocHQ Logo' className='hide-on-sm' />
-			<img src={vistaLogo} alt='Vista Logo' className='hide-on-sm vista-logo' />
-			<img src={dochqLogoSq} alt='DocHQ Logo' className='show-on-sm' />
-			<h3>Video Consultation</h3>
-			<div style={{ width: 150 }}/>
-		</div>
-	) : (
-		<div className='patient-header'>
-			<img src={dochqLogo} alt='DocHQ Logo' className='hide-on-sm' />
-			<img src={dochqLogoSq} alt='DocHQ Logo' className='show-on-sm' />
-			<h3>Video Consultation</h3>
-			<div style={{ width: 150 }}/>
-		</div>
-	);
+export const PatientHeader = () => (
+	<div className='patient-header'>
+		<img src={dochqLogo} alt='DocHQ Logo' className='hide-on-sm' />
+		<img src={dochqLogoSq} alt='DocHQ Logo' className='show-on-sm' />
+		<h3>Video Consultation</h3>
+		<div style={{ width: 150 }}/>
+	</div>
+);
 
 const Message = ({ message }) => (
 	<div className='message-background'>{message || 'hello world'}</div>

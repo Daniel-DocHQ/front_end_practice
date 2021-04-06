@@ -19,10 +19,6 @@ import getURLParams from '../helpers/getURLParams';
 import AppointmentContextProvider from '../context/AppointmentContext';
 
 const Meeting = () => {
-	const isVista = window.location.href.includes('vista');
-	const params = getURLParams(window.location.href);
-	const appointmentId = params['appointmentId'];
-	const skiptime = params['skiptime'];
 	const [step, setStep] = useState(1);
 	const [isLoading, setIsLoading] = useState(true);
 	const [videoCallToken, setVideoCallToken] = useState('');
@@ -30,11 +26,14 @@ const Meeting = () => {
 	const [marketing_accept, setMarketing_accept] = useState();
 	const [isEarly, setIsEarly] = useState();
 	const [share_accept, setShare_accept] = useState();
-	const [userMedia, setUserMedia] = useState(false);
+	const [userMedia, setUserMedia] = useState(true);
 	const [questionsVisible, setQuestionsVisible] = useState(true);
+	const [isEnglish, setIsEnglish] = useState(true);
+	const [isVista, setIsVista] = useState(false);
 	const [appointmentInfo, setAppointmentInfo] = useState();
-	const language = !!appointmentInfo && appointmentInfo.language;
-	const isEnglish = language === 'EN';
+	const params = getURLParams(window.location.href);
+	const appointmentId = params['appointmentId'];
+	const skiptime = params['skiptime'];
 
 	useEffect(async () => {
 		await bookingService.getAppointmentInfo(appointmentId)
@@ -44,6 +43,10 @@ const Meeting = () => {
 					const now = new Date();
 					const appointmentTime = new Date(result.appointments.start_time);
 					setIsEarly(Math.round((((appointmentTime.getTime() - now.getTime()) / 1000) / 60)) > 30);
+					const language = !!result.appointments && result.appointments.language;
+					const isVistaType = (!!result.appointments && result.appointments.type) === 'video_gp';
+					setIsVista(isVistaType);
+					setIsEnglish(isVistaType ? true : language === 'EN');
 					setIsLoading(false);
 				} else {
 					// handle
@@ -85,33 +88,52 @@ const Meeting = () => {
 					/>
 				);
 			}
-
-			switch (step) {
-				case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
-					setToc_accept(true);
-					increaseStep(1);
-				}} />;
-				case 2: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
-					setMarketing_accept(value);
-					isEnglish ? increaseStep(2) : increaseStep(1)
-				}} />;
-				case 3: return <NationalTestDataSharingPolicies next={(value) => {
-					setShare_accept(value);
-					increaseStep(1);
-				}} />;
-				case 4: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
-				case 5: return <TestKit isEnglish={isEnglish} next={() => {
-					increaseStep(1);
-					bookingService
-						.updateTerms(appointmentId, {
-							toc_accept,
-							marketing_accept,
-							share_accept,
-						});
-				}} />;
-				default:
-					setQuestionsVisible(false);
-					return null;
+			if (isVista) {
+				switch (step) {
+					case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
+						setToc_accept(true);
+						increaseStep(1);
+					}} />;
+					case 2: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
+					case 3: return <TestKit isEnglish={isEnglish} next={() => {
+						increaseStep(1);
+						bookingService
+							.updateTerms(appointmentId, {
+								toc_accept,
+							});
+					}} />;
+					default:
+						setQuestionsVisible(false);
+						return null;
+				}
+			} else {
+				switch (step) {
+					case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
+						setToc_accept(true);
+						increaseStep(1);
+					}} />;
+					case 2: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
+						setMarketing_accept(value);
+						isEnglish ? increaseStep(2) : increaseStep(1)
+					}} />;
+					case 3: return <NationalTestDataSharingPolicies next={(value) => {
+						setShare_accept(value);
+						increaseStep(1);
+					}} />;
+					case 4: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
+					case 5: return <TestKit isEnglish={isEnglish} next={() => {
+						increaseStep(1);
+						bookingService
+							.updateTerms(appointmentId, {
+								toc_accept,
+								marketing_accept,
+								share_accept,
+							});
+					}} />;
+					default:
+						setQuestionsVisible(false);
+						return null;
+				}
 			}
 		}
 	};
@@ -120,7 +142,7 @@ const Meeting = () => {
 		<AppointmentContextProvider>
 			{questionsVisible ? (
 				<React.Fragment>
-					<PatientHeader isVista={isVista} />
+					<PatientHeader />
 					<FullScreenOverlay
 						isVisible={questionsVisible}
 						content={displayContent()}
@@ -129,6 +151,7 @@ const Meeting = () => {
 			) : (
 				<Box
 					isNurse={false}
+					token={' '}
 					isEnglish={isEnglish}
 					videoCallToken={videoCallToken}
 					setVideoCallToken={setVideoCallToken}
@@ -187,10 +210,17 @@ const TestKit = ({ isEnglish, next }) => {
 			{ready ? (
 				<h3>{isEnglish ? 'Do you have your test kit with you?' : 'Haben Sie Ihr Testkit dabei?'}</h3>
 			) : (
-				<h3>{isEnglish
-					? 'Your test kit is required for this appointment. Have you got it with you now?'
-					: 'Ihr Testkit wird für diesen Termin benötigt. Haben Sie es jetzt bei sich?'
-				}</h3>
+				isEnglish ? (
+					<h3>
+						Your test kit is required for this appointment.<br />
+						Have you got it with you now?
+					</h3>
+				) : (
+					<h3>
+						Ihr Testkit wird für diesen Termin benötigt.<bt />
+						Haben Sie es jetzt bei sich?
+					</h3>
+				)
 			)}
 			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
 				{ready && (
@@ -400,19 +430,29 @@ const DelphinDataSharingPolicies = ({ isEnglish, next }) => {
 					</div>
 				</React.Fragment>
 			) : ( ready === 'ready' ? (
-				<h3 className='padding-box'>
-					{isEnglish
-						? 'Thank you for submitting your decision. DocHQ Limited will share your medical data with Klarity App.'
-						: 'Vielen Dank für Ihre Entscheidung. DocHQ Limited teilt Ihre medizinischen Daten mit der Klarity App.'
-					}
-				</h3>
+				isEnglish ? (
+					<h3 className='padding-box'>
+						Thank you for submitting your decision.<br />
+						DocHQ Limited will share your medical data with Klarity App.
+					</h3>
+				) : (
+					<h3 className='padding-box'>
+						Vielen Dank für Ihre Entscheidung.<br />
+						DocHQ Limited teilt Ihre medizinischen Daten mit der Klarity App.
+					</h3>
+				)
 			) : (
-				<h3 style={{ fontWeight: 500 }} className='padding-box'>
-					{isEnglish
-						? 'Thank you for submitting your decision. DocHQ Limited will not share your medical data with Klarity App.'
-						: 'Vielen Dank für Ihre Entscheidung. DocHQ Limited gibt Ihre medizinischen Daten nicht an die Klarity App weiter.'
-					}
-				</h3>
+				isEnglish ? (
+					<h3 className='padding-box'>
+						Thank you for submitting your decision.<br />
+						DocHQ Limited will not share your medical data with Klarity App.
+					</h3>
+				) : (
+					<h3 className='padding-box'>
+						Vielen Dank für Ihre Entscheidung.<br />
+						DocHQ Limited gibt Ihre medizinischen Daten nicht an die Klarity App weiter.
+					</h3>
+				)
 			))}
 			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
 				<DocButton

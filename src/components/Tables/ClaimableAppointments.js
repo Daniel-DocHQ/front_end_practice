@@ -1,4 +1,5 @@
 import React from 'react';
+import { get } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,6 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DocButton from '../DocButton/DocButton';
 import './Tables.scss';
+
 const styles = {
 	tableText: {
 		fontSize: 16,
@@ -32,12 +34,11 @@ const styles = {
 	},
 };
 
-const ClaimableAppointments = ({ claimAppointment, appointments, refresh }) => {
+const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
-				<h3>Claimable Appointments</h3>
-				<DocButton color='green' text='Update' onClick={refresh} />
+				<h2>Claimable Appointments</h2>
 			</div>
 			<TableContainer
 				style={{
@@ -51,6 +52,7 @@ const ClaimableAppointments = ({ claimAppointment, appointments, refresh }) => {
 						<TableRow>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
+							<TableCell align='center' style={styles.tableText}>Test</TableCell>
 							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 						</TableRow>
 					</TableHead>
@@ -61,10 +63,13 @@ const ClaimableAppointments = ({ claimAppointment, appointments, refresh }) => {
 							appointments.map(appointment => (
 								<TableRow key={appointment.id}>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(appointment.start_time).toLocaleDateString()}
+										{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(appointment.start_time).toLocaleTimeString()}
+										{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
 									<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
 										<DocButton
@@ -80,6 +85,7 @@ const ClaimableAppointments = ({ claimAppointment, appointments, refresh }) => {
 								<TableCell style={styles.tableText}>
 									<p>No appointments to display</p>
 								</TableCell>
+								<TableCell/>
 								<TableCell/>
 								<TableCell/>
 							</TableRow>

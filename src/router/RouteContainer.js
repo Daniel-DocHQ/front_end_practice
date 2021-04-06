@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { ToastsContainer, ToastsStore } from 'react-toasts';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+
 import PatientHealthAssessment from '../components/PatientProfile/PatientHealthAssessment';
 import Layout from '../layouts/Layout';
 import CompanyResults from '../screens/hr-portal/CompanyResults';
@@ -28,6 +28,8 @@ import NurseMeeting2 from '../screens/nurse-portal/NurseMeeting2';
 import Purchase from '../screens/b2c-portal/Purchase';
 import B2CDashboard from '../screens/b2c-portal/B2CDashboard';
 import B2CBookAppointment from '../screens/b2c-portal/B2CBookAppointment';
+import LiveDashboard from '../screens/nurse-portal/LiveDashboard';
+import RotaManagement from '../screens/nurse-portal/RotaManagement';
 
 const { isSupported } = require('twilio-video');
 
@@ -158,6 +160,16 @@ const RouteHandler = () => {
 			<PrivateRoute path='/practitioner/dashboard' requiredRole='practitioner'>
 				<Layout title='Dashboard'>
 					<NurseDashboard {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/practitioner/live-dashboard' requiredRole='practitioner'>
+				<Layout title='Live Dashboard'>
+					<LiveDashboard {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/practitioner/rota' requiredRole='practitioner'>
+				<Layout title='Rota Management'>
+					<RotaManagement {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/video-appointment' requiredRole='practitioner'>

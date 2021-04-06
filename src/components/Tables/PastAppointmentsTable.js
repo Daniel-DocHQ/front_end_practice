@@ -1,13 +1,14 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
+import { get } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import DocButton from '../DocButton/DocButton';
-import './Tables.scss';
 import LinkButton from '../DocButton/LinkButton';
+import './Tables.scss';
+
 const styles = {
 	smallCol: {
 		width: '15%',
@@ -19,116 +20,101 @@ const styles = {
 	},
 	medCol: { width: '25%', maxWidth: '25%' },
 };
-const PastAppointmentTable = ({ appointments, refresh }) => {
-	function isDataValidEnoughToDisplay(obj) {
-		return (
-			!!obj &&
-			!!obj.booking_user &&
-			!!obj.booking_user.first_name &&
-			!!obj.booking_user.last_name &&
-			!!obj.type &&
-			!!obj.start_time &&
-			!!obj.id
-		);
-	}
 
-	return (
-		<div className="doc-container"  style={{ height: '100%' }}>
-			<div
-				style={{
-					width: '100%',
-					margin: 'auto',
-					display: 'flex',
-					justifyContent: 'space-between',
-					alignItems: 'center',
-				}}
-			>
-				<h3>Past Appointments</h3>
-				<DocButton color='green' text='Update' onClick={refresh} />
-			</div>
-			<TableContainer style={{ margin: 'auto', maxHeight: '500px' }}>
-				<Table stickyHeader>
-					<TableHead>
-						<TableRow>
-							<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
-							<TableCell align='center' style={styles.tableText}>Date</TableCell>
-							<TableCell align='center' style={styles.tableText}>Time</TableCell>
-							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{typeof appointments !== 'undefined' &&
-							typeof appointments === 'object' &&
-							appointments.length > 0 &&
-							appointments.map(appointment =>
-								isDataValidEnoughToDisplay(appointment) ? (
-									<TableRow key={appointment.id}>
-										<TableCell align='left'>
-											{`${appointment.booking_user.first_name} ${appointment.booking_user.last_name}`}
-										</TableCell>
-										<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-											{new Date(appointment.start_time).toLocaleDateString()}
-										</TableCell>
-										<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-											{new Date(appointment.start_time).toLocaleTimeString()}
-										</TableCell>
-										<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
-											<LinkButton
-												text='Join'
-												color='green'
-												linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
-											/>
-											{/* {appointment && typeof appointment.notes !== 'undefined' ? (
-											<DocButton
-												text='View'
-												color='green'
-												style={{
-													marginLeft: '10px',
-													marginTop: '0px',
-													marginRight: '10px',
-													boxSizing: 'border-box',
-													maxWidth: '40%',
-												}}
-												onClick={() => {
-													setVisibleId(appointment.id);
-													setIsVisible(true);
-												}}
-											/>
-										) : (
-											<p>No Notes</p>
-										)} */}
-										</TableCell>
-									</TableRow>
-								) : null
-							)}
-						{typeof appointments !== 'object' || appointments.length === 0 ? (
-							<TableRow>
-								<TableCell style={styles.tableText}>
-									<p>No appointments to display</p>
-								</TableCell>
-								<TableCell/>
-								<TableCell/>
-								<TableCell/>
-							</TableRow>
-						) : null}
-					</TableBody>
-				</Table>
-			</TableContainer>
-			{/* {typeof appointments !== 'undefined' && typeof appointments === 'object' && (
-				<DocModal
-					isVisible={isVisible}
-					onClose={() => setIsVisible(false)}
-					title='Patient Notes'
-					content={
-						<PatientNotesContent
-							appointment={appointments.filter(appointment => appointment.id === visibleId)}
-						/>
-					}
-				/>
-			)} */}
+const PastAppointmentsTable = ({ appointments = [] }) => (
+	<div className="doc-container"  style={{ height: '100%' }}>
+		<div
+			style={{
+				width: '100%',
+				margin: 'auto',
+				display: 'flex',
+				justifyContent: 'space-between',
+				alignItems: 'center',
+			}}
+		>
+			<h2>Past Appointments</h2>
 		</div>
-	);
-};
+		<TableContainer style={{ margin: 'auto', maxHeight: '500px' }}>
+			<Table stickyHeader>
+				<TableHead>
+					<TableRow>
+						<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
+						<TableCell align='center' style={styles.tableText}>Date</TableCell>
+						<TableCell align='center' style={styles.tableText}>Time</TableCell>
+						<TableCell align='center' style={styles.tableText}>Test</TableCell>
+						<TableCell align='right' style={styles.tableText}>Actions</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{(typeof appointments === 'object' && !!appointments.length) ? appointments.map(appointment => (
+						<TableRow key={appointment.id}>
+							<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
+								{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
+							</TableCell>
+							<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+								{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
+							</TableCell>
+							<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+							{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
+							</TableCell>
+							<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+								{get(appointment, 'booking_user.metadata.test_type', '')}
+							</TableCell>
+							<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
+								<LinkButton
+									text='Join'
+									color='green'
+									linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+								/>
+								{/* {appointment && typeof appointment.notes !== 'undefined' ? (
+								<DocButton
+									text='View'
+									color='green'
+									style={{
+										marginLeft: '10px',
+										marginTop: '0px',
+										marginRight: '10px',
+										boxSizing: 'border-box',
+										maxWidth: '40%',
+									}}
+									onClick={() => {
+										setVisibleId(appointment.id);
+										setIsVisible(true);
+									}}
+								/>
+							) : (
+								<p>No Notes</p>
+							)} */}
+							</TableCell>
+						</TableRow>
+					)) : (
+						<TableRow>
+							<TableCell style={styles.tableText}>
+								<p>No appointments to display</p>
+							</TableCell>
+							<TableCell/>
+							<TableCell/>
+							<TableCell/>
+							<TableCell/>
+						</TableRow>
+					)}
+				</TableBody>
+			</Table>
+		</TableContainer>
+		{/* {typeof appointments !== 'undefined' && typeof appointments === 'object' && (
+			<DocModal
+				isVisible={isVisible}
+				onClose={() => setIsVisible(false)}
+				title='Patient Notes'
+				content={
+					<PatientNotesContent
+						appointment={appointments.filter(appointment => appointment.id === visibleId)}
+					/>
+				}
+			/>
+		)} */}
+	</div>
+);
 // TODO shape patient notes modal content container
 
 const PatientNotesContent = ({ appointment }) => {
@@ -158,4 +144,4 @@ const PatientNotesContent = ({ appointment }) => {
 	) : null;
 };
 
-export default memo(PastAppointmentTable);
+export default memo(PastAppointmentsTable);

@@ -1,4 +1,6 @@
-import React, { Component, useContext } from 'react';
+import React, { Component, useContext, useEffect } from 'react';
+import nurseService from '../services/nurseService';
+import REQUEST_INTERVAL from '../helpers/requestInterval';
 import authorisationSvc from '../services/authorisationService';
 import bookingUserDataService from '../services/bookingUserDataService';
 
@@ -82,6 +84,7 @@ export default class AuthContextProvider extends Component {
 	}
 
 	render() {
+
 		return (
 			<AuthContext.Provider
 				value={{

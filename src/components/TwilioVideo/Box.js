@@ -1,19 +1,28 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import getURLParams from '../../helpers/getURLParams';
 import DocButton from '../DocButton/DocButton';
-import './box-test.scss';
+import bookingService from '../../services/bookingService';
 import TwillioVideoCall, { PatientHeader } from '../VideoCall/TwillioVideoCall';
 import FullScreenOverlay from '../FullScreenOverlay/FullScreenOverlay';
+import {
+	AppointmentContext,
+} from '../../context/AppointmentContext';
+import './box-test.scss';
 
 const Box = ({
+	token,
 	isNurse,
 	isEnglish = true,
 	updateImageData,
 	captureDisabled,
 	videoCallToken,
 	setVideoCallToken,
+	hideVideoAppointment,
 }) => {
 	const params = getURLParams(window.location.href);
+	const {
+		appointmentId = params['appointmentId'],
+	} = useContext(AppointmentContext);
 	const handleSubmit = useCallback(
 		async event => {
 			event.preventDefault();
@@ -28,6 +37,10 @@ const Box = ({
 				},
 			}).then(res => res.json());
 			setVideoCallToken(data.token);
+			bookingService
+				.updateAppointmentStatus(token, appointmentId, {
+					status: isNurse ? 'PRACTITIONER_ATTENDED' : 'PATIENT_ATTENDED',
+				});
 		},
 		[params, isNurse]
 	);
@@ -36,9 +49,11 @@ const Box = ({
 			<TwillioVideoCall
 				isNurse={isNurse}
 				token={videoCallToken}
-				appointmentId={params['appointmentId']}
+				authToken={token}
+				appointmentId={appointmentId}
 				updateImageData={updateImageData}
 				captureDisabled={captureDisabled}
+				hideVideoAppointment={hideVideoAppointment}
 			/>
 		</div>
 	) : (
@@ -74,7 +89,7 @@ const Box = ({
 						}}
 					>
 						<h2>You are ready for your appointment</h2>
-						<DocButton text='Join Appointment' onClick={handleSubmit}  color='green' />
+						<DocButton text='Join Appointment' onClick={handleSubmit} color='green' />
 					</div>
 				</div>
 			)}

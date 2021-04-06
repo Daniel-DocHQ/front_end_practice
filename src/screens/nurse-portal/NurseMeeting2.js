@@ -18,6 +18,7 @@ import {
 	Tooltip,
 	Divider,
 } from '@material-ui/core';
+import { get } from 'lodash';
 import { Alert } from '@material-ui/lab';
 import { format, differenceInMinutes } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
@@ -32,27 +33,38 @@ import bookingService from '../../services/bookingService';
 import getValueFromObject from '../../helpers/getValueFromObject';
 import { AuthContext } from '../../context/AuthContext';
 
-const APPOINTMENT_TYPES = {
-	vista: 'video_gp',
-	tui: 'video_gp_tui',
+const TEST_TYPES = {
+	pcr: 'PCR',
+	antigen: 'Antigen',
 };
 
-const NurseMeeting2 = ({ isVideo }) => {
+const APPOINTMENT_TYPES = {
+	tui: 'video_gp_tui',
+	vista: 'video_gp',
+};
+
+const NurseMeeting2 = ({
+	isVideo,
+	appointmentId,
+	hideVideoAppointment,
+}) => {
 	const token = useToken();
 	const [videoCallToken, setVideoCallToken] = useState();
 	const [kitProvider, setKitProvider] = useState();
 
 	return (
-		<AppointmentContextProvider token={token}>
+		<AppointmentContextProvider token={token} appointmentId={appointmentId}>
 			<div className='row flex-start items-start'>
 				{isVideo && (
 					<div className='patient-video'>
 						<Box
 							isNurse
-							updateImageData={console.log}
+							token={token}
 							captureDisabled
+							updateImageData={console.log}
 							videoCallToken={videoCallToken}
 							setVideoCallToken={setVideoCallToken}
+							hideVideoAppointment={hideVideoAppointment}
 						/>
 					</div>
 				)}
@@ -76,11 +88,12 @@ const TabContainer = ({
 	kitProvider,
 	setKitProvider,
 }) => {
-	const [value, setValue] = React.useState(0);
 	const {
 		type,
+		test_type,
 		appointmentId,
 	} = useContext(AppointmentContext);
+	const [value, setValue] = React.useState(0);
 	const patients = useBookingUsers();
 	let patient = useBookingUser(0);
 	patient = {...patient, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})}
@@ -88,20 +101,21 @@ const TabContainer = ({
 	const increaseStep = useCallback(() => {
 		setValue((oldValue) => oldValue + 1);
 	});
+	const isAntigenType = test_type === TEST_TYPES.antigen;
 	const isTuiType = type === APPOINTMENT_TYPES.tui;
 
 	useEffect(() => {
-		if (isJoined && value === 0 && type === APPOINTMENT_TYPES.vista) {
+		if (isJoined && value === 0 && test_type === TEST_TYPES.pcr) {
 			increaseStep();
 		}
 	}, [isJoined]);
 
 	return (
-		isTuiType ? (
+		isAntigenType ? (
 			<div className='tab-container' style={{ minHeight: 'unset' }}>
 				{value === 0 && (
 					<AddressVerification
-						isTuiType
+						isAntigenType
 						patient={patient}
 						patients={patients}
 						isJoined={isJoined}
@@ -122,30 +136,44 @@ const TabContainer = ({
 		) : (
 			<React.Fragment>
 				{value === 0 && (
-					<VideoAppointmentDetails
-						patient={patient}
-						appointmentDetails={appointmentDetails}
-						updateParent={increaseStep}
-					/>
+					isTuiType ? (
+						<AddressVerification
+							isAntigenType
+							patient={patient}
+							patients={patients}
+							isJoined={isJoined}
+							appointmentId={appointmentId}
+							updateParent={increaseStep}
+						/>
+					) : (
+						<VideoAppointmentDetails
+							patient={patient}
+							appointmentDetails={appointmentDetails}
+							updateParent={increaseStep}
+						/>
+					)
 				)}
 				{value === 1 && (
 					<AddressVerification
 						isJoined
 						patient={patient}
+						patients={patients}
 						appointmentId={appointmentId}
 						updateParent={increaseStep}
 					/>
 				)}
 				{value === 2 && (
 					<PatientIdVerification
-						patient={patient}
+						patients={patients}
+						isTuiType={isTuiType}
 						appointmentId={appointmentId}
 						updateParent={increaseStep}
 					/>
 				)}
 				{value === 3 && (
 					<SubmitPatientResult
-						patient={patient}
+						patients={patients}
+						isTuiType={isTuiType}
 						appointmentId={appointmentId}
 					/>
 				)}
@@ -158,14 +186,14 @@ const PatientDetails = ({
     title,
     patient,
     fullData,
-	isTuiType,
+	isAntigenType,
     patients = [],
     appointmentId,
 	addressBlockTitle,
 	isSpaceBetweenPhoneBox,
 }) => {
 	const linkRef = useRef(null);
-	const isManyPatients = patients.length > 1 || isTuiType;
+	const isManyPatients = patients.length > 1 || isAntigenType;
 
 	const addressDataBlock = () => (
 		<React.Fragment>
@@ -287,13 +315,19 @@ const PatientDetails = ({
 };
 
 const SubmitPatientResult = ({
-	patient,
+	patients,
+	isTuiType,
 	appointmentId,
 }) => {
 	const {
 		updateNotes,
 	} = useContext(AppointmentContext);
 	const { token } = useContext(AuthContext);
+	const [patientsToVerify, setPatientsToVerify] = useState([...patients]);
+	const currentPatient = get(patientsToVerify, '[0]');
+	const forename = get(currentPatient, 'first_name', '');
+	const surname = get(currentPatient, 'last_name', '');
+	const currentPatientName = `${forename} ${surname}`;
 	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
 	const [kitIdModifyMode, setKitIdModifyMode] = useState(false);
 	const [kitIdSubmitted, setKitIdSubmitted] = useState(false);
@@ -309,12 +343,15 @@ const SubmitPatientResult = ({
 	const isSampleTakenRejected = sampleTaken === 'rejected';
 	const isSampleTakenValid = !isSampleTakenInvalid && !isSampleTakenRejected;
 	const isSampleTakenNotValid = isSampleTakenInvalid || isSampleTakenRejected;
+	const showPatientName = isTuiType && patients && patients.length > 1;
 
 	function updateKitId() {
 		if (kitId) {
 			sendResult({
 				kitId,
 				result: '',
+				forename,
+				surname,
 			});
 			setKitIdSubmitted(true);
 			setKitIdModifyMode(true);
@@ -324,13 +361,15 @@ const SubmitPatientResult = ({
 	function sendSampleTaken() {
 		if (sampleTaken) {
 			sendResult({
-				result: '',
 				...((isSampleTakenInvalid) && {
 					invalid_notes: notes,
 				}),
 				...(isSampleTakenRejected && {
 					reject_notes: notes,
 				}),
+				result: '',
+				forename,
+				surname,
 				sampleTaken,
 			}, true);
 		}
@@ -338,12 +377,26 @@ const SubmitPatientResult = ({
 
     function sendResult(formData, isSampleTaken) {
 		const body = formData;
-		bookingService
-			.sendResult(token, appointmentId, body)
+		bookingService.sendResult(token, appointmentId, body)
 			.then(result => {
 				if (isSampleTaken) {
 					if (result.success) {
-						setSampleTakenStatus({ severity: 'success', message: 'Result sent successfully' });
+						const newPatients = [...patientsToVerify];
+						newPatients.shift();
+						if (newPatients.length === 0) {
+							setSampleTakenStatus({ severity: 'success', message: 'Result sent successfully' });
+							return;
+						}
+						setPatientsToVerify(newPatients);
+						setNotes();
+						setSampleTaken();
+						setKitId('');
+						setAppointmentNotes();
+						setShowAppointmentNotes(false);
+						setKitIdModifyMode(false);
+						setKitIdSubmitted(false);
+						setSampleTakenStatus();
+						setNotesStatus();
 					} else {
 						setSampleTakenStatus({
 							severity: 'error',
@@ -365,13 +418,13 @@ const SubmitPatientResult = ({
 					<Grid item>
 						<PatientDetails
 							title='Patient Details'
-							patient={patient}
+							patient={currentPatient}
 							appointmentId={appointmentId}
 						/>
 					</Grid>
 					<Grid item className='padding-top-box'>
 						<div className='row space-between'>
-							<h3 className='no-margin'>Enter Kit ID</h3>
+							<h3 className='no-margin'>Enter{showPatientName ? ` ${currentPatientName} ` : ' '}Kit ID</h3>
 						</div>
 						<div className='row'>
 							<TextInputElement
@@ -401,7 +454,7 @@ const SubmitPatientResult = ({
 					{kitIdSubmitted && (
 						<Grid item>
 							<div className='row space-between'>
-								<h3 className='no-margin'>Sample Taken</h3>
+								<h3 className='no-margin'>{showPatientName && `${currentPatientName} - `}Sample Taken</h3>
 							</div>
 							<div style={{ paddingLeft: 10 }}>
 								<FormControl component='fieldset'>
@@ -517,7 +570,7 @@ const AddressVerification = ({
     patient,
     patients,
 	isJoined,
-	isTuiType,
+	isAntigenType,
     updateParent,
     appointmentId,
 }) => {
@@ -579,10 +632,10 @@ const AddressVerification = ({
 							fullData
 							patient={patient}
 							patients={patients}
-							isTuiType={isTuiType}
+							isAntigenType={isAntigenType}
 							isSpaceBetweenPhoneBox
-							addressBlockTitle={isTuiType && isJoined}
-							title={isTuiType ? ( isJoined ? 'Patient Details' : 'Appointment Details') : 'Address Verification' }
+							addressBlockTitle={isAntigenType && isJoined}
+							title={isAntigenType ? ( isJoined ? 'Patient Details' : 'Appointment Details') : 'Address Verification' }
 							appointmentId={appointmentId}
 						/>
 					</Grid>
@@ -736,26 +789,52 @@ const VideoAppointmentDetails = ({
 );
 
 const PatientIdVerification = ({
-    patient,
     patients,
+	isTuiType,
     updateParent,
     appointmentId,
 }) => {
     const { token } = useContext(AuthContext);
+	const [patientsToVerify, setPatientsToVerify] = useState([...patients]);
     const [security_checked, setSecurity_checked] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
+	const [passportId, setPassportId] = useState('');
+	const currentPatient = get(patientsToVerify, '[0]');
+	const forename = get(currentPatient, 'first_name', '');
+	const surname = get(currentPatient, 'last_name', '');
+	const currentPatientName = `${forename} ${surname}`;
+	const showPatientName = isTuiType && patients && patients.length > 1;
+	const isValid = !!security_checked && !!security_document && (isTuiType ? !!passportId : true);
 
     function proceed() {
-		if (security_document) {
+		if (isValid) {
 			bookingService
-				.sendResult(token, appointmentId, {
+				.sendResult(token, appointmentId, isTuiType ? {
 					result: '',
+					forename,
+					surname,
+					passportId,
+					security_checked,
+					security_document,
+				} : {
+					result: '',
+					forename,
+					surname,
 					security_checked,
 					security_document,
 				})
 				.then(result => {
 					if (result.success) {
-						updateParent();
+						const newPatients = [...patientsToVerify];
+						newPatients.shift();
+						if (newPatients.length === 0) {
+							updateParent();
+							return;
+						}
+						setPatientsToVerify(newPatients);
+						setSecurity_checked(false);
+						setSecurity_document('');
+						setPassportId('');
 					} else {
 						ToastsStore.error('Failed');
 					}
@@ -773,15 +852,14 @@ const PatientIdVerification = ({
 					<Grid item>
 						<PatientDetails
 							fullData
-							patient={patient}
-							patients={patients}
 							title='Patient Details'
+							patient={currentPatient}
 							appointmentId={appointmentId}
 						/>
 					</Grid>
 					<Grid item>
 						<div className='row space-between'>
-							<h3 className='no-margin'>Patient ID Verification</h3>
+							<h3 className='no-margin'>{showPatientName ? currentPatientName : 'Patient'} ID Verification</h3>
 						</div>
 						<div className='row'>
 							<MaterialCheckbox
@@ -792,7 +870,7 @@ const PatientIdVerification = ({
 						</div>
 						<div className='row'>
 							<FormControl variant='filled' style={{ width: '100%' }}>
-								<InputLabel id='security-document-label'>Security Document</InputLabel>
+								<InputLabel id='security-document-label'>{showPatientName && currentPatientName} Security Document</InputLabel>
 								<Select
 									labelId='security-document-label'
 									id='security-document'
@@ -806,14 +884,30 @@ const PatientIdVerification = ({
 								</Select>
 							</FormControl>
 						</div>
+						{(isTuiType && !!security_document && security_checked) && (
+							<>
+								<div className='row space-between padding-top-box'>
+									<h3 className='no-margin'>{showPatientName && currentPatientName} Passport Number</h3>
+								</div>
+								<div className='row'>
+									<TextInputElement
+										id='passport-id'
+										value={passportId}
+										placeholder='Passport ID'
+										onChange={setPassportId}
+										required
+									/>
+								</div>
+							</>
+						)}
 					</Grid>
 					<Grid item>
 						<div className='row flex-end'>
 							<DocButton
 								text='Submit'
 								onClick={proceed}
-								disabled={!security_document}
-								color={!!security_document ? 'green' : 'disabled'}
+								disabled={!isValid}
+								color={isValid ? 'green' : 'disabled'}
 							/>
 						</div>
 					</Grid>
