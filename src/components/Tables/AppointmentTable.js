@@ -139,7 +139,7 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 											<LinkButton
 												text='Join'
 												color='green'
-												linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+												linkSrc={`practitioner/live-dashboard?appointmentId=${appointment.id}`}
 											/>
 											<DocButton
 												text='Release'
