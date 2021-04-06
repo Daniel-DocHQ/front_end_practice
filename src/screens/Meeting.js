@@ -5,6 +5,7 @@ import {
 	Radio,
 	RadioGroup,
 } from '@material-ui/core';
+import { format } from 'date-fns';
 import { get } from 'lodash';
 import FullScreenOverlay from '../components/FullScreenOverlay/FullScreenOverlay';
 import DocButton from '../components/DocButton/DocButton';
@@ -13,7 +14,7 @@ import DocModal from '../components/DocModal/DocModal';
 import LinkButton from '../components/DocButton/LinkButton';
 import Box from '../components/TwilioVideo/Box';
 import bookingService from '../services/bookingService';
-import { ddMMyyyy, formatTimeSlot } from '../helpers/formatDate';
+import { ddMMyyyy } from '../helpers/formatDate';
 import getURLParams from '../helpers/getURLParams';
 import AppointmentContextProvider from '../context/AppointmentContext';
 import '../assets/css/Meeting.scss';
@@ -167,7 +168,7 @@ const AppointmentSummary = ({ date, isVista, isEnglish }) => (
 	<div>
 		<h2>{isEnglish ? 'Appointment Summary' : 'Terminübersicht'}</h2>
 		<p><b>{isEnglish ? 'Selected date' : 'Ausgewähltes Datum'}: </b>{ddMMyyyy(date)}</p>
-		<p><b>{isEnglish ? 'Selected date' : 'Ausgewählte Zeit'}: </b>{formatTimeSlot(date)} ({get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time')})</p>
+		<p><b>{isEnglish ? 'Selected date' : 'Ausgewählte Zeit'}: </b>{format(new Date(date || ''), 'p')} ({get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time')})</p>
 		{isEnglish ? (
 			<p>Please, make sure you click on this link at least <b>15 minutes before</b> your actual appointment.</p>
 		) : (

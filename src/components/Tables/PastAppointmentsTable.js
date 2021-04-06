@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { get } from 'lodash';
+import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -46,48 +47,52 @@ const PastAppointmentsTable = ({ appointments = [] }) => (
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{(typeof appointments === 'object' && !!appointments.length) ? appointments.map(appointment => (
-						<TableRow key={appointment.id}>
-							<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
-								{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
-							</TableCell>
-							<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-								{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
-							</TableCell>
-							<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-							{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
-							</TableCell>
-							<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-								{get(appointment, 'booking_user.metadata.test_type', '')}
-							</TableCell>
-							<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
-								<LinkButton
-									text='Join'
-									color='green'
-									linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
-								/>
-								{/* {appointment && typeof appointment.notes !== 'undefined' ? (
-								<DocButton
-									text='View'
-									color='green'
-									style={{
-										marginLeft: '10px',
-										marginTop: '0px',
-										marginRight: '10px',
-										boxSizing: 'border-box',
-										maxWidth: '40%',
-									}}
-									onClick={() => {
-										setVisibleId(appointment.id);
-										setIsVisible(true);
-									}}
-								/>
-							) : (
-								<p>No Notes</p>
-							)} */}
-							</TableCell>
-						</TableRow>
-					)) : (
+					{(typeof appointments === 'object' && !!appointments.length) ? appointments.map(appointment => {
+						const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
+
+						return (
+							<TableRow key={appointment.id}>
+								<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
+									{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
+								</TableCell>
+								<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									{appointmentStartTime.toLocaleDateString()}
+								</TableCell>
+								<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									{format(appointmentStartTime, 'p')}
+								</TableCell>
+								<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+									{get(appointment, 'booking_user.metadata.test_type', '')}
+								</TableCell>
+								<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<LinkButton
+										text='Join'
+										color='green'
+										linkSrc={`/practitioner/live-dashboard?appointmentId=${appointment.id}`}
+									/>
+									{/* {appointment && typeof appointment.notes !== 'undefined' ? (
+									<DocButton
+										text='View'
+										color='green'
+										style={{
+											marginLeft: '10px',
+											marginTop: '0px',
+											marginRight: '10px',
+											boxSizing: 'border-box',
+											maxWidth: '40%',
+										}}
+										onClick={() => {
+											setVisibleId(appointment.id);
+											setIsVisible(true);
+										}}
+									/>
+								) : (
+									<p>No Notes</p>
+								)} */}
+								</TableCell>
+							</TableRow>
+						);
+					}) : (
 						<TableRow>
 							<TableCell style={styles.tableText}>
 								<p>No appointments to display</p>

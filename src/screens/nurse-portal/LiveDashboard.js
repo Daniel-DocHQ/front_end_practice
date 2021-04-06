@@ -1,4 +1,4 @@
-import React, { memo, useContext } from 'react';
+import React, { memo, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
     AppBar,
@@ -10,6 +10,7 @@ import {
 import AppointmentLiveStatus from './AppointmentLiveStatus';
 import { AuthContext } from '../../context/AuthContext';
 import MyRooms from './MyRooms';
+import getURLParams from '../../helpers/getURLParams';
 
 const useStyles = makeStyles((theme) => ({
     tab: {
@@ -58,6 +59,8 @@ function a11yProps(index) {
 const LiveDashboard = (props) => {
     const [value, setValue] = React.useState(0);
     const classes = useStyles();
+    const params = getURLParams(window.location.href);
+	const appointmentId = params['appointmentId'];
     let history = useHistory();
 
     if (props.isAuthenticated !== true && props.role !== 'practitioner') {
@@ -68,6 +71,11 @@ const LiveDashboard = (props) => {
         setValue(newValue);
     };
 
+    useEffect(() => {
+        if (appointmentId) {
+            setValue(1);
+        }
+    }, []);
 	return (
         <>
             <AppBar position="static">
@@ -96,7 +104,7 @@ const LiveDashboard = (props) => {
                     <AppointmentLiveStatus />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    <MyRooms />
+                    <MyRooms appointmentIdParam={appointmentId} />
                 </TabPanel>
             </Box>
         </>

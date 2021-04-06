@@ -1,6 +1,6 @@
 import React from 'react';
-import { format, intervalToDuration } from 'date-fns';
-import { startCase, lowerCase } from 'lodash';
+import { format } from 'date-fns';
+import { lowerCase } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -62,7 +62,9 @@ const TodayDoctors = ({ doctors }) => (
                     {typeof doctors !== 'undefined' &&
                         typeof doctors === 'object' &&
                         doctors.length > 0 &&
-                        doctors.map(doctor => {
+                        doctors
+                            .sort((a, b) => (a.start_time > b.start_time ? -1 : (a.start_time < b.start_time ? 1 : 0)))
+                            .map(doctor => {
                             {/* const start = new Date(doctor.start_in).getTime();
                             const duration = intervalToDuration({ start, end: (new Date().getTime()) })
                             const formatted = `${duration.minutes}:${duration.seconds}`
