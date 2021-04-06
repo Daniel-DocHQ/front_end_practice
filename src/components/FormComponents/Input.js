@@ -6,7 +6,6 @@ const Input = ({
 	style,
 	...rest
 }) => {
-	console.log(rest);
 	let allStyles = {};
 	if (style) {
 		allStyles = { ...style };
