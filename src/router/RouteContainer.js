@@ -14,7 +14,7 @@ import ShippingInfo from '../screens/patient-portal/ShippingInfo';
 import SymptomChecker from '../screens/patient-portal/SymptomChecker';
 import ResultsScreen from '../screens/patient-portal/ResultsScreen.js';
 import AuthBasedRedirect from './AuthBasedRedirect';
-import AuthContextProvider, { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import PrivateRoute from './PrivateRoute';
 import VerifyToken from '../screens/VerifyToken';
 import HelpScreen from '../screens/HelpScreen';
@@ -23,9 +23,12 @@ import { StepperContainer } from '../components/BookingEngine/Stepper';
 import Unsupported from '../screens/Unsupported';
 import Meeting from '../screens/Meeting';
 import NurseDashboard from '../screens/nurse-portal/NurseDashboard';
-
 import BookingEngine from '../components/BookingEngineAuthed/BookingEngine';
 import NurseMeeting2 from '../screens/nurse-portal/NurseMeeting2';
+import Purchase from '../screens/b2c-portal/Purchase';
+import B2CDashboard from '../screens/b2c-portal/B2CDashboard';
+import B2CBookAppointment from '../screens/b2c-portal/B2CBookAppointment';
+
 const { isSupported } = require('twilio-video');
 
 const RouteContainer = () => {
@@ -170,6 +173,23 @@ const RouteHandler = () => {
 			<Route path='/practitioner/*'>
 				<Redirect to={`/${ctx.role}/dashboard`} />
 			</Route>
+			{/* B2C Routes */}
+
+			<PrivateRoute path='/b2c/dashboard' requiredRole='b2c'>
+				<Layout title='Dashboard'>
+					<B2CDashboard />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/b2c/order-test-kit' requiredRole='b2c'>
+				<Layout title='Purchase'>
+					<Purchase />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/b2c/book-appointment' requiredRole='b2c'>
+				<Layout title='Book Appointment'>
+					<B2CBookAppointment />
+				</Layout>
+			</PrivateRoute>
 			{/* 404 page */}
 
 			<Route path='*'>

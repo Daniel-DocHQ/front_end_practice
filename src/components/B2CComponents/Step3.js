@@ -1,11 +1,15 @@
-import React from 'react';
-import './BookingEngine.scss';
-import datesAreSameDay from '../../helpers/datesAreSameDay';
+import React, { useState, useEffect, useContext } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
+import { Field, useFormikContext } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
+import bookingService from '../../services/bookingService';
+import datesAreSameDay from '../../helpers/datesAreSameDay';
+import { AuthContext } from '../../context/AuthContext';
+import bookingFormModel from './bookingFormModel';
 import Slot from './Slot';
+import './BookingEngine.scss';
 
 const datePickerTheme = createMuiTheme({
 	overrides: {
@@ -88,30 +92,89 @@ const datePickerTheme = createMuiTheme({
 		},
 	},
 });
-const Step1 = ({ appointments, availableDates, date, updateDate, selectedSlot, updateSlot }) => {
+
+const Step3 = () => {
+	const { token } = useContext(AuthContext);
+	const [appointments, setAppointments] = useState();
+	const [availableDates, setAvailableDates] = useState();
 	const today = new Date();
 	const in40days = new Date(today.setDate(today.getDate() + 40));
+	const dateRange = {
+		start: `${('0' + today.getDate()).slice(-2)}-${('0' + today.getMonth()).slice(-2)}-${today.getFullYear()}`,
+		end: `${('0' + in40days.getDate()).slice(-2)}-${('0' + (in40days.getMonth() +1 )).slice(-2)}-${in40days.getFullYear()}`,
+	};
+	const {
+        formField: {
+            appointmentDate,
+			selectedSlot,
+        }
+    } = bookingFormModel;
+	const { values: { appointmentDate: selectedDate }, setFieldValue } = useFormikContext();
+
+	function getSlots() {
+		bookingService
+			.getSlots(typeof selectedDate === 'undefined' ? new Date() : selectedDate)
+			.then(result => {
+				if (result.success && result.appointments) {
+					setAppointments(result.appointments);
+				} else {
+					// handle
+				}
+			})
+			.catch(err => console.log(err));
+	}
+	function getAvailableDates() {
+		bookingService
+			.getAvailableDates(dateRange.start, dateRange.end, token)
+			.then(result => {
+				if (result.success && result.availableDates) {
+					setAvailableDates(result.availableDates);
+					const firstAvailableDate = result.availableDates.find(({ has_appointments }) => has_appointments);
+					setFieldValue(appointmentDate.name, !!firstAvailableDate && !!firstAvailableDate.date ? firstAvailableDate.date : null);
+				} else {
+					// handle
+				}
+			})
+			.catch(err => console.log(err));
+	};
 	function disableDates(date) {
 		const day = availableDates.filter(item => datesAreSameDay(item.date, date));
 		return day && day.length === 1 && typeof day[0].has_appointments !== 'undefined'
 			? !day[0].has_appointments
 			: false;
-	}
+	};
+
+	useEffect(() => {
+		if (availableDates === null || typeof availableDates === 'undefined') {
+			// get available days
+			getAvailableDates();
+		}
+	}, []);
+	useEffect(() => {
+		if (selectedDate) {
+			getSlots();
+		}
+	}, [selectedDate]);
+
 	return (
 		<React.Fragment>
 			<div className='no-margin col'>
 				<div className='appointment-calendar-container'>
 					<ThemeProvider theme={datePickerTheme}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<DatePicker
-								label='Select Date'
-								value={date}
-								onChange={updateDate}
-								variant='static'
-								maxDate={in40days}
-								disablePast
-								shouldDisableDate={typeof availableDates !== 'undefined' ? disableDates : null}
-							/>
+							<Field name={appointmentDate.name}>
+								{({ field, form }) => (
+									<DatePicker
+										{...field}
+										variant='static'
+										label={appointmentDate.label}
+										maxDate={in40days}
+										disablePast
+										shouldDisableDate={typeof availableDates !== 'undefined' ? disableDates : null}
+										onChange={(value) => form.setFieldValue(field.name, value)}
+									/>
+								)}
+							</Field>
 						</MuiPickersUtilsProvider>
 					</ThemeProvider>
 					<div className='appointment-guide'>
@@ -127,19 +190,24 @@ const Step1 = ({ appointments, availableDates, date, updateDate, selectedSlot, u
 							<h3 id='appointments'>Appointments Available</h3>
 						</div>
 						<div className='slot-container'>
-							{appointments.map((item, i) => {
-								return (
-									<Slot
-										start_time={item.start_time}
-										key={i}
-										id={item.id}
-										selectSlot={updateSlot}
-										isSelected={
-											typeof selectedSlot === 'undefined' ? false : item.id === selectedSlot.id
-										}
-									/>
-								);
-							})}
+							<Field name={selectedSlot.name}>
+								{({ field, form }) =>
+									appointments.map((item, i) => {
+										return (
+											<Slot
+												start_time={item.start_time}
+												key={i}
+												{...field}
+												id={item.id}
+												selectSlot={(value) => form.setFieldValue(field.name, value)}
+												isSelected={
+													typeof selectedSlot === 'undefined' ? false : item.id === selectedSlot.id
+												}
+											/>
+										);
+									})
+								}
+							</Field>
 						</div>
 					</div>
 				) : (
@@ -148,6 +216,6 @@ const Step1 = ({ appointments, availableDates, date, updateDate, selectedSlot, u
 			</div>
 		</React.Fragment>
 	);
-};
+}
 
-export default Step1;
+export default Step3;

@@ -1,11 +1,11 @@
 import React from 'react';
-import './BookingEngine.scss';
-import datesAreSameDay from '../../helpers/datesAreSameDay';
+import { Field } from 'formik';
 import DateFnsUtils from '@date-io/date-fns';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { createMuiTheme } from '@material-ui/core';
+import { DatePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
+import { createMuiTheme, Box } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
-import Slot from './Slot';
+import bookingFormModel from './bookingFormModel';
+import './BookingEngine.scss';
 
 const datePickerTheme = createMuiTheme({
 	overrides: {
@@ -88,63 +88,51 @@ const datePickerTheme = createMuiTheme({
 		},
 	},
 });
-const Step1 = ({ appointments, availableDates, date, updateDate, selectedSlot, updateSlot }) => {
-	const today = new Date();
-	const in40days = new Date(today.setDate(today.getDate() + 40));
-	function disableDates(date) {
-		const day = availableDates.filter(item => datesAreSameDay(item.date, date));
-		return day && day.length === 1 && typeof day[0].has_appointments !== 'undefined'
-			? !day[0].has_appointments
-			: false;
-	}
+
+const Step1 = () => {
+
+	const {
+        formField: {
+            travelDate,
+			travelTime,
+        }
+    } = bookingFormModel;
+
 	return (
 		<React.Fragment>
 			<div className='no-margin col'>
-				<div className='appointment-calendar-container'>
-					<ThemeProvider theme={datePickerTheme}>
-						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<DatePicker
-								label='Select Date'
-								value={date}
-								onChange={updateDate}
-								variant='static'
-								maxDate={in40days}
-								disablePast
-								shouldDisableDate={typeof availableDates !== 'undefined' ? disableDates : null}
-							/>
-						</MuiPickersUtilsProvider>
-					</ThemeProvider>
-					<div className='appointment-guide'>
-						<div className='available guide'>
-							<i className='fa fa-circle'></i>
-							<span>Available Date(s)</span>
-						</div>
-					</div>
-				</div>
-				{typeof appointments !== 'undefined' && appointments.length > 0 ? (
-					<div className='appointment-slot-container'>
-						<div className='row flex-start'>
-							<h3 id='appointments'>Appointments Available</h3>
-						</div>
-						<div className='slot-container'>
-							{appointments.map((item, i) => {
-								return (
-									<Slot
-										start_time={item.start_time}
-										key={i}
-										id={item.id}
-										selectSlot={updateSlot}
-										isSelected={
-											typeof selectedSlot === 'undefined' ? false : item.id === selectedSlot.id
-										}
+				<ThemeProvider theme={datePickerTheme}>
+				<MuiPickersUtilsProvider utils={DateFnsUtils}>
+					<div className='row'>
+						<div className='appointment-calendar-container'>
+							<Field name={travelDate.name}>
+								{({ field, form }) => (
+									<DatePicker
+										{...field}
+										variant='static'
+										label={travelDate.label}
+										onChange={(value) => form.setFieldValue(field.name, value)}
 									/>
-								);
-							})}
+								)}
+							</Field>
+						</div>
+						<div className='appointment-calendar-container'>
+							<Field name={travelTime.name}>
+								{({ field, form }) => (
+									<TimePicker
+										autoOk
+										{...field}
+										openTo="hours"
+										variant="static"
+										label={travelTime.label}
+										onChange={(value) => form.setFieldValue(field.name, value)}
+									/>
+								)}
+							</Field>
 						</div>
 					</div>
-				) : (
-					<></>
-				)}
+					</MuiPickersUtilsProvider>
+				</ThemeProvider>
 			</div>
 		</React.Fragment>
 	);
