@@ -6,26 +6,25 @@ import REQUEST_INTERVAL from '../helpers/requestInterval';
 const PractitionerOnlinePinger = () => {
 	const { user, token, logout } = useContext(AuthContext);
 	const role = !!user && !!user.roles ? user.roles[0].name : '';
-    const isPractitioner = role === 'practitioner';
+	const path = window.location.pathname;
+	const roleName = 'practitioner';
+    const isPractitioner = role === roleName && path.split('/').includes(roleName);
 
     useEffect(() => {
 		const interval = setInterval(() => {
             if (isPractitioner) {
                 nurseService.updateLastOnline(token)
-				.catch(({ response: { status }}) => {
-					if (status === 401) {
-						logout();
-					}
-				});
+					.catch(({ response: { status }}) => {
+						if (status === 401) {
+							logout();
+						}
+					});
             }
 		}, REQUEST_INTERVAL);
 		return () => clearInterval(interval);
     }, [user]);
 
-	return (
-		<React.Fragment>
-		</React.Fragment>
-	);
+	return <React.Fragment />;
 };
 
 export default PractitionerOnlinePinger;
