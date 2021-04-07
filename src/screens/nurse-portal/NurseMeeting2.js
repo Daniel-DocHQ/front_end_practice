@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback, useContext } from 'react';
+import { get } from 'lodash';
 import AppointmentContextProvider, {
 	AppointmentContext,
 	useAppointmentDetails,
@@ -18,7 +19,6 @@ import {
 	Tooltip,
 	Divider,
 } from '@material-ui/core';
-import { get } from 'lodash';
 import { Alert } from '@material-ui/lab';
 import { format, differenceInMinutes } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
@@ -60,7 +60,6 @@ const NurseMeeting2 = ({
 						<Box
 							isNurse
 							token={token}
-							captureDisabled
 							updateImageData={console.log}
 							videoCallToken={videoCallToken}
 							setVideoCallToken={setVideoCallToken}
@@ -1114,7 +1113,7 @@ const copyToClipboard = (ref) => {
 };
 
 const CertificatesContainer = ({ kitProvider }) => {
-	const { displayCertificates, booking_users } = useContext(AppointmentContext);
+	const { displayCertificates, booking_users, img } = useContext(AppointmentContext);
 	return displayCertificates ? (
 		<div
 			style={{
@@ -1127,6 +1126,7 @@ const CertificatesContainer = ({ kitProvider }) => {
 			{!!booking_users &&
 				booking_users.map((user, i) => <CertificatesAaron
 					key={i}
+					img={get(img, `[${i}]`, '')}
 					patient_data={user}
 					kitProvider={kitProvider}
 				/>)}

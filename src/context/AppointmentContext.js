@@ -10,6 +10,7 @@ export default class AppointmentContextProvider extends Component {
 		super(props);
 		this.state = {
 			type: null,
+			img: [],
 			test_type: null,
 			appointmentId: null,
 			booking_users: null,
@@ -64,7 +65,7 @@ export default class AppointmentContextProvider extends Component {
 				.catch(err => ToastsStore.error(`Cannot find appointment details`));
 		}
 		function storeImage(img) {
-			this.setState({ img });
+			this.setState({ img: [...this.state.img, img] });
 		}
 		function uploadImage(appointmentId, token) {
 			if (!!this.state.img) {
@@ -129,6 +130,7 @@ export default class AppointmentContextProvider extends Component {
 		return (
 			<AppointmentContext.Provider
 				value={{
+					img: this.state.img,
 					type: this.state.type,
 					test_type: this.state.test_type,
 					appointmentId: this.state.appointmentId,

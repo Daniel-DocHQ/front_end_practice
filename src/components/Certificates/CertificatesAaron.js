@@ -29,7 +29,11 @@ const minus15mins = date => {
 	return newDate;
 };
 
-const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }) => {
+const CertificatesAaron = ({
+	img,
+	patient_data,
+	kitProvider: preselectedKidProvider,
+}) => {
 	const { user, token } = useContext(AuthContext);
 	const appointmentId = useAppointmentId();
 	const [populated, setPopulated] = useState(false);
@@ -57,6 +61,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 	function isValid(obj) {
 		return (
 			!!obj &&
+			!!img &&
 			!!obj.forename &&
 			!!obj.surname &&
 			!!obj.email &&
@@ -376,6 +381,12 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 							placeholder='Add Reason for Rejection. This notes will be sent to the client'
 						/>
 					</React.Fragment>
+				)}
+				{!!img && (
+					<div>
+						<p>Captured Image:</p>
+						<img src={img} style={{ width: 220 }} />
+					</div>
 				)}
 				{!!status && !!status.severity && !!status.message && !isLoading && (
 					<div className='row center'>

@@ -113,3 +113,14 @@
 		opacity: 0.8;
 	}
 }
+
+.flat.white {
+	color: var(--doc-white);
+
+	&:hover,
+	&:active {
+		color: var(--doc-pink) !important;
+		box-shadow: none;
+		opacity: 0.8;
+	}
+}

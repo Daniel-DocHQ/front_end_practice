@@ -2,17 +2,16 @@ import React from 'react';
 import './Controls.scss';
 const Controls = ({
 	isMuted,
-	isPhotoMode,
 	updateMuted,
-	updatePhotoMode,
 	capturePhoto,
 	isNurse,
 	handleDisconnect,
 	handlePause,
 	captureDisabled,
+	currentBookingUserName,
 }) => (
 	<>
-		{/* <div className="top-container">
+		<div className="top-container">
 			{isNurse && (
 				<>
 					<div className='control-item' onClick={handlePause}>
@@ -23,14 +22,29 @@ const Controls = ({
 					</div>
 				</>
 			)}
-		</div> */}
+		</div>
+		<div className="top-container right">
+			{isNurse && !captureDisabled ? (
+				<div className="photo-box">
+					<p>Patient {currentBookingUserName} - Test Results</p>
+					<div className='photo-controller'>
+						<div
+							className='control-item'
+							onClick={capturePhoto}
+						>
+							<i className='fa fa-camera'></i>
+						</div>
+					</div>
+				</div>
+			) : null}
+		</div>
 		<div className="controls-container">
-			{!isMuted && !isPhotoMode && (
+			{!isMuted && (
 				<div className='control-item' onClick={updateMuted}>
 					<i className='fa fa-microphone'></i>
 				</div>
 			)}
-			{isMuted && !isPhotoMode && (
+			{isMuted && (
 				<div className='control-item' onClick={updateMuted}>
 					<i className='fa fa-microphone-slash' style={{ color: 'var(--doc-pink)' }}></i>
 				</div>
@@ -38,22 +52,6 @@ const Controls = ({
 			<div className='control-item' onClick={handleDisconnect}>
 				<i className='fa fa-phone' style={{ color: 'var(--doc-pink)' }}></i>
 			</div>
-			{isNurse && !captureDisabled ? (
-				<div className={`photo-controller ${isPhotoMode ? 'active' : ''}`}>
-					<div
-						className='control-item'
-						onClick={() => {
-							updatePhotoMode(!isPhotoMode);
-							if (isPhotoMode) {
-								capturePhoto();
-							}
-						}}
-					>
-						<i className='fa fa-camera'></i>
-					</div>
-					{isPhotoMode && <p>Capture</p>}
-				</div>
-			) : null}
 		</div>
 	</>
 );
