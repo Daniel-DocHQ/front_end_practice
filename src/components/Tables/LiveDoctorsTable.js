@@ -63,6 +63,7 @@ const LiveDoctorsTable = ({ doctors }) => (
                 <TableHead>
                     <TableRow>
                         <TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
+                        <TableCell align='center' style={styles.tableText}>Appointments</TableCell>
                         <TableCell align='center' style={styles.tableText}>Patients</TableCell>
                         <TableCell align='center' style={styles.tableText}>Status</TableCell>
                     </TableRow>
@@ -75,7 +76,9 @@ const LiveDoctorsTable = ({ doctors }) => (
                             return (
                                 <TableRow key={doctor.id}>
                                     <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {`${doctor.first_name} ${doctor.last_name}`}
+                                        {doctor.name}
+                                    </TableCell>
+                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
                                     </TableCell>
                                     <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         {doctor.patients}

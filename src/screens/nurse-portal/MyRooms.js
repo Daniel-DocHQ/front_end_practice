@@ -10,10 +10,10 @@ import NurseMeeting2 from './NurseMeeting2';
 
 const REQUEST_INTERVAL = 30 * 1000; // 30 seconds
 
-const MyRooms = () => {
+const MyRooms = ({ appointmentIdParam = '' }) => {
     const { user, token } = useContext(AuthContext);
 	const [appointments, setAppointments] = useState();
-    const [appointmentId, setAppointmentId] = useState('VXNlcjowfE9yZzp8VGltZToxNjE3MTQ5MTAw');
+    const [appointmentId, setAppointmentId] = useState(appointmentIdParam);
     const [holdAppointments, setHoldAppointments] = useState();
 
 	let history = useHistory();
