@@ -25,6 +25,9 @@ import Meeting from '../screens/Meeting';
 import NurseDashboard from '../screens/nurse-portal/NurseDashboard';
 import BookingEngine from '../components/BookingEngineAuthed/BookingEngine';
 import NurseMeeting2 from '../screens/nurse-portal/NurseMeeting2';
+import Purchase from '../screens/b2c-portal/Purchase';
+import B2CDashboard from '../screens/b2c-portal/B2CDashboard';
+import B2CBookAppointment from '../screens/b2c-portal/B2CBookAppointment';
 import LiveDashboard from '../screens/nurse-portal/LiveDashboard';
 import RotaManagement from '../screens/nurse-portal/RotaManagement';
 
@@ -164,11 +167,11 @@ const RouteHandler = () => {
 					<LiveDashboard {...ctx} />
 				</Layout>
 			</PrivateRoute>
-			{/* <PrivateRoute path='/practitioner/rota' requiredRole='practitioner'>
+			<PrivateRoute path='/practitioner/rota' requiredRole='practitioner'>
 				<Layout title='Rota Management'>
 					<RotaManagement {...ctx} />
 				</Layout>
-			</PrivateRoute> */}
+			</PrivateRoute>
 			<PrivateRoute path='/practitioner/video-appointment' requiredRole='practitioner'>
 				<Layout title='Video Appointment'>
 					<NurseMeeting2 isVideo={true} {...ctx} />
@@ -182,6 +185,23 @@ const RouteHandler = () => {
 			<Route path='/practitioner/*'>
 				<Redirect to={`/${ctx.role}/dashboard`} />
 			</Route>
+			{/* B2C Routes */}
+
+			<PrivateRoute path='/b2c/dashboard' requiredRole='b2c'>
+				<Layout title='Dashboard'>
+					<B2CDashboard />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/b2c/order-test-kit' requiredRole='b2c'>
+				<Layout title='Purchase'>
+					<Purchase />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/b2c/book-appointment' requiredRole='b2c'>
+				<Layout title='Book Appointment'>
+					<B2CBookAppointment />
+				</Layout>
+			</PrivateRoute>
 			{/* 404 page */}
 
 			<Route path='*'>

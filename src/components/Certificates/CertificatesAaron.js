@@ -181,6 +181,7 @@ const CertificatesAaron = ({ patient_data, kitProvider: preselectedKidProvider }
 				});
 		}
 	}
+
 	return ((!!patient_data && populated) || (!patient_data && !populated)) &&  (
 		<React.Fragment>
 			<Paper style={{ padding: '20px', width: '350px', marginTop: '10px' }}>

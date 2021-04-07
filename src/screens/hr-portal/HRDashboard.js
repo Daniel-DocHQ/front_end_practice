@@ -1,4 +1,4 @@
-import { AppBar, Button, Paper, Tabs, Tab } from '@material-ui/core';
+import { AppBar, Tabs, Tab } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
 import '../../assets/css/PatientDashboard.scss';
 import { AuthContext } from '../../context/AuthContext';
