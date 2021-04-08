@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { format } from 'date-fns';
 import { get, camelCase } from 'lodash';
 import Table from '@material-ui/core/Table';
@@ -7,6 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Timer from '../Timer/Timer';
 import './Tables.scss';
 
 const styles = {
@@ -49,31 +50,6 @@ const HUMAN_STATUSES = {
     practitionerAttended: 'Doctor Waiting',
 };
 
-const msToHMS = (ms) => {
-    let seconds = ms / 1000;
-    seconds = seconds % 3600;
-    let minutes = parseInt( seconds / 60 );
-    seconds = Math.round(seconds % 60);
-
-    return  (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
-}
-
-const Timer = ({ statusLastUpdated, currentTime }) => {
-    const [counter, setCounter] = useState(0);
-    const [timeDifference, setTimeDifference] = useState((currentTime - statusLastUpdated));
-
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setTimeDifference(timeDifference + 1000);
-            setCounter((prev) => prev + 1);
-		}, 1000);
-		return () => clearInterval(interval);
-	  }, [counter]);
-
-	return msToHMS(timeDifference);
-};
-
-
 const LiveStatusTable = ({ appointments = [] }) => {
     const currentTime = new Date().getTime();
     const filteredAppointments = appointments.filter(({ status, start_time }) => {
@@ -112,6 +88,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
                             filteredAppointments.map(appointment => {
                                 const appointmentStatus = camelCase(get(appointment, 'status', ''));
                                 const statusLastUpdated = get(appointment, 'status_last_updated', '');
+
                                 return (
                                     <TableRow key={appointment.id}>
                                         <TableCell

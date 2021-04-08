@@ -122,9 +122,6 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 									<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
 										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
 									</TableCell>
-									{/* <TableCell align='center' style={styles.smallCol}>
-										{appointment.type}
-									</TableCell> */}
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 										{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
 									</TableCell>
@@ -139,7 +136,7 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 											<LinkButton
 												text='Join'
 												color='green'
-												linkSrc={`practitioner/live-dashboard?appointmentId=${appointment.id}`}
+												linkSrc={`/practitioner/live-dashboard?appointmentId=${appointment.id}`}
 											/>
 											<DocButton
 												text='Release'
@@ -148,15 +145,6 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 												onClick={() => releaseAppointment(appointment.id)}
 											/>
 										</div>
-										{/* <DocButton
-											text='Join'
-											color='green'
-											style={styles.bntStyles}
-											onClick={() =>
-												setRedirectDetails({ id: appointment.id, type: appointment.type })
-											}
-										/> */}
-										{/* <DocButton text='Cancel' color='pink' style={styles.bntStyles} /> */}
 									</TableCell>
 								</TableRow>
 							))}

@@ -8,6 +8,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DocButton from '../DocButton/DocButton';
+import useDateFilter from '../../helpers/hooks/useDateFilter';
+import Timer from '../Timer/Timer';
 import './Tables.scss';
 
 const styles = {
@@ -37,106 +39,115 @@ const styles = {
 	},
 };
 
-const NextAppointmentsTable = ({join, nextAppointments, holdAppointments = [] }) => (
-    <div className='doc-container' style={{ justifyContent: 'unset' }}>
-        {!!holdAppointments.length && (
-            <div style={{ paddingBottom: 70 }}>
-                <div style={styles.mainContainer}>
-                    <h2>Waiting Rooms</h2>
+const NextAppointmentsTable = ({ join, nextAppointments = [], holdAppointments = [] }) => {
+    const currentTime = new Date().getTime();
+    const { filteredAppointments } = useDateFilter(nextAppointments);
+
+    return (
+        <div className='doc-container' style={{ justifyContent: 'unset' }}>
+            {!!holdAppointments.length && (
+                <div style={{ paddingBottom: 70 }}>
+                    <div style={styles.mainContainer}>
+                        <h2>Waiting Rooms</h2>
+                    </div>
+                    <TableContainer
+                        style={{
+                            maxWidth: '1200px',
+                            maxHeight: '500px',
+                            marginBottom: '40px',
+                        }}
+                    >
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align='center' style={styles.tableText}>Test</TableCell>
+                                    <TableCell align='center' style={styles.tableText}>Timer</TableCell>
+                                    <TableCell align='center' style={styles.tableText}>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {typeof holdAppointments !== 'undefined' &&
+                                    typeof holdAppointments === 'object' &&
+                                    holdAppointments.length > 0 &&
+                                    holdAppointments.map(appointment => {
+                                        const statusLastUpdated = get(appointment, 'status_last_updated', '');
+
+                                        return (
+                                            <TableRow key={appointment.id}>
+                                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                                    {get(appointment, 'booking_user.metadata.test_type', '')}
+                                                </TableCell>
+                                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                                    {!!statusLastUpdated && <Timer statusLastUpdated={new Date(statusLastUpdated).getTime()} currentTime={currentTime} paused />}
+                                                </TableCell>
+                                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                                    <DocButton
+                                                        text='Join'
+                                                        color='green'
+                                                        onClick={() => join(appointment.id)}
+                                                    />
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </div>
-                <TableContainer
-                    style={{
-                        maxWidth: '1200px',
-                        maxHeight: '500px',
-                        marginBottom: '40px',
-                    }}
-                >
-                    <Table stickyHeader>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align='center' style={styles.tableText}>Test</TableCell>
-                                <TableCell align='center' style={styles.tableText}>Timer</TableCell>
-                                <TableCell align='center' style={styles.tableText}>Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {typeof holdAppointments !== 'undefined' &&
-                                typeof holdAppointments === 'object' &&
-                                holdAppointments.length > 0 &&
-                                holdAppointments.map(appointment => (
-                                    <TableRow key={appointment.id}>
-                                        <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                            {get(appointment, 'booking_user.metadata.test_type', '')}
-                                        </TableCell>
-                                        <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                            {format(new Date(appointment.start_time), 'p')}
-                                        </TableCell>
-                                        <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                            <DocButton
-                                                text='Join'
-                                                color='green'
-                                                onClick={() => join(appointment.id)}
-                                            />
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+            )}
+            <div style={styles.mainContainer}>
+                <h2>Next Appointments</h2>
             </div>
-        )}
-        <div style={styles.mainContainer}>
-            <h2>Next Appointments</h2>
-        </div>
-        <TableContainer
-            style={{
-                maxWidth: '1200px',
-                maxHeight: '500px',
-                marginBottom: '40px',
-            }}
-        >
-            <Table stickyHeader>
-                <TableHead>
-                    <TableRow>
-                        <TableCell align='center' style={styles.tableText}>Test</TableCell>
-                        <TableCell align='center' style={styles.tableText}>Time</TableCell>
-                        <TableCell align='center' style={styles.tableText}>Actions</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {typeof nextAppointments !== 'undefined' &&
-                        typeof nextAppointments === 'object' &&
-                        nextAppointments.length > 0 &&
-                        nextAppointments.map(appointment => (
-                            <TableRow key={appointment.id}>
-                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                    {get(appointment, 'booking_user.metadata.test_type', '')}
-                                </TableCell>
-                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                    {format(new Date(appointment.start_time), 'p')}
-                                </TableCell>
-                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                    <DocButton
-                                        text='Join'
-                                        color='green'
-                                        onClick={() => join(appointment.id)}
-                                    />
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    {typeof nextAppointments !== 'object' || nextAppointments.length === 0 ? (
+            <TableContainer
+                style={{
+                    maxWidth: '1200px',
+                    maxHeight: '500px',
+                    marginBottom: '40px',
+                }}
+            >
+                <Table stickyHeader>
+                    <TableHead>
                         <TableRow>
-                            <TableCell style={styles.tableText}>
-                                <p>No appointments to display</p>
-                            </TableCell>
-                            <TableCell />
-                            <TableCell />
+                            <TableCell align='center' style={styles.tableText}>Test</TableCell>
+                            <TableCell align='center' style={styles.tableText}>Time</TableCell>
+                            <TableCell align='center' style={styles.tableText}>Actions</TableCell>
                         </TableRow>
-                    ) : null}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    </div>
-);
+                    </TableHead>
+                    <TableBody>
+                        {typeof filteredAppointments !== 'undefined' &&
+                            typeof filteredAppointments === 'object' &&
+                            filteredAppointments.length > 0 &&
+                            filteredAppointments.map(appointment => (
+                                <TableRow key={appointment.id}>
+                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        {get(appointment, 'booking_user.metadata.test_type', '')}
+                                    </TableCell>
+                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        {format(new Date(appointment.start_time), 'p')}
+                                    </TableCell>
+                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        <DocButton
+                                            text='Join'
+                                            color='green'
+                                            onClick={() => join(appointment.id)}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        {typeof nextAppointments !== 'object' || nextAppointments.length === 0 ? (
+                            <TableRow>
+                                <TableCell style={styles.tableText}>
+                                    <p>No appointments to display</p>
+                                </TableCell>
+                                <TableCell />
+                                <TableCell />
+                            </TableRow>
+                        ) : null}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
+    );
+};
 
 export default memo(NextAppointmentsTable);
