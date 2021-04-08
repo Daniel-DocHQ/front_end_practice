@@ -34,4 +34,3 @@ const Timer = ({ statusLastUpdated, currentTime, paused = false }) => {
 };
 
 export default Timer;
-
