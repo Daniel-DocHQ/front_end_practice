@@ -23,7 +23,7 @@ const Layout = ({ title, children }) => {
 	const classes = useStyles();
 	const contextValue = useContext(AuthContext);
 	const { isAuthenticated, user, logout } = contextValue;
-	const role = !!user && !!user.roles ? user.roles[0].name : '';
+	const role = (!!user && !!user.roles ? user.roles[0].name : '').toLowerCase();
 
 	const addProps = () => {
 		const childrenWithProps = React.Children.map(children, child => {
