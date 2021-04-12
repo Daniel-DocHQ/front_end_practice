@@ -1,5 +1,5 @@
 import React from 'react';
-import { format } from 'date-fns';
+import { format, differenceInMilliseconds  } from 'date-fns';
 import { lowerCase } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -35,6 +35,19 @@ const styles = {
 	},
 };
 
+const timeDifference = (now, start_time, status) => {
+    if (start_time.getTime() > now.getTime()) {
+        // Future
+        return format(new Date(differenceInMilliseconds(start_time, now)), "hh:mm:ss")
+    } else {
+        // Past
+        if (status == "Offline") {
+            return format(new Date(differenceInMilliseconds(now, start_time)), "hh:mm:ss") + " Ago"
+        }
+    }
+}
+
+
 const TodayDoctors = ({ doctors }) => (
     <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
         <div style={styles.mainContainer}>
@@ -63,7 +76,6 @@ const TodayDoctors = ({ doctors }) => (
                         typeof doctors === 'object' &&
                         doctors.length > 0 &&
                         doctors
-                            .sort((a, b) => (a.start_time > b.start_time ? -1 : (a.start_time < b.start_time ? 1 : 0)))
                             .map(doctor => {
                             {/* const start = new Date(doctor.start_in).getTime();
                             const duration = intervalToDuration({ start, end: (new Date().getTime()) })
@@ -75,7 +87,18 @@ const TodayDoctors = ({ doctors }) => (
                             {/* const formatted = `${minutes}:${seconds}` */}
                             const isDoctorOffline = doctor.status === 'Offline';
                             {/* const isAppointmentSoon = minutes <= 5 && isDoctorOffline; */}
-                            const isAppointmentSoon = false;
+                            var isAppointmentSoon = false;
+
+                            var now = new Date()
+                            var start_time = new Date(doctor.start_time)
+
+                            now.setMinutes(now.getMinutes() - 10);
+
+                            if (start_time.getTime() < now.getTime()) {
+                                if (doctor.status == "Offline") {
+                                    isAppointmentSoon = true;
+                                }
+                            }
 
                             return (
                                 <TableRow key={doctor.id}>
@@ -89,7 +112,7 @@ const TodayDoctors = ({ doctors }) => (
                                         {format(new Date(doctor.end_time), 'p')}
                                     </TableCell>
                                     <TableCell align='center' className={isAppointmentSoon && 'red-bold-text'} style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {/* {formatted} Min */}
+                                        {timeDifference(now, start_time, doctor.status)}
                                     </TableCell>
                                     <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         {!!doctor.next_appointment ? format(new Date(doctor.next_appointment), 'p') : ''}
