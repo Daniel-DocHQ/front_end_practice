@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { get } from 'lodash';
 import clsx from 'clsx';
+import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -116,17 +117,19 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{filteredAppointments.length > 0 &&
-							filteredAppointments.map(appointment => (
+						{filteredAppointments.length > 0 && filteredAppointments.map(appointment => {
+							const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
+
+							return (
 								<TableRow key={appointment.id}>
 									<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
 										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
+										{appointmentStartTime.toLocaleDateString()}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
+										{format(appointmentStartTime, 'p')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
@@ -147,7 +150,8 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 										</div>
 									</TableCell>
 								</TableRow>
-							))}
+							);
+						})}
 						{filteredAppointments.length === 0 ? (
 							<TableRow>
 								<TableCell style={styles.tableText}>

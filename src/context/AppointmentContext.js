@@ -3,6 +3,7 @@ import { ToastsStore } from 'react-toasts';
 import dataURItoBlob from '../helpers/dataURItoBlob';
 import getURLParams from '../helpers/getURLParams';
 import nurseSvc from '../services/nurseService';
+
 export const AppointmentContext = React.createContext();
 
 export default class AppointmentContextProvider extends Component {
