@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import {format} from "date-fns";
 import { get } from 'lodash';
 import clsx from 'clsx';
 import Table from '@material-ui/core/Table';
@@ -129,7 +130,7 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 										{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
+										{format(new Date(get(appointment, 'start_time', '')), "p")}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
@@ -148,15 +149,6 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 												onClick={() => releaseAppointment(appointment.id)}
 											/>
 										</div>
-										{/* <DocButton
-											text='Join'
-											color='green'
-											style={styles.bntStyles}
-											onClick={() =>
-												setRedirectDetails({ id: appointment.id, type: appointment.type })
-											}
-										/> */}
-										{/* <DocButton text='Cancel' color='pink' style={styles.bntStyles} /> */}
 									</TableCell>
 								</TableRow>
 							))}
