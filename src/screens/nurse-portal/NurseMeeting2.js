@@ -1066,7 +1066,7 @@ const AppointmentActions = ({
 									value={kitProvider}
 									required
 								>
-									<MenuItem value='Roche Test Kit'>Roche Test Kit</MenuItem>
+									<MenuItem value='Roche'>Roche Test Kit</MenuItem>
 								</Select>
 							</FormControl>
 						</Grid>

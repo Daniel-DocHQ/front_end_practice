@@ -65,11 +65,20 @@ const PastAppointmentsTable = ({ appointments = [] }) => (
 									{get(appointment, 'booking_user.metadata.test_type', '')}
 								</TableCell>
 								<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
-									<LinkButton
-										text='Join'
-										color='green'
-										linkSrc={`/practitioner/live-dashboard?appointmentId=${appointment.id}`}
-									/>
+									<div style={{ display: 'flex' }}>
+										<LinkButton
+											text='View'
+											color='green'
+											linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
+										/>
+										<div style={{ marginLeft: 10 }}>
+											<LinkButton
+												text='Join'
+												color='green'
+												linkSrc={`/practitioner/live-dashboard?appointmentId=${appointment.id}`}
+											/>
+										</div>
+									</div>
 									{/* {appointment && typeof appointment.notes !== 'undefined' ? (
 									<DocButton
 										text='View'

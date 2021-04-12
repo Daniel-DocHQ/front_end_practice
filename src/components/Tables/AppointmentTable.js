@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import {format} from "date-fns";
 import { get } from 'lodash';
 import clsx from 'clsx';
 import { format } from 'date-fns';
@@ -103,7 +102,6 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 			</div>
 			<TableContainer
 				style={{
-					maxWidth: '1200px',
 					marginBottom: '40px',
 				}}
 			>
@@ -138,10 +136,17 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 									<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
 										<div style={{ display: 'flex' }}>
 											<LinkButton
-												text='Join'
+												text='View'
 												color='green'
-												linkSrc={`/practitioner/live-dashboard?appointmentId=${appointment.id}`}
+												linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
 											/>
+											<div style={{ marginLeft: 10 }}>
+												<LinkButton
+													text='Join'
+													color='green'
+													linkSrc={`/practitioner/live-dashboard?appointmentId=${appointment.id}`}
+												/>
+											</div>
 											<DocButton
 												text='Release'
 												color='pink'

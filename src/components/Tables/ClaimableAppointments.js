@@ -42,7 +42,6 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 			</div>
 			<TableContainer
 				style={{
-					maxWidth: '1200px',
 					maxHeight: '500px',
 					marginBottom: '40px',
 				}}

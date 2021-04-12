@@ -146,13 +146,13 @@ const NurseDashboard = props => {
 	}
 	return (
 		<Grid container justify="space-between">
-			<Grid item xs={12} md={6}>
+			<Grid item xs={12}>
 				<ClaimableAppointments
 					appointments={claimableAppointments}
 					claimAppointment={claimAppointment}
 				/>
 			</Grid>
-			<Grid item xs={12} md={6}>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<AppointmentTable
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}

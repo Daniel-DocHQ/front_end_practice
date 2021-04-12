@@ -61,7 +61,7 @@ const CertificatesAaron = ({
 	function isValid(obj) {
 		return (
 			!!obj &&
-			!!img &&
+			// !!img &&
 			!!obj.forename &&
 			!!obj.surname &&
 			!!obj.email &&
@@ -338,7 +338,7 @@ const CertificatesAaron = ({
 							value={kitProvider}
 							required
 						>
-							<MenuItem value='Roche Test Kit'>Roche Test Kit</MenuItem>
+							<MenuItem value='Roche'>Roche Test Kit</MenuItem>
 						</Select>
 					</FormControl>
 				</div>
