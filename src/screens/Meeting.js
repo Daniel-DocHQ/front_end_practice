@@ -128,7 +128,7 @@ const Meeting = () => {
 							.updateTerms(appointmentId, {
 								toc_accept: toc_accept.toString(),
 								marketing_accept: marketing_accept.toString(),
-								share_accept: share_accept.toString(),
+								...(share_accept !== undefined && {share_accept: share_accept.toString()}),
 							});
 					}} />;
 					default:
