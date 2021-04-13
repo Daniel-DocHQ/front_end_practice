@@ -5,6 +5,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import LinkButton from '../DocButton/LinkButton';
 import './Tables.scss';
 
 const styles = {
@@ -22,7 +23,7 @@ const styles = {
 const RotaPastAppointmentsTable = ({ doctors = [] }) => {
 
 	return (
-		<div className="doc-container"  style={{ height: '100%' }}>
+		<div className="doc-container"  style={{ height: '100%', maxWidth: '90vw' }}>
 			<div
 				style={{
 					width: '100%',
@@ -42,6 +43,7 @@ const RotaPastAppointmentsTable = ({ doctors = [] }) => {
                             {[...Array(24)].map((_, i) => (
                                 <TableCell align='center' style={styles.tableText}>{i}-{i + 1}</TableCell>
                             ))}
+                            <TableCell align='right' style={styles.tableText}>Action</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -94,6 +96,12 @@ const RotaPastAppointmentsTable = ({ doctors = [] }) => {
                                         </div>
                                     </TableCell>
                                 ))}
+                                <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <LinkButton
+                                        text='Release'
+                                        color='pink'
+                                    />
+                                </TableCell>
                             </TableRow>
                         )}
 						{doctors.length === 0 ? (

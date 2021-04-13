@@ -108,9 +108,9 @@ const NextAppointmentsTable = ({ join, nextAppointments = [], holdAppointments =
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <TableCell align='center' style={styles.tableText}>Test</TableCell>
-                            <TableCell align='center' style={styles.tableText}>Time</TableCell>
-                            <TableCell align='center' style={styles.tableText}>Actions</TableCell>
+                            <TableCell align='left' style={styles.tableText}>Test</TableCell>
+                            <TableCell align='left' style={styles.tableText}>Time</TableCell>
+                            <TableCell align='left' style={styles.tableText}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -119,13 +119,13 @@ const NextAppointmentsTable = ({ join, nextAppointments = [], holdAppointments =
                             filteredAppointments.length > 0 &&
                             filteredAppointments.map(appointment => (
                                 <TableRow key={appointment.id}>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         {get(appointment, 'booking_user.metadata.test_type', '')}
                                     </TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         {format(new Date(appointment.start_time), 'p')}
                                     </TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         <DocButton
                                             text='Join'
                                             color='green'
