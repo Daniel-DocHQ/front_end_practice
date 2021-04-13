@@ -65,39 +65,11 @@ const PastAppointmentsTable = ({ appointments = [] }) => (
 									{get(appointment, 'booking_user.metadata.test_type', '')}
 								</TableCell>
 								<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
-									<div style={{ display: 'flex' }}>
-										<LinkButton
-											text='View'
-											color='green'
-											linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
-										/>
-										<div style={{ marginLeft: 10 }}>
-											<LinkButton
-												text='Join'
-												color='green'
-												linkSrc={`/practitioner/live-dashboard?appointmentId=${appointment.id}`}
-											/>
-										</div>
-									</div>
-									{/* {appointment && typeof appointment.notes !== 'undefined' ? (
-									<DocButton
+									<LinkButton
 										text='View'
 										color='green'
-										style={{
-											marginLeft: '10px',
-											marginTop: '0px',
-											marginRight: '10px',
-											boxSizing: 'border-box',
-											maxWidth: '40%',
-										}}
-										onClick={() => {
-											setVisibleId(appointment.id);
-											setIsVisible(true);
-										}}
+										linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
 									/>
-								) : (
-									<p>No Notes</p>
-								)} */}
 								</TableCell>
 							</TableRow>
 						);

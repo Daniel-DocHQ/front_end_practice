@@ -91,6 +91,7 @@ const TabContainer = ({
 		type,
 		test_type,
 		appointmentId,
+		status_changes,
 	} = useContext(AppointmentContext);
 	const [value, setValue] = React.useState(0);
 	const patients = useBookingUsers();
@@ -106,6 +107,9 @@ const TabContainer = ({
 	useEffect(() => {
 		if (isJoined && value === 0 && test_type === TEST_TYPES.pcr) {
 			increaseStep();
+		}
+		if (get(status_changes, `${[status_changes.length - 1]}.changed_to`) === 'ON_HOLD' && test_type === TEST_TYPES.pcr) {
+			setValue(1);
 		}
 	}, [isJoined]);
 
@@ -213,10 +217,10 @@ const PatientDetails = ({
 					<p className='tab-row-text'>{patient.extended_address}</p>
 				</div>
 			)}
-			{!!patient.region && fullData && (
+			{!!patient.locality && fullData && (
 				<div className='row space-between no-margin'>
 					<p className='tab-row-text title-info'>Town:</p>
-					<p className='tab-row-text'>{patient.region}</p>
+					<p className='tab-row-text'>{patient.locality}</p>
 				</div>
 			)}
 			{!!patient.country && fullData && (
@@ -376,7 +380,7 @@ const SubmitPatientResult = ({
 
     function sendResult(formData, isSampleTaken) {
 		const body = formData;
-		bookingService.sendResult(token, appointmentId, body)
+		bookingService.sendResult(token, appointmentId, body, currentPatient.id)
 			.then(result => {
 				if (isSampleTaken) {
 					if (result.success) {
@@ -578,14 +582,14 @@ const AddressVerification = ({
 	// Fields
 	const [addressLine1, setAddressLine1] = useState('');
 	const [addressLine2, setAddressLine2] = useState('');
-	const [town, setTown] = useState('');
+	const [locality, setLocality] = useState('');
 	const [country, setCountry] = useState('');
 	const [postCode, setPostCode] = useState('');
 
 	function isValid() {
 		return (
 			!!addressLine1 &&
-			!!town &&
+			!!locality &&
 			!!country &&
 			!!postCode
 		);
@@ -599,11 +603,11 @@ const AddressVerification = ({
 					appointment_address: {
 						addressLine1,
 						addressLine2,
-						town,
+						locality,
 						country,
 						postCode,
 					},
-				})
+				}, patient.id)
 				.then(result => {
 					if (result.success) {
 						updateParent();
@@ -663,10 +667,10 @@ const AddressVerification = ({
 							<div className='row'>
 								<TextInputElement
 									required
-									value={town}
-									id='town'
+									value={locality}
+									id='locality'
 									label='Town'
-									onChange={setTown}
+									onChange={setLocality}
 								/>
 							</div>
 							<div className='row'>
@@ -821,7 +825,7 @@ const PatientIdVerification = ({
 					surname,
 					security_checked,
 					security_document,
-				})
+				}, currentPatient.id)
 				.then(result => {
 					if (result.success) {
 						const newPatients = [...patientsToVerify];

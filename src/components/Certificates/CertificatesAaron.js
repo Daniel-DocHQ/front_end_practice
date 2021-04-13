@@ -36,6 +36,7 @@ const CertificatesAaron = ({
 	const { user, token } = useContext(AuthContext);
 	const appointmentId = useAppointmentId();
 	const [populated, setPopulated] = useState(false);
+	const [patientId, setPatientId] = useState();
 	// Form fields
 	const [forename, setForename] = useState('');
 	const [surname, setSurname] = useState('');
@@ -99,6 +100,9 @@ const CertificatesAaron = ({
 	}
 	// populate with patient_date provided
 	function populate() {
+		if(patient_data.id) {
+			setPatientId(patient_data.id)
+		}
 		if (patient_data.first_name) {
 			setForename(patient_data.first_name);
 		}
@@ -160,7 +164,7 @@ const CertificatesAaron = ({
 			}
 			setIsLoading(true);
 			bookingService
-				.sendResult(token, appointmentId, body)
+				.sendResult(token, appointmentId, body, patientId)
 				.then(result => {
 					if (result.success) {
 						setStatus({ severity: 'success', message: 'Certificate successfully generated .' });
