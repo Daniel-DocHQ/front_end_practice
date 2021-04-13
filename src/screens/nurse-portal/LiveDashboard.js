@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
         borderRightBottomRadius: 10,
         borderLeftBottomRadius: 10,
     },
-  }));
+}));
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

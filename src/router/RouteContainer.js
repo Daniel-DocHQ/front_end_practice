@@ -31,6 +31,8 @@ import B2CBookAppointment from '../screens/b2c-portal/B2CBookAppointment';
 import LiveDashboard from '../screens/nurse-portal/LiveDashboard';
 import RotaManagement from '../screens/nurse-portal/RotaManagement';
 import AppointmentView from '../components/AppointmentView/AppointmentView';
+import TermsConditionsDe from '../screens/TermsConditionsDe';
+import TermsConditionsEn from '../screens/TermsConditionsEn';
 
 const { isSupported } = require('twilio-video');
 
@@ -87,6 +89,17 @@ const RouteHandler = () => {
 					<BookingEngine {...ctx} />
 				</Layout>
 			</PrivateRoute>
+
+			<Route path='/en/consultation/terms'>
+				<Layout title='Terms and Conditions'>
+					<TermsConditionsEn {...ctx} />
+				</Layout>
+			</Route>
+			<Route path='/de/consultation/terms'>
+				<Layout title='Terms and Conditions'>
+					<TermsConditionsDe {...ctx} />
+				</Layout>
+			</Route>
 
 			<Route path='/appointment'>
 				{isSupported ? <Meeting /> : <Redirect to='/unsupported-browser' />}
