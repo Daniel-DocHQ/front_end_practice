@@ -1,0 +1,14 @@
+.row-text {
+	padding-top: 16px;
+}
+.negative, .valid {
+    color: var(--doc-green);
+    font-weight: bold;
+}
+.rejected, .positive {
+    color: var(--doc-pink);
+    font-weight: bold;
+}
+.invalid {
+    font-weight: bold;
+}

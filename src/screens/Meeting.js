@@ -126,9 +126,9 @@ const Meeting = () => {
 						increaseStep(1);
 						bookingService
 							.updateTerms(appointmentId, {
-								toc_accept,
-								marketing_accept,
-								share_accept,
+								toc_accept: toc_accept.toString(),
+								marketing_accept: marketing_accept.toString(),
+								share_accept: share_accept.toString(),
 							});
 					}} />;
 					default:

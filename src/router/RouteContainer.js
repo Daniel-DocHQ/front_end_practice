@@ -30,6 +30,7 @@ import B2CDashboard from '../screens/b2c-portal/B2CDashboard';
 import B2CBookAppointment from '../screens/b2c-portal/B2CBookAppointment';
 import LiveDashboard from '../screens/nurse-portal/LiveDashboard';
 import RotaManagement from '../screens/nurse-portal/RotaManagement';
+import AppointmentView from '../components/AppointmentView/AppointmentView';
 
 const { isSupported } = require('twilio-video');
 
@@ -170,6 +171,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/practitioner/rota' requiredRole='practitioner'>
 				<Layout title='Rota Management'>
 					<RotaManagement {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/practitioner/appointment' requiredRole='practitioner'>
+				<Layout title='Appointment Information'>
+					<AppointmentView {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/video-appointment' requiredRole='practitioner'>

@@ -9,18 +9,17 @@ import {
 	Select,
 	MenuItem,
 } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { Alert } from '@material-ui/lab';
+import { ToastsStore } from 'react-toasts';
+import React, { useEffect, useState, useContext } from 'react';
 import existsInArray from '../../helpers/existsInArray';
 import DocButton from '../DocButton/DocButton';
 import MaterialCheckbox from '../FormComponents/MaterialCheckbox/MaterialCheckbox';
 import EmailInputElement from '../FormComponents/EmailInput';
 import TextInputElement from '../FormComponents/TextInputElement';
 import bookingService from '../../services/bookingService';
-import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import { ToastsStore } from 'react-toasts';
-import { Alert } from '@material-ui/lab';
 import { useAppointmentId } from '../../context/AppointmentContext';
 
 const minus15mins = date => {
@@ -338,7 +337,7 @@ const CertificatesAaron = ({
 							value={kitProvider}
 							required
 						>
-							<MenuItem value='Roche Test Kit'>Roche Test Kit</MenuItem>
+							<MenuItem value='Roche'>Roche Test Kit</MenuItem>
 						</Select>
 					</FormControl>
 				</div>
@@ -382,10 +381,22 @@ const CertificatesAaron = ({
 						/>
 					</React.Fragment>
 				)}
-				{!!img && (
+				{!!img ? (
 					<div>
 						<p>Captured Image:</p>
 						<img src={img} style={{ width: 220 }} />
+					</div>
+				) : (
+					<div className='row'>
+						<div style={{ padding: 15, borderRadius: '50%', background: '#EFEFF0', marginRight: 15 }}>
+							<i className="fas fa-camera" style={{ fontSize: 20 }} />
+						</div>
+						<h3 className='no-margin'>Test Results</h3>
+					</div>
+				)}
+				{attemptedSubmit && !img && (
+					<div className='row no-margin'>
+						<p className='error'>You must enter make a test result photo</p>
 					</div>
 				)}
 				{!!status && !!status.severity && !!status.message && !isLoading && (

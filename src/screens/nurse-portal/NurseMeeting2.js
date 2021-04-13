@@ -797,10 +797,10 @@ const PatientIdVerification = ({
 	const [patientsToVerify, setPatientsToVerify] = useState([...patients]);
     const [security_checked, setSecurity_checked] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
-	const [passportId, setPassportId] = useState('');
 	const currentPatient = get(patientsToVerify, '[0]');
 	const forename = get(currentPatient, 'first_name', '');
 	const surname = get(currentPatient, 'last_name', '');
+	const [passportId, setPassportId] = useState(get(currentPatient, 'metadata.passportId', ''));
 	const currentPatientName = `${forename} ${surname}`;
 	const showPatientName = isTuiType && patients && patients.length > 1;
 	const isValid = !!security_checked && !!security_document && (isTuiType ? !!passportId : true);
@@ -1066,7 +1066,7 @@ const AppointmentActions = ({
 									value={kitProvider}
 									required
 								>
-									<MenuItem value='Roche Test Kit'>Roche Test Kit</MenuItem>
+									<MenuItem value='Roche'>Roche Test Kit</MenuItem>
 								</Select>
 							</FormControl>
 						</Grid>

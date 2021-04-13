@@ -8,7 +8,6 @@ import {
     makeStyles,
 } from '@material-ui/core';
 import AppointmentLiveStatus from './AppointmentLiveStatus';
-import { AuthContext } from '../../context/AuthContext';
 import MyRooms from './MyRooms';
 import getURLParams from '../../helpers/getURLParams';
 
@@ -76,6 +75,7 @@ const LiveDashboard = (props) => {
             setValue(1);
         }
     }, []);
+
 	return (
         <>
             <AppBar position="static">
