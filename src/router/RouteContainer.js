@@ -31,6 +31,7 @@ import B2CBookAppointment from '../screens/b2c-portal/B2CBookAppointment';
 import LiveDashboard from '../screens/nurse-portal/LiveDashboard';
 import RotaManagement from '../screens/nurse-portal/RotaManagement';
 import AppointmentView from '../components/AppointmentView/AppointmentView';
+import ShiftDetails from '../screens/nurse-portal/ShiftDetails';
 import TermsConditionsDe from '../screens/TermsConditionsDe';
 import TermsConditionsEn from '../screens/TermsConditionsEn';
 
@@ -184,6 +185,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/practitioner/rota' requiredRole='practitioner'>
 				<Layout title='Rota Management'>
 					<RotaManagement {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/practitioner/shift-details' requiredRole='practitioner'>
+				<Layout title='Shift Details'>
+					<ShiftDetails {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/appointment' requiredRole='practitioner'>

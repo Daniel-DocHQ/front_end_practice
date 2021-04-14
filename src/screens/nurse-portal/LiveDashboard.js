@@ -11,7 +11,7 @@ import AppointmentLiveStatus from './AppointmentLiveStatus';
 import MyRooms from './MyRooms';
 import getURLParams from '../../helpers/getURLParams';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     tab: {
         fontSize: 14,
         fontWeight: 'bold',
