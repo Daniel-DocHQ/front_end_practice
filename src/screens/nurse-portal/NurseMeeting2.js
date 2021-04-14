@@ -108,9 +108,9 @@ const TabContainer = ({
 		if (isJoined && value === 0 && test_type === TEST_TYPES.pcr) {
 			increaseStep();
 		}
-		if (get(status_changes, `${[status_changes.length - 1]}.changed_to`) === 'ON_HOLD' && test_type === TEST_TYPES.pcr) {
-			setValue(1);
-		}
+		// if (get(status_changes, `${[status_changes.length - 1]}.changed_to`) === 'ON_HOLD' && test_type === TEST_TYPES.pcr) {
+		// 	setValue(1);
+		// }
 	}, [isJoined]);
 
 	return (
@@ -1011,7 +1011,7 @@ const AppointmentActions = ({
 						<h3 className='no-margin'>Appointment Actions</h3>
 					</div>
 					<div className='row space-between'>
-						<p className='no-margin'>Appointment Notes</p>
+						<p className='no-margin'><b>Appointment Notes</b></p>
 						{!showNotes && (
 							<DocButton
 								color='green'
@@ -1058,7 +1058,7 @@ const AppointmentActions = ({
 						style={{ padding: '30px 0'}}
 					>
 						<Grid item xs={6}>
-							<p className='no-margin'>Kit Provider</p>
+							<p className='no-margin'><b>Kit Provider</b></p>
 						</Grid>
 						<Grid item xs={6}>
 							<FormControl variant='filled' style={{ width: '100%' }}>
