@@ -9,6 +9,7 @@ import bookingService from '../../services/bookingService';
 import { Grid } from '@material-ui/core';
 import TodayDoctors from '../../components/Tables/TodayDoctors';
 import { AuthContext } from '../../context/AuthContext';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 const NurseDashboard = props => {
 	const { logout } = useContext(AuthContext);
@@ -19,7 +20,7 @@ const NurseDashboard = props => {
 	const [appointments, setAppointments] = useState();
 	const [claimableAppointments, setClaimableAppointments] = useState();
 	const [todayDoctors, setTodayDoctors] = useState();
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	let history = useHistory();
 
 	const logoutUser = () => {
@@ -29,30 +30,9 @@ const NurseDashboard = props => {
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		logoutUser();
 	}
-	useEffect(() => {
-		if (!isLoading) {
-			if (
-				typeof props.token !== 'undefined' &&
-				!gotAppointments &&
-				!gotPastAppointments &&
-				!gotClaimable
-			) {
-				getFutureAppointments();
-				getPastAppointments();
-				getTodayDoctors();
-				getClaimableAppointments();
-				setIsLoading(true);
-			}
-		}
-	});
-	useEffect(() => {
-		const interval = setInterval(() => {
-			getTodayDoctors();
-		}, 15000);
-		return () => clearInterval(interval);
-	}, []);
-	function getFutureAppointments() {
-		nurseService
+
+	const getFutureAppointments = async () => {
+		await nurseService
 			.getAppointments(props.token)
 			.then(data => {
 				if (data.success) {
@@ -66,8 +46,8 @@ const NurseDashboard = props => {
 			})
 			.catch(err => ToastsStore.error('Error fetching appointments'));
 	}
-	function getTodayDoctors() {
-		nurseService
+	const getTodayDoctors = async () => {
+		await nurseService
 			.getTodayDoctors(props.token)
 			.then(data => {
 				if (data.success) {
@@ -80,8 +60,8 @@ const NurseDashboard = props => {
 			})
 			.catch(err => ToastsStore.error('Error fetching appointments'));
 	}
-	function getPastAppointments() {
-		nurseService
+	const getPastAppointments = async () => {
+		await nurseService
 			.getPastAppointments(props.token)
 			.then(data => {
 				if (data.success && data.appointments) {
@@ -96,8 +76,8 @@ const NurseDashboard = props => {
 			.catch(err => ToastsStore.error('Error fetching appointments'));
 	}
 
-	function getClaimableAppointments() {
-		bookingService
+	const getClaimableAppointments = async () => {
+		await bookingService
 			.getClaimableAppointments(props.token)
 			.then(result => {
 				if (result.success && result.claimable_appointments) {
@@ -144,7 +124,39 @@ const NurseDashboard = props => {
 			})
 			.catch(() => ToastsStore.error('Error releasing appointment'));
 	}
-	return (
+
+	const getAllInfo = async () => {
+		await setIsLoading(true);
+		await getFutureAppointments();
+		await getPastAppointments();
+		await getTodayDoctors();
+		await getClaimableAppointments();
+		await setIsLoading(false);
+	};
+
+	useEffect(() => {
+		if (
+			typeof props.token !== 'undefined' &&
+			!gotAppointments &&
+			!gotPastAppointments &&
+			!gotClaimable
+		) {
+			getAllInfo();
+		}
+	}, []);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			getTodayDoctors();
+		}, 15000);
+		return () => clearInterval(interval);
+	}, []);
+
+	return isLoading ? (
+		 <div className='row center' style={{ height: '100vh', alignContent: 'center' }}>
+			<LoadingSpinner />
+		</div>
+	) :(
 		<Grid container justify="space-between">
 			<Grid item xs={12}>
 				<ClaimableAppointments

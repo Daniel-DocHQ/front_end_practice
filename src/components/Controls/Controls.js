@@ -26,7 +26,9 @@ const Controls = ({
 		<div className="top-container right">
 			{isNurse && !captureDisabled ? (
 				<div className="photo-box">
-					<p>Patient {currentBookingUserName} - Test Results</p>
+					<div className="text-box">
+						<p>Patient {currentBookingUserName} - Test Results</p>
+					</div>
 					<div className='photo-controller'>
 						<div
 							className='control-item'
