@@ -346,7 +346,10 @@ const nurseSvc = {
 							});
 						}
 					})
-					.catch(err => console.error(err));
+					.catch(err => {
+						console.error(err)
+						resolve({success: true, appointment: []})
+					});
 			} else {
 				// return unauthorized
 				resolve({ success: false, authenticated: false });
