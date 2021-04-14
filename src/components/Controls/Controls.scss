@@ -19,9 +19,21 @@
 .photo-box {
   display: flex;
   justify-content: space-between;
+  .text-box {
+    background-color: rgba(239, 239, 240, 0.6);
+    border-radius: 25px;
+    align-items: center;
+    display: flex;
+    max-width: 165px;
+    margin-right: 10px;
+    p {
+      margin: 0;
+      align-self: center;
+    }
+  }
 }
 .right {
-  right: 100px;
+  right: 30px;
 }
 .control-item {
   width: 50px;

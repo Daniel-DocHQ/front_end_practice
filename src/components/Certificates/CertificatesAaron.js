@@ -48,7 +48,7 @@ const CertificatesAaron = ({
 	const [security_document, setSecurity_document] = useState('');
 	const [kitProvider, setKitProvider] = useState('');
 	const [result, setResult] = useState('');
-	const [passport_number, setPassportNumber] = useState('');
+	const [passportId, setPassportId] = useState('');
 	// Error handling
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 	const [errors, setErrors] = useState([]);
@@ -71,7 +71,7 @@ const CertificatesAaron = ({
 			!!obj.security_document &&
 			!!obj.result &&
 			!!obj.medicalprofessional &&
-			!!obj.passport_number &&
+			!!obj.passportId &&
 			!!obj.kitProvider &&
 			(isResultRejected ? !!obj.reject_notes : true)
 		);
@@ -118,6 +118,9 @@ const CertificatesAaron = ({
 		if (patient_data.sex) {
 			setSex(patient_data.sex);
 		}
+		if (patient_data.metadata.passportId) {
+			setPassportId(patient_data.metadata.passportId)
+		}
 		if (patient_data.date_of_birth) {
 			setDob(patient_data.date_of_birth);
 		} else if (patient_data.dateOfBirth) {
@@ -141,7 +144,7 @@ const CertificatesAaron = ({
 				security_checked,
 				security_document,
 				result,
-				passport_number,
+				passportId,
 				kitProvider,
 				...(isResultRejected && { reject_notes }),
 			});
@@ -270,9 +273,9 @@ const CertificatesAaron = ({
 							value={sex}
 							onChange={e => setSex(e.target.value)}
 						>
-							<FormControlLabel value='Female' control={<Radio />} label='Female' />
-							<FormControlLabel value='Male' control={<Radio />} label='Male' />
-							<FormControlLabel value='Other' control={<Radio />} label='Other' />
+							<FormControlLabel value='female' control={<Radio />} label='Female' />
+							<FormControlLabel value='male' control={<Radio />} label='Male' />
+							<FormControlLabel value='other' control={<Radio />} label='Other' />
 						</RadioGroup>
 					</FormControl>
 				</div>
@@ -317,10 +320,10 @@ const CertificatesAaron = ({
 				)}
 				<div className='row'>
 					<TextInputElement
-						value={passport_number}
+						value={passportId}
 						id='passport-number'
 						label='Passport number'
-						onChange={setPassportNumber}
+						onChange={setPassportId}
 						inputProps={{ minLength: '5' }}
 						required
 						updateStatus={updateErrors}

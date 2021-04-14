@@ -19,27 +19,29 @@ const useDateFilter = (appointments) => {
 	lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6);
 
 	useEffect(() => {
-		switch (filter) {
-			case 'today':
-				setFilteredAppointments([...appointments].filter((appointment) =>
-					new Date(appointment.start_time).setHours(0,0,0,0) === todayTime));
-				break;
-			case 'tomorrow':
-				setFilteredAppointments([...appointments].filter((appointment) =>
-					new Date(appointment.start_time).setHours(0,0,0,0) === tomorrowTime));
-				break;
-			case 'week':
-				setFilteredAppointments([...appointments].filter((appointment) => {
-					const appointmentDate = new Date(appointment.start_time);
-					return appointmentDate >= firstDayOfWeek && appointmentDate <= lastDayOfWeek;
-				}));
-				break;
-			case 'month':
-				setFilteredAppointments([...appointments].filter((appointment) =>
-					new Date(appointment.start_time).getMonth() === currentMonth));
-				break;
-			default:
-				setFilteredAppointments([...appointments]);
+		if (!!appointments.length) {
+			switch (filter) {
+				case 'today':
+					setFilteredAppointments([...appointments].filter((appointment) =>
+						new Date(appointment.start_time).setHours(0,0,0,0) === todayTime));
+					break;
+				case 'tomorrow':
+					setFilteredAppointments([...appointments].filter((appointment) =>
+						new Date(appointment.start_time).setHours(0,0,0,0) === tomorrowTime));
+					break;
+				case 'week':
+					setFilteredAppointments([...appointments].filter((appointment) => {
+						const appointmentDate = new Date(appointment.start_time);
+						return appointmentDate >= firstDayOfWeek && appointmentDate <= lastDayOfWeek;
+					}));
+					break;
+				case 'month':
+					setFilteredAppointments([...appointments].filter((appointment) =>
+						new Date(appointment.start_time).getMonth() === currentMonth));
+					break;
+				default:
+					setFilteredAppointments([...appointments]);
+			}
 		}
 	}, [filter, appointments]);
 
