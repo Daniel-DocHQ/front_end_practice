@@ -32,7 +32,7 @@ const AppointmentView = (props) => {
                     ToastsStore.error(`Cannot find appointment details`);
                 }
             })
-            .catch(err => ToastsStore.error(`Cannot find appointment details`))
+            .catch(() => ToastsStore.error(`Cannot find appointment details`))
     );
 
     useEffect(() => {

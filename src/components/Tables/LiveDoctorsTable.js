@@ -71,23 +71,25 @@ const LiveDoctorsTable = ({ doctors }) => (
                 <TableBody>
                     {typeof doctors !== 'undefined' &&
                         typeof doctors === 'object' &&
-                        doctors.length > 0 &&
-                        doctors.map(doctor => {
-                            return (
-                                <TableRow key={doctor.id}>
-                                    <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {doctor.name}
-                                    </TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                    </TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {doctor.patients}
-                                    </TableCell>
-                                    <TableCell align='center' className={`text-status-${doctor.status}`} style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        <div className={`circle status-${doctor.status.toLowerCase()}`}/>
-                                    </TableCell>
-                                </TableRow>
-                            );
+                            doctors.length > 0 &&
+                            doctors.map(doctor => {
+                                if (doctor.status == "Online"){
+                                    return (
+                                        <TableRow key={doctor.id}>
+                                            <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                                {doctor.name}
+                                            </TableCell>
+                                            <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            </TableCell>
+                                            <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                                {doctor.patients}
+                                            </TableCell>
+                                            <TableCell align='center' className={`text-status-${doctor.status}`} style={{ ...styles.smallCol, ...styles.tableText }}>
+                                                <div className={`circle status-${doctor.status.toLowerCase()}`}/>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                }
                         })}
                     {typeof doctors !== 'object' || doctors.length === 0 ? (
                         <TableRow>

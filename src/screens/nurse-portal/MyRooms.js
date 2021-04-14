@@ -7,6 +7,7 @@ import { ToastsStore } from 'react-toasts';
 import NextAppointmentsTable from '../../components/Tables/NextAppointmentsTable';
 import { Grid } from '@material-ui/core';
 import NurseMeeting2 from './NurseMeeting2';
+import UrgentClaimable from '../../components/Tables/UrgentClaimable';
 
 const REQUEST_INTERVAL = 30 * 1000; // 30 seconds
 
@@ -47,28 +48,35 @@ const MyRooms = ({ appointmentIdParam = '' }) => {
     );
 
 	return (
-		<Grid container>
-            <Grid item xs={3}>
-                <NextAppointmentsTable
-                    user={user}
-					appointmentId={appointmentId}
-                    join={(id) => setAppointmentId(id)}
-                    nextAppointments={appointments}
-                    holdAppointments={holdAppointments}
-                />
-            </Grid>
-            {appointmentId && (
-                <Grid item xs={9}>
-                    <div className='doc-container' style={{ justifyContent: 'unset' }}>
-                        <NurseMeeting2
-							isVideo
-							appointmentId={appointmentId}
-							hideVideoAppointment={() => setAppointmentId()}
-						/>
-                    </div>
-                </Grid>
-            )}
-		</Grid>
+		<>
+			<Grid container>
+				<Grid item xs={3}>
+					<NextAppointmentsTable
+						user={user}
+						appointmentId={appointmentId}
+						join={(id) => setAppointmentId(id)}
+						nextAppointments={appointments}
+						holdAppointments={holdAppointments}
+					/>
+				</Grid>
+				{appointmentId && (
+					<Grid item xs={9}>
+						<div className='doc-container' style={{ justifyContent: 'unset' }}>
+							<NurseMeeting2
+								isVideo
+								appointmentId={appointmentId}
+								hideVideoAppointment={() => setAppointmentId()}
+							/>
+						</div>
+					</Grid>
+				)}
+			</Grid>
+			<Grid container>
+				<Grid item xs={6}>
+					<UrgentClaimable claimAppointment={(slotId) => console.log(slotId)} appointments={appointments} />
+				</Grid>
+			</Grid>
+		</>
 	);
 };
 
