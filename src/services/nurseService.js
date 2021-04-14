@@ -339,15 +339,10 @@ const nurseSvc = {
 								success: true,
 								appointments: response.data,
 							});
-						} else if (response.status !== 200) {
+						} else  {
 							resolve({
 								success: true,
 								appointments: [],
-							});
-						} else {
-							reject({
-								success: false,
-								error: 'Unable to retrieve information.',
 							});
 						}
 					})
