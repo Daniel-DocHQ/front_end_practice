@@ -39,9 +39,15 @@ const styles = {
 	},
 };
 
-const NextAppointmentsTable = ({ join, nextAppointments = [], holdAppointments = [] }) => {
+const NextAppointmentsTable = ({
+    join,
+    appointmentId,
+    nextAppointments = [],
+    holdAppointments = [],
+}) => {
     const currentTime = new Date().getTime();
-    const { filteredAppointments } = useDateFilter(nextAppointments);
+    const { filteredAppointments: appointmentToFilter } = useDateFilter(nextAppointments);
+    const filteredAppointments = appointmentToFilter.filter(({ id }) => id !== appointmentId);
 
     return (
         <div className='doc-container' style={{ justifyContent: 'unset' }}>
@@ -134,7 +140,7 @@ const NextAppointmentsTable = ({ join, nextAppointments = [], holdAppointments =
                                     </TableCell>
                                 </TableRow>
                             ))}
-                        {typeof nextAppointments !== 'object' || nextAppointments.length === 0 ? (
+                        {typeof filteredAppointments !== 'object' || filteredAppointments.length === 0 ? (
                             <TableRow>
                                 <TableCell style={styles.tableText}>
                                     <p>No appointments to display</p>

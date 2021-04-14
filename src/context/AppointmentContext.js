@@ -15,6 +15,7 @@ export default class AppointmentContextProvider extends Component {
 			test_type: null,
 			appointmentId: null,
 			booking_users: null,
+			status_changes: [],
 			appointmentDetails: null,
 			displayCertificates: null,
 		};
@@ -49,7 +50,7 @@ export default class AppointmentContextProvider extends Component {
 					if (result.success && result.appointment) {
 						const isCaptureDisabled =
 							result && result.appointment && result.appointment.type === 'video_gp';
-						const { booking_users, testing_kit_id, type, appointmentId: id, booking_user: { metadata: { test_type }} } = result.appointment;
+						const { booking_users, testing_kit_id, type, appointmentId: id, status_changes, booking_user: { metadata: { test_type }} } = result.appointment;
 						this.setState({
 							isCaptureDisabled,
 							booking_users,
@@ -58,6 +59,7 @@ export default class AppointmentContextProvider extends Component {
 							appointmentId,
 							test_type,
 							type,
+							status_changes,
 						});
 					} else {
 						ToastsStore.error(`Cannot find appointment details`);
@@ -136,6 +138,7 @@ export default class AppointmentContextProvider extends Component {
 					test_type: this.state.test_type,
 					appointmentId: this.state.appointmentId,
 					booking_users: this.state.booking_users,
+					status_changes: this.state.status_changes,
 					appointmentDetails: this.state.appointmentDetails,
 					displayCertificates: this.state.displayCertificates,
 					getAppointmentDetails: this.getAppointmentDetails,

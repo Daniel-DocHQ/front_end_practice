@@ -110,7 +110,7 @@ const AppointmentInfo = ({ appointment }) => {
 const AddressInfo = ({ appointment }) => {
     const addressLine1 = get(appointment, 'booking_user.street_address', '');
     const addressLine2 = get(appointment, 'booking_user.extended_address', '');
-    const city = get(appointment, 'booking_user.town', '');
+    const city = get(appointment, 'booking_user.locality', '');
     const county = get(appointment, 'booking_user.region', '');
     const country = get(appointment, 'booking_user.country', '');
     const postalCode = get(appointment, 'booking_user.postal_code', '');
@@ -181,13 +181,12 @@ const PatientInfo = ({ patient }) => {
 
 const AppointmentNotes = ({ notes }) => {
     const filteredNotes = notes.filter(({ content }) => !content.includes('Status Change'));
+    const notesLength = filteredNotes.length;
 
-    return !!filteredNotes.length && (
+    return !!notesLength && (
         <Box>
            <Typography className="row-text"><b>Appointment Notes:</b></Typography>
-            {filteredNotes.map(({ content }) => (
-                <Typography>{content}</Typography>
-            ))}
+            <Typography>{get(filteredNotes, `${notesLength - 1}.content`, '')}</Typography>
         </Box>
     );
 };
