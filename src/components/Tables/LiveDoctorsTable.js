@@ -1,4 +1,5 @@
 import React from 'react';
+import { Grid } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,7 +8,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../DocButton/LinkButton';
 import './Tables.scss';
-import { Grid } from '@material-ui/core';
 
 const styles = {
 	tableText: {
@@ -96,8 +96,6 @@ const LiveDoctorsTable = ({ doctors }) => (
                             <TableCell style={styles.tableText}>
                                 <p>No doctors to display</p>
                             </TableCell>
-                            <TableCell />
-                            <TableCell />
                             <TableCell />
                             <TableCell />
                             <TableCell />
