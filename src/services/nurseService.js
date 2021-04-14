@@ -339,7 +339,7 @@ const nurseSvc = {
 								success: true,
 								appointments: response.data,
 							});
-						} else if (response.status === 200 && response.data === null) {
+						} else if (response.status !== 200) {
 							resolve({
 								success: true,
 								appointments: [],
