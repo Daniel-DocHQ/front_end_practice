@@ -218,7 +218,7 @@ function claimAppointment(auth_token, slot_id) {
 }
 function updateAppointmentStatus(auth_token, slot_id, body) {
 	return new Promise((resolve, reject) => {
-		if (auth_token && slot_id) {
+		if (!!auth_token && !!slot_id) {
 			axios({
 				url: `${baseURL}/${slot_id}/status`,
 				method: 'POST',

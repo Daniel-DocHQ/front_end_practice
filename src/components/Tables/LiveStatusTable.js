@@ -8,6 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Timer from '../Timer/Timer';
+import LinkButton from '../DocButton/LinkButton';
 import './Tables.scss';
 
 const styles = {
@@ -88,6 +89,7 @@ const LiveStatusTable = ({ appointments = [] }) => {
                             filteredAppointments.map(appointment => {
                                 const appointmentStatus = camelCase(get(appointment, 'status', ''));
                                 const statusLastUpdated = get(appointment, 'status_last_updated', '');
+                                const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
 
                                 return (
                                     <TableRow key={appointment.id}>
@@ -110,10 +112,13 @@ const LiveStatusTable = ({ appointments = [] }) => {
 											{get(appointment, 'booking_user.metadata.test_type', '')}
 										</TableCell>
                                         <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                            {format(new Date(get(appointment, 'start_time', '')), 'p')}
+                                            {format(appointmentStartTime, 'p')}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                            {!!statusLastUpdated && <Timer statusLastUpdated={new Date(statusLastUpdated).getTime()} currentTime={currentTime} />}
+                                            <Timer
+                                                currentTime={currentTime}
+                                                statusLastUpdated={statusLastUpdated ? new Date(statusLastUpdated).getTime() : appointmentStartTime.getTime()}
+                                            />
                                         </TableCell>
                                         <TableCell align='center' className={`text-status-${appointmentStatus}`} style={{ ...styles.medCol, ...styles.tableText }}>
                                             {HUMAN_STATUSES[appointmentStatus] || ''}
@@ -121,7 +126,13 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                         <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
                                             <div className={`circle status-${appointmentStatus}`}/>
                                         </TableCell>
-                                        <TableCell />
+                                        <TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
+                                            <LinkButton
+                                                text='View'
+                                                color='green'
+                                                linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
+                                            />
+									    </TableCell>
                                     </TableRow>
                                 );
                             })}
