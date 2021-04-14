@@ -98,8 +98,9 @@ const RotaPastAppointmentsTable = ({ doctors = [] }) => {
                                 ))}
                                 <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
                                     <LinkButton
-                                        text='Release'
                                         color='pink'
+                                        text='Release'
+                                        linkSrc={`/practitioner/shift-details?practitionerId=${doctor.id}`}
                                     />
                                 </TableCell>
                             </TableRow>

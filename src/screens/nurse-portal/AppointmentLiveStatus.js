@@ -6,7 +6,9 @@ import LiveStatusTable from '../../components/Tables/LiveStatusTable';
 import { AuthContext } from '../../context/AuthContext';
 import nurseService from '../../services/nurseService';
 import adminService from '../../services/adminService';
+import bookingService from '../../services/bookingService';
 import LiveDoctorsTable from '../../components/Tables/LiveDoctorsTable';
+import UrgentClaimable from '../../components/Tables/UrgentClaimable';
 
 const AppointmentLiveStatus = () => {
 	const { token } = useContext(AuthContext);
@@ -58,9 +60,25 @@ const AppointmentLiveStatus = () => {
 			.catch(err => ToastsStore.error('Error fetching appointments'))
     );
 
+	function claimAppointment(slotId) {
+		bookingService
+			.claimAppointment(token, slotId)
+			.then(result => {
+				if (result.success) {
+					ToastsStore.success('Appointment claimed');
+					getFutureAppointments();
+					// getClaimableAppointments();
+				} else {
+					ToastsStore.error('Error claiming appointment');
+				}
+			})
+			.catch(() => ToastsStore.error('Error claiming appointment'));
+	}
+
 	return (
 		<Grid container>
 			<Grid item xs={12}>
+				<UrgentClaimable claimAppointment={(slotId) => console.log(slotId)} appointments={appointments} />
 				<LiveStatusTable appointments={appointments} />
 				<LiveDoctorsTable doctors={doctors} />
 			</Grid>

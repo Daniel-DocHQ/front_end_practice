@@ -6,6 +6,7 @@ import RotaPastAppointmentsTable from '../../components/Tables/RotaPastAppointme
 const RotaManagement = props => {
 	const doctors = [
 		{
+			id: 1,
 			first_name: 'Bruce',
 			last_name: 'Wayne',
 			start_time: '2021-03-19T08:30:00Z',
@@ -17,6 +18,7 @@ const RotaManagement = props => {
 			status: 'online',
 		},
 		{
+			id: 2,
 			first_name: 'Mike',
 			last_name: 'Johnson',
 			start_time: '2021-03-19T08:30:00Z',
@@ -28,6 +30,7 @@ const RotaManagement = props => {
 			status: 'offline',
 		},
 		{
+			id: 3,
 			first_name: 'Taylor',
 			last_name: 'Xavier',
 			start_time: '2021-03-19T08:30:00Z',
@@ -39,6 +42,7 @@ const RotaManagement = props => {
 			status: 'offline',
 		},
 		{
+			id: 4,
 			first_name: 'Lady',
 			last_name: 'Young',
 			start_time: '2021-03-19T08:30:00Z',
@@ -50,6 +54,7 @@ const RotaManagement = props => {
 			status: 'online',
 		},
 		{
+			id: 5,
 			first_name: 'Loureen',
 			last_name: 'Ling',
 			start_time: '2021-03-19T08:30:00Z',
