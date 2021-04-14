@@ -71,7 +71,8 @@ const LiveDoctorsTable = ({ doctors }) => (
                 <TableBody>
                     {typeof doctors !== 'undefined' &&
                         typeof doctors === 'object' &&
-                        doctors.length > 0 &&
+                            doctors.length > 0 &&
+                            doctors.status == "Online" && 
                         doctors.map(doctor => {
                             return (
                                 <TableRow key={doctor.id}>
