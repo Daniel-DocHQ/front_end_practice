@@ -50,9 +50,10 @@ const MyRooms = ({ appointmentIdParam = '' }) => {
 	return (
 		<>
 			<Grid container>
-				<Grid item xs={appointmentId ? 3 : 12}>
+				<Grid item xs={3}>
 					<NextAppointmentsTable
 						user={user}
+						appointmentId={appointmentId}
 						join={(id) => setAppointmentId(id)}
 						nextAppointments={appointments}
 						holdAppointments={holdAppointments}

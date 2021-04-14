@@ -19,9 +19,11 @@ const TopNavigation = ({
 	return (
 		<div className='top-navigation-container'>
 			<div style={{ display: 'flex' }}>
-				<Link to={`/${role}/dashboard`}>
-					<i className='fa fa-home' style={{ fontSize: '36px' }}></i>
-				</Link>
+				{!!role && (
+					<Link to={`/${role}/dashboard`}>
+						<i className='fa fa-home' style={{ fontSize: '36px' }}></i>
+					</Link>
+				)}
 				<div className='practice-logo'>
 					<img src={docIcon} alt='DocHQ Icon' />
 				</div>

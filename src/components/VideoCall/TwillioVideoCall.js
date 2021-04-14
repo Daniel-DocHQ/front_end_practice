@@ -27,7 +27,8 @@ function TwillioVideoCall({
 }) {
 	const sound = useNatureSounds();
 	const { storeImage, displayCertificates } = useContext(AppointmentContext);
-	const [bookingUsers, setBookingUsers] = useState([...useBookingUsers()]);
+	const patients = useBookingUsers();
+	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
 	const [isSoundPlayable, setIsSoundPlayable] = useState(!isNurse);

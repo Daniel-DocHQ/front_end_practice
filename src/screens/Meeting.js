@@ -26,7 +26,6 @@ const Meeting = () => {
 	const [toc_accept, setToc_accept] = useState();
 	const [marketing_accept, setMarketing_accept] = useState();
 	const [isEarly, setIsEarly] = useState();
-	const [share_accept, setShare_accept] = useState();
 	const [userMedia, setUserMedia] = useState(true);
 	const [questionsVisible, setQuestionsVisible] = useState(true);
 	const [isEnglish, setIsEnglish] = useState(true);
@@ -115,20 +114,15 @@ const Meeting = () => {
 					}} />;
 					case 2: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
 						setMarketing_accept(value);
-						isEnglish ? increaseStep(2) : increaseStep(1)
-					}} />;
-					case 3: return <NationalTestDataSharingPolicies next={(value) => {
-						setShare_accept(value);
 						increaseStep(1);
 					}} />;
-					case 4: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
-					case 5: return <TestKit isEnglish={isEnglish} next={() => {
+					case 3: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
+					case 4: return <TestKit isEnglish={isEnglish} next={() => {
 						increaseStep(1);
 						bookingService
 							.updateTerms(appointmentId, {
 								toc_accept: toc_accept.toString(),
 								marketing_accept: marketing_accept.toString(),
-								share_accept: share_accept.toString(),
 							});
 					}} />;
 					default:
@@ -459,66 +453,6 @@ const DelphinDataSharingPolicies = ({ isEnglish, next }) => {
 				<DocButton
 					color={!!decision ? 'green' : 'disabled'}
 					text={isReadyEmpty ? (isEnglish ? 'Submit' : 'Speichern') : (isEnglish ? 'Next' : 'Nächster')}
-					disabled={!decision}
-					onClick={() => {
-						if (isReadyEmpty) {
-							setReady(decision);
-						} else {
-							next(decision === 'ready' ? true : false);
-						}
-					}}
-					style={{ margin: '5px' }}
-				/>
-			</div>
-		</div>
-	);
-};
-
-const NationalTestDataSharingPolicies = ({ next }) => {
-	const [ready, setReady] = useState('');
-	const [decision, setDecision] = useState();
-	const isReadyEmpty = ready === '';
-
-	return (
-		<div
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				alignItems: 'center',
-			}}
-		>
-			{isReadyEmpty ? (
-				<React.Fragment>
-					<h3 className='padding-box'>
-						Ich erlaube die Verwertung meiner Daten inklusive Testergebnis für die Corona- Warn-App des Robert-Koch-Instituts. (Optional)
-					​</h3>
-					<div className='row padding-box'>
-						<FormControl component='fieldset'>
-							<RadioGroup
-								aria-label='dataSharing'
-								name='dataSharing'
-								value={decision}
-								onChange={e => setDecision(e.target.value)}
-							>
-								<FormControlLabel value='ready' control={<Radio />} label='Daten teilen' />
-								<FormControlLabel value='notReady' control={<Radio />} label="Daten nicht teilen" />
-							</RadioGroup>
-						</FormControl>
-					</div>
-				</React.Fragment>
-			) : ( ready === 'ready' ? (
-				<h3 className='padding-box'>
-					Vielen Dank für Ihre Entscheidung. DocHQ Limited teilt Ihre Daten mit der Corona Warn App.
-				</h3>
-			) : (
-				<h3 style={{ fontWeight: 500 }} className='padding-box'>
-					Vielen Dank für Ihre Entscheidung. DocHQ Limited gibt Ihre Daten nicht an die Corona Warn App weiter.
-				</h3>
-			))}
-			<div style={{ paddingTop: '20px', textAlign: 'center' }}>
-				<DocButton
-					color={!!decision ? 'green' : 'disabled'}
-					text={isReadyEmpty ? 'Speichern' : 'Nächster'}
 					disabled={!decision}
 					onClick={() => {
 						if (isReadyEmpty) {
