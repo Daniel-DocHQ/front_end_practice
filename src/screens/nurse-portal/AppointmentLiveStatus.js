@@ -11,12 +11,25 @@ import LiveDoctorsTable from '../../components/Tables/LiveDoctorsTable';
 import UrgentClaimable from '../../components/Tables/UrgentClaimable';
 
 const AppointmentLiveStatus = () => {
-	const { token } = useContext(AuthContext);
+	const { token, logout, role, isAuthenticated } = useContext(AuthContext);
+	const [claimableAppointments, setClaimableAppointments] = useState();
 	const [appointments, setAppointments] = useState();
 	const [doctors, setDoctors] = useState();
 	let history = useHistory();
 
+	const logoutUser = () => {
+		logout();
+		history.push('/login');
+	};
+
+	if (isAuthenticated !== true && role !== 'practitioner') {
+		logoutUser();
+	}
+
 	useEffect(() => {
+		if (!claimableAppointments) {
+			getClaimableAppointments();
+		}
 		if (!appointments) {
 			getFutureAppointments();
 		}
@@ -37,7 +50,7 @@ const AppointmentLiveStatus = () => {
 				if (data.success) {
 					setDoctors(data.appointments);
 				} else if (!data.authenticated) {
-					history.push('/login');
+					logoutUser();
 				} else {
 					ToastsStore.error('Error fetching appointments');
 				}
@@ -52,7 +65,7 @@ const AppointmentLiveStatus = () => {
 				if (data.success) {
 					setAppointments(data.appointments);
 				} else if (!data.authenticated) {
-					history.push('/login');
+					logoutUser();
 				} else {
 					ToastsStore.error('Error fetching appointments');
 				}
@@ -60,14 +73,33 @@ const AppointmentLiveStatus = () => {
 			.catch(err => ToastsStore.error('Error fetching appointments'))
     );
 
+	const getClaimableAppointments = async () => {
+		await bookingService
+			.getClaimableAppointments(token)
+			.then(result => {
+				if (result.success && result.claimable_appointments) {
+					setClaimableAppointments(result.claimable_appointments);
+				} else if (!result.success) {
+					ToastsStore.error('Unable to load claimable appointments');
+				}
+			})
+			.catch(({ status }) => {
+				if (status === 401) {
+					logoutUser();
+					ToastsStore.error('Token expired');
+				} else {
+					ToastsStore.error('Unable to load claimable appointments');
+				}
+			});
+	}
+
 	function claimAppointment(slotId) {
 		bookingService
 			.claimAppointment(token, slotId)
 			.then(result => {
 				if (result.success) {
 					ToastsStore.success('Appointment claimed');
-					getFutureAppointments();
-					// getClaimableAppointments();
+					getClaimableAppointments();
 				} else {
 					ToastsStore.error('Error claiming appointment');
 				}
@@ -78,7 +110,7 @@ const AppointmentLiveStatus = () => {
 	return (
 		<Grid container>
 			<Grid item xs={12}>
-				<UrgentClaimable claimAppointment={(slotId) => console.log(slotId)} appointments={appointments} />
+				<UrgentClaimable claimAppointment={(slotId) => claimAppointment(slotId)} appointments={claimableAppointments} />
 				<LiveStatusTable appointments={appointments} />
 				<LiveDoctorsTable doctors={doctors} />
 			</Grid>

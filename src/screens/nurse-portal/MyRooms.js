@@ -1,28 +1,38 @@
-import React, { useEffect, useState, memo } from 'react';
-import { AuthContext } from '../../context/AuthContext';
-import { useContext } from 'react';
-import nurseService from '../../services/nurseService';
+import React, { useEffect, useState, useContext, memo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
-import NextAppointmentsTable from '../../components/Tables/NextAppointmentsTable';
 import { Grid } from '@material-ui/core';
 import NurseMeeting2 from './NurseMeeting2';
+import nurseService from '../../services/nurseService';
+import { AuthContext } from '../../context/AuthContext';
+import bookingService from '../../services/bookingService';
 import UrgentClaimable from '../../components/Tables/UrgentClaimable';
+import NextAppointmentsTable from '../../components/Tables/NextAppointmentsTable';
 
 const REQUEST_INTERVAL = 30 * 1000; // 30 seconds
 
 const MyRooms = ({ appointmentIdParam = '' }) => {
-    const { user, token } = useContext(AuthContext);
+    const { user, token, logout } = useContext(AuthContext);
 	const [appointments, setAppointments] = useState();
+	const [claimableAppointments, setClaimableAppointments] = useState();
     const [appointmentId, setAppointmentId] = useState(appointmentIdParam);
     const [holdAppointments, setHoldAppointments] = useState();
-
 	let history = useHistory();
 
+	const logoutUser = () => {
+		logout();
+		history.push('/login');
+	};
+
 	useEffect(() => {
+		if (!claimableAppointments) {
+			getClaimableAppointments();
+		}
+
 		const interval = setInterval(() => {
             getFutureAppointments();
 		}, REQUEST_INTERVAL);
+
 		return () => clearInterval(interval);
 	  }, []);
 
@@ -39,13 +49,47 @@ const MyRooms = ({ appointmentIdParam = '' }) => {
 					setAppointments(results.filter((item) => item.status !== 'ON_HOLD'));
                     setHoldAppointments(results.filter((item) => item.status === 'ON_HOLD'));
 				} else if (!data.authenticated) {
-					history.push('/login');
+					logoutUser();
 				} else {
 					ToastsStore.error('Error fetching appointments');
 				}
 			})
 			.catch(err => ToastsStore.error('Error fetching appointments'))
     );
+
+	const getClaimableAppointments = async () => {
+		await bookingService
+			.getClaimableAppointments(token)
+			.then(result => {
+				if (result.success && result.claimable_appointments) {
+					setClaimableAppointments(result.claimable_appointments);
+				} else if (!result.success) {
+					ToastsStore.error('Unable to load claimable appointments');
+				}
+			})
+			.catch(({ status }) => {
+				if (status === 401) {
+					logoutUser();
+					ToastsStore.error('Token expired');
+				} else {
+					ToastsStore.error('Unable to load claimable appointments');
+				}
+			});
+	}
+
+	function claimAppointment(slotId) {
+		bookingService
+			.claimAppointment(token, slotId)
+			.then(result => {
+				if (result.success) {
+					ToastsStore.success('Appointment claimed');
+					getClaimableAppointments();
+				} else {
+					ToastsStore.error('Error claiming appointment');
+				}
+			})
+			.catch(() => ToastsStore.error('Error claiming appointment'));
+	}
 
 	return (
 		<>
@@ -73,7 +117,10 @@ const MyRooms = ({ appointmentIdParam = '' }) => {
 			</Grid>
 			<Grid container>
 				<Grid item xs={6}>
-					<UrgentClaimable claimAppointment={(slotId) => console.log(slotId)} appointments={appointments} />
+					<UrgentClaimable
+						claimAppointment={(slotId) => claimAppointment(slotId)}
+						appointments={claimableAppointments}
+					/>
 				</Grid>
 			</Grid>
 		</>

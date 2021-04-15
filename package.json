@@ -18,6 +18,8 @@
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.56",
     "@material-ui/pickers": "3.2.x",
+    "@sentry/react": "^6.2.5",
+    "@sentry/tracing": "^6.2.5",
     "axios": "0.19.x",
     "date-fns": "2.14.x",
     "detectrtc": "1.4.0",

@@ -45,7 +45,6 @@ const CertificatesAaron = ({
 	const [sex, setSex] = useState('');
 	const [reject_notes, setReject_notes] = useState('');
 	const [security_checked, setSecurity_checked] = useState(false);
-	const [security_document, setSecurity_document] = useState('');
 	const [kitProvider, setKitProvider] = useState('');
 	const [result, setResult] = useState('');
 	const [passportId, setPassportId] = useState('');
@@ -68,7 +67,6 @@ const CertificatesAaron = ({
 			!!obj.dob &&
 			!!obj.sex &&
 			!!obj.security_checked &&
-			!!obj.security_document &&
 			!!obj.result &&
 			!!obj.medicalprofessional &&
 			!!obj.passportId &&
@@ -131,10 +129,7 @@ const CertificatesAaron = ({
 	}
 	// used as the form submit function, super lazy but works a charm
 	function proceed() {
-		if (
-			canCreateCertificate &&
-			(errors.length === 0 || (errors.length === 1 && errors.includes('security-document')))
-		) {
+		if ( canCreateCertificate && errors.length === 0) {
 			sendResult({
 				forename,
 				surname,
@@ -142,7 +137,6 @@ const CertificatesAaron = ({
 				dob,
 				sex,
 				security_checked,
-				security_document,
 				result,
 				passportId,
 				kitProvider,
@@ -294,28 +288,6 @@ const CertificatesAaron = ({
 				{attemptedSubmit && !security_checked && (
 					<div className='row no-margin'>
 						<p className='error'>You must confirm security has been checked</p>
-					</div>
-				)}
-				<div className='row'>
-					<FormControl variant='filled' style={{ width: '100%' }}>
-						<InputLabel id='security-document-label'>Security Document</InputLabel>
-						<Select
-							labelId='security-document-label'
-							id='security-document'
-							onChange={e => setSecurity_document(e.target.value)}
-							value={security_document}
-							required
-							updateStatus={updateErrors}
-						>
-							<MenuItem value='Passport'>Passport</MenuItem>
-							<MenuItem value='Driving Licence'>Driving Licence</MenuItem>
-							<MenuItem value='National Identification'>National Identification</MenuItem>
-						</Select>
-					</FormControl>
-				</div>
-				{attemptedSubmit && security_document === '' && (
-					<div className='row no-margin'>
-						<p className='error'>You must confirm enter a security document</p>
 					</div>
 				)}
 				<div className='row'>
