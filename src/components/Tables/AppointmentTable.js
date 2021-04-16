@@ -111,6 +111,7 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 							<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
+							<TableCell align='center' style={styles.tableText}>People</TableCell>
 							<TableCell align='center' style={styles.tableText}>Test</TableCell>
 							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 						</TableRow>
@@ -129,6 +130,9 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 										{format(appointmentStartTime, 'p')}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{get(appointment, 'booking_users.length', '')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
@@ -168,6 +172,7 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 								<TableCell />
 								<TableCell />
 								<TableCell/>
+								<TableCell />
 								<TableCell />
 							</TableRow>
 						) : null}
