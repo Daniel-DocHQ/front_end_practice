@@ -21,7 +21,7 @@
     "axios": "0.19.x",
     "date-fns": "2.14.x",
     "detectrtc": "1.4.0",
-    "dotenv": "8.2.x",
+    "dotenv": "^8.2.0",
     "dotenv-cli": "^4.0.0",
     "draft-js": "0.11.x",
     "draftjs-to-html": "0.9.x",
@@ -60,7 +60,7 @@
   },
   "proxy": "http://localhost:80",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "dotenv -e .env.development react-scripts start",
     "build:staging": "dotenv -e .env.development react-scripts build",
     "build:production": "dotenv -e .env.production react-scripts build",
     "test": "react-scripts test",
