@@ -299,7 +299,7 @@ const PatientDetails = ({
 								onClick={() => copyToClipboard(linkRef)}
 								className='tab-row-text patient-link-text'
 							>
-								https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
+								https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointmentId}
 							</Typography>
 						</Tooltip>
 					</div>
@@ -1002,7 +1002,7 @@ const AppointmentActions = ({
 								onClick={() => copyToClipboard(linkRef)}
 								className='tab-row-text patient-link-text'
 							>
-								https://myhealth.dochq.co.uk/appointment?appointmentId={appointmentId}
+								https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointmentId}
 							</Typography>
 						</Tooltip>
 					</div>

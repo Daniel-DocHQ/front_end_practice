@@ -140,11 +140,13 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 												color='green'
 												linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
 											/>
-											<div style={{ marginLeft: 10 }}>
+											<div style={{ marginLeft: 10 }}
+												onClick={() => localStorage.setItem('appointmentId', appointment.id)}
+											>
 												<LinkButton
 													text='Join'
 													color='green'
-													linkSrc={`/practitioner/live-dashboard?appointmentId=${appointment.id}`}
+													linkSrc={`/practitioner/live/my-rooms`}
 												/>
 											</div>
 											<DocButton
