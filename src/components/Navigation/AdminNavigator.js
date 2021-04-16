@@ -190,7 +190,7 @@ const AdminNavigator = ({
                     </NavLink>
                     <NavLink
                         activeClassName='active'
-                        to='/practitioner/live-dashboard'
+                        to='/practitioner/live/dashboard'
                         style={{ display: 'flex' }}
                     >
                         <ListItem button>
