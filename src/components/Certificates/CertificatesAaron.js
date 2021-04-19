@@ -68,7 +68,6 @@ const CertificatesAaron = ({
 			!!obj.sex &&
 			!!obj.security_checked &&
 			!!obj.result &&
-			!!obj.medicalprofessional &&
 			!!obj.passportId &&
 			!!obj.kitProvider &&
 			(isResultRejected ? !!obj.reject_notes : true)

@@ -1,9 +1,14 @@
 import { Grid } from '@material-ui/core';
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import DocButton from '../DocButton/DocButton';
 import './IncomingVideo.scss';
 
-const InVid = ({ takePhoto, participant, storeImage }) => {
+const InVid = ({
+	takePhoto,
+	participant,
+	storeImage,
+	currentBookingUserName,
+}) => {
 	const containerRef = useRef();
 	const canvasRef = useRef();
 	const [isHidden, setIsHidden] = useState(false);
@@ -109,7 +114,7 @@ const InVid = ({ takePhoto, participant, storeImage }) => {
 				</div>
 				{!!bufferPhoto && (
 					<div className="captured-image-box">
-						<p className="captured-text">Captured Image:</p>
+						<p className="captured-text">{currentBookingUserName} - Captured Image:</p>
 						<Grid container justify="space-between" spacing={2}>
 							<Grid item xs={6}>
 								<img className="captured-img" src={bufferPhoto} />
