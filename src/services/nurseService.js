@@ -339,19 +339,17 @@ const nurseSvc = {
 								success: true,
 								appointments: response.data,
 							});
-						} else if (response.status === 200 && response.data === null) {
+						} else  {
 							resolve({
 								success: true,
 								appointments: [],
 							});
-						} else {
-							reject({
-								success: false,
-								error: 'Unable to retrieve information.',
-							});
 						}
 					})
-					.catch(err => console.error(err));
+					.catch(err => {
+						console.error(err)
+						resolve({success: true, appointment: []})
+					});
 			} else {
 				// return unauthorized
 				resolve({ success: false, authenticated: false });

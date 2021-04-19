@@ -50,7 +50,7 @@ const UrgentClaimable = ({ claimAppointment, appointments }) => {
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
-							<TableCell align='center' style={styles.tableText}>Patient</TableCell>
+							<TableCell align='center' style={styles.tableText}>Patients</TableCell>
 							<TableCell align='center' style={styles.tableText}>Test</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
 							<TableCell align='right' style={styles.tableText}>Actions</TableCell>

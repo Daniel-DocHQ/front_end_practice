@@ -145,8 +145,8 @@ const Meeting = () => {
 				</React.Fragment>
 			) : (
 				<Box
+					token="token"
 					isNurse={false}
-					token={' '}
 					isEnglish={isEnglish}
 					videoCallToken={videoCallToken}
 					setVideoCallToken={setVideoCallToken}

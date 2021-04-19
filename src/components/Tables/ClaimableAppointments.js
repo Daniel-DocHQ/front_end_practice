@@ -51,6 +51,7 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 						<TableRow>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
+							<TableCell align='center' style={styles.tableText}>People</TableCell>
 							<TableCell align='center' style={styles.tableText}>Test</TableCell>
 							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 						</TableRow>
@@ -66,6 +67,9 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 										{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{get(appointment, 'booking_users.length', '')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
@@ -84,6 +88,7 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 								<TableCell style={styles.tableText}>
 									<p>No appointments to display</p>
 								</TableCell>
+								<TableCell/>
 								<TableCell/>
 								<TableCell/>
 								<TableCell/>

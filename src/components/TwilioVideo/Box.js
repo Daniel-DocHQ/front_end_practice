@@ -21,8 +21,9 @@ const Box = ({
 }) => {
 	const params = getURLParams(window.location.href);
 	const {
-		appointmentId = params['appointmentId'],
+		appointmentId: contextAppointmentId,
 	} = useContext(AppointmentContext);
+	const appointmentId = contextAppointmentId || params['appointmentId'];
 	const handleSubmit = useCallback(
 		async event => {
 			event.preventDefault();

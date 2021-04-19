@@ -111,6 +111,7 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 							<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
+							<TableCell align='center' style={styles.tableText}>People</TableCell>
 							<TableCell align='center' style={styles.tableText}>Test</TableCell>
 							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 						</TableRow>
@@ -131,6 +132,9 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 										{format(appointmentStartTime, 'p')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{get(appointment, 'booking_users.length', '')}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
 									<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
@@ -140,11 +144,13 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 												color='green'
 												linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
 											/>
-											<div style={{ marginLeft: 10 }}>
+											<div style={{ marginLeft: 10 }}
+												onClick={() => localStorage.setItem('appointmentId', appointment.id)}
+											>
 												<LinkButton
 													text='Join'
 													color='green'
-													linkSrc={`/practitioner/live-dashboard?appointmentId=${appointment.id}`}
+													linkSrc={`/practitioner/live/my-rooms`}
 												/>
 											</div>
 											<DocButton
@@ -166,6 +172,7 @@ const AppointmentTable = ({releaseAppointment, appointments = [] }) => {
 								<TableCell />
 								<TableCell />
 								<TableCell/>
+								<TableCell />
 								<TableCell />
 							</TableRow>
 						) : null}

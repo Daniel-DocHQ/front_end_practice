@@ -156,6 +156,7 @@ const TodayDoctors = ({ doctors }) => (
                             <TableCell />
                             <TableCell />
                             <TableCell />
+                            <TableCell />
                         </TableRow>
                     ) : null}
                 </TableBody>

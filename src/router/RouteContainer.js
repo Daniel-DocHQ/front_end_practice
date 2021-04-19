@@ -34,6 +34,7 @@ import AppointmentView from '../components/AppointmentView/AppointmentView';
 import ShiftDetails from '../screens/nurse-portal/ShiftDetails';
 import TermsConditionsDe from '../screens/TermsConditionsDe';
 import TermsConditionsEn from '../screens/TermsConditionsEn';
+import MyRooms from '../screens/nurse-portal/MyRooms';
 
 const { isSupported } = require('twilio-video');
 
@@ -177,9 +178,14 @@ const RouteHandler = () => {
 					<NurseDashboard {...ctx} />
 				</Layout>
 			</PrivateRoute>
-			<PrivateRoute path='/practitioner/live-dashboard' requiredRole='practitioner'>
+			<PrivateRoute path='/practitioner/live/dashboard' requiredRole='practitioner'>
 				<Layout title='Live Dashboard'>
 					<LiveDashboard {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/practitioner/live/my-rooms' requiredRole='practitioner'>
+				<Layout title='Live Dashboard'>
+					<MyRooms {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/rota' requiredRole='practitioner'>

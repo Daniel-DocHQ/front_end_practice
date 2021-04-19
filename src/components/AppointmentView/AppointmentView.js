@@ -180,7 +180,7 @@ const PatientInfo = ({ patient }) => {
 };
 
 const AppointmentNotes = ({ notes }) => {
-    const filteredNotes = notes.filter(({ content }) => !content.includes('Status Change'));
+    const filteredNotes = notes.filter(({ content }) => !content.includes('Status Change') && !content.includes('GDPR Terms Change:'));
     const notesLength = filteredNotes.length;
 
     return !!notesLength && (
