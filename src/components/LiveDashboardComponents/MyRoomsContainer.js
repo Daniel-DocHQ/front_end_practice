@@ -99,7 +99,7 @@ const MyRoomsContainer = () => {
 						user={user}
 						appointmentId={appointmentId}
 						join={(id) => {
-							localStorage.setItem('appointmentId', appointmentId);
+							localStorage.setItem('appointmentId', id);
 							setAppointmentId(id);
 						}}
 						nextAppointments={appointments}
