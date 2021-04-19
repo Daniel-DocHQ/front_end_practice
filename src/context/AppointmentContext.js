@@ -63,9 +63,13 @@ export default class AppointmentContextProvider extends Component {
 						});
 					} else {
 						ToastsStore.error(`Cannot find appointment details`);
+						localStorage.removeItem('appointmentId');
 					}
 				})
-				.catch(err => ToastsStore.error(`Cannot find appointment details`));
+				.catch(err => {
+					ToastsStore.error(`Cannot find appointment details`);
+					localStorage.removeItem('appointmentId');
+				});
 		}
 		function storeImage(img) {
 			this.setState({ img: [...this.state.img, img] });

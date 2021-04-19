@@ -939,6 +939,13 @@ const AppointmentActions = ({
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
 
+	useEffect(() => {
+		if (notesStatus && notesStatus.severity === 'success') {
+			const timer = setTimeout(() => setNotesStatus(), 3000);
+			return () => clearTimeout(timer);
+		}
+	  }, [notesStatus]);
+
 	return (
 		<div className='tab-container'>
 			<div className='tab-content'>
