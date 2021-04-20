@@ -68,7 +68,6 @@ const CertificatesAaron = ({
 			!!obj.sex &&
 			!!obj.security_checked &&
 			!!obj.result &&
-			!!obj.medicalprofessional &&
 			!!obj.passportId &&
 			!!obj.kitProvider &&
 			(isResultRejected ? !!obj.reject_notes : true)
@@ -129,19 +128,20 @@ const CertificatesAaron = ({
 	}
 	// used as the form submit function, super lazy but works a charm
 	function proceed() {
-		if ( canCreateCertificate && errors.length === 0) {
-			sendResult({
-				forename,
-				surname,
-				email,
-				dob,
-				sex,
-				security_checked,
-				result,
-				passportId,
-				kitProvider,
-				...(isResultRejected && { reject_notes }),
-			});
+		const body = {
+			forename,
+			surname,
+			email,
+			dob,
+			sex,
+			security_checked,
+			result,
+			passportId,
+			kitProvider,
+			...(isResultRejected && { reject_notes }),
+		};
+		if (canCreateCertificate && isValid(body) && errors.length === 0) {
+			sendResult(body);
 		} else {
 			setAttemptedSubmit(true);
 		}
@@ -294,7 +294,7 @@ const CertificatesAaron = ({
 					<TextInputElement
 						value={passportId}
 						id='passport-number'
-						label='Passport number'
+						label='ID document number'
 						onChange={setPassportId}
 						inputProps={{ minLength: '5' }}
 						required

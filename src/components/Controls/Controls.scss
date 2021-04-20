@@ -1,12 +1,5 @@
 .top-container {
-  top: 20px;
-  width: 200px;
-  max-width: 40%;
   height: 100px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
   transition: all linear 0.5s;
   position: absolute;
   p {
@@ -18,13 +11,15 @@
 }
 .photo-box {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  height: 100%;
   .text-box {
     background-color: rgba(239, 239, 240, 0.6);
     border-radius: 25px;
     align-items: center;
     display: flex;
-    max-width: 165px;
+    height: 50%;
     margin-right: 10px;
     p {
       margin: 0;
@@ -34,6 +29,14 @@
 }
 .right {
   right: 30px;
+}
+.control-container {
+  width: 200px;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
 }
 .control-item {
   width: 50px;
@@ -58,7 +61,7 @@
   justify-content: space-around;
   transition: all linear 0.5s;
   position: absolute;
-  bottom: 20px;
+  bottom: 0px;
 }
   .photo-controller {
     display: flex;

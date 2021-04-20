@@ -205,10 +205,11 @@ function TwillioVideoCall({
 						{participants.length !== 0 &&
 							participants.map(participant => (
 								<InVid
+									takePhoto={takePhoto}
 									participant={participant}
 									updateImageData={updateImage}
-									takePhoto={takePhoto}
 									storeImage={uploadImageForUser}
+									currentBookingUserName={currentBookingUserName}
 								/>
 							))}
 					</React.Fragment>
