@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form } from 'formik';
-import './BookingEngine.scss';
 import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import Step0 from './Step0';
 import Step1 from './Step1';
@@ -10,10 +9,18 @@ import Step4 from './Step4';
 import Step5 from './Step5';
 import DocButton from '../DocButton/DocButton';
 import LinkButton from '../DocButton/LinkButton';
+import './BookingEngine.scss';
 
-const BookingEngineForm = ({ activeStep, handleBack, steps, ...restProps }) => {
+const BookingEngineForm = ({
+    passengers,
+    activePassenger,
+    activeStep,
+    handleBack,
+    steps,
+    ...restProps
+}) => {
     const isLastStep = activeStep === steps.length - 1;
-	function renderSteps() {
+	const renderSteps = () => {
 		switch (activeStep) {
             case 0:
 				return (
@@ -26,7 +33,7 @@ const BookingEngineForm = ({ activeStep, handleBack, steps, ...restProps }) => {
 
 			case 2:
 				return (
-					<Step2 />
+					<Step2 passengers={passengers} activePassenger={activePassenger} />
 				);
 			case 3:
 				return (
@@ -34,20 +41,21 @@ const BookingEngineForm = ({ activeStep, handleBack, steps, ...restProps }) => {
 				);
             case 4:
 				return (
-					<Step4 />
+					<Step4 passengers={passengers} />
 				);
             case 5:
 				return (
 					<Step5 />
 				);
-		}
-	}
+		};
+	};
+
 	return (
         <Form {...restProps}>
             <Stepper activeStep={activeStep} orientation='vertical'>
                 {steps.map((label, i) => (
                     <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
+                        <StepLabel>{label}{(activeStep === 2 && i == 2) && ` ${activePassenger + 1}`}</StepLabel>
                         <StepContent>
                             {renderSteps()}
                             <div className='row flex-start'>

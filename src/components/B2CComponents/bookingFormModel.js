@@ -70,6 +70,7 @@ const bookingFormModel = {
             name: 'dateOfBirth',
             label: 'Date Of Birth',
             id: 'date-of-birth',
+            placeholder: 'dd/mm/yyyy',
             type: 'text',
             required: true,
         },

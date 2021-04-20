@@ -2,8 +2,8 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
 
-const Step4 = () => {
-    const { values: { appointmentDate, selectedSlot, firstName, lastName } } = useFormikContext();
+const Step4 = ({ passengers }) => {
+    const { values: { appointmentDate, selectedSlot } } = useFormikContext();
 
 	return (
 		<React.Fragment>
@@ -19,12 +19,61 @@ const Step4 = () => {
 					{formatTimeSlot(selectedSlot)} - {formatTimeSlot(selectedSlot)}
 				</p>
 			</div>
-            <div className='row no-margin'>
-				<p>
-					<strong>Passenger Name:&nbsp;</strong>
-					{firstName} {lastName}
-				</p>
-			</div>
+            {passengers.map(({
+				firstName,
+				lastName,
+				email,
+				phone,
+				dateOfBirth,
+				ethnicity,
+				sex,
+				passportNumber,
+			}, i) => (
+				<>
+					<div className='row no-margin'>
+						<p>
+							<strong>Passenger Name {i + 1}:&nbsp;</strong>
+							{firstName} {lastName}
+						</p>
+					</div>
+					<div className='row no-margin'>
+						<p>
+							<strong>Email:&nbsp;</strong>
+							{email}
+						</p>
+					</div>
+					<div className='row no-margin'>
+						<p>
+							<strong>Phone:&nbsp;</strong>
+							{phone}
+						</p>
+					</div>
+					<div className='row no-margin'>
+						<p>
+							<strong>Date Of Birth:&nbsp;</strong>
+							{dateOfBirth}
+						</p>
+					</div>
+					<div className='row no-margin'>
+						<p>
+							<strong>Ethnicity:&nbsp;</strong>
+							{ethnicity}
+						</p>
+					</div>
+					<div className='row no-margin'>
+						<p>
+							<strong>Sex:&nbsp;</strong>
+							{sex}
+						</p>
+					</div>
+					<div className='row no-margin'>
+						<p>
+							<strong>Passport number:&nbsp;</strong>
+							{passportNumber}
+						</p>
+					</div>
+				</>
+			))}
 		</React.Fragment>
 	);
 };
