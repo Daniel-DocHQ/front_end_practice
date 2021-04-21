@@ -129,6 +129,15 @@ export default class AppointmentContextProvider extends Component {
 		}
 		if (!!this.props.token) this.state.token = this.props.token;
 	}
+	componentDidUpdate(prevProps) {
+		// Typical usage (don't forget to compare props):
+		if (this.props.appointmentId !== prevProps.appointmentId) {
+			const appointmentId = this.props.appointmentId;
+			if (!!appointmentId && !!this.props.token) {
+				this.getAppointmentDetails(appointmentId, this.props.token);
+			}
+		}
+	  }
 	componentWillUnmount() {
 		this.clearState();
 	}

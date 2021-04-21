@@ -17,6 +17,7 @@ const NurseDashboard = props => {
 	const [gotPastAppointments, setGotPastAppointments] = useState(false);
 	const [gotClaimable, setGotClaimable] = useState(false);
 	const [pastAppointments, setPastAppointments] = useState();
+	const [ongoingAppointmentId, setOngoingAppointmentId] = useState();
 	const [appointments, setAppointments] = useState();
 	const [claimableAppointments, setClaimableAppointments] = useState();
 	const [todayDoctors, setTodayDoctors] = useState();
@@ -125,12 +126,28 @@ const NurseDashboard = props => {
 			.catch(() => ToastsStore.error('Error releasing appointment'));
 	}
 
+	const getPractitionerInfo = () => {
+		nurseService
+			.getPractitionerInformation(props.token)
+			.then(data => {
+				if (data.success) {
+					setOngoingAppointmentId(data.appointments.last_atteneded_appointment || localStorage.getItem('appointmentId') || '');
+				} else if (!data.authenticated) {
+					logoutUser();
+				} else {
+					ToastsStore.error('Error fetching practitioner information');
+				}
+			})
+			.catch(err => ToastsStore.error('Error fetching practitioner information'))
+	}
+
 	const getAllInfo = async () => {
 		await setIsLoading(true);
 		await getFutureAppointments();
 		await getPastAppointments();
 		await getTodayDoctors();
 		await getClaimableAppointments();
+		await getPractitionerInfo();
 		await setIsLoading(false);
 	};
 
@@ -166,6 +183,7 @@ const NurseDashboard = props => {
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<AppointmentTable
+					ongoingAppointmentId={ongoingAppointmentId}
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}
 				/>

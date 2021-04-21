@@ -113,7 +113,7 @@ const CertificatesAaron = ({
 			setEmail(patient_data.email);
 		}
 		if (patient_data.sex) {
-			setSex(patient_data.sex);
+			setSex(patient_data.sex.toLowerCase());
 		}
 		if (patient_data.metadata.passportId) {
 			setPassportId(patient_data.metadata.passportId)

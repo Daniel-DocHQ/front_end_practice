@@ -48,10 +48,11 @@ const NextAppointmentsTable = ({
     const currentTime = new Date().getTime();
     const { filteredAppointments: appointmentToFilter } = useDateFilter(nextAppointments);
     const filteredAppointments = appointmentToFilter.filter(({ id }) => id !== appointmentId).sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime());
+    const filteredHoldAppointments = holdAppointments.filter(({ id }) => id !== appointmentId);
 
     return (
         <div className='doc-container' style={{ justifyContent: 'unset' }}>
-            {!!holdAppointments.length && (
+            {!!filteredHoldAppointments.length && (
                 <div style={{ paddingBottom: 70 }}>
                     <div style={styles.mainContainer}>
                         <h2>Waiting Rooms</h2>
@@ -72,10 +73,10 @@ const NextAppointmentsTable = ({
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {typeof holdAppointments !== 'undefined' &&
-                                    typeof holdAppointments === 'object' &&
-                                    holdAppointments.length > 0 &&
-                                    holdAppointments.map(appointment => {
+                                {typeof filteredHoldAppointments !== 'undefined' &&
+                                    typeof filteredHoldAppointments === 'object' &&
+                                    filteredHoldAppointments.length > 0 &&
+                                    filteredHoldAppointments.map(appointment => {
                                         const statusLastUpdated = get(appointment, 'status_last_updated', '');
 
                                         return (

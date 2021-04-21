@@ -356,5 +356,36 @@ const nurseSvc = {
 			}
 		});
 	},
+	getPractitionerInformation(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/practitioner/me`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								appointments: response.data,
+							});
+						} else  {
+							resolve({
+								success: true,
+								appointments: [],
+							});
+						}
+					})
+					.catch(err => {
+						console.error(err)
+						resolve({success: true, appointment: []})
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 };
 export default nurseSvc;

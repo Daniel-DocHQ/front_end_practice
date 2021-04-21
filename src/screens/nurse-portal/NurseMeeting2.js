@@ -92,6 +92,7 @@ const TabContainer = ({
 		test_type,
 		appointmentId,
 		status_changes,
+		toggleDisplayCertificates,
 	} = useContext(AppointmentContext);
 	const [value, setValue] = React.useState(0);
 	const patients = useBookingUsers();
@@ -108,9 +109,10 @@ const TabContainer = ({
 		if (isJoined && value === 0 && test_type === TEST_TYPES.pcr) {
 			increaseStep();
 		}
-		// if (get(status_changes, `${[status_changes.length - 1]}.changed_to`) === 'ON_HOLD' && test_type === TEST_TYPES.pcr) {
-		// 	setValue(1);
-		// }
+		if (get(status_changes, `${[status_changes.length - 1]}.changed_to`) === 'ON_HOLD' && test_type === TEST_TYPES.antigen) {
+			setValue(1);
+			toggleDisplayCertificates();
+		}
 	}, [isJoined]);
 
 	return (
@@ -807,7 +809,7 @@ const PatientIdVerification = ({
 	const [passportId, setPassportId] = useState(get(currentPatient, 'metadata.passportId', ''));
 	const currentPatientName = `${forename} ${surname}`;
 	const showPatientName = isTuiType && patients && patients.length > 1;
-	const isValid = !!security_checked && !!security_document && (isTuiType ? !!passportId : true);
+	const isValid = !!security_checked && (isTuiType ? !!passportId : !!security_document);
 
     function proceed() {
 		if (isValid) {
@@ -818,7 +820,6 @@ const PatientIdVerification = ({
 					surname,
 					passportId,
 					security_checked,
-					security_document,
 				} : {
 					result: '',
 					forename,
@@ -871,32 +872,34 @@ const PatientIdVerification = ({
 								labelComponent='Customer security check completed'
 							/>
 						</div>
-						<div className='row'>
-							<FormControl variant='filled' style={{ width: '100%' }}>
-								<InputLabel id='security-document-label'>{showPatientName && currentPatientName} Security Document</InputLabel>
-								<Select
-									labelId='security-document-label'
-									id='security-document'
-									onChange={e => setSecurity_document(e.target.value)}
-									value={security_document}
-									required
-								>
-									<MenuItem value='Passport'>Passport</MenuItem>
-									<MenuItem value='Driving Licence'>Driving Licence</MenuItem>
-									<MenuItem value='National Identification'>National Identification</MenuItem>
-								</Select>
-							</FormControl>
-						</div>
-						{(isTuiType && !!security_document && security_checked) && (
+						{!isTuiType && (
+							<div className='row'>
+								<FormControl variant='filled' style={{ width: '100%' }}>
+									<InputLabel id='security-document-label'>{showPatientName && currentPatientName} Security Document</InputLabel>
+									<Select
+										labelId='security-document-label'
+										id='security-document'
+										onChange={e => setSecurity_document(e.target.value)}
+										value={security_document}
+										required
+									>
+										<MenuItem value='Passport'>Passport</MenuItem>
+										<MenuItem value='Driving Licence'>Driving Licence</MenuItem>
+										<MenuItem value='National Identification'>National Identification</MenuItem>
+									</Select>
+								</FormControl>
+							</div>
+						)}
+						{(isTuiType && security_checked) && (
 							<>
 								<div className='row space-between padding-top-box'>
-									<h3 className='no-margin'>{showPatientName && currentPatientName} Passport Number</h3>
+									<h3 className='no-margin'>{showPatientName && currentPatientName} Document ID Number</h3>
 								</div>
 								<div className='row'>
 									<TextInputElement
 										id='passport-id'
 										value={passportId}
-										placeholder='Passport ID'
+										placeholder='Document ID Number'
 										onChange={setPassportId}
 										required
 									/>

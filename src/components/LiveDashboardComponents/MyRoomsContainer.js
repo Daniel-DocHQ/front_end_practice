@@ -15,9 +15,14 @@ const MyRoomsContainer = () => {
     const { user, token, logout } = useContext(AuthContext);
 	const [appointments, setAppointments] = useState();
 	const [claimableAppointments, setClaimableAppointments] = useState();
-    const [appointmentId, setAppointmentId] = useState(localStorage.getItem('appointmentId') || '');
+    const [appointmentId, setAppointmentId] = useState();
     const [holdAppointments, setHoldAppointments] = useState();
 	let history = useHistory();
+
+	const handleSetAppointmentId = (id) => {
+		localStorage.setItem('appointmentId', id);
+		setAppointmentId(id);
+	};
 
 	const logoutUser = () => {
 		logout();
@@ -27,6 +32,10 @@ const MyRoomsContainer = () => {
 	useEffect(() => {
 		if (!claimableAppointments) {
 			getClaimableAppointments();
+		}
+
+		if (!appointmentId) {
+			getPractitionerInfo();
 		}
 
 		const interval = setInterval(() => {
@@ -39,6 +48,21 @@ const MyRoomsContainer = () => {
 	useEffect(() => {
 		getFutureAppointments();
 	}, [appointmentId]);
+
+	const getPractitionerInfo = () => {
+		nurseService
+			.getPractitionerInformation(token)
+			.then(data => {
+				if (data.success) {
+					handleSetAppointmentId(data.appointments.last_atteneded_appointment || localStorage.getItem('appointmentId') || '');
+				} else if (!data.authenticated) {
+					logoutUser();
+				} else {
+					ToastsStore.error('Error fetching practitioner information');
+				}
+			})
+			.catch(err => ToastsStore.error('Error fetching practitioner information'))
+	}
 
 	const getFutureAppointments = () => (
 		nurseService
@@ -98,10 +122,7 @@ const MyRoomsContainer = () => {
 					<NextAppointmentsTable
 						user={user}
 						appointmentId={appointmentId}
-						join={(id) => {
-							localStorage.setItem('appointmentId', id);
-							setAppointmentId(id);
-						}}
+						join={handleSetAppointmentId}
 						nextAppointments={appointments}
 						holdAppointments={holdAppointments}
 					/>
