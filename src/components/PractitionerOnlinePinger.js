@@ -1,4 +1,5 @@
 import React, { useEffect, useContext } from 'react';
+import { get } from 'lodash';
 import nurseService from '../services/nurseService';
 import { AuthContext } from '../context/AuthContext';
 import REQUEST_INTERVAL from '../helpers/requestInterval';
@@ -14,7 +15,8 @@ const PractitionerOnlinePinger = () => {
 		const interval = setInterval(() => {
             if (isPractitioner) {
                 nurseService.updateLastOnline(token)
-					.catch(({ response: { status }}) => {
+					.catch((data) => {
+						const status = get(data, 'response.status', '');
 						if (status === 401) {
 							logout();
 						}
