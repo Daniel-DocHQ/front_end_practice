@@ -9,6 +9,9 @@ import {
 	Select,
 	MenuItem,
 } from '@material-ui/core';
+import { get } from 'lodash';
+import { useDebounce } from 'react-use';
+import moment from 'moment';
 import { Alert } from '@material-ui/lab';
 import { ToastsStore } from 'react-toasts';
 import React, { useEffect, useState, useContext } from 'react';
@@ -97,33 +100,40 @@ const CertificatesAaron = ({
 	}
 	// populate with patient_date provided
 	function populate() {
-		if(patient_data.id) {
+		const firstName = get(patient_data, 'metadata.forename', '') || patient_data.first_name;
+		const lastName = get(patient_data, 'metadata.surname', '') || patient_data.last_name;
+		const kitProvider = get(patient_data, 'metadata.kitProvider', '') || preselectedKidProvider;
+		const email = get(patient_data, 'metadata.email', '') || patient_data.email;
+		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
+		const dob = get(patient_data, 'metadata.dob', '') || patient_data.dob;
+		const securityChecked = get(patient_data, 'metadata.security_checked', false);
+
+		if (patient_data.id) {
 			setPatientId(patient_data.id)
 		}
-		if (patient_data.first_name) {
-			setForename(patient_data.first_name);
+		if (firstName) {
+			setForename(firstName);
 		}
-		if (patient_data.last_name) {
-			setSurname(patient_data.last_name);
+		if (securityChecked) {
+			setSecurity_checked(securityChecked);
 		}
-		if (!!preselectedKidProvider) {
-			setKitProvider(preselectedKidProvider);
+		if (lastName) {
+			setSurname(lastName);
 		}
-		if (patient_data.email) {
-			setEmail(patient_data.email);
+		if (!!kitProvider) {
+			setKitProvider(kitProvider);
 		}
-		if (patient_data.sex) {
-			setSex(patient_data.sex.toLowerCase());
+		if (email) {
+			setEmail(email);
+		}
+		if (sex) {
+			setSex(sex.toLowerCase());
 		}
 		if (patient_data.metadata.passportId) {
 			setPassportId(patient_data.metadata.passportId)
 		}
-		if (patient_data.date_of_birth) {
-			setDob(patient_data.date_of_birth);
-		} else if (patient_data.dateOfBirth) {
-			setDob(patient_data.dateOfBirth);
-		} else if (patient_data.dob) {
-			setDob(patient_data.dob);
+		if (dob) {
+			setDob(dob);
 		}
 	}
 	// used as the form submit function, super lazy but works a charm
@@ -146,12 +156,25 @@ const CertificatesAaron = ({
 			setAttemptedSubmit(true);
 		}
 	}
+	const updatePatientInfo = (body) => {
+		bookingService
+			.sendResult(token, appointmentId, body, patientId)
+			.then(result => {
+				if (result.success) {
+				} else {
+					ToastsStore.error('Failed to update patient info');
+				}
+			})
+			.catch(() => {
+				ToastsStore.error('Failed to update patient info');
+			});
+	}
 	function sendResult(formData) {
 		const body = formData;
 		body.medicalprofessional = (!!user && !!user.first_name && !!user.last_name) ? `${user.first_name} ${user.last_name}` : '';
-		let currentDate = new Date();
-		body.date_sampled = minus15mins(currentDate).toISOString();
-		body.date_reported = currentDate.toISOString();
+		let currentDate = moment();
+		body.date_sampled = currentDate.subtract(15, "minutes").format();
+		body.date_reported = currentDate.format();
 		body.security_checked = 'true';
 
 		if (isValid(body)) {
@@ -186,6 +209,23 @@ const CertificatesAaron = ({
 				});
 		}
 	}
+
+	useDebounce(() => {
+		if (!status && populated) {
+			const body = {
+				forename,
+				surname,
+				email,
+				dob,
+				sex,
+				security_checked,
+				result,
+				passportId,
+				kitProvider,
+			};
+			updatePatientInfo(body);
+		}
+	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId])
 
 	return ((!!patient_data && populated) || (!patient_data && !populated)) &&  (
 		<React.Fragment>

@@ -41,6 +41,7 @@
     "react-router-dom": "5.2.x",
     "react-scripts": "3.4.x",
     "react-toasts": "3.0.x",
+    "react-use": "^17.2.3",
     "simple-peer": "9.7.x",
     "socket.io": "2.3.x",
     "socket.io-client": "2.3.x",
