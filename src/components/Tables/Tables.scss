@@ -44,3 +44,10 @@ tr.MuiTableRow-root:nth-of-type(even) {
 .text-status-online {
 	color: var(--doc-green) !important;
 }
+.upload-file-input {
+	height: unset;
+	text-align: center;
+	& input[type=file] {
+		display: none;
+	}
+}

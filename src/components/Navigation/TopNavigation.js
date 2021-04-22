@@ -20,8 +20,8 @@ const TopNavigation = ({
 		<div className='top-navigation-container'>
 			<div style={{ display: 'flex' }}>
 				{!!role && (
-					<Link to={`/${role}/dashboard`}>
-						<i className='fa fa-home' style={{ fontSize: '36px' }}></i>
+					<Link to={`/${typeof role === 'object' ? role.name : role}/dashboard`}>
+						<i className='fa fa-home' style={{ fontSize: '36px', marginRight: 20 }}></i>
 					</Link>
 				)}
 				<div className='practice-logo'>

@@ -143,6 +143,9 @@ const PatientInfo = ({ patient }) => {
     const invalidNotes = get(patient, 'metadata.invalid_notes', '');
     const sampleTaken = get(patient, 'metadata.sampleTaken', '');
     const kitProvider = get(patient, 'metadata.kitProvider', '');
+    const kitId = get(patient, 'metadata.kitId', '');
+    const samplingDate = get(patient, 'metadata.date_sampled', '');
+    const reportedDate = get(patient, 'metadata.date_reported', '');
 
     return (
         <Box>
@@ -153,7 +156,10 @@ const PatientInfo = ({ patient }) => {
             {dob && (<Typography className="row-text"><b>Date of Birth: </b>{format(new Date(dob), 'dd-MM-yyyy')}</Typography>)}
             {ethnicity && (<Typography className="row-text"><b>Ethnicity: </b>{ethnicity}</Typography>)}
             {sex && (<Typography className="row-text"><b>Sex: </b>{sex}</Typography>)}
-            {passportNumber && (<Typography className="row-text"><b>Passport Number: </b>{passportNumber}</Typography>)}
+            {passportNumber && (<Typography className="row-text"><b>ID Document Number: </b>{passportNumber}</Typography>)}
+            {kitId && (<Typography className="row-text"><b>Kit ID: </b>{kitId}</Typography>)}
+            {samplingDate && (<Typography className="row-text"><b>Sampling Date and Time: </b>{new Date(samplingDate).toUTCString()}</Typography>)}
+            {reportedDate && (<Typography className="row-text"><b>Reported Date and Time: </b>{new Date(reportedDate).toUTCString()}</Typography>)}
             <Box pt={2}>
                 {kitProvider && (
                     <Typography className="row-text">

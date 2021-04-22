@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback, useContext } from 'react';
 import { get } from 'lodash';
+import moment from 'moment';
 import AppointmentContextProvider, {
 	AppointmentContext,
 	useAppointmentDetails,
@@ -382,6 +383,8 @@ const SubmitPatientResult = ({
 
     function sendResult(formData, isSampleTaken) {
 		const body = formData;
+		let currentDate = moment();
+		body.date_sampled = currentDate.format();
 		bookingService.sendResult(token, appointmentId, body, currentPatient.id)
 			.then(result => {
 				if (isSampleTaken) {
