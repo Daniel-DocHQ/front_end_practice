@@ -26,7 +26,7 @@ const Meeting = () => {
 	const [toc_accept, setToc_accept] = useState();
 	const [marketing_accept, setMarketing_accept] = useState();
 	const [isEarly, setIsEarly] = useState();
-	const [userMedia, setUserMedia] = useState(true);
+	const [userMedia, setUserMedia] = useState(false);
 	const [questionsVisible, setQuestionsVisible] = useState(true);
 	const [isEnglish, setIsEnglish] = useState(true);
 	const [isVista, setIsVista] = useState(false);
@@ -57,15 +57,17 @@ const Meeting = () => {
 	}, []);
 
 	useEffect(() => {
+		setIsLoading(true);
 		if (isEarly === false) {
 			navigator.getUserMedia({
-				video: true,
-				audio: true
+					video: true,
+					audio: true,
 				},
 				() => setUserMedia(true),
 				() => setUserMedia(false),
 			);
 		}
+		setIsLoading(false);
 	}, [isEarly]);
 
 	const increaseStep = (value) => setStep(step + value);
