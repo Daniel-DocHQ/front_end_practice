@@ -135,7 +135,7 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 										{get(appointment, 'booking_users.length', '')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-										{get(appointment, 'test_type', '')}
+										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
 									<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
 										<LinkButton

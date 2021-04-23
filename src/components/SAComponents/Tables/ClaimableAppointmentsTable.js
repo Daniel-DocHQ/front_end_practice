@@ -34,10 +34,10 @@ const styles = {
 	},
 };
 
-const CancelledAppointmentsTable = ({ appointments = [] }) => (
+const ClaimableAppointmentsTable = ({ appointments = [] }) => (
 	<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 		<div style={styles.mainContainer}>
-			<h2>Cancelled Appointments</h2>
+			<h2>Claimable Appointments</h2>
 		</div>
 		<TableContainer
 			style={{
@@ -47,11 +47,10 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => (
 			<Table stickyHeader>
 				<TableHead>
 					<TableRow>
-						<TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
 						<TableCell align='center' style={styles.tableText}>Date</TableCell>
 						<TableCell align='center' style={styles.tableText}>Time</TableCell>
-						<TableCell align='center' style={styles.tableText}>People</TableCell>
-						<TableCell align='center' style={styles.tableText}>Test</TableCell>
+                        <TableCell align='center' style={styles.tableText}>People</TableCell>
+                        <TableCell align='center' style={styles.tableText}>Test</TableCell>
 						<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 					</TableRow>
 				</TableHead>
@@ -61,26 +60,22 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => (
 
 						return (
 							<TableRow key={appointment.id}>
-								<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
-									{get(appointment, 'user_name', '')}
-								</TableCell>
 								<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 									{appointmentStartTime.toLocaleDateString()}
 								</TableCell>
 								<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 									{format(appointmentStartTime, 'p')}
 								</TableCell>
-								<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-									{get(appointment, 'booking_users.length', '')}
-								</TableCell>
-								<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-									{get(appointment, 'booking_user.metadata.test_type', '')}
-								</TableCell>
+                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    {get(appointment, 'booking_users.length', '')}
+                                </TableCell>
+                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    {get(appointment, 'booking_user.metadata.test_type', '')}
+                                </TableCell>
 								<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
 									<LinkButton
-										text='View'
-										color='green'
-										linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
+										text='Assign'
+										color='pink'
 									/>
 								</TableCell>
 							</TableRow>
@@ -95,7 +90,6 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => (
 							<TableCell />
 							<TableCell />
 							<TableCell />
-							<TableCell />
 						</TableRow>
 					) : null}
 				</TableBody>
@@ -104,4 +98,4 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => (
 	</div>
 );
 
-export default memo(CancelledAppointmentsTable);
+export default memo(ClaimableAppointmentsTable);

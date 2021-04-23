@@ -127,10 +127,10 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
                                         {get(appointment, 'booking_users.length', '')}
                                     </TableCell>
                                     <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {get(appointment, 'test_type', '')}
+                                        {get(appointment, 'booking_user.metadata.test_type', '')}
                                     </TableCell>
                                     <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {get(appointment, 'result', '')}
+                                        {get(appointment, 'booking_user.metadata.result', '')}
                                     </TableCell>
                                     <TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         <LinkButton

@@ -8,6 +8,8 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import PastAppointmentsTable from '../../components/SAComponents/Tables/PastAppointmentsTable';
 import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
 import CancelledAppointmentsTable from '../../components/SAComponents/Tables/CancelledAppointmentsTable';
+import ClaimableAppointmentsTable from '../../components/SAComponents/Tables/ClaimableAppointmentsTable';
+import AvailableAppointmentsTable from '../../components/SAComponents/Tables/AvailableAppointmentsTable';
 
 const DoctorsManagement = props => {
 	const { logout } = useContext(AuthContext);
@@ -58,15 +60,28 @@ const DoctorsManagement = props => {
 				<UpcomingAppointmentsTable
 					appointments={appointments.filter(({ status }) => {
 						const appStatus = status.toLowerCase();
-						return appStatus !== 'canceled' && appStatus !== 'completed';
+						return appStatus !== 'canceled' && appStatus !== 'completed' && appStatus !== 'available';
 					})}
 				/>
 			</Grid>
-            <Grid item xs={12} style={{ paddingTop: 20 }}>
-				<CancelledAppointmentsTable appointments={appointments.filter(({ status }) => status.toLowerCase() === 'canceled')} />
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<AvailableAppointmentsTable
+					appointments={appointments.filter(({ status }) =>  status.toLowerCase() === 'available')}
+				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<PastAppointmentsTable appointments={appointments.filter(({ status }) => status.toLowerCase() === 'completed')} />
+				<ClaimableAppointmentsTable
+					appointments={appointments.filter(({ status, user }) => (status.toLowerCase() === 'waiting' && parseFloat(user) < 20))}
+				/>
+			</Grid>
+            <Grid item xs={12} style={{ paddingTop: 20 }}>
+				<CancelledAppointmentsTable
+					appointments={appointments.filter(({ status }) => status.toLowerCase() === 'canceled')}
+				/>
+			</Grid>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<PastAppointmentsTable
+					appointments={appointments.filter(({ status }) => status.toLowerCase() === 'completed')} />
 			</Grid>
 		</Grid>
 	);

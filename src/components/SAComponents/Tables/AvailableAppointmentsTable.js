@@ -7,7 +7,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import LinkButton from '../../DocButton/LinkButton';
 import '../../Tables/Tables.scss';
 
 const styles = {
@@ -34,10 +33,10 @@ const styles = {
 	},
 };
 
-const CancelledAppointmentsTable = ({ appointments = [] }) => (
+const AvailableAppointmentsTable = ({ appointments = [] }) => (
 	<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 		<div style={styles.mainContainer}>
-			<h2>Cancelled Appointments</h2>
+			<h2>Available Appointments</h2>
 		</div>
 		<TableContainer
 			style={{
@@ -50,9 +49,6 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => (
 						<TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
 						<TableCell align='center' style={styles.tableText}>Date</TableCell>
 						<TableCell align='center' style={styles.tableText}>Time</TableCell>
-						<TableCell align='center' style={styles.tableText}>People</TableCell>
-						<TableCell align='center' style={styles.tableText}>Test</TableCell>
-						<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -70,19 +66,6 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => (
 								<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 									{format(appointmentStartTime, 'p')}
 								</TableCell>
-								<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-									{get(appointment, 'booking_users.length', '')}
-								</TableCell>
-								<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-									{get(appointment, 'booking_user.metadata.test_type', '')}
-								</TableCell>
-								<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
-									<LinkButton
-										text='View'
-										color='green'
-										linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
-									/>
-								</TableCell>
 							</TableRow>
 						);
 					})}
@@ -93,9 +76,6 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => (
 							</TableCell>
 							<TableCell />
 							<TableCell />
-							<TableCell />
-							<TableCell />
-							<TableCell />
 						</TableRow>
 					) : null}
 				</TableBody>
@@ -104,4 +84,4 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => (
 	</div>
 );
 
-export default memo(CancelledAppointmentsTable);
+export default memo(AvailableAppointmentsTable);
