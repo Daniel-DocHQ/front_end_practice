@@ -18,7 +18,7 @@ const adminService = {
 								success: true,
 								appointments: response.data,
 							});
-						} else if (response.status === 200 && response.data === null) {
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
 							resolve({
 								success: true,
 								appointments: [],
@@ -51,7 +51,7 @@ const adminService = {
 								success: true,
 								appointments: response.data,
 							});
-						} else if (response.status === 200 && response.data === null) {
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
 							resolve({
 								success: true,
 								appointments: [],
