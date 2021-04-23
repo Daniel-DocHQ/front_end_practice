@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	FormControl,
 	FormControlLabel,
@@ -6,12 +6,17 @@ import {
 	Radio,
 	RadioGroup,
 } from '@material-ui/core';
-import { Field } from 'formik';
+import { get } from 'lodash';
+import { Field, useFormikContext } from 'formik';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
 import './BookingEngine.scss';
 
-const Step2 = () => {
+const Step2 = ({
+    passengers,
+    activePassenger,
+}) => {
+    const { setFieldValue, setTouched, setErrors } = useFormikContext();
     const {
         formField: {
 			firstName,
@@ -24,6 +29,21 @@ const Step2 = () => {
 			passportNumber,
         }
     } = bookingFormModel;
+
+    useEffect(() => {
+        if (get(passengers, `[${activePassenger}].${firstName.name}`, '')) {
+            setFieldValue(firstName.name, passengers[activePassenger][firstName.name]);
+            setFieldValue(lastName.name, passengers[activePassenger][lastName.name]);
+            setFieldValue(email.name, passengers[activePassenger][email.name]);
+            setFieldValue(phone.name, passengers[activePassenger][phone.name]);
+            setFieldValue(dateOfBirth.name, passengers[activePassenger][dateOfBirth.name]);
+            setFieldValue(ethnicity.name, passengers[activePassenger][ethnicity.name]);
+            setFieldValue(sex.name, passengers[activePassenger][sex.name]);
+            setFieldValue(passportNumber.name, passengers[activePassenger][passportNumber.name]);
+            setTouched({});
+            setErrors({});
+        }
+    }, [activePassenger])
 
 	return (
 		<React.Fragment>

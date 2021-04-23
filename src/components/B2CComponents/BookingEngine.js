@@ -7,6 +7,9 @@ import validationSchema from './validationSchema';
 
 const BookingEngine = () => {
 	const [activeStep, setActiveStep] = useState(0);
+	const [activePassenger, setActivePassenger] = useState(0);
+	const [passengers, setPassengers] = useState([]);
+	const [restFormValues, setRestFormValues] = useState([]);
 	const { formInitialValues } = bookingFormModel;
 	const currentValidationSchema = validationSchema[activeStep];
 	const steps = [
@@ -17,6 +20,17 @@ const BookingEngine = () => {
         'Summary',
         'Booking Confirmation',
     ];
+
+	const passengerInitialValues = {
+		firstName: '',
+		lastName: '',
+		email: '',
+		phone: '',
+		dateOfBirth: '',
+		ethnicity: '',
+		sex: 'Female',
+		passportNumber: '',
+	};
 
 	// function placeBooking() {
 	// 	const body = {
@@ -49,7 +63,9 @@ const BookingEngine = () => {
 	// 		});
 	// }
 	function handleBack() {
-		setActiveStep(activeStep - 1);
+		activeStep === 2 && activePassenger !== 0
+			? setActivePassenger(activePassenger - 1)
+			: setActiveStep(activeStep - 1);
 	}
 	function handleNext() {
 		setActiveStep(activeStep + 1);
@@ -61,20 +77,79 @@ const BookingEngine = () => {
 				initialValues={formInitialValues}
 				validationSchema={currentValidationSchema}
 				onSubmit={async (values, actions) => {
-					if (activeStep === 4) {
-						handleNext();
+					if (activeStep === 0) {
+						setRestFormValues(values);
+						const {
+							antigenTest,
+        					pcrTest,
+						} = values;
+						const newPassengers = [...Array(antigenTest + pcrTest)].map(() => ({
+							...passengerInitialValues,
+						}));
 						actions.setTouched({});
 						actions.setSubmitting(false);
 						actions.setErrors({});
+						setPassengers(newPassengers);
+						handleNext();
+					} else if (activeStep === 2) {
+						actions.setSubmitting(false);
+						actions.setTouched({});
+						actions.setErrors({});
+						const {
+							firstName,
+							lastName,
+							email,
+							phone,
+							dateOfBirth,
+							ethnicity,
+							sex,
+							passportNumber,
+						} = values;
+						const newPassengers = [...passengers];
+						newPassengers[activePassenger] = {
+							firstName,
+							lastName,
+							email,
+							phone,
+							dateOfBirth,
+							ethnicity,
+							sex,
+							passportNumber,
+						};
+						setPassengers(newPassengers);
+						if (activePassenger === passengers.length - 1) {
+							handleNext();
+						} else {
+							actions.resetForm({
+								...restFormValues,
+								...passengerInitialValues,
+							});
+							setActivePassenger(activePassenger + 1);
+						}
+					} else if (activeStep === 4) {
+						setRestFormValues({
+							...restFormValues,
+							...values,
+						});
+						actions.setTouched({});
+						actions.setSubmitting(false);
+						actions.setErrors({});
+						handleNext();
 					} else {
-						handleNext();
+						setRestFormValues({
+							...restFormValues,
+							...values,
+						});
 						actions.setTouched({});
 						actions.setSubmitting(false);
 						actions.setErrors({});
+						handleNext();
 					}
 				}}
 			>
 				<BookingEngineForm
+					passengers={passengers}
+					activePassenger={activePassenger}
 					activeStep={activeStep}
 					handleBack={handleBack}
 					steps={steps}

@@ -32,10 +32,9 @@ const datePickerTheme = createMuiTheme({
 			day: {
 				width: '24px',
 				height: '24px',
-				backgroundColor: 'var(--doc-green)',
 				marginTop: '5px',
 				marginBottom: '5px',
-				color: 'var(--doc-white)',
+				color: 'var(--doc-black)',
 			},
 		},
 		MuiIconButton: {
@@ -102,35 +101,36 @@ const Step1 = () => {
 		<React.Fragment>
 			<div className='no-margin col'>
 				<ThemeProvider theme={datePickerTheme}>
-				<MuiPickersUtilsProvider utils={DateFnsUtils}>
-					<div className='row'>
-						<div className='appointment-calendar-container'>
-							<Field name={travelDate.name}>
-								{({ field, form }) => (
-									<DatePicker
-										{...field}
-										variant='static'
-										label={travelDate.label}
-										onChange={(value) => form.setFieldValue(field.name, value)}
-									/>
-								)}
-							</Field>
+					<MuiPickersUtilsProvider utils={DateFnsUtils}>
+						<div className='row'>
+							<div className='appointment-calendar-container'>
+								<Field name={travelDate.name}>
+									{({ field, form }) => (
+										<DatePicker
+											{...field}
+											variant='static'
+											disablePast
+											label={travelDate.label}
+											onChange={(value) => form.setFieldValue(field.name, value)}
+										/>
+									)}
+								</Field>
+							</div>
+							<div className='appointment-calendar-container'>
+								<Field name={travelTime.name}>
+									{({ field, form }) => (
+										<TimePicker
+											autoOk
+											{...field}
+											openTo="hours"
+											variant="static"
+											label={travelTime.label}
+											onChange={(value) => form.setFieldValue(field.name, value)}
+										/>
+									)}
+								</Field>
+							</div>
 						</div>
-						<div className='appointment-calendar-container'>
-							<Field name={travelTime.name}>
-								{({ field, form }) => (
-									<TimePicker
-										autoOk
-										{...field}
-										openTo="hours"
-										variant="static"
-										label={travelTime.label}
-										onChange={(value) => form.setFieldValue(field.name, value)}
-									/>
-								)}
-							</Field>
-						</div>
-					</div>
 					</MuiPickersUtilsProvider>
 				</ThemeProvider>
 			</div>
