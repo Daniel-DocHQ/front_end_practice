@@ -9,11 +9,10 @@ import DocButton from '../DocButton/DocButton';
 import Video from 'twilio-video';
 import { Redirect } from 'react-router-dom';
 import bookingService from '../../services/bookingService';
-import useNatureSounds from '../../helpers/hooks/useNatureSounds';
 import { AppointmentContext, useBookingUsers } from '../../context/AppointmentContext';
+
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
-
 const { isSupported } = require('twilio-video');
 
 function TwillioVideoCall({
@@ -25,13 +24,11 @@ function TwillioVideoCall({
 	authToken,
 	hideVideoAppointment,
 }) {
-	const sound = useNatureSounds();
 	const { storeImage, displayCertificates } = useContext(AppointmentContext);
 	const patients = useBookingUsers();
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
-	const [isSoundPlayable, setIsSoundPlayable] = useState(!isNurse);
 	const [takePhoto, setTakePhoto] = useState(false);
 	const currentBookingUserName = `${get(bookingUsers, '[0].first_name', '')} ${get(bookingUsers, '[0].last_name', '')}`;
 	const [message, setMessage] = useState(
@@ -65,7 +62,6 @@ function TwillioVideoCall({
 
 	useEffect(() => {
 		const participantConnected = participant => {
-			if (isSoundPlayable) setIsSoundPlayable(false);
 			setMessage(isNurse ? 'Patient Connected' : 'Medical Professional Connected');
 			setParticipants(prevParticipants => [...prevParticipants, participant]);
 		};
@@ -186,7 +182,6 @@ function TwillioVideoCall({
 					</div>
 				}
 			/>
-			{isSoundPlayable && <>{sound}</>}
 			<div className='video-call-container'>
 				<React.Fragment>
 					{typeof isNurse !== 'undefined' && !isNurse ? <PatientHeader /> : null}
