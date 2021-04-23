@@ -99,7 +99,7 @@ const AppointmentInfo = ({ appointment }) => {
         <Box>
             <Typography className="row-text"><b>Appointment Date: </b>{appointmentStartTime.toLocaleDateString()}</Typography>
             <Typography className="row-text"><b>Appointment Time: </b>{format(appointmentStartTime, 'p')} - {format(appointmentEndTime, 'p')}</Typography>
-            <Typography className="row-text"><b>Number of people: </b>{appointment.booking_users.length}</Typography>
+            <Typography className="row-text"><b>Number of people: </b>{get(appointment, 'booking_users.length', '')}</Typography>
             <Box pt={2}>
                 <Typography className="row-text"><b>Test Type: </b>{get(appointment, 'booking_user.metadata.test_type', '')}</Typography>
             </Box>

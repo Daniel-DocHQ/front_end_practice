@@ -123,7 +123,7 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 							return (
 								<TableRow key={appointment.id}>
 									<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
-										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
+										{get(appointment, 'user_name', '')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 										{appointmentStartTime.toLocaleDateString()}
@@ -135,13 +135,14 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 										{get(appointment, 'booking_users.length', '')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-										{get(appointment, 'booking_user.metadata.test_type', '')}
+										{get(appointment, 'test_type', '')}
 									</TableCell>
 									<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
-                                        <LinkButton
-                                            text='View'
-                                            color='green'
-                                        />
+										<LinkButton
+											text='View'
+											color='green'
+											linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
+										/>
 									</TableCell>
 								</TableRow>
 							);

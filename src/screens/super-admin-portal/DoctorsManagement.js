@@ -2,7 +2,7 @@ import React, { useEffect, useState, memo, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
 import { Grid } from '@material-ui/core';
-import nurseService from '../../services/nurseService';
+import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import PastAppointmentsTable from '../../components/SAComponents/Tables/PastAppointmentsTable';
@@ -11,9 +11,7 @@ import CancelledAppointmentsTable from '../../components/SAComponents/Tables/Can
 
 const DoctorsManagement = props => {
 	const { logout } = useContext(AuthContext);
-	const [pastAppointments, setPastAppointments] = useState();
-	const [appointments, setAppointments] = useState();
-    const [cancelledAppointments, setCancelledAppointments] = useState();
+	const [appointments, setAppointments] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	let history = useHistory();
 
@@ -24,25 +22,9 @@ const DoctorsManagement = props => {
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		logoutUser();
 	}
-
-    const getCancelledAppointments = async () => {
-		await nurseService
-			.getAppointments(props.token)
-			.then(data => {
-				if (data.success) {
-					setCancelledAppointments(data.appointments);
-				} else if (!data.authenticated) {
-					logoutUser();
-				} else {
-					ToastsStore.error('Error fetching appointments');
-				}
-			})
-			.catch(err => ToastsStore.error('Error fetching appointments'));
-	}
-
-	const getFutureAppointments = async () => {
-		await nurseService
-			.getAppointments(props.token)
+    const getAllAppointments = async () => {
+		await adminService
+			.getAllAppointments(props.token)
 			.then(data => {
 				if (data.success) {
 					setAppointments(data.appointments);
@@ -54,27 +36,11 @@ const DoctorsManagement = props => {
 			})
 			.catch(err => ToastsStore.error('Error fetching appointments'));
 	}
-	const getPastAppointments = async () => {
-		await nurseService
-			.getPastAppointments(props.token)
-			.then(data => {
-				if (data.success && data.appointments) {
-					setPastAppointments(data.appointments);
-				} else if (!data.success && !data.authenticated) {
-					logoutUser();
-				} else {
-					ToastsStore.error('Error fetching appointments');
-				}
-			})
-			.catch(err => ToastsStore.error('Error fetching appointments'));
-	}
 
 
 	const getAllInfo = async () => {
 		await setIsLoading(true);
-		await getFutureAppointments();
-		await getPastAppointments();
-        await getCancelledAppointments()
+		await getAllAppointments();
 		await setIsLoading(false);
 	};
 
@@ -90,14 +56,17 @@ const DoctorsManagement = props => {
 		<Grid container justify="space-between">
 			<Grid item xs={12}>
 				<UpcomingAppointmentsTable
-					appointments={appointments}
+					appointments={appointments.filter(({ status }) => {
+						const appStatus = status.toLowerCase();
+						return appStatus !== 'canceled' && appStatus !== 'completed';
+					})}
 				/>
 			</Grid>
             <Grid item xs={12} style={{ paddingTop: 20 }}>
-				<CancelledAppointmentsTable appointments={cancelledAppointments} />
+				<CancelledAppointmentsTable appointments={appointments.filter(({ status }) => status.toLowerCase() === 'canceled')} />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<PastAppointmentsTable appointments={pastAppointments} />
+				<PastAppointmentsTable appointments={appointments.filter(({ status }) => status.toLowerCase() === 'completed')} />
 			</Grid>
 		</Grid>
 	);
