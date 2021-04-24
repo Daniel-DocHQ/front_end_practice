@@ -16,7 +16,7 @@ const Step4 = ({ passengers }) => {
 			<div className='row no-margin'>
 				<p>
 					<strong>Appointment Time:&nbsp;</strong>
-					{formatTimeSlot(selectedSlot)} - {formatTimeSlot(selectedSlot)}
+					{formatTimeSlot(selectedSlot.start_time)} - {formatTimeSlot(selectedSlot.end_time)}
 				</p>
 			</div>
             {passengers.map(({
@@ -29,7 +29,7 @@ const Step4 = ({ passengers }) => {
 				sex,
 				passportNumber,
 			}, i) => (
-				<>
+				<div key={i}>
 					<div className='row no-margin'>
 						<p>
 							<strong>Passenger Name {i + 1}:&nbsp;</strong>
@@ -72,7 +72,7 @@ const Step4 = ({ passengers }) => {
 							{passportNumber}
 						</p>
 					</div>
-				</>
+				</div>
 			))}
 		</React.Fragment>
 	);

@@ -13,7 +13,7 @@ const bookingFormModel = {
         sex: 'Female',
         passportNumber: '',
         appointmentDate: new Date(),
-        selectedSlot: new Date(),
+        selectedSlot: null,
     },
     formField: {
         antigenTest: {

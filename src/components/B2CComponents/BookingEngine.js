@@ -4,6 +4,8 @@ import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import BookingEngineForm from './BookingEngineForm';
 import bookingFormModel from './bookingFormModel';
 import validationSchema from './validationSchema';
+import bookingService from '../../services/bookingService';
+import { ToastsStore } from 'react-toasts';
 
 const BookingEngine = () => {
 	const [activeStep, setActiveStep] = useState(0);
@@ -32,36 +34,6 @@ const BookingEngine = () => {
 		passportNumber: '',
 	};
 
-	// function placeBooking() {
-	// 	const body = {
-	// 		billing_details: {
-	// 			first_name: user.first_name,
-	// 			last_name: user.last_name,
-	// 			dateOfBirth: ddMMyyyy(user.date_of_birth),
-	// 			email: user.email,
-	// 			street_address: user.address_1,
-	// 			extended_address: '',
-	// 			locality: user.city,
-	// 			region: user.county,
-	// 			postal_code: user.postcode,
-	// 		},
-	// 		toc_accept: true,
-	// 		marketing_accept: false,
-	// 	};
-
-	// 	bookingService
-	// 		.paymentRequest(selectedAppointment.id, body, token)
-	// 		.then(result => {
-	// 			if (result.success && result.confirmation) {
-	// 				handleNext();
-	// 			} else {
-	// 				handleNext();
-	// 			}
-	// 		})
-	// 		.catch(() => {
-	// 			handleNext();
-	// 		});
-	// }
 	function handleBack() {
 		activeStep === 2 && activePassenger !== 0
 			? setActivePassenger(activePassenger - 1)
@@ -127,14 +99,26 @@ const BookingEngine = () => {
 							setActivePassenger(activePassenger + 1);
 						}
 					} else if (activeStep === 4) {
-						setRestFormValues({
-							...restFormValues,
-							...values,
-						});
-						actions.setTouched({});
-						actions.setSubmitting(false);
-						actions.setErrors({});
-						handleNext();
+						const {
+							selectedSlot,
+							travelDate,
+        					travelTime,
+						} = values;
+						const body = {
+							bookingUsers: passengers,
+							travelDate,
+        					travelTime,
+						}
+						bookingService
+							.paymentRequest(selectedSlot.id, body)
+							.then(result => {
+								if (result.success && result.confirmation) {
+									handleNext();
+								} else {
+									ToastsStore.error('Something went wrong');
+								}
+							})
+							.catch(() => ToastsStore.error('Something went wrong'));
 					} else {
 						setRestFormValues({
 							...restFormValues,
