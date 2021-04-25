@@ -1,14 +1,12 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
-import LinkButton from '../DocButton/LinkButton';
 import './BookingEngine.scss';
 
 const icon = require('../../assets/images/icons/circled-tick.svg');
 
-const Step5 = () => {
-    const { values: { appointmentDate, selectedSlot, email } } = useFormikContext();
-
+const Step5 = ({ passengers }) => {
+    const { values: { appointmentDate, selectedSlot } } = useFormikContext();
     return (
         typeof isError === 'undefined' ? (
             <React.Fragment>
@@ -29,11 +27,11 @@ const Step5 = () => {
                         <div className='row no-margin'>
                             <p>
                                 <strong>Selected Time:&nbsp;</strong>
-                                {formatTimeSlot(selectedSlot)} - {formatTimeSlot(selectedSlot)}
+                                {formatTimeSlot(selectedSlot.start_time)} - {formatTimeSlot(selectedSlot.end_time)}
                             </p>
                         </div>
                         <div className='row no-margin'>
-                            <p>A confirmation email will be sent to: {email}</p>
+                            <p>A confirmation email will be sent to: {passengers[0].email}</p>
                         </div>
                     </div>
                 </div>

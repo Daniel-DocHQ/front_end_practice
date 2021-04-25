@@ -22,7 +22,7 @@ const {
 
 export default [
   Yup.object().shape({
-    [antigenTest.name]: Yup.number().required('Input number of kits').min(0, 'Minimum 0 number of kits').max(15, 'You can\'t order more than 15'),
+    [antigenTest.name]: Yup.number().required('Input number of kits').min(1, 'Minimum 0 number of kits').max(15, 'You can\'t order more than 15'),
     [pcrTest.name]: Yup.number().required('Input number of kits').min(0, 'Minimum 0 number of kits').max(15, 'You can\'t order more than 15'),
   }),
   Yup.object().shape({
@@ -36,13 +36,16 @@ export default [
     [phone.name]: Yup.string().required('Input phone').min(5, 'Invalid phone number'),
     [dateOfBirth.name]: Yup.string()
         .required('Input date of birth')
-        .matches(/^[0-3][1-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$/, 'Invalid date of birth'),
+        .matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/, 'Invalid date of birth'),
     [ethnicity.name]: Yup.string().required('Input ethnicity'),
     [sex.name]: Yup.string().required('Select sex'),
     [passportNumber.name]: Yup.string().required('Input passport number'),
   }),
   Yup.object().shape({
-    [appointmentDate.name]: Yup.date(),
-    [selectedSlot.name]: Yup.date(),
+    [selectedSlot.name]: Yup.object().shape({
+      id: Yup.string().required(),
+      end_time: Yup.string().required(),
+      start_time: Yup.string().required(),
+    }).required('You should select appointment time'),
   }),
 ];

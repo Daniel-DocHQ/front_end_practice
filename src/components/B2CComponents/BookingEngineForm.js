@@ -45,7 +45,7 @@ const BookingEngineForm = ({
 				);
             case 5:
 				return (
-					<Step5 />
+					<Step5 passengers={passengers} />
 				);
 		};
 	};

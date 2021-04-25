@@ -231,11 +231,11 @@ const RouteHandler = () => {
 					<Purchase />
 				</Layout>
 			</PrivateRoute>
-			<PrivateRoute path='/b2c/book-appointment' requiredRole='b2c'>
+			<Route path='/b2c/book-appointment'>
 				<Layout title='Book Appointment'>
 					<B2CBookAppointment />
 				</Layout>
-			</PrivateRoute>
+			</Route>
 			{/* Super Admin Routes */}
 
 			<PrivateRoute path='/super_admin/dashboard' requiredRole='super_admin'>

@@ -28,7 +28,7 @@ const Step0 = () => {
                         )}
                     </Field>
                 </div>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                {/* <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                     <Field name={pcrTest.name}>
                         {({ field, meta }) => (
                             <Input
@@ -40,7 +40,7 @@ const Step0 = () => {
                             />
                         )}
                     </Field>
-                </div>
+                </div> */}
 		    </div>
             <h4 style={{ margin: '0px', marginTop: '10px', textAlign: 'left', width: 'max-content' }}>
                 Remember  that children under 18 years can only attend the online video appointment with an adult (18+) present from the same appointment booking.

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-import { Field, useFormikContext } from 'formik';
+import { Field, useFormikContext, ErrorMessage } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
@@ -26,7 +26,7 @@ const datePickerTheme = createMuiTheme({
 				},
 			},
 			current: {
-				color: 'var(--doc-white)',
+				color: 'var(--doc-white)!important',
 			},
 			dayDisabled: {
 				color: 'var(--doc-dark-grey)',
@@ -109,7 +109,13 @@ const Step3 = () => {
 			selectedSlot,
         }
     } = bookingFormModel;
-	const { values: { appointmentDate: selectedDate }, setFieldValue } = useFormikContext();
+	const {
+		values: {
+			appointmentDate: selectedDate,
+			selectedSlot: selectedSlotValue,
+		},
+		setFieldValue,
+	} = useFormikContext();
 
 	function getSlots() {
 		bookingService
@@ -118,10 +124,14 @@ const Step3 = () => {
 				if (result.success && result.appointments) {
 					setAppointments(result.appointments);
 				} else {
-					// handle
+					setAppointments();
 				}
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				console.log(err);
+				setAppointments();
+			});
+		setFieldValue(selectedSlot.name, null)
 	}
 	function getAvailableDates() {
 		bookingService
@@ -199,9 +209,10 @@ const Step3 = () => {
 												key={i}
 												{...field}
 												id={item.id}
+												item={item}
 												selectSlot={(value) => form.setFieldValue(field.name, value)}
 												isSelected={
-													typeof selectedSlot === 'undefined' ? false : item.id === selectedSlot.id
+													!!selectedSlotValue ? item.id === selectedSlotValue.id : false
 												}
 											/>
 										);
@@ -211,9 +222,11 @@ const Step3 = () => {
 						</div>
 					</div>
 				) : (
-					<></>
+					<>No available appointments at this day</>
 				)}
 			</div>
+
+			<ErrorMessage component="p" className="error" name={selectedSlot.name} />
 		</React.Fragment>
 	);
 }
