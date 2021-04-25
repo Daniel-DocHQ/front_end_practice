@@ -195,7 +195,7 @@ const CancelOrder = ({order, open, onClose, loading, setLoading}) => {
             let apiCall = new Promise((res, rej) => {
                 axios({
                     method: 'delete',
-                    url: `${orderUrl}/v1/${order.id}`,
+                    url: `${orderUrl}/v1/order/${order.id}`,
                 }).then(res)
                 .catch(rej)
             })
