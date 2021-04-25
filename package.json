@@ -15,6 +15,7 @@
     "@fortawesome/fontawesome-free": "5.13.x",
     "@fortawesome/fontawesome-svg-core": "1.2.x",
     "@material-ui/core": "4.11.x",
+    "@material-ui/data-grid": "^4.0.0-alpha.26",
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.56",
     "@material-ui/pickers": "3.2.x",

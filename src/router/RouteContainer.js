@@ -38,6 +38,7 @@ import MyRooms from '../screens/nurse-portal/MyRooms';
 import SADashboard from '../screens/super-admin-portal/SADashboard';
 import DoctorsManagement from '../screens/super-admin-portal/DoctorsManagement';
 import CertificatesList from '../screens/super-admin-portal/CertificatesList';
+import OrderList from '../screens/super-admin-portal/OrderList';
 
 const { isSupported } = require('twilio-video');
 
@@ -246,6 +247,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/certificates-list' requiredRole='super_admin'>
 				<Layout title='Certificates List'>
 					<CertificatesList {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/order-list' requiredRole='super_admin'>
+				<Layout title='Order List'>
+					<OrderList {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/doctors-management' requiredRole='super_admin'>

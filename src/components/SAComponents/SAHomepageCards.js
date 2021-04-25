@@ -41,6 +41,23 @@ const SAHomepageCards = () => {
 				/>
 			),
 		},
+		{
+			display: true,
+			title: 'Order Management',
+			icon: <img src={BookAppointmentIcon} alt='Order Management' />,
+			content: (
+				<React.Fragment>
+					<p>Order Management</p>
+				</React.Fragment>
+			),
+			actions: (
+				<LinkButton
+					color='green'
+					text='Order List'
+					linkSrc='/super_admin/order-list'
+				/>
+			),
+		},
 	];
 
 	return (
