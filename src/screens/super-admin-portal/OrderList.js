@@ -1,11 +1,9 @@
 import React, { useEffect, memo, useState } from 'react';
 import {format} from 'date-fns';
 import axios from 'axios';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
 import Container from '@material-ui/core/Container';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid, GridToolbar  } from '@material-ui/data-grid';
 import OrderDetails from '../../components/OrderDetails/OrderDetails';
@@ -18,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
     data_grid: {
         marginTop: 30,
-        height: 500,
+        height: 700,
         width: '100%',
     },
 }));
@@ -33,11 +31,12 @@ const price_format = {
     valueFormatter: ({value})  => {return "£" + value},
 };
 const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'id', headerName: 'ID', width: 60 },
+    { field: 'billing_detail', headerName: 'Customer Email', width: 170, valueFormatter: ({value}) => value.email},
     { field: 'short_token', headerName: 'Short Token', width: 150 },
     { field: 'shipping_flag', headerName: 'Shipping status', width: 150 },
     { field: 'payment_flag', headerName: 'Payment status', width: 150 },
-    { field: 'price', headerName: 'Amount', width: 150, ...price_format},
+    { field: 'price', headerName: 'Amount', width: 90, ...price_format},
     { field: 'created_at', headerName: 'Order placed', ...date_format },
     { field: 'modified_at', headerName: 'Last order action', ...date_format },
     { field: 'source', headerName: 'Source'},
@@ -47,37 +46,38 @@ const columns = [
 const OrderList = props => {
     const classes = useStyles();
     const [rows, setRows] = useState([]);
-    const [loading, setLoading] = useState(true)
+    const [pageSize, setPageSize] = useState(0)
+    const [page, setPage] = useState(0);
+    const [pageCount, setPageCount] = useState(0)
     const [error, setError] = useState(<></>)
     const [detailsOpen, setDetailsOpen] = useState(false);
     const [orderDetail, setOrderDetail] = useState({});
+    const [dataTableLoading, setDataTableLoading] = useState(true);
+    const apiCall = new Promise((res, rej) => {
+        axios({
+            method: 'get',
+            url: `${orderUrl}/v1/order?page=${page}`,
+        }).then(res)
+            .catch(rej)
+    })
 
     const clickedRow = (param, event) => {
         setOrderDetail(param);
         setDetailsOpen(true);
     }
 
-    useEffect(() =>{
-        let apiCall = new Promise((res, rej) => {
-            axios({
-                method: 'get',
-                url: `${orderUrl}/v1/order`,
-            }).then(res)
-            .catch(rej)
-        })
-
-        apiCall.then(res => {
-            if (res.status === 200 && typeof res.data && res.data.orders) {
+    useEffect(() => {
+        (async () => {
+            setDataTableLoading(true)
+            const res = await apiCall
+            if (res.status === 200 && res.data.orders) {
+                setPageSize(res.data.pagnation_page_size)
+                setPageCount(res.data.total_count)
                 setRows(res.data.orders)
-            } else {
-                setError(<>Something bad happened</>)
             }
-            setLoading(false);
-        })
-        .catch(res => {
-            setError(<>{res.message}</>)
-        })
-    }, [])
+            setDataTableLoading(false);
+        })();
+    }, [page])
 
     const toggleDrawer = (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -86,37 +86,32 @@ const OrderList = props => {
         setDetailsOpen(false)
     }
 
-    return loading ? (
-        <div className={classes.root}>
-            <Grid container spacing={10} direction="column" justify="center" alignItems="center">
-                <Grid item></Grid>
-                <Grid item>
-                    <CircularProgress />
-                </Grid>
-                {error}
-            </Grid>
-        </div>
-    ) : (
+    return (
         <Container className={classes.root}>
             <Grid container spacing={3} direction="column">
                 <Grid item></Grid>
                 <Grid item className={classes.data_grid}>
                     <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    pageSize={20}
-                    components={{
-                        Toolbar: GridToolbar,
-                    }}
-                    onRowClick={clickedRow}
-                />
-                    </Grid>
+                        pagination
+                        rows={rows}
+                        columns={columns}
+                        pageSize={pageSize}
+                        components={{
+                            Toolbar: GridToolbar,
+                        }}
+                        onRowClick={clickedRow}
+                        paginationMode="server"
+                        onPageChange={(params) => setPage(params.page)}
+                        loading={dataTableLoading}
+                        rowCount={pageCount}
+                    />
                 </Grid>
+            </Grid>
 
-                <Drawer anchor="right" open={detailsOpen} onClose={toggleDrawer}>
-                    <OrderDetails order={orderDetail} closeHandler={toggleDrawer}/>
-                </Drawer>
-            </Container>
+            <Drawer anchor="right" open={detailsOpen} onClose={toggleDrawer}>
+                <OrderDetails order={orderDetail} closeHandler={toggleDrawer}/>
+            </Drawer>
+        </Container>
     )
 };
 
