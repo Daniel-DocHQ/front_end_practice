@@ -120,7 +120,7 @@ const OrderDetails = ({order, closeHandler}) => {
                                 <ListItemText>Email: {orderDetail.billing_detail.email}</ListItemText>
                             </ListItem>
                             <ListItem>
-                                <ListItemText>Phone: {orderDetail.address.telephone}</ListItemText>
+                                <ListItemText>Phone: {orderDetail.billing_address.telephone}</ListItemText>
                             </ListItem>
                         </List>
                     </Grid>
@@ -129,11 +129,11 @@ const OrderDetails = ({order, closeHandler}) => {
                             Shipping Address
                         </Typography>
                         <p>
-                            {orderDetail.address.address_1},<br />
-                            {orderDetail.address.address_2}, <br />
-                            {orderDetail.address.town}, <br />
-                            {orderDetail.address.county}, <br />
-                            {orderDetail.address.postcode},
+                            {orderDetail.shipping_address.address_1},<br />
+                            {orderDetail.shipping_address.address_2}, <br />
+                            {orderDetail.shipping_address.town}, <br />
+                            {orderDetail.shipping_address.county}, <br />
+                            {orderDetail.shipping_address.postcode},
                         </p>
                     </Grid>
                     <Grid item xs={12}>
