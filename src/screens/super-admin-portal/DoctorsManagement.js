@@ -1,6 +1,5 @@
 import React, { useEffect, useState, memo, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ToastsStore } from 'react-toasts';
 import { Grid } from '@material-ui/core';
 import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
@@ -15,6 +14,10 @@ const DoctorsManagement = props => {
 	const { logout } = useContext(AuthContext);
 	const [appointments, setAppointments] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const today = new Date();
+	today.setHours(0,0,0,0);
+	const start_time = new Date(today.setDate(today.getDate() - 30));
+	const end_time = new Date(today.setDate(today.getDate() + 30));
 	let history = useHistory();
 
 	const logoutUser = () => {
@@ -24,30 +27,27 @@ const DoctorsManagement = props => {
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		logoutUser();
 	}
-    const getAllAppointments = async () => {
-		await adminService
-			.getAllAppointments(props.token)
-			.then(data => {
-				if (data.success) {
-					setAppointments(data.appointments);
-				} else if (!data.authenticated) {
-					logoutUser();
-				} else {
-					ToastsStore.error('Error fetching appointments');
-				}
-			})
-			.catch(err => ToastsStore.error('Error fetching appointments'));
-	}
-
-
-	const getAllInfo = async () => {
-		await setIsLoading(true);
-		await getAllAppointments();
-		await setIsLoading(false);
-	};
 
 	useEffect(() => {
-        getAllInfo();
+        (async () => {
+			setIsLoading(true);
+			await adminService
+				.getAllAppointments({
+					start_time: start_time.toISOString(),
+					end_time: end_time.toISOString(),
+				}, props.token)
+				.then(data => {
+					if (data.success) {
+						setAppointments(data.appointments);
+					} else if (!data.authenticated) {
+						logoutUser();
+					}
+				})
+				.catch(err => {
+					console.log(err);
+				});
+			setIsLoading(false);
+		})();
 	}, []);
 
 	return isLoading ? (

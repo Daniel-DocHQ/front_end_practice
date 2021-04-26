@@ -37,12 +37,13 @@ const adminService = {
 			}
 		});
 	},
-	getAllAppointments(token) {
+	getAllAppointments(dateRange, token) {
+		const { start_time, end_time } = dateRange;
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/admin/allappointments`,
+					url: `${bookingUrl}/admin/allappointments?start_time=${start_time}&end_time=${end_time}`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
@@ -63,7 +64,12 @@ const adminService = {
 							});
 						}
 					})
-					.catch(err => console.error(err));
+					.catch(err => {
+						console.log(err);
+						reject({
+							success: false,
+						});
+					});
 			} else {
 				// return unauthorized
 				resolve({ success: false, authenticated: false });
