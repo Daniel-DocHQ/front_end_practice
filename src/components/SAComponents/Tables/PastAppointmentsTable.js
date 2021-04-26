@@ -38,6 +38,12 @@ const styles = {
 		fontSize: 16,
 	},
 	medCol: { width: '25%', maxWidth: '25%' },
+    mainContainer: {
+		width: '100%',
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
 };
 
 const PastAppointmentsTable = ({ appointments = [] }) => {
@@ -45,16 +51,8 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
     const { filteredAppointments, filter, setFilter } = useDateFilter(appointments);
 
     return (
-        <div className="doc-container"  style={{ height: '100%' }}>
-            <div
-                style={{
-                    width: '100%',
-                    margin: 'auto',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                }}
-            >
+        <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+            <div style={styles.mainContainer}>
                 <h2>Past Appointments</h2>
                 <ButtonGroup aria-label="outlined primary button group">
                     <Button

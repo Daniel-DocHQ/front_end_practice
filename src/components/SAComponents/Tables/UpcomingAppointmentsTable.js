@@ -12,7 +12,6 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import LinkButton from '../../DocButton/LinkButton';
-import DocButton from '../../DocButton/DocButton';
 import useDateFilter from '../../../helpers/hooks/useDateFilter';
 import '../../Tables/Tables.scss';
 

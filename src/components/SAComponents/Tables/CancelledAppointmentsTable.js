@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import clsx from 'clsx';
 import { get } from 'lodash';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
@@ -7,8 +8,25 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import LinkButton from '../../DocButton/LinkButton';
+import useDateFilter from '../../../helpers/hooks/useDateFilter';
 import '../../Tables/Tables.scss';
+
+const useStyles = makeStyles(() => ({
+	btn: {
+		fontSize: 14,
+		border: '1px solid #EFEFF0',
+		textTransform: 'none',
+	},
+	activeBtn: {
+		fontWeight: 500,
+		color: 'white',
+		background: '#00BDAF',
+	},
+}));
 
 const styles = {
 	smallCol: {
@@ -34,74 +52,117 @@ const styles = {
 	},
 };
 
-const CancelledAppointmentsTable = ({ appointments = [] }) => (
-	<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
-		<div style={styles.mainContainer}>
-			<h2>Cancelled Appointments</h2>
-		</div>
-		<TableContainer
-			style={{
-				marginBottom: '40px',
-			}}
-		>
-			<Table stickyHeader>
-				<TableHead>
-					<TableRow>
-						<TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
-						<TableCell align='center' style={styles.tableText}>Date</TableCell>
-						<TableCell align='center' style={styles.tableText}>Time</TableCell>
-						<TableCell align='center' style={styles.tableText}>People</TableCell>
-						<TableCell align='center' style={styles.tableText}>Test</TableCell>
-						<TableCell align='right' style={styles.tableText}>Actions</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{(!!appointments && appointments.length > 0) && appointments.map(appointment => {
-						const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
+const CancelledAppointmentsTable = ({ appointments = [] }) => {
+	const classes = useStyles();
+    const { filteredAppointments, filter, setFilter } = useDateFilter(appointments);
 
-						return (
-							<TableRow key={appointment.id}>
-								<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
-									{get(appointment, 'user_name', '')}
-								</TableCell>
-								<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-									{appointmentStartTime.toLocaleDateString()}
-								</TableCell>
-								<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-									{format(appointmentStartTime, 'p')}
-								</TableCell>
-								<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-									{get(appointment, 'booking_users.length', '')}
-								</TableCell>
-								<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-									{get(appointment, 'booking_user.metadata.test_type', '')}
-								</TableCell>
-								<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
-									<LinkButton
-										text='View'
-										color='green'
-										linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
-									/>
-								</TableCell>
-							</TableRow>
-						);
-					})}
-					{appointments.length === 0 ? (
+	return (
+		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+			<div style={styles.mainContainer}>
+				<h2>Cancelled Appointments</h2>
+				<ButtonGroup aria-label="outlined primary button group">
+                    <Button
+						className={clsx(
+							classes.btn,
+							{[classes.activeBtn]: filter === 'last month'},
+						)}
+						onClick={() => setFilter('last month')}
+					>
+						Month
+					</Button>
+					<Button
+						className={clsx(
+							classes.btn,
+							{[classes.activeBtn]: filter === 'last week'},
+						)}
+						onClick={() => setFilter('last week')}
+					>
+						Week
+					</Button>
+                    <Button
+						className={clsx(
+							classes.btn,
+							{[classes.activeBtn]: filter === 'yesterday'},
+						)}
+						onClick={() => setFilter('yesterday')}
+					>
+						Yesterday
+					</Button>
+                    <Button
+						className={clsx(
+							classes.btn,
+							{[classes.activeBtn]: filter === 'today'},
+						)}
+						onClick={() => setFilter('today')}
+					>
+						Today
+					</Button>
+				</ButtonGroup>
+			</div>
+			<TableContainer
+				style={{
+					marginBottom: '40px',
+				}}
+			>
+				<Table stickyHeader>
+					<TableHead>
 						<TableRow>
-							<TableCell style={styles.tableText}>
-								<p>No appointments to display</p>
-							</TableCell>
-							<TableCell />
-							<TableCell />
-							<TableCell />
-							<TableCell />
-							<TableCell />
+							<TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
+							<TableCell align='center' style={styles.tableText}>Date</TableCell>
+							<TableCell align='center' style={styles.tableText}>Time</TableCell>
+							<TableCell align='center' style={styles.tableText}>People</TableCell>
+							<TableCell align='center' style={styles.tableText}>Test</TableCell>
+							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 						</TableRow>
-					) : null}
-				</TableBody>
-			</Table>
-		</TableContainer>
-	</div>
-);
+					</TableHead>
+					<TableBody>
+						{(!!filteredAppointments && filteredAppointments.length > 0) && filteredAppointments.map(appointment => {
+							const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
+
+							return (
+								<TableRow key={appointment.id}>
+									<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
+										{get(appointment, 'user_name', '')}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+										{appointmentStartTime.toLocaleDateString()}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+										{format(appointmentStartTime, 'p')}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{get(appointment, 'booking_users.length', '')}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{get(appointment, 'booking_user.metadata.test_type', '')}
+									</TableCell>
+									<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
+										<LinkButton
+											text='View'
+											color='green'
+											linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
+										/>
+									</TableCell>
+								</TableRow>
+							);
+						})}
+						{filteredAppointments.length === 0 ? (
+							<TableRow>
+								<TableCell style={styles.tableText}>
+									<p>No appointments to display</p>
+								</TableCell>
+								<TableCell />
+								<TableCell />
+								<TableCell />
+								<TableCell />
+								<TableCell />
+							</TableRow>
+						) : null}
+					</TableBody>
+				</Table>
+			</TableContainer>
+		</div>
+	);
+};
 
 export default memo(CancelledAppointmentsTable);
