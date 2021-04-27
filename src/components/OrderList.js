@@ -6,7 +6,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid, GridToolbar  } from '@material-ui/data-grid';
-import OrderDetails from '../../components/OrderDetails/OrderDetails';
+import OrderDetails from './OrderDetails/OrderDetails';
 
 const orderUrl = process.env.REACT_APP_API_URL
 

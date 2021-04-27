@@ -31,6 +31,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { makeStyles } from '@material-ui/core/styles';
+import DocButton from '../DocButton/DocButton';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -49,8 +50,9 @@ const useStyles = makeStyles((theme) => ({
     },
     container: {
         marginTop: 10,
-    }
+    },
 }));
+
 const OrderDetails = ({order, closeHandler}) => {
     const classes = useStyles();
     const [orderDetail, setOrderDetail] = useState({});
@@ -169,14 +171,18 @@ const OrderDetails = ({order, closeHandler}) => {
                             <Typography variant="h6" className={classes.title}>
                                 Actions
                             </Typography>
-                            <Button onClick={handleCancelDialogToggle} variant="contained">Cancel order</Button>
+                            <DocButton
+                                className="pink"
+                                onClick={handleCancelDialogToggle}
+                                text="Cancel order"
+                            />
                             <CancelOrder
-                            order={orderDetail}
-                            open={cancelDialogOpen}
-                            onClose={handleCancelDialogToggle}
-                            loading={loading}
-                            setLoading={setLoading}
-                        />
+                                order={orderDetail}
+                                open={cancelDialogOpen}
+                                onClose={handleCancelDialogToggle}
+                                loading={loading}
+                                setLoading={setLoading}
+                            />
                             </Grid>
                         </Grid>
                     </Container>

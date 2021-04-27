@@ -38,7 +38,9 @@ import MyRooms from '../screens/nurse-portal/MyRooms';
 import SADashboard from '../screens/super-admin-portal/SADashboard';
 import DoctorsManagement from '../screens/super-admin-portal/DoctorsManagement';
 import CertificatesList from '../screens/super-admin-portal/CertificatesList';
-import OrderList from '../screens/super-admin-portal/OrderList';
+import CSOrderList from '../screens/cs-portal/CSOrderList';
+import SAOrderList from '../screens/super-admin-portal/SAOrderList';
+import CSDashboard from '../screens/cs-portal/CSDashboard';
 
 const { isSupported } = require('twilio-video');
 
@@ -249,14 +251,26 @@ const RouteHandler = () => {
 					<CertificatesList {...ctx} />
 				</Layout>
 			</PrivateRoute>
-			<PrivateRoute path='/super_admin/order-list' requiredRole='super_admin'>
-				<Layout title='Order List'>
-					<OrderList {...ctx} />
-				</Layout>
-			</PrivateRoute>
 			<PrivateRoute path='/super_admin/doctors-management' requiredRole='super_admin'>
 				<Layout title='Doctors Management'>
 					<DoctorsManagement />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/order-list' requiredRole='super_admin'>
+				<Layout title='Order List'>
+					<SAOrderList {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			{/* Customer Services Routes */}
+
+			<PrivateRoute path='/customer_services/dashboard' requiredRole='customer_services'>
+				<Layout title='Dashboard'>
+					<CSDashboard />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/customer_services/order-list' requiredRole='customer_services'>
+				<Layout title='Order List'>
+					<CSOrderList {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			{/* 404 page */}

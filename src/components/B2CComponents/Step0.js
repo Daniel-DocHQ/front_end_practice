@@ -4,7 +4,9 @@ import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
 import './BookingEngine.scss';
 
-const Step0 = () => {
+const Step0 = ({
+    isEdit,
+}) => {
     const {
         formField: {
             antigenTest,
@@ -23,6 +25,7 @@ const Step0 = () => {
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
                                 {...antigenTest}
+                                disabled={isEdit}
                                 {...field}
                             />
                         )}
@@ -36,6 +39,7 @@ const Step0 = () => {
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
                                 {...pcrTest}
+                                disabled={isEdit}
                                 {...field}
                             />
                         )}

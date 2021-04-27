@@ -36,7 +36,7 @@ export default [
     [phone.name]: Yup.string().required('Input phone').min(5, 'Invalid phone number'),
     [dateOfBirth.name]: Yup.string()
         .required('Input date of birth')
-        .matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/, 'Invalid date of birth'),
+        .matches(/^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/, 'Invalid date of birth'),
     [ethnicity.name]: Yup.string().required('Input ethnicity'),
     [sex.name]: Yup.string().required('Select sex'),
     [passportNumber.name]: Yup.string().required('Input passport number'),

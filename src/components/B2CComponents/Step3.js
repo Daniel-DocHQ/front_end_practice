@@ -99,10 +99,7 @@ const Step3 = () => {
 	const [availableDates, setAvailableDates] = useState();
 	const today = new Date();
 	const in40days = new Date(today.setDate(today.getDate() + 40));
-	const dateRange = {
-		start: `${('0' + today.getDate()).slice(-2)}-${('0' + today.getMonth()).slice(-2)}-${today.getFullYear()}`,
-		end: `${('0' + in40days.getDate()).slice(-2)}-${('0' + (in40days.getMonth() +1 )).slice(-2)}-${in40days.getFullYear()}`,
-	};
+
 	const {
         formField: {
             appointmentDate,
@@ -113,9 +110,19 @@ const Step3 = () => {
 		values: {
 			appointmentDate: selectedDate,
 			selectedSlot: selectedSlotValue,
+			travelDate,
 		},
 		setFieldValue,
 	} = useFormikContext();
+
+	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 3));
+	const endDate = new Date(travelDate);
+
+	const dateRange = {
+		start: `${('0' + startDate.getDate()).slice(-2)}-${('0' + startDate.getMonth()).slice(-2)}-${startDate.getFullYear()}`,
+		end: `${('0' + endDate.getDate()).slice(-2)}-${('0' + (endDate.getMonth() +1 )).slice(-2)}-${endDate.getFullYear()}`,
+	};
+	console.log(dateRange);
 
 	function getSlots() {
 		bookingService
