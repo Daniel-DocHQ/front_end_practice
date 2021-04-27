@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
+import { ToastsStore } from 'react-toasts';
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import BookingEngineForm from './BookingEngineForm';
 import bookingFormModel from './bookingFormModel';
 import validationSchema from './validationSchema';
 import bookingService from '../../services/bookingService';
-import { ToastsStore } from 'react-toasts';
+import getURLParams from '../../helpers/getURLParams';
 
 const BookingEngine = () => {
+	const params = getURLParams(window.location.href);
+	const short_token = params['short_token'];
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
 	const [passengers, setPassengers] = useState([]);
@@ -104,11 +107,12 @@ const BookingEngine = () => {
 							travelDate,
         					travelTime,
 						} = values;
+						const bookingUsers = passengers.map((item) => ({ ...item, metadata: { short_token } }));
 						const body = {
-							bookingUsers: passengers,
+							bookingUsers,
 							travelDate,
         					travelTime,
-						}
+						};
 						bookingService
 							.paymentRequest(selectedSlot.id, body)
 							.then(result => {
