@@ -89,7 +89,6 @@ const datePickerTheme = createMuiTheme({
 });
 
 const Step1 = () => {
-
 	const {
         formField: {
             travelDate,
@@ -111,7 +110,11 @@ const Step1 = () => {
 											variant='static'
 											disablePast
 											label={travelDate.label}
-											onChange={(value) => form.setFieldValue(field.name, value)}
+											onChange={(value) => {
+												const appointmentDate = new Date(value).setDate(value.getDate() - 3);
+												form.setFieldValue(field.name, value);
+												form.setFieldValue('appointmentDate', new Date(appointmentDate));
+											}}
 										/>
 									)}
 								</Field>
