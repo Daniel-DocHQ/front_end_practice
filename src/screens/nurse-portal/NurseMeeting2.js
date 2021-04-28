@@ -24,7 +24,6 @@ import { Alert } from '@material-ui/lab';
 import { format, differenceInMinutes } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
 import { useToken } from '../../context/AuthContext';
-import '../../assets/css/NurseMeeting.scss';
 import Box from '../../components/TwilioVideo/Box';
 import MaterialCheckbox from '../../components/FormComponents/MaterialCheckbox/MaterialCheckbox';
 import CertificatesAaron from '../../components/Certificates/CertificatesAaron';
@@ -33,6 +32,7 @@ import TextInputElement from '../../components/FormComponents/TextInputElement';
 import bookingService from '../../services/bookingService';
 import getValueFromObject from '../../helpers/getValueFromObject';
 import { AuthContext } from '../../context/AuthContext';
+import '../../assets/css/NurseMeeting.scss';
 
 const TEST_TYPES = {
 	pcr: 'PCR',
@@ -199,6 +199,7 @@ const PatientDetails = ({
 	isSpaceBetweenPhoneBox,
 }) => {
 	const linkRef = useRef(null);
+	const alternativeLinkRef = useRef(null);
 	const isManyPatients = patients.length > 1 || isAntigenType;
 
 	const addressDataBlock = () => (
@@ -305,6 +306,38 @@ const PatientDetails = ({
 								https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointmentId}
 							</Typography>
 						</Tooltip>
+					</div>
+					<div className='row space-between no-margin' style={{ padding: '20px 0' }}>
+						<p className='tab-row-text title-info'>
+							Alternative Patient Joining link:
+						</p>
+						<Tooltip title="Click to copy">
+							<Typography
+								noWrap
+								ref={alternativeLinkRef}
+								onClick={() => copyToClipboard(alternativeLinkRef)}
+								className='tab-row-text patient-link-text'
+							>
+								https://8x8.vc/dochq/{process.env.REACT_APP_JOIN_LINK_PREFIX}-{appointmentId}
+							</Typography>
+						</Tooltip>
+					</div>
+					<div className='row center no-margin' style={{ padding: '20px 0' }}>
+						<DocButton
+							text="Email Alternative Link to Patient"
+							color="green"
+							onClick={() => bookingService.sendAlternativeLink()
+								.then(result => {
+									if (result.success) {
+										ToastsStore.success('Alternative Link has been sent successfully');
+									} else {
+										ToastsStore.error('Failed');
+									}
+								}).catch(() => {
+									ToastsStore.error('Failed');
+								})
+							}
+						/>
 					</div>
 				</div>
 				{isManyPatients && (
@@ -941,6 +974,7 @@ const AppointmentActions = ({
 		img,
 	} = useContext(AppointmentContext);
 	const linkRef = useRef(null);
+	const alternativeLinkRef = useRef(null);
 	const [notesStatus, setNotesStatus] = useState();
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
@@ -1018,6 +1052,38 @@ const AppointmentActions = ({
 								https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointmentId}
 							</Typography>
 						</Tooltip>
+					</div>
+					<div className='row space-between no-margin' style={{ padding: '20px 0' }}>
+						<p className='tab-row-text title-info'>
+							Alternative Patient Joining link:
+						</p>
+						<Tooltip title="Click to copy">
+							<Typography
+								noWrap
+								ref={alternativeLinkRef}
+								onClick={() => copyToClipboard(alternativeLinkRef)}
+								className='tab-row-text patient-link-text'
+							>
+								https://8x8.vc/dochq/{process.env.REACT_APP_JOIN_LINK_PREFIX}-{appointmentId}
+							</Typography>
+						</Tooltip>
+					</div>
+					<div className='row center no-margin' style={{ padding: '20px 0' }}>
+						<DocButton
+							text="Email Alternative Link to Patient"
+							color="green"
+							onClick={() => bookingService.sendAlternativeLink()
+								.then(result => {
+									if (result.success) {
+										ToastsStore.success('Alternative Link has been sent successfully');
+									} else {
+										ToastsStore.error('Failed');
+									}
+								}).catch(() => {
+									ToastsStore.error('Failed');
+								})
+							}
+						/>
 					</div>
 					<Divider />
 					<div className='row no-margin' style={{ paddingTop: '20px' }}>

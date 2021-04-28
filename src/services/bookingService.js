@@ -15,6 +15,7 @@ const bookingService = {
 	getAppointmentInfo,
 	updateTerms,
 	updateAppointmentStatus,
+	sendAlternativeLink,
 };
 
 // Booking engine
@@ -362,4 +363,32 @@ function updateTerms(appointment_id, body) {
 		}
 	});
 }
+
+function sendAlternativeLink(auth_token, appointmentId) {
+	return new Promise((resolve, reject) => {
+		if (auth_token && appointmentId) {
+			axios({
+				url: `${baseURL}/${appointmentId}/8x8link`,
+				method: 'POST',
+				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },
+			})
+				.then(response => {
+					if (response.status === 200 || response.data.status === 'ok') {
+						resolve({ success: true });
+					} else {
+						reject({
+							success: false,
+							error: response.data.error,
+						});
+					}
+				})
+				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+		} else if (typeof auth_token === 'undefined') {
+			reject({ success: false, error: 'Unable to authenticate user.', authenticated: false });
+		} else {
+			resolve({ success: false, error: 'Missing Details' });
+		}
+	});
+}
+
 export default bookingService;
