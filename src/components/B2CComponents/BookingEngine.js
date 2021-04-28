@@ -109,11 +109,27 @@ const BookingEngine = () => {
 								travelDate,
 								travelTime,
 							} = values;
-							const bookingUsers = passengers.map((item) => ({ ...item, metadata: { short_token } }));
+							const bookingUsers = passengers.map(({
+								firstName,
+								lastName,
+								email,
+								phone,
+								dateOfBirth,
+								ethnicity,
+								sex,
+								passportNumber,
+								...rest
+							}) => ({
+								first_name: firstName,
+								last_name: lastName,
+								date_of_birth: dateOfBirth,
+								metadata: { short_token },
+								...rest,
+							}));
 							const body = {
-								bookingUsers,
-								travelDate,
-								travelTime,
+								booking_users: bookingUsers,
+								travel_date: travelDate,
+								travel_time: travelTime,
 							};
 							bookingService
 								.paymentRequest(selectedSlot.id, body)
