@@ -5,7 +5,6 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import bookingService from '../../services/bookingService';
-import datesAreSameDay from '../../helpers/datesAreSameDay';
 import { AuthContext } from '../../context/AuthContext';
 import bookingFormModel from './bookingFormModel';
 import Slot from './Slot';
@@ -26,12 +25,15 @@ const datePickerTheme = createMuiTheme({
 				},
 			},
 			current: {
-				color: 'var(--doc-white)!important',
+				color: 'var(--doc-pink)!important',
 			},
 			dayDisabled: {
 				color: 'var(--doc-dark-grey)',
 				opacity: '0.5',
 				backgroundColor: 'var(--doc-white)!important',
+			},
+			hidden: {
+				opacity: '0 !important',
 			},
 			day: {
 				width: '24px',
@@ -96,9 +98,6 @@ const datePickerTheme = createMuiTheme({
 const Step3 = () => {
 	const { token } = useContext(AuthContext);
 	const [appointments, setAppointments] = useState();
-	const [availableDates, setAvailableDates] = useState();
-	const today = new Date();
-	const in40days = new Date(today.setDate(today.getDate() + 40));
 
 	const {
         formField: {
@@ -115,14 +114,8 @@ const Step3 = () => {
 		setFieldValue,
 	} = useFormikContext();
 
-	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 3));
+	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 3)).setHours(0,0,0,0);
 	const endDate = new Date(travelDate);
-
-	const dateRange = {
-		start: `${('0' + startDate.getDate()).slice(-2)}-${('0' + startDate.getMonth()).slice(-2)}-${startDate.getFullYear()}`,
-		end: `${('0' + endDate.getDate()).slice(-2)}-${('0' + (endDate.getMonth() +1 )).slice(-2)}-${endDate.getFullYear()}`,
-	};
-	console.log(dateRange);
 
 	function getSlots() {
 		bookingService
@@ -140,33 +133,7 @@ const Step3 = () => {
 			});
 		setFieldValue(selectedSlot.name, null)
 	}
-	function getAvailableDates() {
-		bookingService
-			.getAvailableDates(dateRange.start, dateRange.end, token)
-			.then(result => {
-				if (result.success && result.availableDates) {
-					setAvailableDates(result.availableDates);
-					const firstAvailableDate = result.availableDates.find(({ has_appointments }) => has_appointments);
-					setFieldValue(appointmentDate.name, !!firstAvailableDate && !!firstAvailableDate.date ? firstAvailableDate.date : null);
-				} else {
-					// handle
-				}
-			})
-			.catch(err => console.log(err));
-	};
-	function disableDates(date) {
-		const day = availableDates.filter(item => datesAreSameDay(item.date, date));
-		return day && day.length === 1 && typeof day[0].has_appointments !== 'undefined'
-			? !day[0].has_appointments
-			: false;
-	};
 
-	useEffect(() => {
-		if (availableDates === null || typeof availableDates === 'undefined') {
-			// get available days
-			getAvailableDates();
-		}
-	}, []);
 	useEffect(() => {
 		if (selectedDate) {
 			getSlots();
@@ -183,12 +150,12 @@ const Step3 = () => {
 								{({ field, form }) => (
 									<DatePicker
 										{...field}
-										variant='static'
-										label={appointmentDate.label}
-										maxDate={in40days}
 										disablePast
-										shouldDisableDate={typeof availableDates !== 'undefined' ? disableDates : null}
+										variant='static'
+										maxDate={endDate}
+										label={appointmentDate.label}
 										onChange={(value) => form.setFieldValue(field.name, value)}
+										shouldDisableDate={(date) => date.setHours(0,0,0,0) < startDate}
 									/>
 								)}
 							</Field>
