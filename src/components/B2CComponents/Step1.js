@@ -29,6 +29,9 @@ const datePickerTheme = createMuiTheme({
 				opacity: '0.5',
 				backgroundColor: 'var(--doc-white)!important',
 			},
+			hidden: {
+				opacity: '0 !important',
+			},
 			day: {
 				width: '24px',
 				height: '24px',

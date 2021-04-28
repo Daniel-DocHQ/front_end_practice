@@ -42,7 +42,7 @@ export default [
     [passportNumber.name]: Yup.string().required('Input passport number'),
   }),
   Yup.object().shape({
-    [selectedSlot.name]: Yup.object().shape({
+    [selectedSlot.name]: Yup.object().typeError('You should select appointment time').shape({
       id: Yup.string().required(),
       end_time: Yup.string().required(),
       start_time: Yup.string().required(),
