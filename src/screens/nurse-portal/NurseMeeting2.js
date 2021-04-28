@@ -318,7 +318,7 @@ const PatientDetails = ({
 								onClick={() => copyToClipboard(alternativeLinkRef)}
 								className='tab-row-text patient-link-text'
 							>
-								https://8x8.vc/dochq/{appointmentId}
+								https://8x8.vc/dochq/{process.env.REACT_APP_JOIN_LINK_PREFIX}-{appointmentId}
 							</Typography>
 						</Tooltip>
 					</div>
@@ -1064,7 +1064,7 @@ const AppointmentActions = ({
 								onClick={() => copyToClipboard(alternativeLinkRef)}
 								className='tab-row-text patient-link-text'
 							>
-								https://8x8.vc/dochq/{appointmentId}
+								https://8x8.vc/dochq/{process.env.REACT_APP_JOIN_LINK_PREFIX}-{appointmentId}
 							</Typography>
 						</Tooltip>
 					</div>

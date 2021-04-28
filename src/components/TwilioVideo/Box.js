@@ -27,7 +27,7 @@ const Box = ({
 	const handleSubmit = useCallback(
 		async event => {
 			event.preventDefault();
-			const data = await fetch('https://myhealth-staging.dochq.co.uk/video/token', {
+			const data = await fetch('/video/token', {
 				method: 'POST',
 				body: JSON.stringify({
 					identity: isNurse ? 'nurse' : 'patient',
