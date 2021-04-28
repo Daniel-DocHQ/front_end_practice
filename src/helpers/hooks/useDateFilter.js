@@ -4,60 +4,62 @@ const useDateFilter = (appointments) => {
 	const [filter, setFilter] = useState('today');
 	const [filteredAppointments, setFilteredAppointments] = useState([]);
 	const today = new Date();
-	const tomorrow = new Date(today);
-	const currentMonth = new Date ().getMonth();
-	today.setHours(0,0,0,0)
-	tomorrow.setDate(tomorrow.getDate() + 1);
-	tomorrow.setHours(0,0,0,0);
 	const todayTime = today.getTime();
-	const tomorrowTime = tomorrow.getTime();
-	const todayObj = new Date();
-	const todayDate = todayObj.getDate();
-	const todayDay = todayObj.getDay();
-	const firstDayOfWeek = new Date(todayObj.setDate(todayDate - todayDay));
-	const lastDayOfWeek = new Date(firstDayOfWeek);
-	lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6);
+	const todayDay = new Date().getDate();
+	const nextMonth = new Date (new Date ().setDate(todayDay + 31)).setHours(0,0,0,0);
+	const lastMonth = new Date (new Date ().setDate(todayDay - 31)).setHours(0,0,0,0);
+	const tomorrow = new Date(new Date ().setDate(todayDay + 1)).setHours(0,0,0,0)
+	const yesterdayTime = new Date(new Date ().setDate(todayDay - 1)).setHours(0,0,0,0);
+	const firstDayOfWeek = new Date(new Date ().setDate(todayDay - 7)).setHours(0,0,0,0);
+	const lastDayOfWeek = new Date(new Date ().setDate(todayDay + 7)).setHours(0,0,0,0);
 
 	useEffect(() => {
 		if (!!appointments.length) {
+			let newAppointments;
 			switch (filter) {
 				case 'last month':
-					setFilteredAppointments([...appointments].filter((appointment) =>
-						new Date(appointment.start_time).getMonth() === currentMonth));
+					newAppointments = [...appointments].filter((appointment) => {
+						const appointmentDate = new Date(appointment.start_time).getTime();
+						return appointmentDate >= lastMonth && appointmentDate <= today;
+					});
 					break;
 				case 'last week':
-					setFilteredAppointments([...appointments].filter((appointment) => {
-						const appointmentDate = new Date(appointment.start_time);
-						return appointmentDate >= firstDayOfWeek && appointmentDate <= lastDayOfWeek;
-					}));
+					newAppointments = [...appointments].filter((appointment) => {
+						const appointmentDate = new Date(appointment.start_time).getTime();
+						return appointmentDate >= firstDayOfWeek && appointmentDate <= today;
+					});
 					break;
 				case 'yesterday':
-					setFilteredAppointments([...appointments].filter((appointment) =>
-						new Date(appointment.start_time).setHours(0,0,0,0) === todayTime));
+					newAppointments = [...appointments].filter((appointment) =>
+						new Date(appointment.start_time).setHours(0,0,0,0) === yesterdayTime
+					);
+					console.log(newAppointments);
 					break;
 				case 'today':
-					setFilteredAppointments([...appointments].filter((appointment) =>
-						new Date(appointment.start_time).setHours(0,0,0,0) === todayTime));
+					newAppointments = [...appointments].filter((appointment) =>
+						new Date(appointment.start_time).setHours(0,0,0,0) === todayTime);
 					break;
 				case 'tomorrow':
-					setFilteredAppointments([...appointments].filter((appointment) =>
-						new Date(appointment.start_time).setHours(0,0,0,0) === tomorrowTime));
+					newAppointments = [...appointments].filter((appointment) =>
+						new Date(appointment.start_time).setHours(0,0,0,0) === tomorrow);
 					break;
 				case 'week':
-					setFilteredAppointments([...appointments].filter((appointment) => {
-						const appointmentDate = new Date(appointment.start_time);
+					newAppointments = [...appointments].filter((appointment) => {
+						const appointmentDate = new Date(appointment.start_time).getTime();
 						return appointmentDate >= today && appointmentDate <= lastDayOfWeek;
-					}));
+					});
 					break;
 				case 'month':
-					setFilteredAppointments([...appointments].filter((appointment) => {
-						const appointmentDate = new Date(appointment.start_time);
-						return appointmentDate >= today && appointmentDate.getMonth() === currentMonth;
-					}));
+					newAppointments = [...appointments].filter((appointment) => {
+						const appointmentDate = new Date(appointment.start_time).getTime();
+						return appointmentDate >= today && appointmentDate <= nextMonth;
+					});
 					break;
 				default:
-					setFilteredAppointments([...appointments]);
+					newAppointments = [...appointments];
 			}
+			newAppointments.sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime());
+			setFilteredAppointments(newAppointments);
 		}
 	}, [filter, appointments]);
 

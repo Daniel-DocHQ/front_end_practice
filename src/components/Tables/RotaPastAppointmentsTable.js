@@ -35,7 +35,7 @@ const RotaPastAppointmentsTable = ({ doctors = [] }) => {
 			>
 				<h2>Rota Management</h2>
 			</div>
-			<TableContainer style={{ margin: 'auto', maxHeight: '500px' }}>
+			<TableContainer style={{ margin: 'auto' }}>
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>

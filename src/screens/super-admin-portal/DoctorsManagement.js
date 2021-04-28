@@ -18,7 +18,6 @@ const DoctorsManagement = props => {
 	today.setHours(0,0,0,0);
 	const start_time = new Date(today.setDate(today.getDate() - 30));
 	const end_time = new Date(today.setDate(today.getDate() + 60));
-	console.log(start_time, end_time);
 	let history = useHistory();
 
 	const logoutUser = () => {

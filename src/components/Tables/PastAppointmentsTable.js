@@ -93,7 +93,7 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
 					</Button>
 				</ButtonGroup>
 			</div>
-			<TableContainer style={{ margin: 'auto', maxHeight: '500px' }}>
+			<TableContainer style={{ margin: 'auto' }}>
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>

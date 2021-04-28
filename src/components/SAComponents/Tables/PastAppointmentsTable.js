@@ -93,7 +93,7 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
 					</Button>
 				</ButtonGroup>
             </div>
-            <TableContainer style={{ margin: 'auto', maxHeight: '500px' }}>
+            <TableContainer style={{ margin: 'auto' }}>
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
@@ -107,7 +107,7 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {!!filteredAppointments.length ? appointments.map(appointment => {
+                        {!!filteredAppointments.length ? filteredAppointments.map(appointment => {
                             const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
 
                             return (

@@ -60,7 +60,7 @@ const AppointmentTable = ({
 }) => {
 	const classes = useStyles();
 	const { filteredAppointments: appointmentToFilter, filter, setFilter } = useDateFilter(appointments);
-    const filteredAppointments = appointmentToFilter.filter(({ id }) => id !== ongoingAppointmentId).sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime());
+    const filteredAppointments = appointmentToFilter.filter(({ id }) => id !== ongoingAppointmentId);
 
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
