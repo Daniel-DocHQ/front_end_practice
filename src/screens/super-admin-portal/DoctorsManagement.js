@@ -74,11 +74,6 @@ const DoctorsManagement = props => {
 					appointments={appointments.filter(({ status, user }) => (status.toLowerCase() === 'waiting' && parseFloat(user) < 20))}
 				/>
 			</Grid>
-            <Grid item xs={12} style={{ paddingTop: 20 }}>
-				<CancelledAppointmentsTable
-					appointments={appointments.filter(({ status }) => status.toLowerCase() === 'canceled')}
-				/>
-			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<PastAppointmentsTable
 					appointments={appointments.filter(({ status }) => status.toLowerCase() === 'completed')} />
