@@ -6,7 +6,6 @@ import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import PastAppointmentsTable from '../../components/SAComponents/Tables/PastAppointmentsTable';
 import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
-import CancelledAppointmentsTable from '../../components/SAComponents/Tables/CancelledAppointmentsTable';
 import ClaimableAppointmentsTable from '../../components/SAComponents/Tables/ClaimableAppointmentsTable';
 import AvailableAppointmentsTable from '../../components/SAComponents/Tables/AvailableAppointmentsTable';
 
