@@ -4,7 +4,7 @@ const useDateFilter = (appointments) => {
 	const [filter, setFilter] = useState('today');
 	const [filteredAppointments, setFilteredAppointments] = useState([]);
 	const today = new Date();
-	const todayTime = today.getTime();
+	const todayTime = new Date(today.getTime()).setHours(0,0,0,0);
 	const todayDay = new Date().getDate();
 	const nextMonth = new Date (new Date ().setDate(todayDay + 31)).setHours(0,0,0,0);
 	const lastMonth = new Date (new Date ().setDate(todayDay - 31)).setHours(0,0,0,0);
