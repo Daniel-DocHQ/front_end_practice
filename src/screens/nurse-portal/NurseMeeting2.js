@@ -70,6 +70,7 @@ const NurseMeeting2 = ({
 				)}
 				<div className={`patient-notes-container ${isVideo ? '' : 'face-to-face'}`}>
 					<TabContainer
+						authToken={token}
 						kitProvider={kitProvider}
 						isJoined={!!videoCallToken}
 						setKitProvider={setKitProvider}
@@ -84,6 +85,7 @@ const NurseMeeting2 = ({
 export default NurseMeeting2;
 
 const TabContainer = ({
+	authToken,
 	isJoined,
 	kitProvider,
 	setKitProvider,
@@ -125,12 +127,14 @@ const TabContainer = ({
 						patient={patient}
 						patients={patients}
 						isJoined={isJoined}
+						authToken={authToken}
 						appointmentId={appointmentId}
 						updateParent={increaseStep}
 					/>
 				)}
 				{value === 1 && (
 					<AppointmentActions
+						authToken={authToken}
 						patient={patient}
 						patients={patients}
 						appointmentId={appointmentId}
@@ -145,6 +149,7 @@ const TabContainer = ({
 					isTuiType ? (
 						<AddressVerification
 							isAntigenType
+							authToken={authToken}
 							patient={patient}
 							patients={patients}
 							isJoined={isJoined}
@@ -162,6 +167,7 @@ const TabContainer = ({
 				{value === 1 && (
 					<AddressVerification
 						isJoined
+						authToken={authToken}
 						patient={patient}
 						patients={patients}
 						appointmentId={appointmentId}
@@ -171,6 +177,7 @@ const TabContainer = ({
 				{value === 2 && (
 					<PatientIdVerification
 						patients={patients}
+						authToken={authToken}
 						isTuiType={isTuiType}
 						appointmentId={appointmentId}
 						updateParent={increaseStep}
@@ -178,6 +185,7 @@ const TabContainer = ({
 				)}
 				{value === 3 && (
 					<SubmitPatientResult
+						authToken={authToken}
 						patients={patients}
 						isTuiType={isTuiType}
 						appointmentId={appointmentId}
@@ -192,6 +200,7 @@ const PatientDetails = ({
     title,
     patient,
     fullData,
+	authToken,
 	isAntigenType,
     patients = [],
     appointmentId,
@@ -326,7 +335,7 @@ const PatientDetails = ({
 						<DocButton
 							text="Email Alternative Link to Patient"
 							color="green"
-							onClick={() => bookingService.sendAlternativeLink()
+							onClick={() => bookingService.sendAlternativeLink(authToken, appointmentId)
 								.then(result => {
 									if (result.success) {
 										ToastsStore.success('Alternative Link has been sent successfully');
@@ -356,6 +365,7 @@ const PatientDetails = ({
 const SubmitPatientResult = ({
 	patients,
 	isTuiType,
+	authToken,
 	appointmentId,
 }) => {
 	const {
@@ -459,6 +469,7 @@ const SubmitPatientResult = ({
 					<Grid item>
 						<PatientDetails
 							title='Patient Details'
+							authToken={authToken}
 							patient={currentPatient}
 							appointmentId={appointmentId}
 						/>
@@ -611,6 +622,7 @@ const AddressVerification = ({
     patient,
     patients,
 	isJoined,
+	authToken,
 	isAntigenType,
     updateParent,
     appointmentId,
@@ -673,6 +685,7 @@ const AddressVerification = ({
 							fullData
 							patient={patient}
 							patients={patients}
+							authToken={authToken}
 							isAntigenType={isAntigenType}
 							isSpaceBetweenPhoneBox
 							addressBlockTitle={isAntigenType && isJoined}
@@ -832,6 +845,7 @@ const VideoAppointmentDetails = ({
 const PatientIdVerification = ({
     patients,
 	isTuiType,
+	authToken,
     updateParent,
     appointmentId,
 }) => {
@@ -892,6 +906,7 @@ const PatientIdVerification = ({
 					<Grid item>
 						<PatientDetails
 							fullData
+							authToken={authToken}
 							title='Patient Details'
 							patient={currentPatient}
 							appointmentId={appointmentId}
@@ -961,6 +976,7 @@ const PatientIdVerification = ({
 
 const AppointmentActions = ({
 	patient,
+	authToken,
 	patients = [],
 	appointmentId,
 	kitProvider,
@@ -1072,7 +1088,7 @@ const AppointmentActions = ({
 						<DocButton
 							text="Email Alternative Link to Patient"
 							color="green"
-							onClick={() => bookingService.sendAlternativeLink()
+							onClick={() => bookingService.sendAlternativeLink(authToken, appointmentId)
 								.then(result => {
 									if (result.success) {
 										ToastsStore.success('Alternative Link has been sent successfully');
