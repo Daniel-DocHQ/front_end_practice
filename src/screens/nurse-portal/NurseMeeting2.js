@@ -301,7 +301,26 @@ const PatientDetails = ({
 							</div>
 						)
 					)}
-					<div className='row space-between no-margin' style={{ padding: '20px 0' }}>
+					<div style={{ padding: '20px 0' }}>
+						{isManyPatients ? (
+							patients.map((item, indx) => (
+								!!item.email && (
+									<div key={indx} className='row space-between no-margin'>
+										<p className='tab-row-text title-info'>Email Address {indx + 1}:</p>
+										<p className='tab-row-text'>{item.email}</p>
+									</div>
+								)
+							))
+						) : (
+							!!patient.email && (
+								<div className='row space-between no-margin'>
+									<p className='tab-row-text title-info'>Email Address:</p>
+									<p className='tab-row-text'>{patient.email}</p>
+								</div>
+							)
+						)}
+					</div>
+					<div className='no-margin' style={{ padding: '20px 0' }}>
 						<p className='tab-row-text title-info'>
 							Patient Joining link:
 						</p>
@@ -316,7 +335,7 @@ const PatientDetails = ({
 							</Typography>
 						</Tooltip>
 					</div>
-					<div className='row space-between no-margin' style={{ padding: '20px 0' }}>
+					<div className='no-margin' style={{ padding: '20px 0' }}>
 						<p className='tab-row-text title-info'>
 							Alternative Patient Joining link:
 						</p>
@@ -351,7 +370,7 @@ const PatientDetails = ({
 				</div>
 				{isManyPatients && (
 					<React.Fragment>
-						{!!addressBlockTitle && <Divider />}
+						<Divider />
 						<div className={isSpaceBetweenPhoneBox && 'padding-top-box'}>
 							{addressDataBlock()}
 						</div>
@@ -688,8 +707,8 @@ const AddressVerification = ({
 							authToken={authToken}
 							isAntigenType={isAntigenType}
 							isSpaceBetweenPhoneBox
-							addressBlockTitle={isAntigenType && isJoined}
-							title={isAntigenType ? ( isJoined ? 'Patient Details' : 'Appointment Details') : 'Address Verification' }
+							addressBlockTitle={isJoined}
+							title={isJoined ? 'Patient Details' : 'Appointment Details'}
 							appointmentId={appointmentId}
 						/>
 					</Grid>
@@ -1056,7 +1075,7 @@ const AppointmentActions = ({
 							</React.Fragment>
 						)}
 					</div>
-					<div className='row space-between' style={{ paddingBottom: '10px' }}>
+					<div style={{ paddingBottom: '10px' }}>
 						<p className='tab-row-text title-info'>Patient Joining link:</p>
 						<Tooltip title="Click to copy">
 							<Typography
@@ -1069,7 +1088,7 @@ const AppointmentActions = ({
 							</Typography>
 						</Tooltip>
 					</div>
-					<div className='row space-between no-margin' style={{ padding: '20px 0' }}>
+					<div className='no-margin' style={{ padding: '20px 0' }}>
 						<p className='tab-row-text title-info'>
 							Alternative Patient Joining link:
 						</p>
@@ -1166,6 +1185,7 @@ const AppointmentActions = ({
 									required
 								>
 									<MenuItem value='Roche'>Roche Test Kit</MenuItem>
+									<MenuItem value='Flowflex'>Flowflex Kit</MenuItem>
 								</Select>
 							</FormControl>
 						</Grid>

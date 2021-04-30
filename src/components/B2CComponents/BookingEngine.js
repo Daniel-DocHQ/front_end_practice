@@ -112,18 +112,14 @@ const BookingEngine = () => {
 							const bookingUsers = passengers.map(({
 								firstName,
 								lastName,
-								email,
-								phone,
 								dateOfBirth,
-								ethnicity,
-								sex,
 								passportNumber,
 								...rest
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
 								date_of_birth: dateOfBirth,
-								metadata: { short_token },
+								metadata: { short_token, passportId: passportNumber },
 								...rest,
 							}));
 							const body = {

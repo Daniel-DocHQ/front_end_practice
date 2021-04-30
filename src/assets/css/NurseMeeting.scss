@@ -1,6 +1,5 @@
 .patient-notes-container {
 	flex: 1;
-	padding: 10px;
 	align-self: flex-start;
 	.tab-container {
 		height: calc(100vh - 130px);
@@ -60,7 +59,7 @@
 		font-weight: bold;
 	}
 	.patient-link-text {
-		max-width: 200px;
+		max-width: 265px;
 		cursor: pointer;
 	}
 	.padding-top-box {
