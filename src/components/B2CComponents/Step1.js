@@ -2,7 +2,7 @@ import React from 'react';
 import { Field } from 'formik';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
-import { createMuiTheme, Box } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import bookingFormModel from './bookingFormModel';
 import './BookingEngine.scss';
@@ -114,7 +114,7 @@ const Step1 = () => {
 											disablePast
 											label={travelDate.label}
 											onChange={(value) => {
-												const appointmentDate = new Date(value).setDate(value.getDate() - 3);
+												const appointmentDate = new Date(value).setDate(value.getDate() - 1);
 												form.setFieldValue(field.name, value);
 												form.setFieldValue('appointmentDate', new Date(appointmentDate));
 											}}

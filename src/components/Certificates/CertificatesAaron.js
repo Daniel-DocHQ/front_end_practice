@@ -181,6 +181,9 @@ const CertificatesAaron = ({
 			if (kitProvider === 'Roche Test Kit') {
 				body.specificity = '96.52%';
 				body.sensitivity = '99.68%';
+			} else {
+				body.specificity = '99.6%';
+				body.sensitivity = '97.1%';
 			}
 			setIsLoading(true);
 			bookingService
@@ -357,6 +360,7 @@ const CertificatesAaron = ({
 							required
 						>
 							<MenuItem value='Roche'>Roche Test Kit</MenuItem>
+							<MenuItem value='Flowflex'>Flowflex Kit</MenuItem>
 						</Select>
 					</FormControl>
 				</div>

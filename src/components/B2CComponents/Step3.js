@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
+import { format } from 'date-fns';
 import { Field, useFormikContext, ErrorMessage } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import bookingService from '../../services/bookingService';
-import { AuthContext } from '../../context/AuthContext';
 import bookingFormModel from './bookingFormModel';
 import Slot from './Slot';
 import './BookingEngine.scss';
@@ -96,7 +96,6 @@ const datePickerTheme = createMuiTheme({
 });
 
 const Step3 = () => {
-	const { token } = useContext(AuthContext);
 	const [appointments, setAppointments] = useState();
 
 	const {
@@ -110,16 +109,26 @@ const Step3 = () => {
 			appointmentDate: selectedDate,
 			selectedSlot: selectedSlotValue,
 			travelDate,
+			travelTime,
 		},
 		setFieldValue,
 	} = useFormikContext();
 
-	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 3)).setHours(0,0,0,0);
+	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 1)).setHours(0,0,0,0);
 	const endDate = new Date(travelDate);
+	const endDateTime = new Date (endDate).setHours(0,0,0,0);
+	const timeToMakeTest = format(new Date(new Date(travelTime).setHours(travelTime.getHours() - 1)), "HH:mm");
 
 	function getSlots() {
+		const selectedDateTime = new Date (selectedDate).setHours(0,0,0,0);
+		const dateSelect = `${format(selectedDate, "yyyy-MM-dd")}T${timeToMakeTest}:00Z`;
 		bookingService
-			.getSlots(typeof selectedDate === 'undefined' ? new Date() : selectedDate)
+			.getSlotsByTime({
+				...(selectedDateTime === endDateTime
+					? {  date_time: `${format(selectedDate, "yyyy-MM-dd")}T00:00:00Z`, date_time_to: dateSelect }
+					: { date_time: dateSelect }
+				),
+			})
 			.then(result => {
 				if (result.success && result.appointments) {
 					setAppointments(result.appointments);

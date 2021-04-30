@@ -16,6 +16,7 @@ const bookingService = {
 	updateTerms,
 	updateAppointmentStatus,
 	sendAlternativeLink,
+	getSlotsByTime,
 };
 
 // Booking engine
@@ -35,6 +36,49 @@ function getSlots(selectedDate) {
 				url: `${baseURL}?&service=${
 					typeof params['service'] === 'undefined' ? SERVICE_TYPE : params['service']
 				}&date=${date}${additionalParams()}`,
+				method: 'get',
+				headers: { 'Content-type': 'application,json' },
+			})
+				.then(response => {
+					if (response.status === 200 || response.data.status === 'ok') {
+						resolve({ success: true, appointments: response.data });
+					} else if (response.status === 204) {
+						resolve({ success: true, appointments: [] });
+					} else if (response.status === 403) {
+						reject({
+							success: false,
+							error: 'Unable to authenticate user.',
+							authenticated: false,
+						});
+					} else {
+						reject({
+							success: false,
+							error: 'An error occurred',
+						});
+					}
+				})
+				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+		} else {
+			resolve({ success: false, error: 'Missing Details' });
+		}
+	});
+}
+
+function getSlotsByTime({ date_time, date_time_to }) {
+	const params = getURLParams();
+	function additionalParams() {
+		// used to book group face to face appointments
+		if (params['group'] && params['user']) {
+			return `&group=${params['group']}&user=${params['user']}`;
+		}
+		return '';
+	}
+	return new Promise((resolve, reject) => {
+		if (!!date_time || !!date_time_to) {
+			axios({
+				url: `${baseURL}?&service=${
+					typeof params['service'] === 'undefined' ? SERVICE_TYPE : params['service']
+				}&date_time=${date_time}&date_time_to=${date_time_to || ''}${additionalParams()}`,
 				method: 'get',
 				headers: { 'Content-type': 'application,json' },
 			})
@@ -276,7 +320,7 @@ function sendResult(auth_token, appointment_id, body, patientId) {
 		body.gmc = '2271298';
 		body.medical_clinic = 'Ciconia Recovery Limited';
 		body.cqc = '8220927874';
-		body.product = 'Roche Rapid Antigen';
+		body.product = !!body.kitProvider ? !!body.kitProvider : 'Roche Rapid Antigen';
 		body.type = 'SARS-CoV-2';
 		body.metadata = { ...body };
 		if (auth_token && appointment_id && patientId) {
