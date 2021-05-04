@@ -42,6 +42,7 @@ const TEST_TYPES = {
 const APPOINTMENT_TYPES = {
 	tui: 'video_gp_tui',
 	vista: 'video_gp',
+	dochq: 'video_gp_dochq',
 };
 
 const NurseMeeting2 = ({
@@ -106,7 +107,7 @@ const TabContainer = ({
 		setValue((oldValue) => oldValue + 1);
 	});
 	const isAntigenType = test_type === TEST_TYPES.antigen;
-	const isTuiType = type === APPOINTMENT_TYPES.tui;
+	const isTuiType = type === APPOINTMENT_TYPES.tui || type === APPOINTMENT_TYPES.dochq;
 
 	useEffect(() => {
 		if (isJoined && value === 0 && test_type === TEST_TYPES.pcr) {

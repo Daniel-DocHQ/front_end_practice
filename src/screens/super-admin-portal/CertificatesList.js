@@ -10,32 +10,32 @@ const CertificatesList = props => {
 	const certificatesTemplates = [
 		{
 			name: 'UK PCR Travel Certificate',
-			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificates-csvs/UK%20PCR%20travel%20certificate.csv',
+			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificate-templates/UK%20PCR%20travel%20certificate.csv',
 			onChange: (file) => uploadCsvFile('PCRTravelUK', file),
 		},
 		{
 			name: 'UK PCR Medical Certificate',
-			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificates-csvs/UK%20PCR%20medical%20certificate.csv',
+			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificate-templates/UK%20PCR%20medical%20certificate.csv',
 			onChange: (file) => uploadCsvFile('PCRMedicalUK', file),
 		},
 		{
 			name: 'UK Antigen Travel Certificate',
-			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificates-csvs/UK%20Antigen%20travel%20certificate.csv',
+			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificate-templates/UK%20Antigen%20medical%20certificate.csv',
 			onChange: (file) => uploadCsvFile('AntigenTravelUK', file),
 		},
 		{
 			name: 'UK Antigen Medical Certificate',
-			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificates-csvs/UK%20Antigen%20medical%20certificate.csv',
+			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificate-templates/UK%20Antigen%20medical%20certificate.csv',
 			onChange: (file) => uploadCsvFile('AntigenMedicalUK', file),
 		},
 		{
 			name: 'DE PCR Travel Certificate',
-			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificates-csvs/DE%20PCR%20Travel%20Certificate.csv',
+			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificate-templates/DE%20PCR%20Travel%20Certificate.csv',
 			onChange: (file) => uploadCsvFile('PCRTravelDE', file),
 		},
 		{
 			name: 'DE Antigen Travel Certificate',
-			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificates-csvs/DE%20Antigen%20Travel%20Certificate.csv',
+			downloadLink: 'https://storage.googleapis.com/dochq.co.uk/certificate-templates/DE%20Antigen%20Travel%20Certificate.csv',
 			onChange: (file) => uploadCsvFile('AntigenTravelDE', file),
 		},
 	];
