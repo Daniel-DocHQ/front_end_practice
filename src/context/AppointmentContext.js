@@ -57,7 +57,7 @@ export default class AppointmentContextProvider extends Component {
 							testing_kit_id,
 							appointmentDetails: result.appointment,
 							appointmentId,
-							test_type,
+							test_type: test_type || 'Antigen',
 							type,
 							status_changes,
 						});
