@@ -100,6 +100,7 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
                             <TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
                             <TableCell align='center' style={styles.tableText}>Date</TableCell>
                             <TableCell align='center' style={styles.tableText}>Time</TableCell>
+                            <TableCell align='center' style={styles.tableText}>Project</TableCell>
                             <TableCell align='center' style={styles.tableText}>People</TableCell>
                             <TableCell align='center' style={styles.tableText}>Test</TableCell>
                             <TableCell align='center' style={styles.tableText}>Results</TableCell>
@@ -109,6 +110,7 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
                     <TableBody>
                         {!!filteredAppointments.length ? filteredAppointments.map(appointment => {
                             const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
+                            const type = get(appointment, 'type', '');
 
                             return (
                                 <TableRow key={appointment.id}>
@@ -121,6 +123,9 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
                                     <TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
                                         {format(appointmentStartTime, 'p')}
                                     </TableCell>
+                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{type && (type === 'video_gp_dochq' ? 'DocHQ' : 'TUI')}
+									</TableCell>
                                     <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         {get(appointment, 'booking_users.length', '')}
                                     </TableCell>

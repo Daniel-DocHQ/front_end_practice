@@ -110,6 +110,7 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 							<TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
+							<TableCell align='center' style={styles.tableText}>Project</TableCell>
                             <TableCell align='center' style={styles.tableText}>People</TableCell>
 							<TableCell align='center' style={styles.tableText}>Test</TableCell>
 							<TableCell align='right' style={styles.tableText}>Actions</TableCell>
@@ -118,6 +119,7 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 					<TableBody>
 						{filteredAppointments.length > 0 && filteredAppointments.map(appointment => {
 							const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
+							const type = get(appointment, 'type', '');
 
 							return (
 								<TableRow key={appointment.id}>
@@ -129,6 +131,9 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
 										{format(appointmentStartTime, 'p')}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+										{type && (type === 'video_gp_dochq' ? 'DocHQ' : 'TUI')}
 									</TableCell>
                                     <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 										{get(appointment, 'booking_users.length', '')}

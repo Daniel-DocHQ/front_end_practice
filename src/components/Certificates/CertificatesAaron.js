@@ -48,7 +48,7 @@ const CertificatesAaron = ({
 	const [sex, setSex] = useState('');
 	const [reject_notes, setReject_notes] = useState('');
 	const [security_checked, setSecurity_checked] = useState(false);
-	const [kitProvider, setKitProvider] = useState('');
+	const [kitProvider, setKitProvider] = useState(preselectedKidProvider);
 	const [result, setResult] = useState('');
 	const [reasonForRejected, setReasonForRejected] = useState('');
 	const [passportId, setPassportId] = useState('');
@@ -85,6 +85,12 @@ const CertificatesAaron = ({
 			setPopulated(true);
 		}
 	}, []);
+
+	useEffect(() => {
+		if (preselectedKidProvider) {
+			setKitProvider(preselectedKidProvider);
+		}
+	}, [preselectedKidProvider])
 	function updateErrors(isValid, field) {
 		// if valid and in array remove
 		if (isValid && existsInArray(errors, field)) {
