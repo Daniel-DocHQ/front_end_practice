@@ -5,8 +5,8 @@ import './BookingEngine.scss';
 
 const icon = require('../../assets/images/icons/circled-tick.svg');
 
-const Step5 = ({ passengers }) => {
-    const { values: { appointmentDate, selectedSlot } } = useFormikContext();
+const Step5 = () => {
+    const { values: { appointmentDate, selectedSlot, passengers } } = useFormikContext();
     return (
         typeof isError === 'undefined' ? (
             <React.Fragment>
