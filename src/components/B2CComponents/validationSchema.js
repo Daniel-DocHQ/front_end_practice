@@ -21,7 +21,7 @@ const {
 
 export default [
   Yup.object().shape({
-    [antigenTest.name]: Yup.number().required('Input number of kits').min(1, 'Minimum 0 number of kits').max(4, 'You can\'t order more than 4'),
+    [antigenTest.name]: Yup.number().required('Input number of kits').min(1, 'Minimum 0 number of kits').max(4, 'Maximum 4 people per appointment'),
     [pcrTest.name]: Yup.number().required('Input number of kits').min(0, 'Minimum 0 number of kits').max(15, 'You can\'t order more than 15'),
   }),
   Yup.object().shape({
