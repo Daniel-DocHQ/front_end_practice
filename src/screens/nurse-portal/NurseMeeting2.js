@@ -442,7 +442,7 @@ const SubmitPatientResult = ({
 				result: '',
 				forename,
 				surname,
-				sampleTaken,
+				sample_taken: sampleTaken,
 			}, true);
 		}
 	}
@@ -484,6 +484,11 @@ const SubmitPatientResult = ({
 				console.log('error')
 			});
 	}
+
+	useEffect(() => {
+		setReasonForRejected('');
+		setNotes('');
+	}, [sampleTaken]);
 
 	return (
 		<div className='tab-container'>
@@ -561,27 +566,32 @@ const SubmitPatientResult = ({
 									<div className='row'>
 										<FormControl variant='filled' style={{ width: '100%' }}>
 											<InputLabel id='test-result-label'>Reason for {isSampleTakenRejected ? 'Rejected' : 'Invalid'}</InputLabel>
-											<Select
-												labelId='test-result-label'
-												id='test-result'
-												label={`Reason for ${isSampleTakenRejected ? 'Rejected' : 'Invalid'}`}
-												onChange={e => setReasonForRejected(e.target.value)}
-												value={reasonForRejected}
-												required
-											>
-												{isSampleTakenRejected ? (
-													<>
-														<MenuItem value='Client not there'>Client not there</MenuItem>
-														<MenuItem value='Test not performed as instructed'>Test not performed as instructed</MenuItem>
-														<MenuItem value='Other'>Other</MenuItem>
-													</>
-												) : (
-													<>
-														<MenuItem value='Test kit is damaged'>Test kit is damaged</MenuItem>
-														<MenuItem value='Other'>Other</MenuItem>
-													</>
-												)}
-											</Select>
+											{isSampleTakenRejected ? (
+												<Select
+													labelId='test-result-label'
+													id='test-result'
+													label="Reason for Rejected"
+													onChange={e => setReasonForRejected(e.target.value)}
+													value={reasonForRejected}
+													required
+												>
+													<MenuItem value='Client not there'>Client not there</MenuItem>
+													<MenuItem value='Test not performed as instructed'>Test not performed as instructed</MenuItem>
+													<MenuItem value='Other'>Other</MenuItem>
+												</Select>
+											) : (
+												<Select
+													labelId='test-result-label'
+													id='test-result'
+													label="Reason for Invalid"
+													onChange={e => setReasonForRejected(e.target.value)}
+													value={reasonForRejected}
+													required
+												>
+													<MenuItem value='Test kit is damaged'>Test kit is damaged</MenuItem>
+													<MenuItem value='Other'>Other</MenuItem>
+												</Select>
+											)}
 										</FormControl>
 									</div>
 									{isOtherOption && (
@@ -600,16 +610,16 @@ const SubmitPatientResult = ({
 												required={isSampleTakenNotValid}
 												placeholder={`Add Reason for ${isSampleTakenRejected ? 'Rejection' : 'Invalidation'}\nThis notes will be sent to the client`}
 											/>
-											<div className='row flex-end'>
-												<DocButton
-													text='Submit'
-													disabled={isSampleTakenNotValid ? !resultNotes : false}
-													color={(isSampleTakenNotValid && !resultNotes) ? 'disabled' : 'green'}
-													onClick={sendSampleTaken}
-												/>
-											</div>
 										</>
 									)}
+									<div className='row flex-end'>
+										<DocButton
+											text='Submit'
+											disabled={isSampleTakenNotValid ? !resultNotes : false}
+											color={(isSampleTakenNotValid && !resultNotes) ? 'disabled' : 'green'}
+											onClick={sendSampleTaken}
+										/>
+									</div>
 								</>
 							)}
 							{!!sampleTakenStatus && !!sampleTakenStatus.severity && !!sampleTakenStatus.message && (
