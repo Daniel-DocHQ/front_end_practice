@@ -397,6 +397,7 @@ const SubmitPatientResult = ({
 	const forename = get(currentPatient, 'first_name', '');
 	const surname = get(currentPatient, 'last_name', '');
 	const currentPatientName = `${forename} ${surname}`;
+	const [reasonForRejected, setReasonForRejected] = useState('');
 	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
 	const [kitIdModifyMode, setKitIdModifyMode] = useState(false);
 	const [kitIdSubmitted, setKitIdSubmitted] = useState(false);
@@ -408,11 +409,13 @@ const SubmitPatientResult = ({
 	const [kitId, setKitId] = useState();
 	const [appointmentNotes, setAppointmentNotes] = useState();
 
+	const isOtherOption = reasonForRejected === 'Other';
 	const isSampleTakenInvalid = sampleTaken === 'invalid';
 	const isSampleTakenRejected = sampleTaken === 'rejected';
 	const isSampleTakenValid = !isSampleTakenInvalid && !isSampleTakenRejected;
 	const isSampleTakenNotValid = isSampleTakenInvalid || isSampleTakenRejected;
 	const showPatientName = isTuiType && patients && patients.length > 1;
+	const resultNotes = isOtherOption ? notes : reasonForRejected;
 
 	function updateKitId() {
 		if (kitId) {
@@ -431,10 +434,10 @@ const SubmitPatientResult = ({
 		if (sampleTaken) {
 			sendResult({
 				...((isSampleTakenInvalid) && {
-					invalid_notes: notes,
+					invalid_notes: resultNotes,
 				}),
 				...(isSampleTakenRejected && {
-					reject_notes: notes,
+					reject_notes: resultNotes,
 				}),
 				result: '',
 				forename,
@@ -554,30 +557,60 @@ const SubmitPatientResult = ({
 								</div>
 							)}
 							{isSampleTakenNotValid && (
-								<React.Fragment>
-									<div className='row space-between'>
-										<h3 className='no-margin'>
-											{isSampleTakenRejected ? 'Rejection Notes' : 'Invalidation Notes'}
-										</h3>
+								<>
+									<div className='row'>
+										<FormControl variant='filled' style={{ width: '100%' }}>
+											<InputLabel id='test-result-label'>Reason for {isSampleTakenRejected ? 'Rejected' : 'Invalid'}</InputLabel>
+											<Select
+												labelId='test-result-label'
+												id='test-result'
+												label={`Reason for ${isSampleTakenRejected ? 'Rejected' : 'Invalid'}`}
+												onChange={e => setReasonForRejected(e.target.value)}
+												value={reasonForRejected}
+												required
+											>
+												{isSampleTakenRejected ? (
+													<>
+														<MenuItem value='Client not there'>Client not there</MenuItem>
+														<MenuItem value='Test not performed as instructed'>Test not performed as instructed</MenuItem>
+														<MenuItem value='Other'>Other</MenuItem>
+													</>
+												) : (
+													<>
+														<MenuItem value='Test kit is damaged'>Test kit is damaged</MenuItem>
+														<MenuItem value='Other'>Other</MenuItem>
+													</>
+												)}
+											</Select>
+										</FormControl>
 									</div>
-									<TextInputElement
-										rows={4}
-										multiline
-										id='notes'
-										value={notes}
-										onChange={setNotes}
-										required={isSampleTakenNotValid}
-										placeholder={`Add Reason for ${isSampleTakenRejected ? 'Rejection' : 'Invalidation'}\nThis notes will be sent to the client`}
-									/>
-									<div className='row flex-end'>
-										<DocButton
-											text='Submit'
-											disabled={isSampleTakenNotValid ? !notes : false}
-											color={isSampleTakenNotValid && !notes ? 'disabled' : 'green'}
-											onClick={sendSampleTaken}
-										/>
-									</div>
-								</React.Fragment>
+									{isOtherOption && (
+										<>
+											<div className='row space-between'>
+												<h3 className='no-margin'>
+													{isSampleTakenRejected ? 'Rejection Notes' : 'Invalidation Notes'}
+												</h3>
+											</div>
+											<TextInputElement
+												rows={4}
+												multiline
+												id='notes'
+												value={notes}
+												onChange={setNotes}
+												required={isSampleTakenNotValid}
+												placeholder={`Add Reason for ${isSampleTakenRejected ? 'Rejection' : 'Invalidation'}\nThis notes will be sent to the client`}
+											/>
+											<div className='row flex-end'>
+												<DocButton
+													text='Submit'
+													disabled={isSampleTakenNotValid ? !resultNotes : false}
+													color={(isSampleTakenNotValid && !resultNotes) ? 'disabled' : 'green'}
+													onClick={sendSampleTaken}
+												/>
+											</div>
+										</>
+									)}
+								</>
 							)}
 							{!!sampleTakenStatus && !!sampleTakenStatus.severity && !!sampleTakenStatus.message && (
 								<div className='row center'>
