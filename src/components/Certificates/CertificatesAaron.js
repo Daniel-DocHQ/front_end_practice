@@ -48,9 +48,8 @@ const CertificatesAaron = ({
 	const [sex, setSex] = useState('');
 	const [reject_notes, setReject_notes] = useState('');
 	const [security_checked, setSecurity_checked] = useState(false);
-	const [kitProvider, setKitProvider] = useState(preselectedKidProvider);
+	const [kitProvider, setKitProvider] = useState('');
 	const [result, setResult] = useState('');
-	const [reasonForRejected, setReasonForRejected] = useState('');
 	const [passportId, setPassportId] = useState('');
 	// Error handling
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
@@ -60,11 +59,11 @@ const CertificatesAaron = ({
 
 	const [canCreateCertificate, setCanCreateCertificate] = useState(true);
 	const isResultRejected = result === 'Rejected';
-	const isOtherOption = reasonForRejected === 'Other';
 
 	function isValid(obj) {
 		return (
 			!!obj &&
+			!!img &&
 			!!obj.forename &&
 			!!obj.surname &&
 			!!obj.email &&
@@ -74,7 +73,7 @@ const CertificatesAaron = ({
 			!!obj.result &&
 			!!obj.passportId &&
 			!!obj.kitProvider &&
-			(isResultRejected ? !!obj.reject_notes : !!img)
+			(isResultRejected ? !!obj.reject_notes : true)
 		);
 	}
 
@@ -85,12 +84,6 @@ const CertificatesAaron = ({
 			setPopulated(true);
 		}
 	}, []);
-
-	useEffect(() => {
-		if (preselectedKidProvider) {
-			setKitProvider(preselectedKidProvider);
-		}
-	}, [preselectedKidProvider])
 	function updateErrors(isValid, field) {
 		// if valid and in array remove
 		if (isValid && existsInArray(errors, field)) {
@@ -155,7 +148,7 @@ const CertificatesAaron = ({
 			result,
 			passportId,
 			kitProvider,
-			...(isResultRejected && { reject_notes: isOtherOption ? reject_notes : reasonForRejected }),
+			...(isResultRejected && { reject_notes }),
 		};
 		if (canCreateCertificate && isValid(body) && errors.length === 0) {
 			sendResult(body);
@@ -395,64 +388,39 @@ const CertificatesAaron = ({
 						<p className='error'>You must enter a result</p>
 					</div>
 				)}
-				{isResultRejected ? (
+				{isResultRejected && (
 					<React.Fragment>
-						<div className='row'>
-							<FormControl variant='filled' style={{ width: '100%' }}>
-								<InputLabel id='test-result-label'>Reason for Rejected</InputLabel>
-								<Select
-									labelId='test-result-label'
-									id='test-result'
-									label='Reason for Rejected'
-									onChange={e => setReasonForRejected(e.target.value)}
-									value={reasonForRejected}
-									required
-									updateStatus={updateErrors}
-								>
-									<MenuItem value='Client not there'>Client not there</MenuItem>
-									<MenuItem value='Test not performed as instructed'>Test not performed as instructed</MenuItem>
-									<MenuItem value='Other'>Other</MenuItem>
-								</Select>
-							</FormControl>
+						<div className='row space-between'>
+							<FormLabel component='legend'>Rejection Notes *</FormLabel>
 						</div>
-						{isOtherOption && (
-							<>
-								<div className='row space-between'>
-									<FormLabel component='legend'>Rejection Notes *</FormLabel>
-								</div>
-								<TextInputElement
-									rows={4}
-									required
-									multiline
-									id='reject-notes'
-									value={reject_notes}
-									onChange={setReject_notes}
-									placeholder='Add Reason for Rejection. This notes will be sent to the client'
-								/>
-							</>
-						)}
+						<TextInputElement
+							rows={4}
+							required
+							multiline
+							id='reject-notes'
+							value={reject_notes}
+							onChange={setReject_notes}
+							placeholder='Add Reason for Rejection. This notes will be sent to the client'
+						/>
 					</React.Fragment>
+				)}
+				{!!img ? (
+					<div>
+						<p>Captured Image:</p>
+						<img src={img} style={{ width: 220 }} />
+					</div>
 				) : (
-					<>
-						{!!img ? (
-							<div>
-								<p>Captured Image:</p>
-								<img src={img} style={{ width: 220 }} />
-							</div>
-						) : (
-							<div className='row'>
-								<div style={{ padding: 15, borderRadius: '50%', background: '#EFEFF0', marginRight: 15 }}>
-									<i className="fas fa-camera" style={{ fontSize: 20 }} />
-								</div>
-								<h3 className='no-margin'>Test Results</h3>
-							</div>
-						)}
-						{(attemptedSubmit && !img) && (
-							<div className='row no-margin'>
-								<p className='error'>You must enter make a test result photo</p>
-							</div>
-						)}
-					</>
+					<div className='row'>
+						<div style={{ padding: 15, borderRadius: '50%', background: '#EFEFF0', marginRight: 15 }}>
+							<i className="fas fa-camera" style={{ fontSize: 20 }} />
+						</div>
+						<h3 className='no-margin'>Test Results</h3>
+					</div>
+				)}
+				{attemptedSubmit && !img && (
+					<div className='row no-margin'>
+						<p className='error'>You must enter make a test result photo</p>
+					</div>
 				)}
 				{!!status && !!status.severity && !!status.message && !isLoading && (
 					<div className='row center'>

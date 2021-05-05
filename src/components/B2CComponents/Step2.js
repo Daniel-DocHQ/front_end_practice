@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	FormControl,
 	FormControlLabel,
@@ -6,15 +6,17 @@ import {
 	Radio,
 	RadioGroup,
 } from '@material-ui/core';
+import { get } from 'lodash';
 import { Field, useFormikContext } from 'formik';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
 import './BookingEngine.scss';
 
 const Step2 = ({
+    passengers,
     activePassenger,
 }) => {
-    const { touched } = useFormikContext();
+    const { setFieldValue, setTouched, setErrors } = useFormikContext();
     const {
         formField: {
 			firstName,
@@ -28,11 +30,26 @@ const Step2 = ({
         }
     } = bookingFormModel;
 
+    useEffect(() => {
+        if (get(passengers, `[${activePassenger}].${firstName.name}`, '')) {
+            setFieldValue(firstName.name, passengers[activePassenger][firstName.name]);
+            setFieldValue(lastName.name, passengers[activePassenger][lastName.name]);
+            setFieldValue(email.name, passengers[activePassenger][email.name]);
+            setFieldValue(phone.name, passengers[activePassenger][phone.name]);
+            setFieldValue(dateOfBirth.name, passengers[activePassenger][dateOfBirth.name]);
+            setFieldValue(ethnicity.name, passengers[activePassenger][ethnicity.name]);
+            setFieldValue(sex.name, passengers[activePassenger][sex.name]);
+            setFieldValue(passportNumber.name, passengers[activePassenger][passportNumber.name]);
+            setTouched({});
+            setErrors({});
+        }
+    }, [activePassenger])
+
 	return (
 		<React.Fragment>
             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].firstName`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input first name' : undefined}>
+                    <Field name={firstName.name}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
@@ -47,7 +64,7 @@ const Step2 = ({
 			</div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
 				<div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].lastName`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input last name' : undefined}>
+                    <Field name={lastName.name}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
@@ -62,20 +79,7 @@ const Step2 = ({
 			</div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
 				<div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field
-                        name={`passengers[${activePassenger}].email`}
-                        validate={(value) => {
-                            let error;
-                            if (!!touched && !!touched.passengers) {
-                                if (!value) {
-                                    error = 'Input email';
-                                } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-                                    error = 'Invalid email address';
-                                }
-                            }
-                            return error;
-                        }}
-                    >
+                    <Field name={email.name}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
@@ -90,20 +94,7 @@ const Step2 = ({
 			</div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field
-                        name={`passengers[${activePassenger}].phone`}
-                        validate={(value) => {
-                            let error;
-                            if (!!touched && !!touched.passengers) {
-                                if (!value) {
-                                    error = 'Input phone';
-                                } else if (value.length < 5) {
-                                    error = 'Invalid phone number';
-                                }
-                            }
-                            return error;
-                        }}
-                    >
+                    <Field name={phone.name}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
@@ -118,20 +109,7 @@ const Step2 = ({
 		    </div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field
-                        name={`passengers[${activePassenger}].dateOfBirth`}
-                        validate={(value) => {
-                            let error;
-                            if (!!touched && !!touched.passengers) {
-                                if ((!value && !!touched && !!touched.passengers)) {
-                                    error = 'Input date of birth';
-                                } else if (!/^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/.test(value)) {
-                                    error = 'Invalid date of birth';
-                                }
-                            }
-                            return error;
-                        }}
-                    >
+                    <Field name={dateOfBirth.name}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
@@ -146,7 +124,7 @@ const Step2 = ({
 		    </div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].ethnicity`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input ethnicity' : undefined}>
+                    <Field name={ethnicity.name}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
@@ -160,9 +138,9 @@ const Step2 = ({
                 </div>
 		    </div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <Field name={`passengers[${activePassenger}].sex`}>
+				<Field name={sex.name}>
 					{({ field, form }) => (
-						<FormControl component='fieldset' validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Select sex' : undefined}>
+						<FormControl component='fieldset'>
 							<FormLabel component='legend'>{sex.label} *</FormLabel>
 							<RadioGroup
 								style={{ display: 'inline' }}
@@ -181,7 +159,7 @@ const Step2 = ({
 			</div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].passportNumber`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input passport number' : undefined}>
+                    <Field name={passportNumber.name}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}

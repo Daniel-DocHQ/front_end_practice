@@ -12,6 +12,7 @@ import LinkButton from '../DocButton/LinkButton';
 import './BookingEngine.scss';
 
 const BookingEngineForm = ({
+    passengers,
     activePassenger,
     activeStep,
     handleBack,
@@ -33,7 +34,7 @@ const BookingEngineForm = ({
 
 			case 2:
 				return (
-					<Step2 activePassenger={activePassenger} />
+					<Step2 passengers={passengers} activePassenger={activePassenger} />
 				);
 			case 3:
 				return (
@@ -41,11 +42,11 @@ const BookingEngineForm = ({
 				);
             case 4:
 				return (
-					<Step4 />
+					<Step4 passengers={passengers} />
 				);
             case 5:
 				return (
-					<Step5 />
+					<Step5 passengers={passengers} />
 				);
 		};
 	};
