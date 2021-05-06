@@ -33,6 +33,7 @@ const Meeting = () => {
 	const [appointmentInfo, setAppointmentInfo] = useState();
 	const params = getURLParams(window.location.href);
 	const appointmentId = params['appointmentId'];
+	const videoType = get(appointmentInfo, 'type', '');
 	const skiptime = params['skiptime'];
 
 	useEffect(async () => {
@@ -113,6 +114,7 @@ const Meeting = () => {
 					case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
 						setToc_accept(true);
 						increaseStep(1);
+						increaseStep(videoType === 'video_gp_dochq' ? 2 : 1);
 					}} />;
 					case 2: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
 						setMarketing_accept(value);
