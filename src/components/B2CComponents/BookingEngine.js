@@ -102,7 +102,6 @@ const BookingEngine = () => {
 								travelDate,
 								travelTime,
 								passengers,
-								test_type,
 							} = values;
 							const booking_users = passengers.map(({
 								firstName,
