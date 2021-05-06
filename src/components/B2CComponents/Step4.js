@@ -2,8 +2,8 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
 
-const Step4 = ({ passengers }) => {
-    const { values: { appointmentDate, selectedSlot } } = useFormikContext();
+const Step4 = () => {
+    const { values: { appointmentDate, selectedSlot, passengers } } = useFormikContext();
 
 	return (
 		<React.Fragment>

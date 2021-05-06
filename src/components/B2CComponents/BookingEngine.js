@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
+import { get } from 'lodash';
 import { ToastsStore } from 'react-toasts';
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import BookingEngineForm from './BookingEngineForm';
@@ -14,8 +15,6 @@ const BookingEngine = () => {
 	const short_token = params['short_token'];
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
-	const [passengers, setPassengers] = useState([]);
-	const [restFormValues, setRestFormValues] = useState([]);
 	const { formInitialValues } = bookingFormModel;
 	const currentValidationSchema = validationSchema[activeStep];
 	const steps = [
@@ -54,62 +53,39 @@ const BookingEngine = () => {
 					initialValues={formInitialValues}
 					validationSchema={currentValidationSchema}
 					onSubmit={async (values, actions) => {
-						if (activeStep === 0) {
-							setRestFormValues(values);
+						if (activeStep === 2) {
 							const {
 								antigenTest,
 								pcrTest,
+								passengers,
 							} = values;
-							const newPassengers = [...Array(antigenTest + pcrTest)].map(() => ({
-								...passengerInitialValues,
-							}));
-							actions.setTouched({});
-							actions.setSubmitting(false);
-							actions.setErrors({});
-							setPassengers(newPassengers);
-							handleNext();
-						} else if (activeStep === 2) {
-							actions.setSubmitting(false);
-							actions.setTouched({});
-							actions.setErrors({});
-							const {
-								firstName,
-								lastName,
-								email,
-								phone,
-								dateOfBirth,
-								ethnicity,
-								sex,
-								passportNumber,
-							} = values;
-							const newPassengers = [...passengers];
-							newPassengers[activePassenger] = {
-								firstName,
-								lastName,
-								email,
-								phone,
-								dateOfBirth,
-								ethnicity,
-								sex,
-								passportNumber,
-							};
-							setPassengers(newPassengers);
-							if (activePassenger === passengers.length - 1) {
+							if (activePassenger === (antigenTest + pcrTest - 1)) {
+								actions.setSubmitting(false);
+								actions.setTouched({});
+								actions.setErrors({});
 								handleNext();
 							} else {
-								actions.resetForm({
-									...restFormValues,
-									...passengerInitialValues,
-								});
+								if (get(passengers, `[${activePassenger + 1}].firstName`, 'default') === 'default') {
+									const newPassengers = [...passengers];
+									newPassengers.push({ ...passengerInitialValues });
+									actions.setValues({
+										...values,
+										passengers: newPassengers,
+									});
+								}
 								setActivePassenger(activePassenger + 1);
+								actions.setSubmitting(false);
+								actions.setTouched({});
+								actions.setErrors({});
 							}
 						} else if (activeStep === 4) {
 							const {
 								selectedSlot,
 								travelDate,
 								travelTime,
+								passengers,
 							} = values;
-							const bookingUsers = passengers.map(({
+							const booking_users = passengers.map(({
 								firstName,
 								lastName,
 								dateOfBirth,
@@ -123,7 +99,7 @@ const BookingEngine = () => {
 								...rest,
 							}));
 							const body = {
-								booking_users: bookingUsers,
+								booking_users,
 								travel_date: travelDate,
 								travel_time: travelTime,
 							};
@@ -138,10 +114,6 @@ const BookingEngine = () => {
 								})
 								.catch(() => ToastsStore.error('Something went wrong'));
 						} else {
-							setRestFormValues({
-								...restFormValues,
-								...values,
-							});
 							actions.setTouched({});
 							actions.setSubmitting(false);
 							actions.setErrors({});
@@ -150,7 +122,6 @@ const BookingEngine = () => {
 					}}
 				>
 					<BookingEngineForm
-						passengers={passengers}
 						activePassenger={activePassenger}
 						activeStep={activeStep}
 						handleBack={handleBack}

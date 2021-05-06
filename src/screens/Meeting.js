@@ -58,7 +58,7 @@ const Meeting = () => {
 
 	useEffect(() => {
 		setIsLoading(true);
-		if (isEarly === false) {
+		if (isEarly === false || !!skiptime) {
 			navigator.getUserMedia({
 					video: true,
 					audio: true,
