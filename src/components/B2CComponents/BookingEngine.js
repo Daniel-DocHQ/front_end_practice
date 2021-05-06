@@ -14,7 +14,6 @@ import adminService from '../../services/adminService';
 const BookingEngine = () => {
 	const params = getURLParams(window.location.href);
 	const short_token = params['short_token'];
-	const order_id = params['order_id'];
 	const [orderInfo, setOrderInfo] = useState(0);
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
@@ -50,8 +49,8 @@ const BookingEngine = () => {
 	}
 
 	useEffect(() => {
-		if (order_id) {
-			adminService.getOrderInfo(order_id)
+		if (short_token) {
+			adminService.getOrderInfo(short_token)
 				.then(data => {
 					console.log(data);
 					if (data.success) {
@@ -64,11 +63,9 @@ const BookingEngine = () => {
 		}
 	}, []);
 
-	console.log(orderInfo);
-
 	return (
 		<BigWhiteContainer>
-			{(short_token && order_id) ? (
+			{(short_token) ? (
 				<Formik
 					initialValues={formInitialValues}
 					validationSchema={currentValidationSchema}
@@ -99,6 +96,7 @@ const BookingEngine = () => {
 								actions.setErrors({});
 							}
 						} else if (activeStep === 4) {
+							const test_type = get(orderInfo, 'items[0].product.type', 'ANT') === 'ANT' ? 'Antigen' : 'PCR';
 							const {
 								selectedSlot,
 								travelDate,
@@ -119,7 +117,7 @@ const BookingEngine = () => {
 								metadata: {
 									short_token,
 									passport_number: passportNumber,
-									test_type: get(orderInfo, 'items[0].product.type', 'ANT'),
+									test_type,
 								},
 								...rest,
 							}));
