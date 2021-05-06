@@ -714,11 +714,11 @@ const AddressVerification = ({
 				.sendResult(token, appointmentId, {
 					result: '',
 					appointment_address: {
-						addressLine1,
-						addressLine2,
+						address_1: addressLine1,
+						address_1: addressLine2,
 						locality,
 						country,
-						postCode,
+						postalCode: postCode,
 					},
 				}, patient.id)
 				.then(result => {
@@ -919,7 +919,7 @@ const PatientIdVerification = ({
 	const currentPatient = get(patientsToVerify, '[0]');
 	const forename = get(currentPatient, 'first_name', '');
 	const surname = get(currentPatient, 'last_name', '');
-	const [passportId, setPassportId] = useState(get(currentPatient, 'metadata.passportId', ''));
+	const [passportId, setPassportId] = useState(get(currentPatient, 'metadata.passport_number', '') || get(currentPatient, 'metadata.passportId', ''));
 	const currentPatientName = `${forename} ${surname}`;
 	const showPatientName = isTuiType && patients && patients.length > 1;
 	const isValid = !!security_checked && (isTuiType ? !!passportId : !!security_document);
@@ -931,7 +931,7 @@ const PatientIdVerification = ({
 					result: '',
 					forename,
 					surname,
-					passportId,
+					passport_number: passportId,
 					security_checked,
 				} : {
 					result: '',

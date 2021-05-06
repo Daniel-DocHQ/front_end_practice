@@ -320,7 +320,7 @@ function sendResult(auth_token, appointment_id, body, patientId) {
 		body.gmc = '2271298';
 		body.medical_clinic = 'Ciconia Recovery Limited';
 		body.cqc = '8220927874';
-		body.product = !!body.kitProvider ? !!body.kitProvider : 'Roche Rapid Antigen';
+		body.product = !!body.kitProvider ? body.kitProvider : 'Roche Rapid Antigen';
 		body.type = 'SARS-CoV-2';
 		body.metadata = { ...body };
 		if (auth_token && appointment_id && patientId) {

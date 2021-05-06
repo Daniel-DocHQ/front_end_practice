@@ -59,7 +59,7 @@ export default class AppointmentContextProvider extends Component {
 							appointmentId,
 							test_type: test_type || 'Antigen',
 							type,
-							status_changes,
+							status_changes: status_changes || [],
 						});
 					} else {
 						ToastsStore.error(`Cannot find appointment details`);

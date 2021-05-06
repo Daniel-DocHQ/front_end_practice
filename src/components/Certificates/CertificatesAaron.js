@@ -72,8 +72,8 @@ const CertificatesAaron = ({
 			!!obj.sex &&
 			!!obj.security_checked &&
 			!!obj.result &&
-			!!obj.passportId &&
-			!!obj.kitProvider &&
+			!!obj.passport_number &&
+			!!obj.kit_provider &&
 			(isResultRejected ? !!obj.reject_notes : !!img)
 		);
 	}
@@ -114,6 +114,7 @@ const CertificatesAaron = ({
 		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
 		const dob = get(patient_data, 'metadata.dob', '') || patient_data.dob;
 		const securityChecked = get(patient_data, 'metadata.security_checked', false);
+		const passportNumber = get(patient_data, 'metadata.passport_number', '') || get(patient_data, 'metadata.passportId', '');
 
 		if (patient_data.id) {
 			setPatientId(patient_data.id)
@@ -136,8 +137,8 @@ const CertificatesAaron = ({
 		if (sex) {
 			setSex(sex.toLowerCase());
 		}
-		if (patient_data.metadata.passportId) {
-			setPassportId(patient_data.metadata.passportId)
+		if (passportNumber) {
+			setPassportId(passportNumber)
 		}
 		if (dob) {
 			setDob(dob);
@@ -153,8 +154,8 @@ const CertificatesAaron = ({
 			sex,
 			security_checked,
 			result,
-			passportId,
-			kitProvider,
+			passport_number: passportId,
+			kit_provider: kitProvider,
 			...(isResultRejected && { reject_notes: isOtherOption ? reject_notes : reasonForRejected }),
 		};
 		if (canCreateCertificate && isValid(body) && errors.length === 0) {
@@ -163,25 +164,13 @@ const CertificatesAaron = ({
 			setAttemptedSubmit(true);
 		}
 	}
-	const updatePatientInfo = (body) => {
-		bookingService
-			.sendResult(token, appointmentId, body, patientId)
-			.then(result => {
-				if (result.success) {
-				} else {
-					ToastsStore.error('Failed to update patient info');
-				}
-			})
-			.catch(() => {
-				ToastsStore.error('Failed to update patient info');
-			});
-	}
+	const updatePatientInfo = (body) => bookingService.sendResult(token, appointmentId, body, patientId);
+
 	function sendResult(formData) {
 		const body = formData;
 		body.medicalprofessional = (!!user && !!user.first_name && !!user.last_name) ? `${user.first_name} ${user.last_name}` : '';
-		let currentDate = moment();
-		body.date_sampled = currentDate.subtract(15, "minutes").format();
-		body.date_reported = currentDate.format();
+		body.date_sampled = moment().subtract(20, "minutes").format();
+		body.date_reported = moment().format();
 		body.security_checked = 'true';
 
 		if (isValid(body)) {
@@ -229,9 +218,9 @@ const CertificatesAaron = ({
 				dob,
 				sex,
 				security_checked,
-				result,
-				passportId,
-				kitProvider,
+				result: '',
+				passport_number: passportId,
+				kit_provider: kitProvider,
 			};
 			updatePatientInfo(body);
 		}

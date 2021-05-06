@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { format } from 'date-fns';
+import moment from 'moment';
 import { Field, useFormikContext, ErrorMessage } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
@@ -96,8 +97,8 @@ const datePickerTheme = createMuiTheme({
 });
 
 const Step3 = () => {
-	const [appointments, setAppointments] = useState();
-
+	const [appointments, setAppointments] = useState([]);
+	const [filteredAppointments, setFilteredAppointments] = useState([]);
 	const {
         formField: {
             appointmentDate,
@@ -115,39 +116,33 @@ const Step3 = () => {
 	} = useFormikContext();
 
 	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 1)).setHours(0,0,0,0);
-	const endDate = new Date(travelDate);
-	const endDateTime = new Date (endDate).setHours(0,0,0,0);
-	const timeToMakeTest = format(new Date(new Date(travelTime).setHours(travelTime.getHours() - 1)), "HH:mm");
+	const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
 
-	function getSlots() {
-		const selectedDateTime = new Date (selectedDate).setHours(0,0,0,0);
-		const dateSelect = `${format(selectedDate, "yyyy-MM-dd")}T${timeToMakeTest}:00Z`;
+	useEffect(() => {
+		if (!!appointments && !!selectedDateTime) {
+			setFilteredAppointments([...appointments].filter(({ start_time }) => new Date(start_time).setHours(0,0,0,0) === selectedDateTime));
+		}
+	}, [selectedDate, appointments]);
+
+	useEffect(() => {
 		bookingService
 			.getSlotsByTime({
-				...(selectedDateTime === endDateTime
-					? {  date_time: `${format(selectedDate, "yyyy-MM-dd")}T00:00:00Z`, date_time_to: dateSelect }
-					: { date_time: dateSelect }
-				),
+				date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).format().replace('+', '%2B'),
+				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 1)).setMinutes(travelTime.getMinutes())).format().replace('+', '%2B'),
 			})
 			.then(result => {
 				if (result.success && result.appointments) {
 					setAppointments(result.appointments);
 				} else {
-					setAppointments();
+					setAppointments([]);
 				}
 			})
 			.catch(err => {
 				console.log(err);
-				setAppointments();
+				setAppointments([]);
 			});
 		setFieldValue(selectedSlot.name, null)
-	}
-
-	useEffect(() => {
-		if (selectedDate) {
-			getSlots();
-		}
-	}, [selectedDate]);
+	}, []);
 
 	return (
 		<React.Fragment>
@@ -161,7 +156,7 @@ const Step3 = () => {
 										{...field}
 										disablePast
 										variant='static'
-										maxDate={endDate}
+										maxDate={travelDate}
 										label={appointmentDate.label}
 										onChange={(value) => form.setFieldValue(field.name, value)}
 										shouldDisableDate={(date) => date.setHours(0,0,0,0) < startDate}
@@ -177,7 +172,7 @@ const Step3 = () => {
 						</div>
 					</div>
 				</div>
-				{typeof appointments !== 'undefined' && appointments.length > 0 ? (
+				{typeof filteredAppointments !== 'undefined' && filteredAppointments.length > 0 ? (
 					<div className='appointment-slot-container'>
 						<div className='row flex-start'>
 							<h3 id='appointments'>Appointments Available</h3>
@@ -185,21 +180,19 @@ const Step3 = () => {
 						<div className='slot-container'>
 							<Field name={selectedSlot.name}>
 								{({ field, form }) =>
-									appointments.map((item, i) => {
-										return (
-											<Slot
-												start_time={item.start_time}
-												key={i}
-												{...field}
-												id={item.id}
-												item={item}
-												selectSlot={(value) => form.setFieldValue(field.name, value)}
-												isSelected={
-													!!selectedSlotValue ? item.id === selectedSlotValue.id : false
-												}
-											/>
-										);
-									})
+									filteredAppointments.map((item, i) => (
+										<Slot
+											start_time={item.start_time}
+											key={i}
+											{...field}
+											id={item.id}
+											item={item}
+											selectSlot={(value) => form.setFieldValue(field.name, value)}
+											isSelected={
+												!!selectedSlotValue ? item.id === selectedSlotValue.id : false
+											}
+										/>
+									))
 								}
 							</Field>
 						</div>

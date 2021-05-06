@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { get } from 'lodash';
 import { ToastsStore } from 'react-toasts';
@@ -9,10 +9,13 @@ import validationSchema from './validationSchema';
 import bookingService from '../../services/bookingService';
 import getURLParams from '../../helpers/getURLParams';
 import LinkButton from '../DocButton/LinkButton';
+import adminService from '../../services/adminService';
 
 const BookingEngine = () => {
 	const params = getURLParams(window.location.href);
 	const short_token = params['short_token'];
+	const order_id = params['order_id'];
+	const [orderInfo, setOrderInfo] = useState(0);
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
@@ -46,9 +49,26 @@ const BookingEngine = () => {
 		setActiveStep(activeStep + 1);
 	}
 
+	useEffect(() => {
+		if (order_id) {
+			adminService.getOrderInfo(order_id)
+				.then(data => {
+					console.log(data);
+					if (data.success) {
+						setOrderInfo(data.order);
+					} else {
+						ToastsStore.error('Error fetching order information');
+					}
+				})
+				.catch(err => ToastsStore.error('Error fetching order information'))
+		}
+	}, []);
+
+	console.log(orderInfo);
+
 	return (
 		<BigWhiteContainer>
-			{short_token ? (
+			{(short_token && order_id) ? (
 				<Formik
 					initialValues={formInitialValues}
 					validationSchema={currentValidationSchema}
@@ -84,6 +104,7 @@ const BookingEngine = () => {
 								travelDate,
 								travelTime,
 								passengers,
+								test_type,
 							} = values;
 							const booking_users = passengers.map(({
 								firstName,
@@ -95,10 +116,15 @@ const BookingEngine = () => {
 								first_name: firstName,
 								last_name: lastName,
 								date_of_birth: dateOfBirth,
-								metadata: { short_token, passportId: passportNumber },
+								metadata: {
+									short_token,
+									passport_number: passportNumber,
+									test_type: get(orderInfo, 'items[0].product.type', 'ANT'),
+								},
 								...rest,
 							}));
 							const body = {
+								test_type,
 								booking_users,
 								travel_date: travelDate,
 								travel_time: travelTime,

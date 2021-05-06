@@ -137,7 +137,7 @@ const PatientInfo = ({ patient }) => {
     const dob = get(patient, 'dob', '');
     const sex = get(patient, 'sex', '');
     const ethnicity = get(patient, 'ethnicity', '');
-    const passportNumber = get(patient, 'metadata.passportId', '');
+    const passportNumber = get(patient, 'metadata.passport_number', '') || get(patient, 'metadata.passportId', '');
     const result = get(patient, 'metadata.result', '');
     const rejectedNotes = get(patient, 'metadata.reject_notes', '');
     const invalidNotes = get(patient, 'metadata.invalid_notes', '');
