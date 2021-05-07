@@ -71,7 +71,7 @@ const BookingEngineForm = ({
                                     <LinkButton
                                         text='Back to Home'
                                         color='green'
-                                        linkSrc={`b2c/dashboard`}
+                                        linkSrc={process.env.REACT_APP_WEBSITE_LINK}
                                     />
                                 ) : (
                                     <DocButton

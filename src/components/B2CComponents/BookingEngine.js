@@ -14,7 +14,6 @@ import adminService from '../../services/adminService';
 const BookingEngine = () => {
 	const params = getURLParams(window.location.href);
 	const short_token = params['short_token'];
-	const order_id = params['order_id'];
 	const [orderInfo, setOrderInfo] = useState(0);
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
@@ -50,8 +49,8 @@ const BookingEngine = () => {
 	}
 
 	useEffect(() => {
-		if (order_id) {
-			adminService.getOrderInfo(order_id)
+		if (short_token) {
+			adminService.getOrderInfo(short_token)
 				.then(data => {
 					console.log(data);
 					if (data.success) {
@@ -64,11 +63,9 @@ const BookingEngine = () => {
 		}
 	}, []);
 
-	console.log(orderInfo);
-
 	return (
 		<BigWhiteContainer>
-			{(short_token && order_id) ? (
+			{(short_token) ? (
 				<Formik
 					initialValues={formInitialValues}
 					validationSchema={currentValidationSchema}
@@ -100,11 +97,23 @@ const BookingEngine = () => {
 							}
 						} else if (activeStep === 4) {
 							const {
+								shipping_address: {
+									address_1,
+									address_2,
+									town,
+									telephone,
+									postcode,
+									country,
+									county,
+									items,
+								},
+							} = orderInfo;
+							const test_type = items[0].product.type;
+							const {
 								selectedSlot,
 								travelDate,
 								travelTime,
 								passengers,
-								test_type,
 							} = values;
 							const booking_users = passengers.map(({
 								firstName,
@@ -115,11 +124,20 @@ const BookingEngine = () => {
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
-								date_of_birth: dateOfBirth,
+								dob: dateOfBirth,
+								street_address: address_1,
+								language: 'EN',
+								extended_address: address_2,
+								postal_code: postcode,
+								phone: telephone,
+								region: county,
+								country,
+								locality: town,
 								metadata: {
 									short_token,
 									passport_number: passportNumber,
-									test_type: get(orderInfo, 'items[0].product.type', 'ANT'),
+									passportId: passportNumber,
+									test_type,
 								},
 								...rest,
 							}));
