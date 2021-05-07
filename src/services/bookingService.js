@@ -64,7 +64,7 @@ function getSlots(selectedDate) {
 	});
 }
 
-function getSlotsByTime({ date_time, date_time_to }) {
+function getSlotsByTime({ date_time, date_time_to, language }) {
 	const params = getURLParams();
 	function additionalParams() {
 		// used to book group face to face appointments
@@ -78,7 +78,7 @@ function getSlotsByTime({ date_time, date_time_to }) {
 			axios({
 				url: `${baseURL}?&service=${
 					typeof params['service'] === 'undefined' ? SERVICE_TYPE : params['service']
-				}&date_time=${date_time}&date_time_to=${date_time_to || ''}${additionalParams()}`,
+				}&date_time=${date_time}&date_time_to=${date_time_to || ''}&language=${language}${additionalParams()}`,
 				method: 'get',
 				headers: { 'Content-type': 'application,json' },
 			})

@@ -129,6 +129,7 @@ const Step3 = () => {
 			.getSlotsByTime({
 				date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).format().replace('+', '%2B'),
 				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 1)).setMinutes(travelTime.getMinutes())).format().replace('+', '%2B'),
+				language: 'EN',
 			})
 			.then(result => {
 				if (result.success && result.appointments) {
