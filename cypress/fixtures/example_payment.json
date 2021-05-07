@@ -1,0 +1,35 @@
+{
+  "booking_users": [
+    {
+      "first_name": "Te",
+      "last_name": "Customer",
+      "date_of_birth": "01/01/1990",
+      "metadata": {
+        "short_token": "do_7447579745",
+        "passport_number": "123456789",
+        "test_type": "Antigen"
+      },
+      "email": "stagingtestingaccounts@dochq.co.uk",
+      "phone": "03300880645",
+      "ethnicity": "Computer",
+      "sex": "Male"
+    },
+    {
+      "first_name": "Testing",
+      "last_name": "Customer 2",
+      "date_of_birth": "01/01/1990",
+      "metadata": {
+        "short_token": "do_7447579745",
+        "passport_number": "123456789",
+        "test_type": "Antigen"
+      },
+      "email": "stagingtestingaccounts@dochq.co.uk",
+      "phone": "03300880645",
+      "ethnicity": "Computer",
+      "sex": "Male"
+    }
+  ],
+  "travel_date": "2021-05-07T10:50:24.676Z",
+  "travel_time": "2021-05-07T10:50:24.676Z",
+  "service": "video_gp_dochq"
+}
