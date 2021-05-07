@@ -17,6 +17,8 @@ import bookingService from '../services/bookingService';
 import { ddMMyyyy } from '../helpers/formatDate';
 import getURLParams from '../helpers/getURLParams';
 import AppointmentContextProvider from '../context/AppointmentContext';
+import TermsConditionsEn from './TermsConditionsEn';
+import TermsConditionsDe from './TermsConditionsDe';
 import '../assets/css/Meeting.scss';
 
 const Meeting = () => {
@@ -61,9 +63,9 @@ const Meeting = () => {
 		setIsLoading(true);
 		if (isEarly === false || !!skiptime) {
 			navigator.getUserMedia({
-					video: true,
-					audio: true,
-				},
+				video: true,
+				audio: true,
+			},
 				() => setUserMedia(true),
 				() => setUserMedia(false),
 			);
@@ -309,55 +311,9 @@ const TermsConditional = ({ isEnglish, next }) => {
 						}}
 					>
 						{isEnglish ? (
-							<>
-								<p>
-									This online guided Covid-19 self-test is a screening method rather than a diagnostic service. It <b>does not replace</b> a consultation with a medical doctor.<br/>
-									You may find the sampling procedure unpleasant. Common reactions are sneezing, gagging and coughing.<br />
-									False negative and false positive test results are possible.<br />
-									A negative test result (no virus detected) does <b>not</b> release you from your duty to follow current government hygiene recommendations and guidelines.<br />
-									In case of a positive test result (virus detected) you and the people in your household, <b>must</b> follow the current government regulations and guidelines.<br />
-									Errors that occur during the sampling and shipment processes that are beyond the control of DocHQ Limited and their partners, can lead to delays or make a sample unreadable or invalid.<br />
-									You can find further information in the FAQ section. If you feel you need to talk to a doctor before your test, please contact customer service.<br />
-									DocHQ Limited and their partners are not liable for any damage to your or other’s health or financial property resulting from any of the above points.<br /><br /><br />
-									I hereby declare that the data I provide is correct and that I will assure that the sample/s originate exclusively from the named person/s and will be obtained in accordance with the written and verbal instructions provided during the online appointment.<br /><br /><br />
-									I give permission for DocHQ Limited to share my personal and medical data for this process with their
-									necessary partners, <b>Public Health England (PHE)</b>, any relevant regulatory authorities, and release the
-									involved doctors and medical staff from their duty of confidentiality.<br />
-									The necessarily involved partners are:<br />
-									Dr. Simon Chaplin-Rogers, Park and St Francis Surgery, Ciconia Recovery Ltd.<br />
-									In case of PCR testing, also: SYNLAB Group, 2030 Labs Limited, Oncologica UK Limited and any other
-									laboratory that DocHQ Limited will contract with in future.<br /><br />
-									<h3>All the above is MANDATORY TO ACCEPT</h3>
-								</p>
-
-							</>
+							<TermsConditionsEn />
 						) : (
-							<p>
-								Dieser online begleitete COVID Selbsttest ist ein Screening, <b>keine</b> medizinische oder diagnostische Dienstleistung, er <b>ersetzt keine</b> ärztliche Untersuchung.<br /><br />
-								Beim COVID Selbsttest können unangenehme körperliche Reaktionen auftreten. Falsch negative und falsch positive Testergebnisse sind möglich<br /><br />
-								Ein negatives Testergebnis (kein Virus-Nachweis) entbindet Sie nicht von den aktuell lokal gültigen Abstands- und Hygieneregeln.<br /><br />
-								Bei positivem Testergebnis (Virus nachgewiesen) sind Sie und alle mit Ihnen lebenden Personen <b>verpflichtet, den aktuell geltenden Leitlinien des lokalen Gesundheitsamtes zu folgen.</b><br /><br />
-								Fehler im Prozess der Probenentnahme und des Versandes, über die DocHQ und seine Partner keine Kontrolle haben, können zu zeitlichen Verzögerungen sowohl zur Unauswertbarkeit einer Probe führen.<br /><br />
-								Hintergrundinformationen sind in den FAQ zu finden. Bei Bedarf nach einer ärztlichen Beratung vor PCR Testung wenden Sie sich bitte an den Kundendienst.<br /><br />
-								Das Unternehmen DocHQ und seine Partner übernimmt keinerlei Haftung zu Schäden oder Schadensersatzforderungen von Kunden oder Dritten, die sich aus den genannten Punkten ergeben.<br /><br />
-								<ul>
-									<li>
-										Ich erkläre an eides statt, dass meine Angaben korrekt sind und verpflichte mich hiermit, Sorge zu tragen, dass die Probe gemäß den schriftlichen und während der Videokonferenz vom medizinischen Personal erteilten Anleitungen von ausschließlich der bezeichneten Person am angegebenen Datum gewonnen wird.
-									</li>
-									<li>
-										Ich bin einverstanden, dass DocHQ meine persönlichen und medizinischen Daten mit den für den Prozess notwendigen Parteien teilt und entbinde die an meinem Covid-19 Test beteiligten Ärzte von DocHQ diesbezüglich von der ärztlichen Schweigepflicht.<br />
-										Die notwendigerweise beteiligten Parteien sind
-										<ul>
-											<li>
-												Synlab Group (bei PCR Test)
-											</li>
-											<li>
-												Die zuständigen Gesundheitsämter und das Robert-Koch-Institut (gemäß Infektionsschutzgesetz).
-											</li>
-										</ul>
-									</li>
-								</ul>
-							</p>
+							<TermsConditionsDe />
 						)}
 						<div style={{ paddingTop: '20px', textAlign: 'center' }}>
 							<DocButton

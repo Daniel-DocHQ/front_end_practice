@@ -96,7 +96,19 @@ const BookingEngine = () => {
 								actions.setErrors({});
 							}
 						} else if (activeStep === 4) {
-							const test_type = get(orderInfo, 'items[0].product.type', 'ANT') === 'ANT' ? 'Antigen' : 'PCR';
+							const {
+								shipping_address: {
+									address_1,
+									address_2,
+									town,
+									telephone,
+									postcode,
+									country,
+									county,
+									items,
+								},
+							} = orderInfo;
+							const test_type = items[0].product.type;
 							const {
 								selectedSlot,
 								travelDate,
@@ -112,10 +124,19 @@ const BookingEngine = () => {
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
-								date_of_birth: dateOfBirth,
+								dob: dateOfBirth,
+								street_address: address_1,
+								language: 'EN',
+								extended_address: address_2,
+								postal_code: postcode,
+								phone: telephone,
+								region: county,
+								country,
+								locality: town,
 								metadata: {
 									short_token,
 									passport_number: passportNumber,
+									passportId: passportNumber,
 									test_type,
 								},
 								...rest,
