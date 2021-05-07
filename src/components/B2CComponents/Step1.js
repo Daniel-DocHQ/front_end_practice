@@ -1,10 +1,11 @@
 import React from 'react';
-import { Field } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import bookingFormModel from './bookingFormModel';
+import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
 import './BookingEngine.scss';
 
 const datePickerTheme = createMuiTheme({
@@ -99,6 +100,11 @@ const Step1 = () => {
         }
     } = bookingFormModel;
 
+	const { values: {
+		travelDate: selectedDate,
+		travelTime: selectedTime,
+	} } = useFormikContext();
+
 	return (
 		<React.Fragment>
 			<div className='no-margin col'>
@@ -121,6 +127,12 @@ const Step1 = () => {
 										/>
 									)}
 								</Field>
+								<div className='row'>
+									<p>
+										<strong>Selected Date:&nbsp;</strong>
+										{ddMMyyyy(selectedDate)}
+									</p>
+								</div>
 							</div>
 							<div className='appointment-calendar-container'>
 								<Field name={travelTime.name}>
@@ -135,6 +147,12 @@ const Step1 = () => {
 										/>
 									)}
 								</Field>
+								<div className='row'>
+									<p>
+										<strong>Selected Time:&nbsp;</strong>
+										{formatTimeSlot(selectedTime)}
+									</p>
+								</div>
 							</div>
 						</div>
 					</MuiPickersUtilsProvider>
