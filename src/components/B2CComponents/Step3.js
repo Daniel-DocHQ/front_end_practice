@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import moment from 'moment';
+import { get } from 'lodash';
 import { Field, useFormikContext, ErrorMessage } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import bookingService from '../../services/bookingService';
 import bookingFormModel from './bookingFormModel';
+import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
 import Slot from './Slot';
 import './BookingEngine.scss';
 
@@ -121,13 +123,14 @@ const Step3 = () => {
 		if (!!appointments && !!selectedDateTime) {
 			setFilteredAppointments([...appointments].filter(({ start_time }) => new Date(start_time).setHours(0,0,0,0) === selectedDateTime));
 		}
+		setFieldValue(selectedSlot.name, null);
 	}, [selectedDate, appointments]);
 
 	useEffect(() => {
 		bookingService
 			.getSlotsByTime({
 				date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).format().replace('+', '%2B'),
-				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 1)).setMinutes(travelTime.getMinutes())).format().replace('+', '%2B'),
+				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 4)).setMinutes(travelTime.getMinutes())).format().replace('+', '%2B'),
 				language: 'EN',
 			})
 			.then(result => {
@@ -141,12 +144,12 @@ const Step3 = () => {
 				console.log(err);
 				setAppointments([]);
 			});
-		setFieldValue(selectedSlot.name, null)
+		setFieldValue(selectedSlot.name, null);
 	}, []);
 
 	return (
 		<React.Fragment>
-			<div className='no-margin col'>
+			<div className='no-margin col' sty>
 				<div className='appointment-calendar-container'>
 					<ThemeProvider theme={datePickerTheme}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -172,10 +175,10 @@ const Step3 = () => {
 						</div>
 					</div>
 				</div>
-				{typeof filteredAppointments !== 'undefined' && filteredAppointments.length > 0 ? (
+				{filteredAppointments.length > 0 && (
 					<div className='appointment-slot-container'>
-						<div className='row flex-start'>
-							<h3 id='appointments'>Appointments Available</h3>
+						<div className='row flex-start' >
+							<h3 style={{ marginBottom: 0 }}>Appointments Available (selected timezone: {get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time')})</h3>
 						</div>
 						<div className='slot-container'>
 							<Field name={selectedSlot.name}>
@@ -197,11 +200,25 @@ const Step3 = () => {
 							</Field>
 						</div>
 					</div>
-				) : (
-					<>No available appointments at this day</>
 				)}
 			</div>
-
+			<div className='row no-margin'>
+				<p >
+					<strong>Selected appointment Date:&nbsp;</strong>
+					{ddMMyyyy(selectedDate)}
+				</p>
+			</div>
+			{filteredAppointments.length <= 0 && (
+				<>No available appointments at this day</>
+			)}
+			{selectedSlotValue && (
+				<div className='row no-margin'>
+					<p style={{ marginTop: 0 }}>
+						<strong>Selected appointment Time:&nbsp;</strong>
+						{formatTimeSlot(selectedSlotValue.start_time)} - {formatTimeSlot(selectedSlotValue.end_time)}
+					</p>
+				</div>
+			)}
 			<ErrorMessage component="p" className="error" name={selectedSlot.name} />
 		</React.Fragment>
 	);

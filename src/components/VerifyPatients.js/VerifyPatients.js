@@ -46,10 +46,10 @@ const Patient = ({ patientData }) => (
 				<p>{patientData.last_name}</p>
 			</div>
 		)}
-		{!!patientData && !!patientData.dob && (
+		{!!patientData && !!patientData.date_of_birth && (
 			<div className='row space-between'>
 				<p className='no-margin'>DOB:</p>
-				<p>{format(new Date(patientData.dob), 'dd-MM-yyyy')}</p>
+				<p>{format(new Date(patientData.date_of_birth), 'dd-MM-yyyy')}</p>
 			</div>
 		)}
 		{patientData && typeof patientData.sex !== 'undefined' && (

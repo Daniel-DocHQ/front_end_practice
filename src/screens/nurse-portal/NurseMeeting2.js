@@ -275,10 +275,10 @@ const PatientDetails = ({
 						</div>
 					)
 				)}
-				{!!patient.dob && !fullData && (
+				{!!patient.date_of_birth && !fullData && (
 					<div className='row space-between no-margin'>
 						<p className='tab-row-text title-info'>DOB:</p>
-						<p className='tab-row-text'>{format(new Date(patient.dob), 'dd-MM-yyyy')}</p>
+						<p className='tab-row-text'>{format(new Date(patient.date_of_birth), 'dd-MM-yyyy')}</p>
 					</div>
 				)}
 				{!isManyPatients && (
@@ -863,10 +863,10 @@ const VideoAppointmentDetails = ({
 										<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
 									</div>
 								)}
-								{!!patient.dob && (
+								{!!patient.date_of_birth && (
 									<div className='row space-between no-margin'>
 										<p className='tab-row-text title-info'>DOB:</p>
-										<p>{format(new Date(patient.dob), 'dd-MM-yyyy')}</p>
+										<p>{format(new Date(patient.date_of_birth), 'dd-MM-yyyy')}</p>
 									</div>
 								)}
 								{!!patient.postal_code && (

@@ -134,7 +134,7 @@ const PatientInfo = ({ patient }) => {
     const lastName = get(patient, 'last_name', '');
     const email = get(patient, 'email', '');
     const phone = get(patient, 'phone', '');
-    const dob = get(patient, 'dob', '');
+    const date_of_birth = get(patient, 'date_of_birth', '') || get(patient, 'metadata.date_of_birth', '');
     const sex = get(patient, 'sex', '');
     const ethnicity = get(patient, 'ethnicity', '');
     const passportNumber = get(patient, 'metadata.passport_number', '') || get(patient, 'metadata.passportId', '');
@@ -153,7 +153,7 @@ const PatientInfo = ({ patient }) => {
             {lastName && (<Typography className="row-text"><b>Surname: </b>{lastName}</Typography>)}
             {email && (<Typography className="row-text"><b>Email Address: </b>{email}</Typography>)}
             {phone && (<Typography className="row-text"><b>Phone Number: </b>{phone}</Typography>)}
-            {dob && (<Typography className="row-text"><b>Date of Birth: </b>{format(new Date(dob), 'dd-MM-yyyy')}</Typography>)}
+            {date_of_birth && (<Typography className="row-text"><b>Date of Birth: </b>{format(new Date(date_of_birth), 'dd-MM-yyyy')}</Typography>)}
             {ethnicity && (<Typography className="row-text"><b>Ethnicity: </b>{ethnicity}</Typography>)}
             {sex && (<Typography className="row-text"><b>Sex: </b>{sex}</Typography>)}
             {passportNumber && (<Typography className="row-text"><b>ID Document Number: </b>{passportNumber}</Typography>)}

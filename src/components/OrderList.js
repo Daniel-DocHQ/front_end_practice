@@ -10,7 +10,7 @@ import OrderDetails from './OrderDetails/OrderDetails';
 
 const orderUrl = process.env.REACT_APP_API_URL
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         flexGrow: 1,
     },
@@ -24,11 +24,11 @@ const useStyles = makeStyles((theme) => ({
 const date_format = {
     type: 'dateTime',
     width: 150,
-    valueFormatter: ({value})  => format(new Date(value), "P p"),
+    valueFormatter: ({ value })  => format(new Date(value * 1000), "P p"),
 };
 
 const price_format = {
-    valueFormatter: ({value})  => {return "£" + value},
+    valueFormatter: ({ value })  => {return "£" + value},
 };
 const columns = [
     { field: 'id', headerName: 'ID', width: 60 },
