@@ -28,4 +28,6 @@ export default [
       start_time: Yup.string().required(),
     }).required('You should select appointment time'),
   }),
+  Yup.object().shape(),
+  Yup.object().shape(),
 ];

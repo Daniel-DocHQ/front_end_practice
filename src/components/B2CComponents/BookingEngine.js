@@ -97,6 +97,7 @@ const BookingEngine = () => {
 							}
 						} else if (activeStep === 4) {
 							const {
+								items,
 								shipping_address: {
 									address_1,
 									address_2,
@@ -105,10 +106,9 @@ const BookingEngine = () => {
 									postcode,
 									country,
 									county,
-									items,
 								},
 							} = orderInfo;
-							const test_type = items[0].product.type;
+							const test_type = get(items, '[0].product.type', 'Antigen');
 							const {
 								selectedSlot,
 								travelDate,
@@ -124,7 +124,7 @@ const BookingEngine = () => {
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
-								dob: dateOfBirth,
+								date_of_birth: dateOfBirth,
 								street_address: address_1,
 								language: 'EN',
 								extended_address: address_2,
