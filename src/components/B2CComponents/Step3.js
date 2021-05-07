@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-import { format } from 'date-fns';
 import moment from 'moment';
 import { Field, useFormikContext, ErrorMessage } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -114,7 +113,6 @@ const Step3 = () => {
 		},
 		setFieldValue,
 	} = useFormikContext();
-	console.log(selectedSlotValue);
 
 	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 1)).setHours(0,0,0,0);
 	const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);

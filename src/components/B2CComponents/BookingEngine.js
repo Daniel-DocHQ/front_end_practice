@@ -104,7 +104,6 @@ const BookingEngine = () => {
 									town,
 									telephone,
 									postcode,
-									country,
 									county,
 								},
 							} = orderInfo;
@@ -131,12 +130,11 @@ const BookingEngine = () => {
 								postal_code: postcode,
 								phone: telephone,
 								region: county,
-								country,
+								country: 'GB',
 								locality: town,
 								metadata: {
 									short_token,
 									passport_number: passportNumber,
-									passportId: passportNumber,
 									test_type,
 								},
 								...rest,
