@@ -114,6 +114,7 @@ const Step3 = () => {
 		},
 		setFieldValue,
 	} = useFormikContext();
+	console.log(selectedSlotValue);
 
 	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 1)).setHours(0,0,0,0);
 	const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
