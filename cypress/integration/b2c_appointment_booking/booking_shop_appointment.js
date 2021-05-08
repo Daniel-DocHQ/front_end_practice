@@ -8,15 +8,13 @@ const appointment_search_rat = [
     }
 ]
 
-
-context('Actions', () => {
+describe("B2C - Booking Appointment", () => {
   beforeEach(() => {
     cy.visit(`/b2c/book-appointment?short_token=${short_token}&service=video_gp_dochq&order_id=testtest`)
   })
 
-
   it('Booking Shop appointment', () => {
-    cy.intercept("GET", '/v1/order/testtest', { fixture: 'order_details_rat.json' }).as("getOrder")
+    cy.intercept("GET", '/v1/order/testtest', { fixture: 'order/order_details_rat.json' })
 
     // How many people would take the test
     cy.get('#antigen-kit').focus().clear().type("2")
@@ -58,7 +56,7 @@ context('Actions', () => {
 
     // Summary
     cy.intercept('POST', '/testid/payment', (req) => {
-      req.reply({fixture: "example_payment.json"})
+      req.reply({fixture: "appointment/example_payment.json"})
     })
     cy.get('.green').click()
     cy.wait(500)

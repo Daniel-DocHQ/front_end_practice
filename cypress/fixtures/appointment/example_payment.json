@@ -1,6 +1,7 @@
 {
   "booking_users": [
     {
+      "country": "GB",
       "first_name": "Te",
       "last_name": "Customer",
       "date_of_birth": "01/01/1990",
@@ -15,6 +16,7 @@
       "sex": "Male"
     },
     {
+      "country": "GB",
       "first_name": "Testing",
       "last_name": "Customer 2",
       "date_of_birth": "01/01/1990",
