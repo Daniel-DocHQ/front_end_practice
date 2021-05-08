@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './SettingsBar.scss';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import getUserDevices from '../../helpers/getUserDevices';
+
 const SettingsBar = ({
 	navIsVisible,
 	audioDevices,
