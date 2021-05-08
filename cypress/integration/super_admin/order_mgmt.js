@@ -2,16 +2,20 @@ require('../utils/auth.js')
 
 describe("Super Admin - Order Management", () => {
   beforeEach(function() {
-    cy.login((token) => localStorage.setItem('auth_token', token))
+    cy.login(
+      Cypress.env('super_admin.email'),
+      Cypress.env('super_admin.password'),
+      (token) => localStorage.setItem('auth_token', token)
+    )
     cy.intercept('**/users/*', { fixture: 'user.json'})
     cy.intercept('**/roles', { fixture: 'user.json'})
     cy.intercept('**/v1/order/*', { fixture: 'order/order_details_rat.json'})
+    cy.intercept('**/v1/order?*', { fixture: 'order/orders.json'})
 
     cy.visit('/super_admin/order-list')
   })
 
   it('Load order ', () => {
-    cy.intercept('**/v1/order?*', { fixture: 'order/orders.json'})
     cy.get(".MuiDataGrid-row:first").click()
   })
 

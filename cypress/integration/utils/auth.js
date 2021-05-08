@@ -1,10 +1,10 @@
-Cypress.Commands.add("login", (cb) => {
+Cypress.Commands.add("login", (email, password, cb) => {
   cy.request({
     method:'POST',
     url: 'https://services-login-staging.dochq.co.uk/auth',
     body: {
-      email: Cypress.env('email'),
-      password: Cypress.env('password'),
+      email: email,
+      password: password,
     },
     auth: {
       bearer: "qj6WfxEpLg2WVjss",

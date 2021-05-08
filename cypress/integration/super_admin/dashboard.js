@@ -2,7 +2,11 @@ require('../utils/auth.js')
 
 describe("Super Admin - Dashboard navigation", () => {
   beforeEach(function() {
-    cy.login((token) => localStorage.setItem('auth_token', token))
+    cy.login(
+      Cypress.env('super_admin.email'),
+      Cypress.env('super_admin.password'),
+      (token) => localStorage.setItem('auth_token', token)
+    )
     cy.intercept('**/users/*', { fixture: 'user.json'})
     cy.intercept('**/roles', { fixture: 'user.json'})
 
