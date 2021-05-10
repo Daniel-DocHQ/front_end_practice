@@ -60,10 +60,11 @@ const OrderDetails = ({order, closeHandler}) => {
     const [error, setError] = useState(<></>)
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     useEffect(() =>{
+        console.log(order);
         let apiCall = new Promise((res, rej) => {
             axios({
                 method: 'get',
-                url: `${orderUrl}/v1/order/${order.short_token}`,
+                url: `${orderUrl}/v1/order/${order.id}`,
             }).then(res)
             .catch(rej)
         })

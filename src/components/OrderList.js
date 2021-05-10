@@ -30,10 +30,10 @@ const date_format = {
 const price_format = {
     valueFormatter: ({ value })  => {return "£" + value},
 };
+
 const columns = [
-    { field: 'id', headerName: 'ID', width: 60 },
-    { field: 'billing_detail', headerName: 'Customer Email', width: 170, valueFormatter: ({value}) => value.email},
     { field: 'short_token', headerName: 'Short Token', width: 150 },
+    { field: 'billing_detail', headerName: 'Customer Email', width: 170, valueFormatter: ({value}) => value.email},
     { field: 'shipping_flag', headerName: 'Shipping status', width: 150 },
     { field: 'payment_flag', headerName: 'Payment status', width: 150 },
     { field: 'price', headerName: 'Amount', width: 90, ...price_format},
@@ -104,6 +104,7 @@ const OrderList = props => {
                         onPageChange={(params) => setPage(params.page)}
                         loading={dataTableLoading}
                         rowCount={pageCount}
+                        getRowId={(row) => row.short_token}
                     />
                 </Grid>
             </Grid>

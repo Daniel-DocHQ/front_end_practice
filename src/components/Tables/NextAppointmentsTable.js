@@ -134,6 +134,7 @@ const NextAppointmentsTable = ({
                                     </TableCell>
                                     <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         <DocButton
+                                            id="join-button-appointment.id"
                                             text='Join'
                                             color='green'
                                             onClick={() => join(appointment.id)}
