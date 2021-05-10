@@ -38,7 +38,7 @@ export const CertificateForm = props => {
     const [formContents, setFormContents] = useState({
         forname: "",
         surname: "",
-        dob:"",
+        date_of_birth:"",
         sex: "",
         security_checked: "",
         security_document: "",
@@ -116,12 +116,12 @@ export const CertificateForm = props => {
                     {/* Date of Birth field */}
                     <Grid item> 
                         <TextField 
-                            id="dob"
+                            id="date_of_birth"
                             label="Date of Birth"
                             onChange={handleChange}
-                            value={formContents.dob}
-                            error={typeof errors.dob !== 'undefined'}
-                            helperText={errors.dob}
+                            value={formContents.date_of_birth}
+                            error={typeof errors.date_of_birth !== 'undefined'}
+                            helperText={errors.date_of_birth}
                         />
                     </Grid>
                     {/* Sex field */}

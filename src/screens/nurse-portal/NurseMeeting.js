@@ -301,13 +301,13 @@ const NurseMeeting = ({ isVideo, isAuthenticated, token, role }) => {
 export default memo(NurseMeeting);
 
 const PatientData = ({ patientData, testKitId, appointmentStartTime, appointmentId }) => {
-	let dobObject = undefined;
-	if (patientData && patientData.dob) {
+	let date_of_birthObject = undefined;
+	if (patientData && patientData.date_of_birth) {
 		try {
-			var d = parse(patientData.dob, 'yyyy-MM-dd', new Date());
-			dobObject = format(d, 'dd/MM/yyyy');
+			var d = parse(patientData.date_of_birth, 'yyyy-MM-dd', new Date());
+			date_of_birthObject = format(d, 'dd/MM/yyyy');
 		} catch (err) {
-			dobObject = patientData.dob;
+			date_of_birthObject = patientData.date_of_birth;
 		}
 	}
 
@@ -326,10 +326,10 @@ const PatientData = ({ patientData, testKitId, appointmentStartTime, appointment
 					<p>{patientData.last_name}</p>
 				</div>
 			)}
-			{typeof dobObject !== 'undefined' && (
+			{typeof date_of_birthObject !== 'undefined' && (
 				<div className='row'>
-					<p className='no-margin'>DOB:</p>
-					<p>{dobObject}</p>
+					<p className='no-margin'>date_of_birth:</p>
+					<p>{date_of_birthObject}</p>
 				</div>
 			)}
 			{patientData && typeof patientData.sex !== 'undefined' && (
