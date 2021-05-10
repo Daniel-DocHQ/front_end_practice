@@ -63,7 +63,7 @@ const OrderDetails = ({order, closeHandler}) => {
         let apiCall = new Promise((res, rej) => {
             axios({
                 method: 'get',
-                url: `${orderUrl}/v1/order/${order.id}`,
+                url: `${orderUrl}/v1/order/${order.short_token}`,
             }).then(res)
             .catch(rej)
         })
