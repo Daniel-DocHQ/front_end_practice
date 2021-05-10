@@ -60,7 +60,6 @@ const OrderDetails = ({order, closeHandler}) => {
     const [error, setError] = useState(<></>)
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     useEffect(() =>{
-        console.log(order);
         let apiCall = new Promise((res, rej) => {
             axios({
                 method: 'get',

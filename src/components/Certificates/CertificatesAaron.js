@@ -44,7 +44,7 @@ const CertificatesAaron = ({
 	const [forename, setForename] = useState('');
 	const [surname, setSurname] = useState('');
 	const [email, setEmail] = useState('');
-	const [date_of_birth, setdate_of_birth] = useState('');
+	const [dob, setDob] = useState('');
 	const [sex, setSex] = useState('');
 	const [reject_notes, setReject_notes] = useState('');
 	const [security_checked, setSecurity_checked] = useState(false);
@@ -68,7 +68,7 @@ const CertificatesAaron = ({
 			!!obj.forename &&
 			!!obj.surname &&
 			!!obj.email &&
-			!!obj.date_of_birth &&
+			!!obj.dob &&
 			!!obj.sex &&
 			!!obj.security_checked &&
 			!!obj.result &&
@@ -112,7 +112,7 @@ const CertificatesAaron = ({
 		const kitProvider = get(patient_data, 'metadata.kitProvider', '') || preselectedKidProvider;
 		const email = get(patient_data, 'metadata.email', '') || patient_data.email;
 		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
-		const date_of_birth = get(patient_data, 'metadata.date_of_birth', '') || patient_data.date_of_birth;
+		const dob = get(patient_data, 'metadata.dob', '') || patient_data.dob;
 		const securityChecked = get(patient_data, 'metadata.security_checked', false);
 		const passportNumber = get(patient_data, 'metadata.passport_number', '') || get(patient_data, 'metadata.passportId', '');
 
@@ -140,8 +140,8 @@ const CertificatesAaron = ({
 		if (passportNumber) {
 			setPassportId(passportNumber)
 		}
-		if (date_of_birth) {
-			setdate_of_birth(date_of_birth);
+		if (dob) {
+			setDob(dob);
 		}
 	}
 	// used as the form submit function, super lazy but works a charm
@@ -150,7 +150,7 @@ const CertificatesAaron = ({
 			forename,
 			surname,
 			email,
-			date_of_birth,
+			dob,
 			sex,
 			security_checked,
 			result,
@@ -215,7 +215,7 @@ const CertificatesAaron = ({
 				forename,
 				surname,
 				email,
-				date_of_birth,
+				dob,
 				sex,
 				security_checked,
 				result: '',
@@ -224,7 +224,7 @@ const CertificatesAaron = ({
 			};
 			updatePatientInfo(body);
 		}
-	}, 300, [forename, surname, email, date_of_birth, sex, security_checked, kitProvider, passportId])
+	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId])
 
 	return ((!!patient_data && populated) || (!patient_data && !populated)) &&  (
 		<React.Fragment>
@@ -281,16 +281,17 @@ const CertificatesAaron = ({
 				)}
 				<div className='row'>
 					<TextInputElement
-						value={date_of_birth}
+						value={dob}
 						id='date-of-birth'
 						label='Date of Birth (dd/mm/yyyy)'
-						onChange={setdate_of_birth}
+						onChange={setDob}
+						pattern={new RegExp(/^[0-3][1-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$/)}
 						inputProps={{ minLength: '2' }}
 						required
 						updateStatus={updateErrors}
 					/>
 				</div>
-				{((attemptedSubmit && typeof date_of_birth === 'undefined') || errors.includes('date of birth (dd/mm/yyyy)')) && (
+				{((attemptedSubmit && typeof dob === 'undefined') || errors.includes('date of birth (dd/mm/yyyy)')) && (
 					<div className='row no-margin'>
 						<p className='error'>Please enter patient date of birth - dd/mm/yyyy</p>
 					</div>
