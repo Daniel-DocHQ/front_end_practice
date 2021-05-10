@@ -68,7 +68,7 @@ const CertificatesAaron = ({
 			!!obj.forename &&
 			!!obj.surname &&
 			!!obj.email &&
-			!!obj.dob &&
+			!!obj.date_of_birth &&
 			!!obj.sex &&
 			!!obj.security_checked &&
 			!!obj.result &&
@@ -112,7 +112,7 @@ const CertificatesAaron = ({
 		const kitProvider = get(patient_data, 'metadata.kitProvider', '') || preselectedKidProvider;
 		const email = get(patient_data, 'metadata.email', '') || patient_data.email;
 		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
-		const dob = get(patient_data, 'metadata.dob', '') || patient_data.dob;
+		const dob = get(patient_data, 'metadata.date_of_birth', '') || patient_data.date_of_birth;
 		const securityChecked = get(patient_data, 'metadata.security_checked', false);
 		const passportNumber = get(patient_data, 'metadata.passport_number', '') || get(patient_data, 'metadata.passportId', '');
 
@@ -141,7 +141,7 @@ const CertificatesAaron = ({
 			setPassportId(passportNumber)
 		}
 		if (dob) {
-			setDob(dob);
+			setDob(moment(dob).format('DD/MM/YYYY'));
 		}
 	}
 	// used as the form submit function, super lazy but works a charm
@@ -150,7 +150,7 @@ const CertificatesAaron = ({
 			forename,
 			surname,
 			email,
-			dob,
+			date_of_birth: moment(dob, "DD/MM/YYYY").format(),
 			sex,
 			security_checked,
 			result,
@@ -215,7 +215,7 @@ const CertificatesAaron = ({
 				forename,
 				surname,
 				email,
-				dob,
+				date_of_birth: moment(dob, "DD/MM/YYYY").format(),
 				sex,
 				security_checked,
 				result: '',
