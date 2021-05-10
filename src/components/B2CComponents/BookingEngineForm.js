@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, useFormikContext } from 'formik';
+import { Form } from 'formik';
 import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import Step0 from './Step0';
 import Step1 from './Step1';
@@ -19,8 +19,6 @@ const BookingEngineForm = ({
     isEdit = false,
     ...restProps
 }) => {
-    const { values } = useFormikContext();
-    console.log(values);
     const isLastStep = activeStep === steps.length - 1;
 	const renderSteps = () => {
 		switch (activeStep) {

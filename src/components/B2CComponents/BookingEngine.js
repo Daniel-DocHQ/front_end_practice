@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { get } from 'lodash';
+import moment from 'moment';
 import { ToastsStore } from 'react-toasts';
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import BookingEngineForm from './BookingEngineForm';
@@ -52,7 +53,6 @@ const BookingEngine = () => {
 		if (short_token) {
 			adminService.getOrderInfo(short_token)
 				.then(data => {
-					console.log(data);
 					if (data.success) {
 						setOrderInfo(data.order);
 					} else {
@@ -123,7 +123,7 @@ const BookingEngine = () => {
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
-								date_of_birth: dateOfBirth,
+								date_of_birth: moment(dateOfBirth, "DD/MM/YYYY").format(),
 								street_address: address_1,
 								language: 'EN',
 								extended_address: address_2,
