@@ -155,6 +155,7 @@ const ClaimableAppointmentsTable = ({ appointments = [] }) => {
 								<TableCell />
 								<TableCell />
 								<TableCell />
+								<TableCell />
 							</TableRow>
 						) : null}
 					</TableBody>

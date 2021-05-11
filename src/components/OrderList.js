@@ -104,6 +104,7 @@ const OrderList = props => {
                         onPageChange={(params) => setPage(params.page)}
                         loading={dataTableLoading}
                         rowCount={pageCount}
+                        getRowId={(row) => row.short_token}
                     />
                 </Grid>
             </Grid>

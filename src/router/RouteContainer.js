@@ -28,6 +28,7 @@ import NurseMeeting2 from '../screens/nurse-portal/NurseMeeting2';
 import Purchase from '../screens/b2c-portal/Purchase';
 import B2CDashboard from '../screens/b2c-portal/B2CDashboard';
 import B2CBookAppointment from '../screens/b2c-portal/B2CBookAppointment';
+import EditBookedAppointment from '../screens/cs-portal/EditBookedAppointment';
 import LiveDashboard from '../screens/nurse-portal/LiveDashboard';
 import RotaManagement from '../screens/nurse-portal/RotaManagement';
 import AppointmentView from '../components/AppointmentView/AppointmentView';
@@ -263,6 +264,11 @@ const RouteHandler = () => {
 			</PrivateRoute>
 			{/* Customer Services Routes */}
 
+			<PrivateRoute path='/customer_services/booking/edit' requiredRole='customer_services'>
+				<Layout title='Edit Booking'>
+					<EditBookedAppointment  {...ctx} />
+				</Layout>
+			</PrivateRoute>
 			<PrivateRoute path='/customer_services/dashboard' requiredRole='customer_services'>
 				<Layout title='Dashboard'>
 					<CSDashboard />

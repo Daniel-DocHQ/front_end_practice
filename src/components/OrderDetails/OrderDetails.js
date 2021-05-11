@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { get } from 'lodash';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
@@ -32,6 +33,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { makeStyles } from '@material-ui/core/styles';
 import DocButton from '../DocButton/DocButton';
+import LinkButton from '../DocButton/LinkButton';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -56,8 +58,9 @@ const useStyles = makeStyles((theme) => ({
 const OrderDetails = ({order, closeHandler}) => {
     const classes = useStyles();
     const [orderDetail, setOrderDetail] = useState({});
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(<></>)
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(<></>);
+    const appointmentId = get(orderDetail, 'appointmentId', '');
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     useEffect(() =>{
         let apiCall = new Promise((res, rej) => {
@@ -174,8 +177,16 @@ const OrderDetails = ({order, closeHandler}) => {
                             <DocButton
                                 className="pink"
                                 onClick={handleCancelDialogToggle}
+                                style={{ marginRight: 10 }}
                                 text="Cancel order"
                             />
+                            {appointmentId && (
+                                <LinkButton
+                                    className="pink"
+                                    linkSrc={`/customer_services/booking/edit?appointmentId=${appointmentId}&service=video_gp_dochq`}
+                                    text="Edit booking"
+                                />
+                            )}
                             <CancelOrder
                                 order={orderDetail}
                                 open={cancelDialogOpen}
@@ -206,7 +217,6 @@ const CancelOrder = ({order, open, onClose, loading, setLoading}) => {
                 .catch(rej)
             })
             apiCall.then(res => {
-                console.log(res)
                 if (res.status === 200 && typeof res.data) {
                     setLoading(false)
                     window.location.reload(false);

@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
-import EditBookedAppointment from '../../components/B2CComponents/EditBookedAppointment';
+import BookingEngine from '../../components/B2CComponents/EditBookedAppointmentForm';
 import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 
 const EditBookedAppointment = () => (
 	<React.Fragment>
 		<BigWhiteContainer>
-			<EditBookedAppointment />
+			<BookingEngine />
 		</BigWhiteContainer>
 	</React.Fragment>
 );

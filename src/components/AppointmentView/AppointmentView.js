@@ -12,7 +12,7 @@ import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import './AppointmentView.scss';
 
 const AppointmentView = (props) => {
-    const [appointment, setAppointment] = useState()
+    const [appointment, setAppointment] = useState();
     const params = getURLParams(window.location.href);
 	const appointmentId = params['appointmentId'];
     const patients = get(appointment, 'booking_users', []);

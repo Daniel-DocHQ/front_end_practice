@@ -161,6 +161,7 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 								<TableCell/>
 								<TableCell />
                                 <TableCell />
+								<TableCell />
 							</TableRow>
 						) : null}
 					</TableBody>

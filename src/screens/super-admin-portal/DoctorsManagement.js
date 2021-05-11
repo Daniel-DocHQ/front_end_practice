@@ -57,9 +57,9 @@ const DoctorsManagement = props => {
 		<Grid container justify="space-between">
 			<Grid item xs={12}>
 				<UpcomingAppointmentsTable
-					appointments={appointments.filter(({ status }) => {
+					appointments={appointments.filter(({ status, user }) => {
 						const appStatus = status.toLowerCase();
-						return appStatus !== 'canceled' && appStatus !== 'completed' && appStatus !== 'available';
+						return appStatus !== 'canceled' && appStatus !== 'completed' && appStatus !== 'available' && parseFloat(user) > 20;
 					})}
 				/>
 			</Grid>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Formik } from 'formik';
 import { get } from 'lodash';
 import moment from 'moment';
@@ -11,11 +11,15 @@ import bookingService from '../../services/bookingService';
 import getURLParams from '../../helpers/getURLParams';
 import LinkButton from '../DocButton/LinkButton';
 import adminService from '../../services/adminService';
+import nurseSvc from '../../services/nurseService';
+import { AuthContext } from '../../context/AuthContext';
 
 const BookingEngine = () => {
+	const { token } = useContext(AuthContext);
+	const [appointment, setAppointment] = useState();
 	const params = getURLParams(window.location.href);
-	const short_token = params['short_token'];
-	const [orderInfo, setOrderInfo] = useState(0);
+	const appointmentId = params['appointmentId'];
+	const bookingUsers = get(appointment, 'booking_users', []);
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
@@ -50,24 +54,44 @@ const BookingEngine = () => {
 	}
 
 	useEffect(() => {
-		if (short_token) {
-			adminService.getOrderInfo(short_token)
-				.then(data => {
-					if (data.success) {
-						setOrderInfo(data.order);
-					} else {
-						ToastsStore.error('Error fetching order information');
-					}
-				})
-				.catch(err => ToastsStore.error('Error fetching order information'))
+		if (appointmentId) {
+			nurseSvc
+            .getAppointmentDetails(appointmentId, token)
+            .then(result => {
+                if (result.success && result.appointment) {
+                    setAppointment(result.appointment);
+                } else {
+                    ToastsStore.error(`Cannot find appointment details`);
+                }
+            })
+            .catch(() => ToastsStore.error(`Cannot find appointment details`))
 		}
 	}, []);
 
 	return (
 		<BigWhiteContainer>
-			{(short_token) ? (
+			{!!appointment && !!bookingUsers.length ? (
 				<Formik
-					initialValues={formInitialValues}
+					initialValues={{
+						...formInitialValues,
+						antigenTest: bookingUsers.length,
+						passengers: bookingUsers.map(({
+							id,
+							first_name,
+							date_of_birth,
+							last_name,
+							metadata: {
+								passport_number,
+							},
+							...rest
+						}) => ({
+							firstName: first_name,
+							lastName: last_name,
+							dateOfBirth: moment(date_of_birth).format('DD/MM/YYYY'),
+							passportNumber: passport_number,
+							...rest,
+						})),
+					}}
 					validationSchema={currentValidationSchema}
 					onSubmit={async (values, actions) => {
 						if (activeStep === 2) {
@@ -97,18 +121,6 @@ const BookingEngine = () => {
 							}
 						} else if (activeStep === 4) {
 							const {
-								items,
-								shipping_address: {
-									address_1,
-									address_2,
-									town,
-									telephone,
-									postcode,
-									county,
-								},
-							} = orderInfo;
-							const test_type = get(items, '[0].product.type', 'Antigen');
-							const {
 								selectedSlot,
 								travelDate,
 								travelTime,
@@ -123,30 +135,19 @@ const BookingEngine = () => {
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
-								tz_location: 'Europe/Berlin',
 								date_of_birth: moment(dateOfBirth, 'DD/MM/YYYY').utc(0).format(),
-								street_address: address_1,
-								language: 'EN',
-								extended_address: address_2,
-								postal_code: postcode,
-								phone: telephone,
-								region: county,
-								country: 'GB',
-								locality: town,
 								metadata: {
-									short_token,
 									passport_number: passportNumber,
-									test_type,
 								},
 								...rest,
 							}));
 							const body = {
-								test_type,
 								booking_users,
 								travel_date: travelDate,
 								travel_time: travelTime,
 							};
-							bookingService
+							await bookingService.deleteBooking(appointmentId, token);
+							await bookingService
 								.paymentRequest(selectedSlot.id, body)
 								.then(result => {
 									if (result.success && result.confirmation) {
@@ -165,6 +166,7 @@ const BookingEngine = () => {
 					}}
 				>
 					<BookingEngineForm
+						isEdit
 						activePassenger={activePassenger}
 						activeStep={activeStep}
 						handleBack={handleBack}
@@ -174,13 +176,13 @@ const BookingEngine = () => {
 			) : (
 				<>
 					<div className="row center">
-						<h3>You haven't bought any test kit yet</h3>
+						<h3>Appointment doesn’t exist</h3>
 					</div>
 					<div className="row center">
 						<LinkButton
-							text='Buy Now!'
+							text='Back to Home'
 							color='green'
-							linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+							linkSrc="/customer_services/dashboard"
 						/>
 					</div>
 				</>

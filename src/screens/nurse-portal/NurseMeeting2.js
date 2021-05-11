@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback, useContext } from 'react';
 import { get } from 'lodash';
 import moment from 'moment';
+import Collapse from '@material-ui/core/Collapse';
 import AppointmentContextProvider, {
 	AppointmentContext,
 	useAppointmentDetails,
@@ -205,18 +206,23 @@ const PatientDetails = ({
 	isAntigenType,
     patients = [],
     appointmentId,
-	addressBlockTitle,
+	isJoined,
+	addressVerification,
 	isSpaceBetweenPhoneBox,
 }) => {
 	const linkRef = useRef(null);
 	const alternativeLinkRef = useRef(null);
 	const isManyPatients = patients.length > 1 || isAntigenType;
+	const [checked, setChecked] = useState(!isJoined);
 
-	const addressDataBlock = () => (
+	const handleChange = () => {
+		setChecked((prev) => !prev);
+	};
+	const addressDataBlock = (title = 'Address Verification') => (
 		<React.Fragment>
-			{!!addressBlockTitle && (
+			{!!isJoined && (
 				<div className='row no-margin' style={{ paddingBottom: 10 }}>
-					<h3 className='no-margin'>Address Verification</h3>
+					<h3 className='no-margin'>{title}</h3>
 				</div>
 			)}
 			{!!patient.street_address && fullData && (
@@ -252,130 +258,132 @@ const PatientDetails = ({
 		</React.Fragment>
 	);
 
+	useEffect(() => {
+		setChecked(!isJoined);
+	}, [isJoined])
+
 	return (
 		<React.Fragment>
-			<div className='row no-margin' style={{ paddingBottom: 10 }}>
+			<div className='row no-margin' style={{ paddingBottom: 10 }} onClick={handleChange}>
 				<h3 className='no-margin'>{title}</h3>
 			</div>
 			<div className='column'>
-				{isManyPatients ? (
-					patients.map((item, indx) => (
-						!!item.last_name && !!item.first_name && (
-							<div key={indx} className='row space-between no-margin'>
-								<p className='tab-row-text title-info'>Full Name Client {indx + 1}:</p>
-								<p className='tab-row-text'>{item.first_name} {item.last_name}</p>
-							</div>
-						)
-					))
-				) : (
-					!!patient.first_name && !!patient.last_name && (
-						<div className='row space-between no-margin'>
-							<p className='tab-row-text title-info'>Full Name:</p>
-							<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
-						</div>
-					)
-				)}
-				{!!patient.date_of_birth && !fullData && (
-					<div className='row space-between no-margin'>
-						<p className='tab-row-text title-info'>DOB:</p>
-						<p className='tab-row-text'>{format(new Date(patient.date_of_birth), 'dd-MM-yyyy')}</p>
-					</div>
-				)}
-				{!isManyPatients && (
-					addressDataBlock()
-				)}
-				<div className={isSpaceBetweenPhoneBox && 'padding-top-box'}>
+				<Collapse in={checked}>
 					{isManyPatients ? (
 						patients.map((item, indx) => (
-							!!item.phone && (
+							!!item.last_name && !!item.first_name && (
 								<div key={indx} className='row space-between no-margin'>
-									<p className='tab-row-text title-info'>Phone No Client {indx + 1}:</p>
-									<p className='tab-row-text'>{item.phone}</p>
+									<p className='tab-row-text title-info'>Full Name Client {indx + 1}:</p>
+									<p className='tab-row-text'>{item.first_name} {item.last_name}</p>
 								</div>
 							)
 						))
 					) : (
-						!!patient.phone && (
+						!!patient.first_name && !!patient.last_name && (
 							<div className='row space-between no-margin'>
-								<p className='tab-row-text title-info'>Phone No:</p>
-								<p className='tab-row-text'>{patient.phone}</p>
+								<p className='tab-row-text title-info'>Full Name:</p>
+								<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
 							</div>
 						)
 					)}
-					<div style={{ padding: '20px 0' }}>
+					{!!patient.date_of_birth && !fullData && (
+						<div className='row space-between no-margin'>
+							<p className='tab-row-text title-info'>DOB:</p>
+							<p className='tab-row-text'>{format(new Date(patient.date_of_birth), 'dd-MM-yyyy')}</p>
+						</div>
+					)}
+					<div className={isSpaceBetweenPhoneBox && 'padding-top-box'}>
 						{isManyPatients ? (
 							patients.map((item, indx) => (
-								!!item.email && (
+								!!item.phone && (
 									<div key={indx} className='row space-between no-margin'>
-										<p className='tab-row-text title-info'>Email Address {indx + 1}:</p>
-										<p className='tab-row-text'>{item.email}</p>
+										<p className='tab-row-text title-info'>Phone No Client {indx + 1}:</p>
+										<p className='tab-row-text'>{item.phone}</p>
 									</div>
 								)
 							))
 						) : (
-							!!patient.email && (
+							!!patient.phone && (
 								<div className='row space-between no-margin'>
-									<p className='tab-row-text title-info'>Email Address:</p>
-									<p className='tab-row-text'>{patient.email}</p>
+									<p className='tab-row-text title-info'>Phone No:</p>
+									<p className='tab-row-text'>{patient.phone}</p>
 								</div>
 							)
 						)}
-					</div>
-					<div className='no-margin' style={{ padding: '20px 0' }}>
-						<p className='tab-row-text title-info'>
-							Patient Joining link:
-						</p>
-						<Tooltip title="Click to copy">
-							<Typography
-								noWrap
-								ref={linkRef}
-								onClick={() => copyToClipboard(linkRef)}
-								className='tab-row-text patient-link-text'
-							>
-								https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointmentId}
-							</Typography>
-						</Tooltip>
-					</div>
-					<div className='no-margin' style={{ padding: '20px 0' }}>
-						<p className='tab-row-text title-info'>
-							Alternative Patient Joining link:
-						</p>
-						<Tooltip title="Click to copy">
-							<Typography
-								noWrap
-								ref={alternativeLinkRef}
-								onClick={() => copyToClipboard(alternativeLinkRef)}
-								className='tab-row-text patient-link-text'
-							>
-								https://8x8.vc/dochq/{process.env.REACT_APP_JOIN_LINK_PREFIX}-{appointmentId}
-							</Typography>
-						</Tooltip>
-					</div>
-					<div className='row center no-margin' style={{ padding: '20px 0' }}>
-						<DocButton
-							text="Email Alternative Link to Patient"
-							color="green"
-							onClick={() => bookingService.sendAlternativeLink(authToken, appointmentId)
-								.then(result => {
-									if (result.success) {
-										ToastsStore.success('Alternative Link has been sent successfully');
-									} else {
-										ToastsStore.error('Failed');
-									}
-								}).catch(() => {
-									ToastsStore.error('Failed');
-								})
-							}
-						/>
-					</div>
-				</div>
-				{isManyPatients && (
-					<React.Fragment>
-						<Divider />
-						<div className={isSpaceBetweenPhoneBox && 'padding-top-box'}>
-							{addressDataBlock()}
+						<div style={{ padding: '20px 0' }}>
+							{isManyPatients ? (
+								patients.map((item, indx) => (
+									!!item.email && (
+										<div key={indx} className='row space-between no-margin'>
+											<p className='tab-row-text title-info'>Email Address {indx + 1}:</p>
+											<p className='tab-row-text'>{item.email}</p>
+										</div>
+									)
+								))
+							) : (
+								!!patient.email && (
+									<div className='row space-between no-margin'>
+										<p className='tab-row-text title-info'>Email Address:</p>
+										<p className='tab-row-text'>{patient.email}</p>
+									</div>
+								)
+							)}
 						</div>
-					</React.Fragment>
+						{addressDataBlock('Address')}
+						<div className='no-margin' style={{ padding: '20px 0' }}>
+							<p className='tab-row-text title-info'>
+								Patient Joining link:
+							</p>
+							<Tooltip title="Click to copy">
+								<Typography
+									noWrap
+									ref={linkRef}
+									onClick={() => copyToClipboard(linkRef)}
+									className='tab-row-text patient-link-text'
+								>
+									https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointmentId}
+								</Typography>
+							</Tooltip>
+						</div>
+						<div className='no-margin' style={{ padding: '20px 0' }}>
+							<p className='tab-row-text title-info'>
+								Alternative Patient Joining link:
+							</p>
+							<Tooltip title="Click to copy">
+								<Typography
+									noWrap
+									ref={alternativeLinkRef}
+									onClick={() => copyToClipboard(alternativeLinkRef)}
+									className='tab-row-text patient-link-text'
+								>
+									https://8x8.vc/dochq/{process.env.REACT_APP_JOIN_LINK_PREFIX}-{appointmentId}
+								</Typography>
+							</Tooltip>
+						</div>
+						<div className='row center no-margin' style={{ padding: '20px 0' }}>
+							<DocButton
+								text="Email Alternative Link to Patient"
+								color="green"
+								onClick={() => bookingService.sendAlternativeLink(authToken, appointmentId)
+									.then(result => {
+										if (result.success) {
+											ToastsStore.success('Alternative Link has been sent successfully');
+										} else {
+											ToastsStore.error('Failed');
+										}
+									}).catch(() => {
+										ToastsStore.error('Failed');
+									})
+								}
+							/>
+						</div>
+					</div>
+				</Collapse>
+				{isJoined && (<Divider />)}
+				{(addressVerification && isJoined) && (
+					<div className={isSpaceBetweenPhoneBox && 'padding-top-box'}>
+						{addressDataBlock()}
+					</div>
 				)}
 			</div>
 		</React.Fragment>
@@ -420,7 +428,7 @@ const SubmitPatientResult = ({
 	function updateKitId() {
 		if (kitId) {
 			sendResult({
-				kitId,
+				kit_id: kitId,
 				result: '',
 				forename,
 				surname,
@@ -442,15 +450,14 @@ const SubmitPatientResult = ({
 				result: '',
 				forename,
 				surname,
-				sample_taken: sampleTaken,
+				result: sampleTaken,
 			}, true);
 		}
 	}
 
     function sendResult(formData, isSampleTaken) {
 		const body = formData;
-		let currentDate = moment();
-		body.date_sampled = currentDate.format();
+		body.date_sampled =  moment().format();
 		bookingService.sendResult(token, appointmentId, body, currentPatient.id)
 			.then(result => {
 				if (isSampleTaken) {
@@ -496,6 +503,8 @@ const SubmitPatientResult = ({
 				<Grid container direction='column'>
 					<Grid item>
 						<PatientDetails
+							isJoined
+							fullData
 							title='Patient Details'
 							authToken={authToken}
 							patient={currentPatient}
@@ -751,7 +760,8 @@ const AddressVerification = ({
 							authToken={authToken}
 							isAntigenType={isAntigenType}
 							isSpaceBetweenPhoneBox
-							addressBlockTitle={isJoined}
+							isJoined={isJoined}
+							addressVerification
 							title={isJoined ? 'Patient Details' : 'Appointment Details'}
 							appointmentId={appointmentId}
 						/>
@@ -951,7 +961,6 @@ const PatientIdVerification = ({
 						setPatientsToVerify(newPatients);
 						setSecurity_checked(false);
 						setSecurity_document('');
-						setPassportId('');
 					} else {
 						ToastsStore.error('Failed');
 					}
@@ -962,13 +971,20 @@ const PatientIdVerification = ({
 		}
 	}
 
+	useEffect(() => {
+		if (currentPatient) {
+			setPassportId(get(currentPatient, 'metadata.passport_number', '') || get(currentPatient, 'metadata.passportId', ''));
+		}
+	}, [patientsToVerify])
+
     return (
 		<div className='tab-container'>
 			<div className='tab-content'>
-				<Grid container direction='column' justify='space-between' className='full-height'>
+				<Grid container direction='column' justify='space-between'>
 					<Grid item>
 						<PatientDetails
 							fullData
+							isJoined
 							authToken={authToken}
 							title='Patient Details'
 							patient={currentPatient}
@@ -1052,8 +1068,6 @@ const AppointmentActions = ({
 		uploadImage,
 		img,
 	} = useContext(AppointmentContext);
-	const linkRef = useRef(null);
-	const alternativeLinkRef = useRef(null);
 	const [notesStatus, setNotesStatus] = useState();
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
@@ -1069,102 +1083,15 @@ const AppointmentActions = ({
 		<div className='tab-container'>
 			<div className='tab-content'>
 				<div className='appointment-notes'>
-					<div className='row no-margin' style={{ paddingBottom: 10 }}>
-						<h3 className='no-margin'>Patient Details</h3>
-					</div>
-					<div className='column'>
-						{patients.length > 1 ? (
-							patients.map((item, indx) => (
-								<div key={indx} style={{ paddingBottom: 10 }}>
-									{!!item.first_name && !!item.last_name && (
-										<div className='row space-between no-margin'>
-											<p className='tab-row-text title-info'>Full Name {indx + 1}:</p>
-											<p className='tab-row-text'>{item.first_name} {item.last_name}</p>
-										</div>
-									)}
-									{!!item.phone && (
-										<div className='row space-between no-margin'>
-											<p className='tab-row-text title-info'>Phone No:</p>
-											<p className='tab-row-text'>{item.phone}</p>
-										</div>
-									)}
-									{!!item.email && (
-										<div className='row space-between no-margin'>
-											<p className='tab-row-text title-info'>Email Address:</p>
-											<p className='tab-row-text'>{item.email}</p>
-										</div>
-									)}
-								</div>
-							))
-						) : (
-							<React.Fragment>
-								{!!patient.first_name && !!patient.last_name && (
-									<div className='row space-between no-margin'>
-										<p className='tab-row-text title-info'>Full Name:</p>
-										<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
-									</div>
-								)}
-								{!!patient.phone && (
-									<div className='row space-between no-margin'>
-										<p className='tab-row-text title-info'>Phone No:</p>
-										<p className='tab-row-text'>{patient.phone}</p>
-									</div>
-								)}
-								{!!patient.email && (
-									<div className='row space-between no-margin'>
-										<p className='tab-row-text title-info'>Email Address:</p>
-										<p className='tab-row-text'>{patient.email}</p>
-									</div>
-								)}
-							</React.Fragment>
-						)}
-					</div>
-					<div style={{ paddingBottom: '10px' }}>
-						<p className='tab-row-text title-info'>Patient Joining link:</p>
-						<Tooltip title="Click to copy">
-							<Typography
-								noWrap
-								ref={linkRef}
-								onClick={() => copyToClipboard(linkRef)}
-								className='tab-row-text patient-link-text'
-							>
-								https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointmentId}
-							</Typography>
-						</Tooltip>
-					</div>
-					<div className='no-margin' style={{ padding: '20px 0' }}>
-						<p className='tab-row-text title-info'>
-							Alternative Patient Joining link:
-						</p>
-						<Tooltip title="Click to copy">
-							<Typography
-								noWrap
-								ref={alternativeLinkRef}
-								onClick={() => copyToClipboard(alternativeLinkRef)}
-								className='tab-row-text patient-link-text'
-							>
-								https://8x8.vc/dochq/{process.env.REACT_APP_JOIN_LINK_PREFIX}-{appointmentId}
-							</Typography>
-						</Tooltip>
-					</div>
-					<div className='row center no-margin' style={{ padding: '20px 0' }}>
-						<DocButton
-							text="Email Alternative Link to Patient"
-							color="green"
-							onClick={() => bookingService.sendAlternativeLink(authToken, appointmentId)
-								.then(result => {
-									if (result.success) {
-										ToastsStore.success('Alternative Link has been sent successfully');
-									} else {
-										ToastsStore.error('Failed');
-									}
-								}).catch(() => {
-									ToastsStore.error('Failed');
-								})
-							}
-						/>
-					</div>
-					<Divider />
+					<PatientDetails
+						fullData
+						isJoined
+						patient={patient}
+						patients={patients}
+						authToken={authToken}
+						title='Patient Details'
+						appointmentId={appointmentId}
+					/>
 					<div className='row no-margin' style={{ paddingTop: '20px' }}>
 						<h3 className='no-margin'>Appointment Actions</h3>
 					</div>

@@ -155,6 +155,7 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
                                 <TableCell/>
                                 <TableCell />
                                 <TableCell />
+                                <TableCell />
                             </TableRow>
                         )}
                     </TableBody>
