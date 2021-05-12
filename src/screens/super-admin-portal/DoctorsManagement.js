@@ -59,7 +59,7 @@ const DoctorsManagement = props => {
 				<UpcomingAppointmentsTable
 					appointments={appointments.filter(({ status, user }) => {
 						const appStatus = status.toLowerCase();
-						return appStatus !== 'canceled' && appStatus !== 'completed' && appStatus !== 'available' && parseFloat(user) > 20;
+						return appStatus !== 'canceled' && appStatus !== 'completed' && appStatus !== 'available';
 					})}
 				/>
 			</Grid>
