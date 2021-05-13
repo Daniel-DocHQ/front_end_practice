@@ -123,7 +123,7 @@ const BookingEngine = () => {
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
-								tz_location: 'Europe/Berlin',
+								tz_location: 'Europe/London',
 								date_of_birth: moment(dateOfBirth, 'DD/MM/YYYY').utc(0).format(),
 								street_address: address_1,
 								language: 'EN',
