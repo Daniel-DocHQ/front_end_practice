@@ -8,6 +8,7 @@ import {
 	RadioGroup,
 	Select,
 	MenuItem,
+	Checkbox,
 } from '@material-ui/core';
 import { get } from 'lodash';
 import { useDebounce } from 'react-use';
@@ -40,6 +41,7 @@ const CertificatesAaron = ({
 	const appointmentId = useAppointmentId();
 	const [populated, setPopulated] = useState(false);
 	const [patientId, setPatientId] = useState();
+	const [doneBy8x8, setDoneBy8x8] = useState(false);
 	// Form fields
 	const [forename, setForename] = useState('');
 	const [surname, setSurname] = useState('');
@@ -74,7 +76,7 @@ const CertificatesAaron = ({
 			!!obj.result &&
 			!!obj.passport_number &&
 			!!obj.kit_provider &&
-			(isResultRejected ? !!obj.reject_notes : !!img)
+			(isResultRejected ? !!obj.reject_notes : (doneBy8x8 ? doneBy8x8 : !!img))
 		);
 	}
 
@@ -429,14 +431,33 @@ const CertificatesAaron = ({
 								<img src={img} style={{ width: 220 }} />
 							</div>
 						) : (
-							<div className='row'>
-								<div style={{ padding: 15, borderRadius: '50%', background: '#EFEFF0', marginRight: 15 }}>
-									<i className="fas fa-camera" style={{ fontSize: 20 }} />
+							<>
+								<div className='row'>
+									<div style={{ padding: 15, borderRadius: '50%', background: '#EFEFF0', marginRight: 15 }}>
+										<i className="fas fa-camera" style={{ fontSize: 20 }} />
+									</div>
+									<h3 className='no-margin'>Test Results</h3>
 								</div>
-								<h3 className='no-margin'>Test Results</h3>
-							</div>
+								<div className='row'>
+								<FormControlLabel
+									control={
+										<Checkbox
+											checked={doneBy8x8}
+											onChange={(e) => setDoneBy8x8(e.target.checked)}
+											defaultValue={false}
+											color='primary'
+										/>
+									}
+									label={
+										<p>
+											Done by Alternative Video platform
+										</p>
+									}
+								/>
+								</div>
+							</>
 						)}
-						{(attemptedSubmit && !img) && (
+						{(attemptedSubmit && !img && !doneBy8x8) && (
 							<div className='row no-margin'>
 								<p className='error'>You must enter make a test result photo</p>
 							</div>

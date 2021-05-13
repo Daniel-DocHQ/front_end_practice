@@ -98,8 +98,9 @@ const TabContainer = ({
 		appointmentId,
 		status_changes,
 		toggleDisplayCertificates,
+		getAppointmentDetails,
 	} = useContext(AppointmentContext);
-	const [value, setValue] = React.useState(0);
+	const [value, setValue] = useState(0);
 	const patients = useBookingUsers();
 	let patient = useBookingUser(0);
 	patient = {...patient, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})}
@@ -119,6 +120,12 @@ const TabContainer = ({
 			toggleDisplayCertificates();
 		}
 	}, [isJoined]);
+
+	// useEffect(() => {
+	// 	if (appointmentId) {
+	// 		getAppointmentDetails(appointmentId, authToken);
+	// 	}
+	// }, [value]);
 
 	return (
 		isAntigenType ? (
@@ -178,6 +185,7 @@ const TabContainer = ({
 				)}
 				{value === 2 && (
 					<PatientIdVerification
+						patient={patient}
 						patients={patients}
 						authToken={authToken}
 						isTuiType={isTuiType}
@@ -228,31 +236,37 @@ const PatientDetails = ({
 			{!!patient.street_address && fullData && (
 				<div className='row space-between no-margin'>
 					<p className='tab-row-text title-info'>Address Line 1:</p>
-					<p className='tab-row-text'>{patient.street_address}</p>
+					<p className='tab-row-text'>{get(patient, 'metadata.street_address', '') || patient.street_address}</p>
 				</div>
 			)}
 			{!!patient.extended_address && fullData && (
 				<div className='row space-between no-margin'>
 					<p className='tab-row-text title-info'>Address Line 2:</p>
-					<p className='tab-row-text'>{patient.extended_address}</p>
+					<p className='tab-row-text'>{get(patient, 'metadata.extended_address', '') || patient.extended_address}</p>
 				</div>
 			)}
 			{!!patient.locality && fullData && (
 				<div className='row space-between no-margin'>
 					<p className='tab-row-text title-info'>Town:</p>
-					<p className='tab-row-text'>{patient.locality}</p>
+					<p className='tab-row-text'>{get(patient, 'metadata.locality', '') || patient.locality}</p>
+				</div>
+			)}
+			{!!patient.region && fullData && (
+				<div className='row space-between no-margin'>
+					<p className='tab-row-text title-info'>County:</p>
+					<p className='tab-row-text'>{get(patient, 'metadata.region', '') || patient.region}</p>
 				</div>
 			)}
 			{!!patient.country && fullData && (
 				<div className='row space-between no-margin'>
 					<p className='tab-row-text title-info'>Country:</p>
-					<p className='tab-row-text'>{patient.country}</p>
+					<p className='tab-row-text'>{get(patient, 'metadata.country', '') || patient.country}</p>
 				</div>
 			)}
 			{!!patient.postal_code && fullData && (
 				<div className='row space-between no-margin'>
 					<p className='tab-row-text title-info'>Post Code:</p>
-					<p className='tab-row-text'>{patient.postal_code}</p>
+					<p className='tab-row-text'>{get(patient, 'metadata.postal_code', '') || patient.postal_code}</p>
 				</div>
 			)}
 		</React.Fragment>
@@ -507,6 +521,7 @@ const SubmitPatientResult = ({
 							fullData
 							title='Patient Details'
 							authToken={authToken}
+							patients={patients}
 							patient={currentPatient}
 							appointmentId={appointmentId}
 						/>
@@ -705,14 +720,14 @@ const AddressVerification = ({
 	const [addressLine1, setAddressLine1] = useState('');
 	const [addressLine2, setAddressLine2] = useState('');
 	const [locality, setLocality] = useState('');
-	const [country, setCountry] = useState('');
+	const [county, setCounty] = useState('');
 	const [postCode, setPostCode] = useState('');
 
 	function isValid() {
 		return (
 			!!addressLine1 &&
 			!!locality &&
-			!!country &&
+			!!county &&
 			!!postCode
 		);
 	}
@@ -722,13 +737,11 @@ const AddressVerification = ({
 			bookingService
 				.sendResult(token, appointmentId, {
 					result: '',
-					appointment_address: {
-						address_1: addressLine1,
-						address_1: addressLine2,
-						locality,
-						country,
-						postalCode: postCode,
-					},
+					street_address: addressLine1,
+					extended_address: addressLine2,
+					locality: locality,
+					region: county,
+					postal_code: postCode,
 				}, patient.id)
 				.then(result => {
 					if (result.success) {
@@ -800,10 +813,10 @@ const AddressVerification = ({
 							<div className='row'>
 								<TextInputElement
 									required
-									value={country}
+									value={county}
 									id='country'
-									label='Country'
-									onChange={setCountry}
+									label='County'
+									onChange={setCounty}
 								/>
 							</div>
 							<div className='row'>
@@ -916,6 +929,7 @@ const VideoAppointmentDetails = ({
 );
 
 const PatientIdVerification = ({
+	patient,
     patients,
 	isTuiType,
 	authToken,
@@ -985,6 +999,8 @@ const PatientIdVerification = ({
 						<PatientDetails
 							fullData
 							isJoined
+							patient={patient}
+							patients={patients}
 							authToken={authToken}
 							title='Patient Details'
 							patient={currentPatient}

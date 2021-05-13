@@ -18,6 +18,7 @@ const bookingService = {
 	sendAlternativeLink,
 	getSlotsByTime,
 	deleteBooking,
+	getAppointmentsByShortToken,
 };
 
 // Booking engine
@@ -64,7 +65,33 @@ function getSlots(selectedDate) {
 		}
 	});
 }
-
+function getAppointmentsByShortToken(shortToken, token) {
+	return new Promise((resolve, reject) => {
+		axios({
+			method: 'get',
+			url: `${baseURL}/-/short-token/${shortToken}`,
+		})
+			.then(response => {
+				if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+					resolve({
+						success: true,
+						appointments: response.data,
+					});
+				} else if (response.status === 200 && response.data === null) {
+					resolve({
+						success: true,
+						appointments: [],
+					});
+				} else {
+					resolve({
+						success: false,
+						error: 'Unable to retrieve appointments.',
+					});
+				}
+			})
+			.catch(err => reject(err));
+	});
+}
 function getSlotsByTime({ date_time, date_time_to, language }) {
 	const params = getURLParams();
 	function additionalParams() {

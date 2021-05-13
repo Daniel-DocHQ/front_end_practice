@@ -10,7 +10,6 @@ import validationSchema from './validationSchema';
 import bookingService from '../../services/bookingService';
 import getURLParams from '../../helpers/getURLParams';
 import LinkButton from '../DocButton/LinkButton';
-import adminService from '../../services/adminService';
 import nurseSvc from '../../services/nurseService';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -82,6 +81,8 @@ const BookingEngine = () => {
 							last_name,
 							metadata: {
 								passport_number,
+								test_type,
+								short_token,
 							},
 							...rest
 						}) => ({
@@ -89,6 +90,8 @@ const BookingEngine = () => {
 							lastName: last_name,
 							dateOfBirth: moment(date_of_birth).format('DD/MM/YYYY'),
 							passportNumber: passport_number,
+							test_type,
+							short_token,
 							...rest,
 						})),
 					}}
@@ -131,6 +134,8 @@ const BookingEngine = () => {
 								lastName,
 								dateOfBirth,
 								passportNumber,
+								test_type,
+								short_token,
 								...rest
 							}) => ({
 								first_name: firstName,
@@ -138,6 +143,8 @@ const BookingEngine = () => {
 								date_of_birth: moment(dateOfBirth, 'DD/MM/YYYY').utc(0).format(),
 								metadata: {
 									passport_number: passportNumber,
+									test_type,
+									short_token,
 								},
 								...rest,
 							}));

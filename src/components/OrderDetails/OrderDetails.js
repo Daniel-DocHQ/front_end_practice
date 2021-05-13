@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { get } from 'lodash';
+import { format } from 'date-fns';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Drawer from '@material-ui/core/Drawer';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
@@ -34,6 +33,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import DocButton from '../DocButton/DocButton';
 import LinkButton from '../DocButton/LinkButton';
+import bookingService from '../../services/bookingService';
+import { Divider } from '@material-ui/core';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -58,9 +59,9 @@ const useStyles = makeStyles((theme) => ({
 const OrderDetails = ({order, closeHandler}) => {
     const classes = useStyles();
     const [orderDetail, setOrderDetail] = useState({});
+    const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(<></>);
-    const appointmentId = get(orderDetail, 'appointmentId', '');
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     useEffect(() =>{
         let apiCall = new Promise((res, rej) => {
@@ -82,6 +83,13 @@ const OrderDetails = ({order, closeHandler}) => {
         })
         .catch(res => {
             setError(<>{res.message}</>)
+        })
+
+        bookingService.getAppointmentsByShortToken(order.id)
+        .then(result => {
+            if (result.success && result.appointments) {
+                setAppointments(result.appointments);
+            }
         })
     }, [order])
 
@@ -113,6 +121,11 @@ const OrderDetails = ({order, closeHandler}) => {
             <Container className={classes.container}>
                 <Grid container spacing={3}>
                     <Grid item></Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h4" className={classes.title}>
+                            Purchase Details
+                        </Typography>
+                    </Grid>
                     <Grid item xs={6}>
                         <Typography variant="h6" className={classes.title}>
                             Billing Details
@@ -180,13 +193,6 @@ const OrderDetails = ({order, closeHandler}) => {
                                 style={{ marginRight: 10 }}
                                 text="Cancel order"
                             />
-                            {appointmentId && (
-                                <LinkButton
-                                    className="pink"
-                                    linkSrc={`/customer_services/booking/edit?appointmentId=${appointmentId}&service=video_gp_dochq`}
-                                    text="Edit booking"
-                                />
-                            )}
                             <CancelOrder
                                 order={orderDetail}
                                 open={cancelDialogOpen}
@@ -196,6 +202,42 @@ const OrderDetails = ({order, closeHandler}) => {
                             />
                             </Grid>
                         </Grid>
+                        {!!appointments.length && (
+                            <Grid container spacing={3}>
+                                <Grid item xs={12}>
+                                    <Divider style={{ margin: '20px 0' }} />
+                                    <Typography variant="h4" className={classes.title}>
+                                        Appointments Details
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={8}>
+                                    <TableContainer component={Paper}>
+                                        <Table className={classes.table} aria-label="simple table">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>Date</TableCell>
+                                                    <TableCell align="right">Action</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                            {appointments.map((row) => (
+                                                <TableRow key={row.id}>
+                                                    <TableCell component="th" scope="row">{format(new Date(row.start_time), 'dd/mm/yyyy/ p')}</TableCell>
+                                                    <TableCell align="right">
+                                                        <LinkButton
+                                                            className="pink"
+                                                            linkSrc={`/customer_services/booking/edit?appointmentId=${row.id}&service=video_gp_dochq`}
+                                                            text="Edit"
+                                                        />
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Grid>
+                            </Grid>
+                        )}
                     </Container>
                 </div>
     )
