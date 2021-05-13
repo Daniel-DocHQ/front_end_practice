@@ -2,6 +2,8 @@ const bookingFormModel = {
     formInitialValues: {
         antigenTest: 0,
         pcrTest: 0,
+        city: '',
+        timezone: '',
         travelDate: new Date(),
         travelTime: new Date(),
         passengers: [
@@ -25,6 +27,14 @@ const bookingFormModel = {
             label: 'Antigen Tests',
             id: 'antigen-kit',
             type: 'number',
+            required: true,
+        },
+        city: {
+            name: 'city',
+            label: 'Select Country of Origin',
+            id: 'city',
+            type: 'text',
+            placeholder: 'Select Country of Origin',
             required: true,
         },
         pcrTest: {

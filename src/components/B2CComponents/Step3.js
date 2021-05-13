@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-import moment from 'moment';
-import { get } from 'lodash';
+import moment from 'moment-timezone';
 import { Field, useFormikContext, ErrorMessage } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
@@ -112,6 +111,7 @@ const Step3 = () => {
 			selectedSlot: selectedSlotValue,
 			travelDate,
 			travelTime,
+			timezone,
 		},
 		setFieldValue,
 	} = useFormikContext();
@@ -129,8 +129,8 @@ const Step3 = () => {
 	useEffect(() => {
 		bookingService
 			.getSlotsByTime({
-				date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).format().replace('+', '%2B'),
-				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 4)).setMinutes(travelTime.getMinutes())).format().replace('+', '%2B'),
+				date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).utc(0).tz(timezone).format().replace('+', '%2B'),
+				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 4)).setMinutes(travelTime.getMinutes())).utc(0).tz(timezone).format().replace('+', '%2B'),
 				language: 'EN',
 			})
 			.then(result => {
@@ -178,7 +178,7 @@ const Step3 = () => {
 				{filteredAppointments.length > 0 && (
 					<div className='appointment-slot-container'>
 						<div className='row flex-start' >
-							<h3 style={{ marginBottom: 0 }}>Appointments Available (selected timezone: {get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time')})</h3>
+							<h3 style={{ marginBottom: 0 }}>Appointments Available (selected timezone: {timezone})</h3>
 						</div>
 						<div className='slot-container'>
 							<Field name={selectedSlot.name}>

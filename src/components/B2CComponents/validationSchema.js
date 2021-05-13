@@ -8,6 +8,7 @@ const {
     travelDate,
     travelTime,
     selectedSlot,
+    city,
   }
 } = bookingFormModel;
 
@@ -17,6 +18,9 @@ export default [
     [pcrTest.name]: Yup.number().required('Input number of kits').min(0, 'Minimum 0 number of kits').max(15, 'You can\'t order more than 15'),
   }),
   Yup.object().shape({
+    [city.name]: Yup.object().shape({
+      timezone: Yup.string(),
+    }).required('Select city'),
     [travelDate.name]: Yup.date(),
     [travelTime.name]: Yup.date(),
   }),

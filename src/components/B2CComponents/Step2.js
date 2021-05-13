@@ -5,7 +5,12 @@ import {
 	FormLabel,
 	Radio,
 	RadioGroup,
+    InputLabel,
+    ListSubheader,
+    Select,
+    MenuItem,
 } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Field, useFormikContext } from 'formik';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
@@ -148,13 +153,45 @@ const Step2 = ({
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                     <Field name={`passengers[${activePassenger}].ethnicity`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input ethnicity' : undefined}>
                         {({ field, meta }) => (
-                            <Input
-                                error={!!meta.error}
-                                touched={meta.touched}
-                                helperText={(meta.error && meta.touched) && meta.error}
-                                {...ethnicity}
-                                {...field}
-                            />
+                            <FormControl variant='filled' style={{ width: '100%' }}>
+                                <InputLabel
+                                    required={ethnicity.required}
+                                    htmlFor="grouped-select"
+                                >
+                                    {ethnicity.label}
+                                </InputLabel>
+                                <Select
+                                    error={!!meta.error}
+                                    touched={meta.touched}
+                                    helperText={(meta.error && meta.touched) && meta.error}
+                                    {...ethnicity}
+                                    {...field}
+                                >
+                                    <ListSubheader><b>White</b></ListSubheader>
+                                    <MenuItem value="English, Welsh, Scottish, Northern Irish or British">English, Welsh, Scottish, Northern Irish or British</MenuItem>
+                                    <MenuItem value="Irish">Irish</MenuItem>
+                                    <MenuItem value="Gypsy or Irish Traveller">Gypsy or Irish Traveller</MenuItem>
+                                    <MenuItem value="Any other White background">Any other White background</MenuItem>
+                                    <ListSubheader><b>Mixed or Multiple ethnic groups</b></ListSubheader>
+                                    <MenuItem value="White and Black Caribbean">White and Black Caribbean</MenuItem>
+                                    <MenuItem value="White and Black African">White and Black African</MenuItem>
+                                    <MenuItem value="White and Asian">White and Asian</MenuItem>
+                                    <MenuItem value="Any other Mixed or Multiple ethnic background">Any other Mixed or Multiple ethnic background</MenuItem>
+                                    <ListSubheader><b>Asian or Asian British</b></ListSubheader>
+                                    <MenuItem value="Indian">Indian</MenuItem>
+                                    <MenuItem value="Pakistani">Pakistani</MenuItem>
+                                    <MenuItem value="Bangladeshi">Bangladeshi</MenuItem>
+                                    <MenuItem value="Chinese">Chinese</MenuItem>
+                                    <MenuItem value="Any other Asian background">Any other Asian background</MenuItem>
+                                    <ListSubheader><b>Black, African, Caribbean or Black British</b></ListSubheader>
+                                    <MenuItem value="African">African</MenuItem>
+                                    <MenuItem value="Caribbean">Caribbean</MenuItem>
+                                    <MenuItem value="Any other Black, African or Caribbean background">Any other Black, African or Caribbean background</MenuItem>
+                                    <ListSubheader><b>Other ethnic group</b></ListSubheader>
+                                    <MenuItem value="Arab">Arab</MenuItem>
+                                    <MenuItem value="Any other ethnic group">Any other ethnic group</MenuItem>
+                                </Select>
+                            </FormControl>
                         )}
                     </Field>
                 </div>

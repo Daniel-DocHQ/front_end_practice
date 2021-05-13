@@ -1,12 +1,15 @@
 import React from 'react';
 import { Field, useFormikContext } from 'formik';
 import DateFnsUtils from '@date-io/date-fns';
+import cityTimezones from 'city-timezones';
 import { DatePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { ThemeProvider } from '@material-ui/styles';
 import bookingFormModel from './bookingFormModel';
 import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
 import './BookingEngine.scss';
+import Input from '../FormComponents/Input';
 
 const datePickerTheme = createMuiTheme({
 	overrides: {
@@ -97,6 +100,7 @@ const Step1 = () => {
         formField: {
             travelDate,
 			travelTime,
+			city,
         }
     } = bookingFormModel;
 
@@ -107,6 +111,36 @@ const Step1 = () => {
 
 	return (
 		<React.Fragment>
+			<div className='row'>
+				<div style={{ paddingRight: 50 }}>
+					<p>
+						Where are you flying from?
+					</p>
+				</div>
+				<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
+					<Field name={city.name}>
+						{({ field, meta, form }) => (
+							<Autocomplete
+								{...field}
+								options={cityTimezones.cityMapping}
+								getOptionLabel={({city, country}) => city ? `${city}, ${country}` : ''}
+								style={{ width: 300 }}
+								onChange={(event, newValue) => {
+									form.setFieldValue(city.name, newValue);
+									form.setFieldValue('timezone', newValue.timezone);
+								}}
+								renderInput={(params) => <Input
+									{...params}
+									{...city}
+									error={!!meta.error}
+									touched={meta.touched}
+									helperText={(meta.error && meta.touched) && meta.error}
+								/>}
+							/>
+						)}
+					</Field>
+				</div>
+			</div>
 			<div className='no-margin col'>
 				<ThemeProvider theme={datePickerTheme}>
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
