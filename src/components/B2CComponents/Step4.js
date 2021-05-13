@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik';
 import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
 
 const Step4 = () => {
-    const { values: { appointmentDate, selectedSlot, passengers } } = useFormikContext();
+    const { values: { appointmentDate, selectedSlot, passengers, timezone } } = useFormikContext();
 
 	return (
 		<React.Fragment>
@@ -16,7 +16,7 @@ const Step4 = () => {
 			<div className='row no-margin'>
 				<p>
 					<strong>Appointment Time:&nbsp;</strong>
-					{formatTimeSlot(selectedSlot.start_time)} - {formatTimeSlot(selectedSlot.end_time)}
+					{formatTimeSlot(selectedSlot.start_time)} - {formatTimeSlot(selectedSlot.end_time)} ({timezone})
 				</p>
 			</div>
             {passengers.map(({

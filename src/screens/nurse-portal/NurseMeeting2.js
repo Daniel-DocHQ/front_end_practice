@@ -21,6 +21,8 @@ import {
 	Tooltip,
 	Divider,
 } from '@material-ui/core';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Alert } from '@material-ui/lab';
 import { format, differenceInMinutes } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
@@ -280,6 +282,7 @@ const PatientDetails = ({
 		<React.Fragment>
 			<div className='row no-margin' style={{ paddingBottom: 10 }} onClick={handleChange}>
 				<h3 className='no-margin'>{title}</h3>
+				{checked ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 			</div>
 			<div className='column'>
 				<Collapse in={checked}>

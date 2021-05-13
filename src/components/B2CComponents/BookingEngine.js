@@ -113,6 +113,7 @@ const BookingEngine = () => {
 								travelDate,
 								travelTime,
 								passengers,
+								timezone,
 							} = values;
 							const booking_users = passengers.map(({
 								firstName,
@@ -123,8 +124,8 @@ const BookingEngine = () => {
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
-								tz_location: 'Europe/London',
-								date_of_birth: moment(dateOfBirth, 'DD/MM/YYYY').utc(0).format(),
+								tz_location: timezone,
+								date_of_birth: moment.utc(dateOfBirth, 'DD/MM/YYYY').format(),
 								street_address: address_1,
 								language: 'EN',
 								extended_address: address_2,

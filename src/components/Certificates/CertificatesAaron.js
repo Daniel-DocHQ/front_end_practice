@@ -8,7 +8,6 @@ import {
 	RadioGroup,
 	Select,
 	MenuItem,
-	Checkbox,
 } from '@material-ui/core';
 import { get } from 'lodash';
 import { useDebounce } from 'react-use';
@@ -25,12 +24,6 @@ import bookingService from '../../services/bookingService';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import { useAppointmentId } from '../../context/AppointmentContext';
-
-const minus15mins = date => {
-	const d = new Date(date);
-	const newDate = new Date(d.getTime() - 60 * 15 * 1000);
-	return newDate;
-};
 
 const CertificatesAaron = ({
 	img,
@@ -152,7 +145,7 @@ const CertificatesAaron = ({
 			forename,
 			surname,
 			email,
-			date_of_birth: moment(dob, "DD/MM/YYYY").utc(0).format(),
+			date_of_birth: moment.utc(dob, "DD/MM/YYYY").format(),
 			sex,
 			security_checked,
 			result,
@@ -217,7 +210,7 @@ const CertificatesAaron = ({
 				forename,
 				surname,
 				email,
-				date_of_birth: moment(dob, "DD/MM/YYYY").utc(0).format(),
+				date_of_birth: moment.utc(dob, "DD/MM/YYYY").format(),
 				sex,
 				security_checked,
 				result: '',
@@ -320,18 +313,6 @@ const CertificatesAaron = ({
 					</div>
 				)}
 				<div className='row'>
-					<MaterialCheckbox
-						value={security_checked}
-						onChange={setSecurity_checked}
-						labelComponent='ID document checked'
-					/>
-				</div>
-				{attemptedSubmit && !security_checked && (
-					<div className='row no-margin'>
-						<p className='error'>You must confirm security has been checked</p>
-					</div>
-				)}
-				<div className='row'>
 					<TextInputElement
 						value={passportId}
 						id='passport-number'
@@ -345,6 +326,18 @@ const CertificatesAaron = ({
 				{attemptedSubmit && errors.includes('passport number') && (
 					<div className='row no-margin'>
 						<p className='error'>Enter patient passport number</p>
+					</div>
+				)}
+				<div className='row'>
+					<MaterialCheckbox
+						value={security_checked}
+						onChange={setSecurity_checked}
+						labelComponent='ID document checked'
+					/>
+				</div>
+				{attemptedSubmit && !security_checked && (
+					<div className='row no-margin'>
+						<p className='error'>You must confirm security has been checked</p>
 					</div>
 				)}
 				<div className='row'>
@@ -432,28 +425,20 @@ const CertificatesAaron = ({
 							</div>
 						) : (
 							<>
-								<div className='row'>
-									<div style={{ padding: 15, borderRadius: '50%', background: '#EFEFF0', marginRight: 15 }}>
-										<i className="fas fa-camera" style={{ fontSize: 20 }} />
+								{!doneBy8x8 && (
+									<div className='row'>
+										<div style={{ padding: 15, borderRadius: '50%', background: '#EFEFF0', marginRight: 15 }}>
+											<i className="fas fa-camera" style={{ fontSize: 20 }} />
+										</div>
+										<h3 className='no-margin'>Test Results</h3>
 									</div>
-									<h3 className='no-margin'>Test Results</h3>
-								</div>
+								)}
 								<div className='row'>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={doneBy8x8}
-											onChange={(e) => setDoneBy8x8(e.target.checked)}
-											defaultValue={false}
-											color='primary'
-										/>
-									}
-									label={
-										<p>
-											Done by Alternative Video platform
-										</p>
-									}
-								/>
+									<MaterialCheckbox
+										value={doneBy8x8}
+										onChange={setDoneBy8x8}
+										labelComponent='Done by Alternative Video platform'
+									/>
 								</div>
 							</>
 						)}

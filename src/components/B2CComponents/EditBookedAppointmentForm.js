@@ -140,7 +140,7 @@ const BookingEngine = () => {
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
-								date_of_birth: moment(dateOfBirth, 'DD/MM/YYYY').utc(0).format(),
+								date_of_birth: moment.utc(dateOfBirth, 'DD/MM/YYYY').format(),
 								metadata: {
 									passport_number: passportNumber,
 									test_type,

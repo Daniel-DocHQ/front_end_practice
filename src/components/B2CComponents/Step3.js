@@ -129,8 +129,8 @@ const Step3 = () => {
 	useEffect(() => {
 		bookingService
 			.getSlotsByTime({
-				date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).utc(0).tz(timezone).format().replace('+', '%2B'),
-				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 4)).setMinutes(travelTime.getMinutes())).utc(0).tz(timezone).format().replace('+', '%2B'),
+				date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
+				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 4)).setMinutes(travelTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
 				language: 'EN',
 			})
 			.then(result => {
