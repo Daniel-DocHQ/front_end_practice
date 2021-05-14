@@ -1,4 +1,5 @@
 import React, { Component, useContext } from 'react';
+import { get } from 'lodash';
 import authorisationSvc from '../services/authorisationService';
 import bookingUserDataService from '../services/bookingUserDataService';
 
@@ -64,22 +65,26 @@ export default class AuthContextProvider extends Component {
 	componentWillMount() {
 		const authToken = localStorage.getItem('auth_token');
 		if (authToken) {
+			let role = '';
 			this.state.token = authToken;
 			this.state.isAuthenticated = true;
 			authorisationSvc.getUser(authToken).then(resp => {
 				if (resp.success && resp.user) {
 					this.setUser(resp.user);
+					role = get(resp.user, 'roles[0].name', '');
 				} else {
 					this.logout();
 				}
 			});
-			bookingUserDataService
-				.getRoleProfile(authToken)
-				.then(result => {
-					if (result.success && result.role_profile) {
-						this.setRoleProfile(result.role_profile);
-					}
-				})
+			if (role === 'patient') {
+				bookingUserDataService
+					.getRoleProfile(authToken)
+					.then(result => {
+						if (result.success && result.role_profile) {
+							this.setRoleProfile(result.role_profile);
+						}
+					})
+			}
 		}
 	}
 

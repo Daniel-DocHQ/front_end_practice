@@ -98,7 +98,11 @@ function TwillioVideoCall({
 	}, [token]);
 
 	const handleDisconnect = () => {
-		isNurse ? setIsCloseCallVisible(true) : room.disconnect();
+		if (isNurse) {
+			setIsCloseCallVisible(true);
+		} else if (!!room ) {
+			room.disconnect();
+		}
 	};
 
 	const handlePause = async () => {
@@ -106,7 +110,9 @@ function TwillioVideoCall({
 		if (!!hideVideoAppointment) {
 			hideVideoAppointment();
 		}
-		room.disconnect();
+		if (!!room) {
+			room.disconnect();
+		}
 	}
 
 	const handleToggleAudio = () => {

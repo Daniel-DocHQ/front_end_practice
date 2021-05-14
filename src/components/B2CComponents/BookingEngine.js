@@ -15,7 +15,7 @@ import adminService from '../../services/adminService';
 const BookingEngine = () => {
 	const params = getURLParams(window.location.href);
 	const short_token = params['short_token'];
-	const [orderInfo, setOrderInfo] = useState(0);
+	const [orderInfo, setOrderInfo] = useState();
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
@@ -55,8 +55,6 @@ const BookingEngine = () => {
 				.then(data => {
 					if (data.success) {
 						setOrderInfo(data.order);
-					} else {
-						ToastsStore.error('Error fetching order information');
 					}
 				})
 				.catch(err => ToastsStore.error('Error fetching order information'))
@@ -65,7 +63,7 @@ const BookingEngine = () => {
 
 	return (
 		<BigWhiteContainer>
-			{(short_token) ? (
+			{(short_token && !!orderInfo) ? (
 				<Formik
 					initialValues={formInitialValues}
 					validationSchema={currentValidationSchema}

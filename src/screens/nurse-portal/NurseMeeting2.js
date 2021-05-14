@@ -98,13 +98,14 @@ const TabContainer = ({
 		type,
 		test_type,
 		appointmentId,
+		booking_users,
 		status_changes,
 		toggleDisplayCertificates,
 		getAppointmentDetails,
 	} = useContext(AppointmentContext);
 	const [value, setValue] = useState(0);
-	const patients = useBookingUsers();
-	let patient = useBookingUser(0);
+	const patients = !!booking_users ? [...booking_users] : [];
+	let patient = !!patients.length ? patients[0] : {};
 	patient = {...patient, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})}
 	const appointmentDetails = useAppointmentDetails();
 	const increaseStep = useCallback(() => {
@@ -123,11 +124,11 @@ const TabContainer = ({
 		}
 	}, [isJoined]);
 
-	// useEffect(() => {
-	// 	if (appointmentId) {
-	// 		getAppointmentDetails(appointmentId, authToken);
-	// 	}
-	// }, [value]);
+	useEffect(() => {
+		if (appointmentId) {
+			getAppointmentDetails(appointmentId, authToken);
+		}
+	}, [value]);
 
 	return (
 		isAntigenType ? (
@@ -280,8 +281,10 @@ const PatientDetails = ({
 
 	return (
 		<React.Fragment>
-			<div className='row no-margin' style={{ paddingBottom: 10 }} onClick={handleChange}>
-				<h3 className='no-margin'>{title}</h3>
+			<div className='row no-margin' style={{ paddingBottom: 10, cursor: 'pointer' }} onClick={handleChange}>
+				<h3 className='no-margin'>
+					{title}
+				</h3>
 				{checked ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 			</div>
 			<div className='column'>
