@@ -1,3 +1,5 @@
+import COUNTRIES from "../../helpers/countries";
+
 const bookingFormModel = {
     formInitialValues: {
         antigenTest: 0,
@@ -12,6 +14,7 @@ const bookingFormModel = {
                 lastName: '',
                 email: '',
                 phone: '',
+                countryCode: COUNTRIES.find(({ country }) => country === 'United Kingdom'),
                 dateOfBirth: '',
                 ethnicity: '',
                 sex: 'Female',
@@ -27,6 +30,13 @@ const bookingFormModel = {
             label: 'Antigen Tests',
             id: 'antigen-kit',
             type: 'number',
+            required: true,
+        },
+        countryCode: {
+            name: 'Country Code',
+            label: 'Choose a country code',
+            id: 'country-code',
+            type: 'text',
             required: true,
         },
         city: {

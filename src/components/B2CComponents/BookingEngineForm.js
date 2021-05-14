@@ -33,11 +33,11 @@ const BookingEngineForm = ({
 
 			case 2:
 				return (
-					<Step2 activePassenger={activePassenger} />
+					<Step2 />
 				);
 			case 3:
 				return (
-					<Step3 />
+					<Step3 activePassenger={activePassenger} />
 				);
             case 4:
 				return (

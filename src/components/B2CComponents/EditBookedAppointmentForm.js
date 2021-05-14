@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import { get } from 'lodash';
 import moment from 'moment';
 import { ToastsStore } from 'react-toasts';
+import parsePhoneNumber from 'libphonenumber-js'
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import BookingEngineForm from './BookingEngineForm';
 import bookingFormModel from './bookingFormModel';
@@ -12,6 +13,7 @@ import getURLParams from '../../helpers/getURLParams';
 import LinkButton from '../DocButton/LinkButton';
 import nurseSvc from '../../services/nurseService';
 import { AuthContext } from '../../context/AuthContext';
+import COUNTRIES from '../../helpers/countries';
 
 const BookingEngine = () => {
 	const { token } = useContext(AuthContext);
@@ -22,12 +24,13 @@ const BookingEngine = () => {
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
+	const defaultCountyCode =  COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
 	const steps = [
         'How many people will take the test?',
         'Travel Details',
-        'Passenger Details',
         'Booking Appointment',
+        'Passenger Details',
         'Summary',
         'Booking Confirmation',
     ];
@@ -39,6 +42,7 @@ const BookingEngine = () => {
 		phone: '',
 		dateOfBirth: '',
 		ethnicity: '',
+		countryCode: defaultCountyCode,
 		sex: 'Female',
 		passportNumber: '',
 	};
@@ -79,21 +83,27 @@ const BookingEngine = () => {
 							first_name,
 							date_of_birth,
 							last_name,
+							phone,
 							metadata: {
 								passport_number,
 								test_type,
 								short_token,
 							},
 							...rest
-						}) => ({
-							firstName: first_name,
-							lastName: last_name,
-							dateOfBirth: moment(date_of_birth).format('DD/MM/YYYY'),
-							passportNumber: passport_number,
-							test_type,
-							short_token,
-							...rest,
-						})),
+						}) => {
+							const parsedPhoneNumber =  parsePhoneNumber(phone);
+
+							return ({
+								firstName: first_name,
+								lastName: last_name,
+								dateOfBirth: moment(date_of_birth).format('DD/MM/YYYY'),
+								passportNumber: passport_number,
+								test_type,
+								countryCode: COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)),
+								short_token,
+								...rest,
+							});
+						}),
 					}}
 					validationSchema={currentValidationSchema}
 					onSubmit={async (values, actions) => {
@@ -135,12 +145,15 @@ const BookingEngine = () => {
 								dateOfBirth,
 								passportNumber,
 								test_type,
+								phone,
+								countryCode,
 								short_token,
 								...rest
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
 								date_of_birth: moment.utc(dateOfBirth, 'DD/MM/YYYY').format(),
+								phone: `${countryCode.label}${phone.trim()}`,
 								metadata: {
 									passport_number: passportNumber,
 									test_type,

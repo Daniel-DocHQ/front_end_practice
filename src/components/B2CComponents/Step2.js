@@ -1,238 +1,227 @@
-import React from 'react';
-import {
-	FormControl,
-	FormControlLabel,
-	FormLabel,
-	Radio,
-	RadioGroup,
-    InputLabel,
-    ListSubheader,
-    Select,
-    MenuItem,
-} from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { Field, useFormikContext } from 'formik';
-import Input from '../FormComponents/Input';
+import React, { useState, useEffect } from 'react';
+import DateFnsUtils from '@date-io/date-fns';
+import moment from 'moment-timezone';
+import { Field, useFormikContext, ErrorMessage } from 'formik';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { createMuiTheme } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
+import bookingService from '../../services/bookingService';
 import bookingFormModel from './bookingFormModel';
+import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
+import Slot from './Slot';
 import './BookingEngine.scss';
 
-const Step2 = ({
-    activePassenger,
-}) => {
-    const { touched } = useFormikContext();
-    const {
+const datePickerTheme = createMuiTheme({
+	overrides: {
+		MuiTypography: {
+			colorPrimary: { color: 'var(--doc-pink)' },
+		},
+		MuiPickersMonth: { monthSelected: { color: 'var(--doc-pink)' } },
+		MuiPickersDay: {
+			daySelected: {
+				'&:hover': { backgroundColor: 'inherit' },
+				backgroundColor: 'inherit',
+				MuiIconButton: {
+					label: { color: 'var(--doc-pink)' },
+				},
+			},
+			current: {
+				color: 'var(--doc-pink)!important',
+			},
+			dayDisabled: {
+				color: 'var(--doc-dark-grey)',
+				opacity: '0.5',
+				backgroundColor: 'var(--doc-white)!important',
+			},
+			hidden: {
+				opacity: '0 !important',
+			},
+			day: {
+				width: '24px',
+				height: '24px',
+				backgroundColor: 'var(--doc-green)',
+				marginTop: '5px',
+				marginBottom: '5px',
+				color: 'var(--doc-white)',
+			},
+		},
+		MuiIconButton: {
+			label: {
+				backgroundColor: 'inherit',
+				color: 'inherit',
+				transition: '0.3s',
+				'&:hover': { backgroundColor: 'var(--doc-pink)', color: 'var(--doc-white)' },
+				borderRadius: '50%',
+				height: '24px',
+				width: '24px',
+			},
+		},
+		MuiButton: {
+			label: {
+				color: 'var(--doc-green)',
+			},
+		},
+		MuiPickersToolbar: {
+			toolbar: { backgroundColor: 'var(--doc-green)' },
+		},
+		MuiPickersStaticWrapper: {
+			staticWrapperRoot: {
+				width: '90%',
+				border: '2px solid var(--doc-green)',
+				borderRadius: '10px',
+				minWidth: '200px',
+				maxWidth: '300px',
+			},
+		},
+		MuiPickersToolbarText: {
+			toolbarTxt: { fontSize: '22px' },
+		},
+		MuiPickersBasePicker: {
+			pickerView: {
+				maxWidth: '300px',
+				minWidth: '200px',
+			},
+		},
+		MuiPickersCalendar: {
+			week: {
+				justifyContent: 'space-evenly',
+			},
+		},
+		MuiPickersCalendarHeader: {
+			daysHeader: { justifyContent: 'space-evenly' },
+			dayLabel: {
+				width: 'auto',
+			},
+		},
+	},
+});
+
+const Step3 = () => {
+	const [appointments, setAppointments] = useState([]);
+	const [filteredAppointments, setFilteredAppointments] = useState([]);
+	const {
         formField: {
-			firstName,
-			lastName,
-			email,
-			phone,
-			dateOfBirth,
-			ethnicity,
-			sex,
-			passportNumber,
+            appointmentDate,
+			selectedSlot,
         }
     } = bookingFormModel;
+	const {
+		values: {
+			appointmentDate: selectedDate,
+			selectedSlot: selectedSlotValue,
+			travelDate,
+			travelTime,
+			timezone,
+		},
+		setFieldValue,
+	} = useFormikContext();
+
+	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 1)).setHours(0,0,0,0);
+	const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
+
+	useEffect(() => {
+		if (!!appointments && !!selectedDateTime) {
+			setFilteredAppointments([...appointments].filter(({ start_time }) => new Date(start_time).setHours(0,0,0,0) === selectedDateTime));
+		}
+		setFieldValue(selectedSlot.name, null);
+	}, [selectedDate, appointments]);
+
+	useEffect(() => {
+		bookingService
+			.getSlotsByTime({
+				date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
+				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 4)).setMinutes(travelTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
+				language: 'EN',
+			})
+			.then(result => {
+				if (result.success && result.appointments) {
+					setAppointments(result.appointments);
+				} else {
+					setAppointments([]);
+				}
+			})
+			.catch(err => {
+				console.log(err);
+				setAppointments([]);
+			});
+		setFieldValue(selectedSlot.name, null);
+	}, []);
 
 	return (
 		<React.Fragment>
-            <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].firstName`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input first name' : undefined}>
-                        {({ field, meta }) => (
-                            <Input
-                                error={!!meta.error}
-                                touched={meta.touched}
-                                helperText={(meta.error && meta.touched) && meta.error}
-                                {...firstName}
-                                {...field}
-                            />
-                        )}
-                    </Field>
-                </div>
+			<div className='no-margin col' sty>
+				<div className='appointment-calendar-container'>
+					<ThemeProvider theme={datePickerTheme}>
+						<MuiPickersUtilsProvider utils={DateFnsUtils}>
+							<Field name={appointmentDate.name}>
+								{({ field, form }) => (
+									<DatePicker
+										{...field}
+										disablePast
+										variant='static'
+										maxDate={travelDate}
+										label={appointmentDate.label}
+										onChange={(value) => form.setFieldValue(field.name, value)}
+										shouldDisableDate={(date) => date.setHours(0,0,0,0) < startDate}
+									/>
+								)}
+							</Field>
+						</MuiPickersUtilsProvider>
+					</ThemeProvider>
+					<div className='appointment-guide'>
+						<div className='available guide'>
+							<i className='fa fa-circle'></i>
+							<span>Available Date(s)</span>
+						</div>
+					</div>
+				</div>
+				{filteredAppointments.length > 0 && (
+					<div className='appointment-slot-container'>
+						<div className='row flex-start' >
+							<h3 style={{ marginBottom: 0 }}>Appointments Available (selected timezone: {timezone})</h3>
+						</div>
+						<div className='slot-container'>
+							<Field name={selectedSlot.name}>
+								{({ field, form }) =>
+									filteredAppointments.map((item, i) => (
+										<Slot
+											start_time={item.start_time}
+											key={i}
+											{...field}
+											id={item.id}
+											item={item}
+											selectSlot={(value) => form.setFieldValue(field.name, value)}
+											isSelected={
+												!!selectedSlotValue ? item.id === selectedSlotValue.id : false
+											}
+										/>
+									))
+								}
+							</Field>
+						</div>
+					</div>
+				)}
 			</div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-				<div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].lastName`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input last name' : undefined}>
-                        {({ field, meta }) => (
-                            <Input
-                                error={!!meta.error}
-                                touched={meta.touched}
-                                helperText={(meta.error && meta.touched) && meta.error}
-                                {...lastName}
-                                {...field}
-                            />
-                        )}
-                    </Field>
-                </div>
+			<div className='row no-margin'>
+				<p >
+					<strong>Selected appointment Date:&nbsp;</strong>
+					{ddMMyyyy(selectedDate)}
+				</p>
 			</div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-				<div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field
-                        name={`passengers[${activePassenger}].email`}
-                        validate={(value) => {
-                            let error;
-                            if (!!touched && !!touched.passengers) {
-                                if (!value) {
-                                    error = 'Input email';
-                                } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-                                    error = 'Invalid email address';
-                                }
-                            }
-                            return error;
-                        }}
-                    >
-                        {({ field, meta }) => (
-                            <Input
-                                error={!!meta.error}
-                                touched={meta.touched}
-                                helperText={(meta.error && meta.touched) && meta.error}
-                                {...email}
-                                {...field}
-                            />
-                        )}
-                    </Field>
-                </div>
-			</div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field
-                        name={`passengers[${activePassenger}].phone`}
-                        validate={(value) => {
-                            let error;
-                            if (!!touched && !!touched.passengers) {
-                                if (!value) {
-                                    error = 'Input phone';
-                                } else if (value.length < 5) {
-                                    error = 'Invalid phone number';
-                                }
-                            }
-                            return error;
-                        }}
-                    >
-                        {({ field, meta }) => (
-                            <Input
-                                error={!!meta.error}
-                                touched={meta.touched}
-                                helperText={(meta.error && meta.touched) && meta.error}
-                                {...phone}
-                                {...field}
-                            />
-                        )}
-                    </Field>
-                </div>
-		    </div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field
-                        name={`passengers[${activePassenger}].dateOfBirth`}
-                        validate={(value) => {
-                            let error;
-                            if (!!touched && !!touched.passengers) {
-                                if ((!value && !!touched && !!touched.passengers)) {
-                                    error = 'Input date of birth';
-                                } else if (!/^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/.test(value)) {
-                                    error = 'Invalid date of birth';
-                                }
-                            }
-                            return error;
-                        }}
-                    >
-                        {({ field, meta }) => (
-                            <Input
-                                error={!!meta.error}
-                                touched={meta.touched}
-                                helperText={(meta.error && meta.touched) && meta.error}
-                                {...dateOfBirth}
-                                {...field}
-                            />
-                        )}
-                    </Field>
-                </div>
-		    </div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].ethnicity`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input ethnicity' : undefined}>
-                        {({ field, meta }) => (
-                            <FormControl variant='filled' style={{ width: '100%' }}>
-                                <InputLabel
-                                    required={ethnicity.required}
-                                    htmlFor="grouped-select"
-                                >
-                                    {ethnicity.label}
-                                </InputLabel>
-                                <Select
-                                    error={!!meta.error}
-                                    touched={meta.touched}
-                                    helperText={(meta.error && meta.touched) && meta.error}
-                                    {...ethnicity}
-                                    {...field}
-                                >
-                                    <ListSubheader><b>White</b></ListSubheader>
-                                    <MenuItem value="English, Welsh, Scottish, Northern Irish or British">English, Welsh, Scottish, Northern Irish or British</MenuItem>
-                                    <MenuItem value="Irish">Irish</MenuItem>
-                                    <MenuItem value="Gypsy or Irish Traveller">Gypsy or Irish Traveller</MenuItem>
-                                    <MenuItem value="Any other White background">Any other White background</MenuItem>
-                                    <ListSubheader><b>Mixed or Multiple ethnic groups</b></ListSubheader>
-                                    <MenuItem value="White and Black Caribbean">White and Black Caribbean</MenuItem>
-                                    <MenuItem value="White and Black African">White and Black African</MenuItem>
-                                    <MenuItem value="White and Asian">White and Asian</MenuItem>
-                                    <MenuItem value="Any other Mixed or Multiple ethnic background">Any other Mixed or Multiple ethnic background</MenuItem>
-                                    <ListSubheader><b>Asian or Asian British</b></ListSubheader>
-                                    <MenuItem value="Indian">Indian</MenuItem>
-                                    <MenuItem value="Pakistani">Pakistani</MenuItem>
-                                    <MenuItem value="Bangladeshi">Bangladeshi</MenuItem>
-                                    <MenuItem value="Chinese">Chinese</MenuItem>
-                                    <MenuItem value="Any other Asian background">Any other Asian background</MenuItem>
-                                    <ListSubheader><b>Black, African, Caribbean or Black British</b></ListSubheader>
-                                    <MenuItem value="African">African</MenuItem>
-                                    <MenuItem value="Caribbean">Caribbean</MenuItem>
-                                    <MenuItem value="Any other Black, African or Caribbean background">Any other Black, African or Caribbean background</MenuItem>
-                                    <ListSubheader><b>Other ethnic group</b></ListSubheader>
-                                    <MenuItem value="Arab">Arab</MenuItem>
-                                    <MenuItem value="Any other ethnic group">Any other ethnic group</MenuItem>
-                                </Select>
-                            </FormControl>
-                        )}
-                    </Field>
-                </div>
-		    </div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <Field name={`passengers[${activePassenger}].sex`}>
-					{({ field, form }) => (
-						<FormControl component='fieldset' validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Select sex' : undefined}>
-							<FormLabel component='legend'>{sex.label} *</FormLabel>
-							<RadioGroup
-								style={{ display: 'inline' }}
-								aria-label={sex.name}
-								name={sex.name}
-								value={field.value}
-                      			onChange={(({ target: { value } }) => form.setFieldValue(field.name, value))}
-							>
-								<FormControlLabel value='Female' control={<Radio />} label='Female' />
-								<FormControlLabel value='Male' control={<Radio />} label='Male' />
-								<FormControlLabel value='Other' control={<Radio />} label='Other' />
-							</RadioGroup>
-						</FormControl>
-					)}
-				</Field>
-			</div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].passportNumber`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input passport number' : undefined}>
-                        {({ field, meta }) => (
-                            <Input
-                                error={!!meta.error}
-                                touched={meta.touched}
-                                helperText={(meta.error && meta.touched) && meta.error}
-                                {...passportNumber}
-                                {...field}
-                            />
-                        )}
-                    </Field>
-                </div>
-		    </div>
+			{filteredAppointments.length <= 0 && (
+				<>No available appointments at this day</>
+			)}
+			{selectedSlotValue && (
+				<div className='row no-margin'>
+					<p style={{ marginTop: 0 }}>
+						<strong>Selected appointment Time:&nbsp;</strong>
+						{formatTimeSlot(selectedSlotValue.start_time)} - {formatTimeSlot(selectedSlotValue.end_time)}
+					</p>
+				</div>
+			)}
+			<ErrorMessage component="p" className="error" name={selectedSlot.name} />
 		</React.Fragment>
 	);
-};
+}
 
-export default Step2;
+export default Step3;

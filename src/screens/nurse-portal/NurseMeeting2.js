@@ -5,8 +5,6 @@ import Collapse from '@material-ui/core/Collapse';
 import AppointmentContextProvider, {
 	AppointmentContext,
 	useAppointmentDetails,
-	useBookingUsers,
-	useBookingUser,
 } from '../../context/AppointmentContext';
 import {
 	Grid,
