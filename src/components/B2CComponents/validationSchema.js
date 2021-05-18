@@ -3,8 +3,8 @@ import bookingFormModel from './bookingFormModel';
 
 const {
   formField: {
-    antigenTest,
-    pcrTest,
+    numberOfPeople,
+    product,
     travelDate,
     travelTime,
     selectedSlot,
@@ -12,30 +12,31 @@ const {
   }
 } = bookingFormModel;
 
-const useValidationScheme = (antigenTestQuantity) => (
-  [
-    Yup.object().shape({
-      [antigenTest.name]: Yup.number().required('Input number of kits').min(1, 'Minimum 1 number of kits').max(4, 'Maximum 4 people per appointment').test('maximum', 'You can\'t have more people that quantity of test that you bought', (value) => (value <= antigenTestQuantity)),
-      [pcrTest.name]: Yup.number().required('Input number of kits').min(0, 'Minimum 0 number of kits').max(15, 'You can\'t order more than 15'),
+export default [
+  Yup.object().shape({
+    [product.name]: Yup.number().required('Select test kit to book appointment'),
+    [numberOfPeople.name]: Yup.number().required('Input number of people').min(1, 'Minimum 1 person for appointment').max(4, 'Maximum 4 people per appointment')
+    .test('maximum', 'You can\'t have more people that quantity of test that you bought',
+    function checkNumberOfPeople(value) {
+      const { testType } = this.parent;
+      return value <= testType.quantity;
     }),
-    Yup.object().shape({
-      [city.name]: Yup.object().shape({
-        timezone: Yup.string(),
-      }).required('Select city'),
-      [travelDate.name]: Yup.date(),
-      [travelTime.name]: Yup.date(),
-    }),
-    Yup.object().shape({
-      [selectedSlot.name]: Yup.object().typeError('You should select appointment time').shape({
-        id: Yup.string().required(),
-        end_time: Yup.string().required(),
-        start_time: Yup.string().required(),
-      }).required('You should select appointment time'),
-    }),
-    Yup.object().shape(),
-    Yup.object().shape(),
-    Yup.object().shape(),
-  ]
-);
-
-export default useValidationScheme;
+  }),
+  Yup.object().shape({
+    [city.name]: Yup.object().shape({
+      timezone: Yup.string(),
+    }).required('Select city'),
+    [travelDate.name]: Yup.date(),
+    [travelTime.name]: Yup.date(),
+  }),
+  Yup.object().shape({
+    [selectedSlot.name]: Yup.object().typeError('You should select appointment time').shape({
+      id: Yup.string().required(),
+      end_time: Yup.string().required(),
+      start_time: Yup.string().required(),
+    }).required('You should select appointment time'),
+  }),
+  Yup.object().shape(),
+  Yup.object().shape(),
+  Yup.object().shape(),
+];

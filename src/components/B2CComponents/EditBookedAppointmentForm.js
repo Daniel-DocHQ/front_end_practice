@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import { get } from 'lodash';
 import moment from 'moment';
 import { ToastsStore } from 'react-toasts';
+import cityTimezones from 'city-timezones';
 import parsePhoneNumber from 'libphonenumber-js'
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import BookingEngineForm from './BookingEngineForm';
@@ -24,8 +25,12 @@ const BookingEngine = () => {
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
-	const defaultCountyCode =  COUNTRIES.find(({ country }) => country === 'United Kingdom');
+	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
+	const defaultCountyCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
+	const usersTravelDate = get(bookingUsers, '[0].metadata.travel_date', new Date ());
+	const usersTimeZone = get(bookingUsers, '[0].tz_location', defaultTimeZone.timezone);
+	const usersTimeZoneObj = cityTimezones.cityMapping.find(({ timezone }) => timezone === usersTimeZone);
 	const steps = [
         'How many people will take the test?',
         'Travel Details',
@@ -77,7 +82,17 @@ const BookingEngine = () => {
 				<Formik
 					initialValues={{
 						...formInitialValues,
-						antigenTest: bookingUsers.length,
+						travelDate: new Date(usersTravelDate),
+						travelTime: new Date(usersTravelDate),
+						testType: {
+							quantity: bookingUsers.length,
+							product: {
+								type: get(bookingUsers, '[0].metadata.test_type', 'Antigen'),
+							},
+						},
+						city: usersTimeZoneObj,
+						timezone: usersTimeZoneObj.timezone,
+						numberOfPeople: bookingUsers.length,
 						passengers: bookingUsers.map(({
 							id,
 							first_name,
@@ -109,11 +124,10 @@ const BookingEngine = () => {
 					onSubmit={async (values, actions) => {
 						if (activeStep === 2) {
 							const {
-								antigenTest,
-								pcrTest,
+								numberOfPeople,
 								passengers,
 							} = values;
-							if (activePassenger === (antigenTest + pcrTest - 1)) {
+							if (activePassenger === (numberOfPeople  - 1)) {
 								actions.setSubmitting(false);
 								actions.setTouched({});
 								actions.setErrors({});
@@ -155,6 +169,15 @@ const BookingEngine = () => {
 								date_of_birth: moment.utc(dateOfBirth, 'DD/MM/YYYY').format(),
 								phone: `${countryCode.label}${phone.trim()}`,
 								metadata: {
+									travel_date: moment(
+										new Date(
+											travelDate.getFullYear(),
+											travelDate.getMonth(),
+											travelDate.getDate(),
+											travelTime.getHours(),
+											travelTime.getMinutes(),
+											0,
+										)).format(),
 									passport_number: passportNumber,
 									test_type,
 									short_token,
@@ -163,8 +186,6 @@ const BookingEngine = () => {
 							}));
 							const body = {
 								booking_users,
-								travel_date: travelDate,
-								travel_time: travelTime,
 							};
 							await bookingService.deleteBooking(appointmentId, token);
 							await bookingService

@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const OrderDetails = ({order, closeHandler}) => {
+const OrderDetails = ({ token, order, closeHandler}) => {
     const classes = useStyles();
     const [orderDetail, setOrderDetail] = useState({});
     const [appointments, setAppointments] = useState([]);
@@ -68,6 +68,7 @@ const OrderDetails = ({order, closeHandler}) => {
             axios({
                 method: 'get',
                 url: `${orderUrl}/v1/order/${order.id}`,
+                headers: { Authorization: `Bearer ${token}` },
             }).then(res)
             .catch(rej)
         })

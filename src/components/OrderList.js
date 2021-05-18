@@ -1,4 +1,4 @@
-import React, { useEffect, memo, useState } from 'react';
+import React, { useEffect, memo, useState, useContext } from 'react';
 import {format} from 'date-fns';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
@@ -7,6 +7,7 @@ import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid, GridToolbar  } from '@material-ui/data-grid';
 import OrderDetails from './OrderDetails/OrderDetails';
+import { AuthContext } from '../context/AuthContext';
 
 const orderUrl = process.env.REACT_APP_API_URL
 
@@ -45,6 +46,7 @@ const columns = [
 
 const OrderList = props => {
     const classes = useStyles();
+    const { token } = useContext(AuthContext);
     const [rows, setRows] = useState([]);
     const [pageSize, setPageSize] = useState(0)
     const [page, setPage] = useState(0);
@@ -57,6 +59,7 @@ const OrderList = props => {
         axios({
             method: 'get',
             url: `${orderUrl}/v1/order?page=${page}`,
+            headers: { Authorization: `Bearer ${token}` },
         }).then(res)
             .catch(rej)
     })
@@ -110,7 +113,7 @@ const OrderList = props => {
             </Grid>
 
             <Drawer anchor="right" open={detailsOpen} onClose={toggleDrawer}>
-                <OrderDetails order={orderDetail} closeHandler={toggleDrawer}/>
+                <OrderDetails token={token} order={orderDetail} closeHandler={toggleDrawer}/>
             </Drawer>
         </Container>
     )

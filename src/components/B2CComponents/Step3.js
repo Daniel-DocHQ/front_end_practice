@@ -15,8 +15,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Field, useFormikContext } from 'formik';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
-import './BookingEngine.scss';
 import COUNTRIES from '../../helpers/countries';
+import './BookingEngine.scss';
 
 const countryToFlag = (isoCode) => (
 	typeof String.fromCodePoint !== 'undefined'
@@ -40,7 +40,8 @@ const Step2 = ({
     activePassenger,
 }) => {
 	const classes = useStyles();
-    const { touched } = useFormikContext();
+    const { touched, values } = useFormikContext();
+    console.log(values);
     const {
         formField: {
 			firstName,
@@ -143,12 +144,12 @@ const Step2 = ({
 								getOptionLabel={(option) => option.label}
 								renderOption={(option) => (
 									<React.Fragment>
-									<span>{countryToFlag(option.code)}</span>
-									{option.country} ({option.code}) {option.label}
+                                        <span>{countryToFlag(option.code)}</span>
+                                        {option.country} ({option.code}) {option.label}
 									</React.Fragment>
 								)}
 								onChange={(event, newValue) => {
-									form.setFieldValue(`passengers[${activePassenger}].countryCode`, newValue);
+									form.setFieldValue(field.name, newValue);
 								}}
 								renderInput={(params) => (
 									<Input
@@ -158,7 +159,6 @@ const Step2 = ({
 										error={!!meta.error}
 										touched={meta.touched}
 										helperText={(meta.error && meta.touched) && meta.error}
-										label="Choose a country code"
 										variant="filled"
 										inputProps={{
 											...params.inputProps,

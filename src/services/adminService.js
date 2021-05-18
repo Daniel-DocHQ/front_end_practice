@@ -108,6 +108,38 @@ const adminService = {
 				});
 		});
 	},
+	getOrderProducts(orderId) {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: 'get',
+				url: `${baseUrl}/v1/order/${orderId}/product?fulfilled=true`,
+			})
+				.then(response => {
+					if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+						resolve({
+							success: true,
+							order: response.data,
+						});
+					} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+						resolve({
+							success: true,
+							order: null,
+						});
+					} else {
+						resolve({
+							success: false,
+							error: 'Unable to get order information',
+						});
+					}
+				})
+				.catch(err => {
+					console.log(err);
+					reject({
+						success: false,
+					});
+				});
+		});
+	},
 	uploadCsvFile(type, data, token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {

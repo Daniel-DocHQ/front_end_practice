@@ -98,7 +98,7 @@ const datePickerTheme = createMuiTheme({
 
 const Step3 = () => {
 	const [appointments, setAppointments] = useState([]);
-	const [filteredAppointments, setFilteredAppointments] = useState([]);
+	// const [filteredAppointments, setFilteredAppointments] = useState([]);
 	const {
         formField: {
             appointmentDate,
@@ -109,30 +109,57 @@ const Step3 = () => {
 		values: {
 			appointmentDate: selectedDate,
 			selectedSlot: selectedSlotValue,
-			travelDate,
-			travelTime,
+			// travelDate,
+			// travelTime,
 			timezone,
+			// testType: {
+			// 	product: {
+			// 		type,
+			// 	},
+			// },
 		},
 		setFieldValue,
 	} = useFormikContext();
 
-	const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - 1)).setHours(0,0,0,0);
-	const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
+	// const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - (type === 'Antigen' ? 1 : 3))).setHours(0,0,0,0);
+	// const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
+
+	// useEffect(() => {
+	// 	if (!!appointments && !!selectedDateTime) {
+	// 		setFilteredAppointments([...appointments].filter(({ start_time }) => new Date(start_time).setHours(0,0,0,0) === selectedDateTime));
+	// 	}
+	// 	setFieldValue(selectedSlot.name, null);
+	// }, [selectedDate, appointments]);
+
+	// useEffect(() => {
+	// 	bookingService
+	// 		.getSlotsByTime({
+	// 			date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
+	// 			date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 4)).setMinutes(travelTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
+	// 			language: 'EN',
+	// 		})
+	// 		.then(result => {
+	// 			if (result.success && result.appointments) {
+	// 				setAppointments(result.appointments);
+	// 			} else {
+	// 				setAppointments([]);
+	// 			}
+	// 		})
+	// 		.catch(err => {
+	// 			console.log(err);
+	// 			setAppointments([]);
+	// 		});
+	// 	setFieldValue(selectedSlot.name, null);
+	// }, []);
 
 	useEffect(() => {
-		if (!!appointments && !!selectedDateTime) {
-			setFilteredAppointments([...appointments].filter(({ start_time }) => new Date(start_time).setHours(0,0,0,0) === selectedDateTime));
+		if (selectedDate) {
+			getSlots();
 		}
-		setFieldValue(selectedSlot.name, null);
-	}, [selectedDate, appointments]);
-
-	useEffect(() => {
+	}, [selectedDate]);
+	function getSlots() {
 		bookingService
-			.getSlotsByTime({
-				date_time: moment(new Date(new Date(startDate).setHours(travelTime.getHours())).setMinutes(travelTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
-				date_time_to: moment(new Date(new Date(travelDate).setHours(travelTime.getHours() - 4)).setMinutes(travelTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
-				language: 'EN',
-			})
+			.getSlots(selectedDate)
 			.then(result => {
 				if (result.success && result.appointments) {
 					setAppointments(result.appointments);
@@ -140,17 +167,15 @@ const Step3 = () => {
 					setAppointments([]);
 				}
 			})
-			.catch(err => {
-				console.log(err);
-				setAppointments([]);
-			});
+			.catch(err => setAppointments([]));
 		setFieldValue(selectedSlot.name, null);
-	}, []);
+	}
 
 	return (
 		<React.Fragment>
 			<div className='no-margin col' sty>
 				<div className='appointment-calendar-container'>
+					<p>Please make sure that you book an appointment in the time window required by the destination country or airline for any PCR test or Antigen test requirement.</p>
 					<ThemeProvider theme={datePickerTheme}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
 							<Field name={appointmentDate.name}>
@@ -159,10 +184,10 @@ const Step3 = () => {
 										{...field}
 										disablePast
 										variant='static'
-										maxDate={travelDate}
+										// maxDate={travelDate}
 										label={appointmentDate.label}
 										onChange={(value) => form.setFieldValue(field.name, value)}
-										shouldDisableDate={(date) => date.setHours(0,0,0,0) < startDate}
+										// shouldDisableDate={(date) => date.setHours(0,0,0,0) < startDate}
 									/>
 								)}
 							</Field>
@@ -175,7 +200,7 @@ const Step3 = () => {
 						</div>
 					</div>
 				</div>
-				{filteredAppointments.length > 0 && (
+				{appointments.length > 0 && (
 					<div className='appointment-slot-container'>
 						<div className='row flex-start' >
 							<h3 style={{ marginBottom: 0 }}>Appointments Available (selected timezone: {timezone})</h3>
@@ -183,7 +208,7 @@ const Step3 = () => {
 						<div className='slot-container'>
 							<Field name={selectedSlot.name}>
 								{({ field, form }) =>
-									filteredAppointments.map((item, i) => (
+									appointments.map((item, i) => (
 										<Slot
 											start_time={item.start_time}
 											key={i}
@@ -208,7 +233,7 @@ const Step3 = () => {
 					{ddMMyyyy(selectedDate)}
 				</p>
 			</div>
-			{filteredAppointments.length <= 0 && (
+			{appointments.length <= 0 && (
 				<>No available appointments at this day</>
 			)}
 			{selectedSlotValue && (

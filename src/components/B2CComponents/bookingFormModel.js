@@ -2,8 +2,9 @@ import COUNTRIES from "../../helpers/countries";
 
 const bookingFormModel = {
     formInitialValues: {
-        antigenTest: 0,
-        pcrTest: 0,
+        numberOfPeople: 1,
+        product: 0,
+        testType: {},
         city: '',
         timezone: '',
         travelDate: new Date(),
@@ -25,11 +26,18 @@ const bookingFormModel = {
         selectedSlot: null,
     },
     formField: {
-        antigenTest: {
-            name: 'antigenTest',
-            label: 'Antigen Tests',
-            id: 'antigen-kit',
+        numberOfPeople: {
+            name: 'numberOfPeople',
+            label: 'Number of People',
+            id: 'number-of-people',
             type: 'number',
+            required: true,
+        },
+        product: {
+            name: 'product',
+            label: 'Product',
+            id: 'product',
+            type: 'text',
             required: true,
         },
         countryCode: {

@@ -8,7 +8,7 @@ import { ToastsStore } from 'react-toasts';
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import BookingEngineForm from './BookingEngineForm';
 import bookingFormModel from './bookingFormModel';
-import useValidationScheme from './validationSchema';
+import validationSchema from './validationSchema';
 import bookingService from '../../services/bookingService';
 import getURLParams from '../../helpers/getURLParams';
 import LinkButton from '../DocButton/LinkButton';
@@ -19,15 +19,17 @@ const BookingEngine = () => {
 	const params = getURLParams(window.location.href);
 	const short_token = params['short_token'];
 	const [orderInfo, setOrderInfo] = useState();
+	// const [items, setItems] = useState([]);
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
 	const usersPhoneNumber = get(orderInfo, 'shipping_address.telephone', '')
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
-	const defaultCountyCode =  COUNTRIES.find(({ country }) => country === 'United Kingdom');
-	const antigenProductQuantity = get(get(orderInfo, 'items', []).find(({ product_id }) => product_id === 9), 'quantity', 1);
-	const currentValidationSchema = useValidationScheme(antigenProductQuantity)[activeStep];
+	const defaultCountyCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
+	const currentValidationSchema = validationSchema[activeStep];
+	const items = get(orderInfo, 'items', []);
+	const defaultTestType = get(items, '[0]', {});
 	const steps = [
         'How many people will take the test?',
         'Travel Details',
@@ -67,16 +69,25 @@ const BookingEngine = () => {
 					}
 				})
 				.catch(err => ToastsStore.error('Error fetching order information'))
+			// adminService.getOrderProducts(short_token)
+			// 	.then(data => {
+			// 		if (data.success) {
+			// 			setItems(data.order);
+			// 		}
+			// 	})
+			// 	.catch(err => ToastsStore.error('Error fetching order information'))
 		}
 	}, []);
 
 	return (
 		<BigWhiteContainer>
-			{(short_token && !!orderInfo) ? (
+			{(short_token && !!orderInfo && !!items.length) ? (
 				<Formik
 					initialValues={{
 						...formInitialValues,
-						antigenTest: antigenProductQuantity <= 4 ? antigenProductQuantity : 4,
+						numberOfPeople: defaultTestType.quantity || 1,
+						product: defaultTestType.product_id || 0,
+						testType: defaultTestType,
 						passengers: [
 							{
 								firstName: get(orderInfo, 'billing_detail.first_name', ''),
@@ -99,11 +110,10 @@ const BookingEngine = () => {
 					onSubmit={async (values, actions) => {
 						if (activeStep === 3) {
 							const {
-								antigenTest,
-								pcrTest,
+								numberOfPeople,
 								passengers,
 							} = values;
-							if (activePassenger === (antigenTest + pcrTest - 1)) {
+							if (activePassenger === (numberOfPeople - 1)) {
 								actions.setSubmitting(false);
 								actions.setTouched({});
 								actions.setErrors({});
@@ -124,7 +134,6 @@ const BookingEngine = () => {
 							}
 						} else if (activeStep === 4) {
 							const {
-								items,
 								shipping_address: {
 									address_1,
 									address_2,
@@ -133,13 +142,17 @@ const BookingEngine = () => {
 									county,
 								},
 							} = orderInfo;
-							const test_type = get(items, '[0].product.type', 'Antigen');
 							const {
 								selectedSlot,
 								travelDate,
 								travelTime,
 								passengers,
 								timezone,
+								testType: {
+									product: {
+										type,
+									},
+								},
 							} = values;
 							const booking_users = passengers.map(({
 								firstName,
@@ -165,15 +178,22 @@ const BookingEngine = () => {
 								metadata: {
 									short_token,
 									passport_number: passportNumber,
-									test_type,
+									travel_date: moment(
+										new Date(
+											travelDate.getFullYear(),
+											travelDate.getMonth(),
+											travelDate.getDate(),
+											travelTime.getHours(),
+											travelTime.getMinutes(),
+											0,
+										)).format(),
+									test_type: type,
 								},
 								...rest,
 							}));
 							const body = {
-								test_type,
+								type: 'video_gp_dochq',
 								booking_users,
-								travel_date: travelDate,
-								travel_time: travelTime,
 							};
 							bookingService
 								.paymentRequest(selectedSlot.id, body)
@@ -198,6 +218,7 @@ const BookingEngine = () => {
 						activeStep={activeStep}
 						handleBack={handleBack}
 						steps={steps}
+						items={items}
 					/>
 				</Formik>
 			) : (
