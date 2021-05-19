@@ -40,8 +40,7 @@ const Step2 = ({
     activePassenger,
 }) => {
 	const classes = useStyles();
-    const { touched, values } = useFormikContext();
-    console.log(values);
+    const { touched } = useFormikContext();
     const {
         formField: {
 			firstName,

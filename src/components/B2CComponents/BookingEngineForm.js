@@ -17,6 +17,7 @@ const BookingEngineForm = ({
     handleBack,
     steps,
     items,
+    bookingUsersQuantity = 0,
     isEdit = false,
     ...restProps
 }) => {
@@ -25,7 +26,11 @@ const BookingEngineForm = ({
 		switch (activeStep) {
             case 0:
 				return (
-					<Step0 items={items} isEdit={isEdit} />
+					<Step0
+                        items={items}
+                        isEdit={isEdit}
+                        bookingUsersQuantity={bookingUsersQuantity}
+                    />
 				);
 			case 1:
 				return (

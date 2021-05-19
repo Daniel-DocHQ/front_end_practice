@@ -30,6 +30,8 @@ const BookingEngine = () => {
 	const currentValidationSchema = validationSchema[activeStep];
 	const usersTravelDate = get(bookingUsers, '[0].metadata.travel_date', new Date ());
 	const usersTimeZone = get(bookingUsers, '[0].tz_location', defaultTimeZone.timezone);
+	const bookingUsersQuantity = get(bookingUsers, 'length', 0);
+	const bookingUsersTestType = get(bookingUsers, '[0].test_type', 'Antigen');
 	const usersTimeZoneObj = cityTimezones.cityMapping.find(({ timezone }) => timezone === usersTimeZone);
 	const steps = [
         'How many people will take the test?',
@@ -50,6 +52,7 @@ const BookingEngine = () => {
 		countryCode: defaultCountyCode,
 		sex: 'Female',
 		passportNumber: '',
+		test_type: bookingUsersTestType,
 	};
 
 	function handleBack() {
@@ -78,21 +81,21 @@ const BookingEngine = () => {
 
 	return (
 		<BigWhiteContainer>
-			{!!appointment && !!bookingUsers.length ? (
+			{!!appointment && !!bookingUsersQuantity ? (
 				<Formik
 					initialValues={{
 						...formInitialValues,
 						travelDate: new Date(usersTravelDate),
 						travelTime: new Date(usersTravelDate),
 						testType: {
-							quantity: bookingUsers.length,
+							quantity: bookingUsersQuantity,
 							product: {
-								type: get(bookingUsers, '[0].metadata.test_type', 'Antigen'),
+								type: bookingUsersTestType,
 							},
 						},
 						city: usersTimeZoneObj,
 						timezone: usersTimeZoneObj.timezone,
-						numberOfPeople: bookingUsers.length,
+						numberOfPeople: bookingUsersQuantity,
 						passengers: bookingUsers.map(({
 							id,
 							first_name,
@@ -107,13 +110,13 @@ const BookingEngine = () => {
 							...rest
 						}) => {
 							const parsedPhoneNumber =  parsePhoneNumber(phone);
-
 							return ({
 								firstName: first_name,
 								lastName: last_name,
 								dateOfBirth: moment(date_of_birth).format('DD/MM/YYYY'),
 								passportNumber: passport_number,
 								test_type,
+								phone: parsedPhoneNumber.nationalNumber,
 								countryCode: COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)),
 								short_token,
 								...rest,
@@ -122,7 +125,7 @@ const BookingEngine = () => {
 					}}
 					validationSchema={currentValidationSchema}
 					onSubmit={async (values, actions) => {
-						if (activeStep === 2) {
+						if (activeStep === 3) {
 							const {
 								numberOfPeople,
 								passengers,
@@ -185,9 +188,10 @@ const BookingEngine = () => {
 								...rest,
 							}));
 							const body = {
+								type: appointment.type,
 								booking_users,
 							};
-							await bookingService.deleteBooking(appointmentId, token);
+							await bookingService.deleteBooking(appointmentId, token).catch(() => ToastsStore.error('Something went wrong'));;
 							await bookingService
 								.paymentRequest(selectedSlot.id, body)
 								.then(result => {
@@ -211,6 +215,7 @@ const BookingEngine = () => {
 						activePassenger={activePassenger}
 						activeStep={activeStep}
 						handleBack={handleBack}
+						bookingUsersQuantity={bookingUsersQuantity}
 						steps={steps}
 					/>
 				</Formik>

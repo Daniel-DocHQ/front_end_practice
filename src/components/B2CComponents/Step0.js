@@ -12,6 +12,7 @@ import './BookingEngine.scss';
 
 const Step0 = ({
     items = [],
+    bookingUsersQuantity,
     isEdit,
 }) => {
     const {
@@ -26,7 +27,9 @@ const Step0 = ({
             {!isEdit && (
                 <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                     <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                        <Field name={productField.name}>
+                        <Field
+                            name={productField.name}
+                        >
                             {({ field, form, meta }) => (
                                 <FormControl variant='filled' style={{ width: '100%' }}>
                                     <InputLabel
@@ -61,14 +64,16 @@ const Step0 = ({
             )}
             <div className='row space-between' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={numberOfPeople.name}>
+                    <Field
+                        name={numberOfPeople.name}
+                        validate={(value) => isEdit ? ((parseFloat(value) < bookingUsersQuantity) ? 'You can\'t reduce quantity of booking users' : undefined) : undefined}
+                    >
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
                                 {...numberOfPeople}
-                                disabled={isEdit}
                                 {...field}
                             />
                         )}
