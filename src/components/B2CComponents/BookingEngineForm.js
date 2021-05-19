@@ -56,7 +56,7 @@ const BookingEngineForm = ({
             <Stepper activeStep={activeStep} orientation='vertical'>
                 {steps.map((label, i) => (
                     <Step key={label}>
-                        <StepLabel>{label}{(activeStep === 2 && i == 2) && ` ${activePassenger + 1}`}</StepLabel>
+                        <StepLabel>{label}{(activeStep === 3 && i == 3) && ` ${activePassenger + 1}`}</StepLabel>
                         <StepContent>
                             {renderSteps()}
                             <div className='row flex-start'>

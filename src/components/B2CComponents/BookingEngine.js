@@ -97,7 +97,7 @@ const BookingEngine = () => {
 								countryCode: !!parsedPhoneNumber
 									? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
 									: defaultCountyCode,
-								dateOfBirth: moment(get(orderInfo, 'billing_detail.date_of_birth', new Date)).format('DD/MM/YYYY'),
+								dateOfBirth: '', //moment(get(orderInfo, 'billing_detail.date_of_birth', new Date)).format('DD/MM/YYYY'),
 								ethnicity: '',
 								sex: 'Female',
 								passportNumber: '',
