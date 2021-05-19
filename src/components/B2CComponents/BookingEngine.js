@@ -52,7 +52,7 @@ const BookingEngine = () => {
 	};
 
 	function handleBack() {
-		activeStep === 2 && activePassenger !== 0
+		activeStep === 3 && activePassenger !== 0
 			? setActivePassenger(activePassenger - 1)
 			: setActiveStep(activeStep - 1);
 	}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-import moment from 'moment-timezone';
+// import moment from 'moment-timezone';
 import { Field, useFormikContext, ErrorMessage } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
@@ -98,6 +98,7 @@ const datePickerTheme = createMuiTheme({
 
 const Step3 = () => {
 	const [appointments, setAppointments] = useState([]);
+	const today = new Date().setHours(0, 0, 0, 0);
 	// const [filteredAppointments, setFilteredAppointments] = useState([]);
 	const {
         formField: {
@@ -162,7 +163,13 @@ const Step3 = () => {
 			.getSlots(selectedDate)
 			.then(result => {
 				if (result.success && result.appointments) {
-					setAppointments(result.appointments);
+					const newAppointments = result.appointments;
+					if (new Date(selectedDate).setHours(0,0,0,0) === today) {
+						const in30min = new Date(new Date().getTime() + 30 * 60000).getTime();
+						setAppointments(newAppointments.filter(({ start_time }) => new Date(start_time).getTime() > in30min));
+					} else {
+						setAppointments(newAppointments);
+					}
 				} else {
 					setAppointments([]);
 				}

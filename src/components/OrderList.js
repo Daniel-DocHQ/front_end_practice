@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid, GridToolbar  } from '@material-ui/data-grid';
 import OrderDetails from './OrderDetails/OrderDetails';
 import { AuthContext } from '../context/AuthContext';
+import { ToastsStore } from 'react-toasts';
 
 const orderUrl = process.env.REACT_APP_API_URL
 
@@ -61,7 +62,7 @@ const OrderList = props => {
             url: `${orderUrl}/v1/order?page=${page}`,
             headers: { Authorization: `Bearer ${token}` },
         }).then(res)
-            .catch(rej)
+            .catch((err) => ToastsStore.error('Error fetching orders'))
     })
 
     const clickedRow = (param, event) => {
