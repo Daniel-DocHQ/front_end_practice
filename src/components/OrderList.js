@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 const date_format = {
     type: 'dateTime',
     width: 150,
-    valueFormatter: ({ value })  => format(new Date(value * 1000), "P p"),
+    valueFormatter: ({ value })  => value ? format(new Date(value * 1000), "P p") : '-',
 };
 
 const price_format = {
