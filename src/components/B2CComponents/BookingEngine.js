@@ -166,7 +166,7 @@ const BookingEngine = () => {
 										travelTime,
 										passengers,
 										timezone,
-										testType: { SKU },
+										testType: { Type },
 									} = values;
 									const booking_users = passengers.map(({
 										firstName,
@@ -201,7 +201,7 @@ const BookingEngine = () => {
 													travelTime.getMinutes(),
 													0,
 												)).format(),
-											test_type: SKU === 'PCR RAA-UK-ANT-BOOKING' ? 'Antigen' : 'PCR',
+											test_type: Type,
 										},
 										...rest,
 									}));
