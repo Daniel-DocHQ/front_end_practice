@@ -34,6 +34,7 @@ import bookingService from '../../services/bookingService';
 import getValueFromObject from '../../helpers/getValueFromObject';
 import { AuthContext } from '../../context/AuthContext';
 import '../../assets/css/NurseMeeting.scss';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 const TEST_TYPES = {
 	pcr: 'PCR',
@@ -102,6 +103,8 @@ const TabContainer = ({
 		getAppointmentDetails,
 	} = useContext(AppointmentContext);
 	const [value, setValue] = useState(0);
+	const [loading, setLoading] = useState(false);
+	const [customerNotThere, setCustomerNotThere] = useState(false);
 	const patients = !!booking_users ? [...booking_users] : [];
 	let patient = !!patients.length ? patients[0] : {};
 	patient = {...patient, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})}
@@ -124,11 +127,15 @@ const TabContainer = ({
 
 	useEffect(() => {
 		if (appointmentId) {
-			getAppointmentDetails(appointmentId, authToken);
+			(async () => {
+				await setLoading(true);
+				await getAppointmentDetails(appointmentId, authToken);
+				await setLoading(false);
+			})();
 		}
 	}, [value]);
 
-	return (
+	return !loading ? (
 		isAntigenType ? (
 			<div className='tab-container' style={{ minHeight: 'unset' }}>
 				{value === 0 && (
@@ -192,6 +199,8 @@ const TabContainer = ({
 						isTuiType={isTuiType}
 						appointmentId={appointmentId}
 						updateParent={increaseStep}
+						customerNotThere={customerNotThere}
+						setCustomerNotThere={setCustomerNotThere}
 					/>
 				)}
 				{value === 3 && (
@@ -200,11 +209,12 @@ const TabContainer = ({
 						patients={patients}
 						isTuiType={isTuiType}
 						appointmentId={appointmentId}
+						customerNotThere={customerNotThere}
 					/>
 				)}
 			</React.Fragment>
 		)
-	);
+	): <LoadingSpinner />;
 };
 
 const PatientDetails = ({
@@ -350,7 +360,7 @@ const PatientDetails = ({
 						{addressDataBlock('Address')}
 						<div className='no-margin' style={{ padding: '20px 0' }}>
 							<p className='tab-row-text title-info'>
-								Patient Joining link:
+								Customer Joining link:
 							</p>
 							<Tooltip title="Click to copy">
 								<Typography
@@ -365,7 +375,7 @@ const PatientDetails = ({
 						</div>
 						<div className='no-margin' style={{ padding: '20px 0' }}>
 							<p className='tab-row-text title-info'>
-								Alternative Patient Joining link:
+								Alternative Customer Joining link:
 							</p>
 							<Tooltip title="Click to copy">
 								<Typography
@@ -380,7 +390,7 @@ const PatientDetails = ({
 						</div>
 						<div className='row center no-margin' style={{ padding: '20px 0' }}>
 							<DocButton
-								text="Email Alternative Link to Patient"
+								text="Email Alternative Link to Customer"
 								color="green"
 								onClick={() => bookingService.sendAlternativeLink(authToken, appointmentId)
 									.then(result => {
@@ -413,6 +423,7 @@ const SubmitPatientResult = ({
 	isTuiType,
 	authToken,
 	appointmentId,
+	customerNotThere,
 }) => {
 	const {
 		updateNotes,
@@ -440,7 +451,6 @@ const SubmitPatientResult = ({
 	const isSampleTakenRejected = sampleTaken === 'rejected';
 	const isSampleTakenValid = !isSampleTakenInvalid && !isSampleTakenRejected;
 	const isSampleTakenNotValid = isSampleTakenInvalid || isSampleTakenRejected;
-	const showPatientName = isTuiType && patients && patients.length > 1;
 	const resultNotes = isOtherOption ? notes : reasonForRejected;
 
 	function updateKitId() {
@@ -523,46 +533,48 @@ const SubmitPatientResult = ({
 						<PatientDetails
 							isJoined
 							fullData
-							title='Patient Details'
+							title='Customer Details'
 							authToken={authToken}
 							patients={patients}
 							patient={currentPatient}
 							appointmentId={appointmentId}
 						/>
 					</Grid>
-					<Grid item className='padding-top-box'>
-						<div className='row space-between'>
-							<h3 className='no-margin'>Enter{showPatientName ? ` ${currentPatientName} ` : ' '}Kit ID</h3>
-						</div>
-						<div className='row'>
-							<TextInputElement
-								id='kit-id'
-								value={kitId}
-								placeholder='Eg: 20P456632'
-								onChange={setKitId}
-								disabled={kitIdModifyMode}
-								required
-							/>
-						</div>
-						<div className='row flex-end'>
-							<DocButton
-								text={kitIdModifyMode ? 'Modify' : 'Submit'}
-								color={kitId ? 'green' : 'disabled'}
-								disabled={!kitId}
-								onClick={() => {
-									if (kitIdModifyMode) {
-										setKitIdModifyMode(false);
-									} else {
-										updateKitId();
-									}
-								}}
-							/>
-						</div>
-					</Grid>
-					{kitIdSubmitted && (
+					{!customerNotThere && (
+						<Grid item className='padding-top-box'>
+							<div className='row space-between'>
+								<h3 className='no-margin'>{currentPatientName} - Kit ID</h3>
+							</div>
+							<div className='row'>
+								<TextInputElement
+									id='kit-id'
+									value={kitId}
+									placeholder='Eg: 20P456632'
+									onChange={setKitId}
+									disabled={kitIdModifyMode}
+									required
+								/>
+							</div>
+							<div className='row flex-end'>
+								<DocButton
+									text={kitIdModifyMode ? 'Modify' : 'Submit'}
+									color={kitId ? 'green' : 'disabled'}
+									disabled={!kitId}
+									onClick={() => {
+										if (kitIdModifyMode) {
+											setKitIdModifyMode(false);
+										} else {
+											updateKitId();
+										}
+									}}
+								/>
+							</div>
+						</Grid>
+					)}
+					{(kitIdSubmitted || customerNotThere) && (
 						<Grid item>
 							<div className='row space-between'>
-								<h3 className='no-margin'>{showPatientName && `${currentPatientName} - `}Sample Taken</h3>
+								<h3 className='no-margin'>{currentPatientName} - Sample Taken</h3>
 							</div>
 							<div style={{ paddingLeft: 10 }}>
 								<FormControl component='fieldset'>
@@ -573,8 +585,12 @@ const SubmitPatientResult = ({
 										style={{ display: 'inline' }}
 										onChange={e => setSampleTaken(e.target.value)}
 									>
-										<FormControlLabel value='valid' control={<Radio />} label='Valid' />
-										<FormControlLabel value='invalid' control={<Radio />} label='Invalid' />
+										{!customerNotThere && (
+											<>
+												<FormControlLabel value='valid' control={<Radio />} label='Valid' />
+												<FormControlLabel value='invalid' control={<Radio />} label='Invalid' />
+											</>
+										)}
 										<FormControlLabel value='rejected' control={<Radio />} label='Rejected' />
 									</RadioGroup>
 								</FormControl>
@@ -660,8 +676,9 @@ const SubmitPatientResult = ({
 									</Alert>
 								</div>
 							)}
+							<Divider />
 							<div className='row space-between'>
-								<h3 className='no-margin'>{isSampleTakenNotValid ? 'Appointment Notes' : 'Notes'}</h3>
+								<h3 className='no-margin'>Appointment Notes</h3>
 								{!showAppointmentNotes && (
 									<DocButton
 										color='green'
@@ -779,7 +796,7 @@ const AddressVerification = ({
 							isSpaceBetweenPhoneBox
 							isJoined={isJoined}
 							addressVerification
-							title={isJoined ? 'Patient Details' : 'Appointment Details'}
+							title={isJoined ? 'Customer Details' : 'Appointment Details'}
 							appointmentId={appointmentId}
 						/>
 					</Grid>
@@ -881,7 +898,7 @@ const VideoAppointmentDetails = ({
 					{!!patient ? (
 						<React.Fragment>
 							<div className='row space-between'>
-								<h3 className='no-margin'>Patient Details</h3>
+								<h3 className='no-margin'>Customer Details</h3>
 							</div>
 							<div className='column'>
 								{!!patient.first_name && !!patient.last_name && (
@@ -939,21 +956,42 @@ const PatientIdVerification = ({
 	authToken,
     updateParent,
     appointmentId,
+	customerNotThere,
+	setCustomerNotThere,
 }) => {
+	const {
+		updateNotes,
+	} = useContext(AppointmentContext);
     const { token } = useContext(AuthContext);
 	const [patientsToVerify, setPatientsToVerify] = useState([...patients]);
     const [security_checked, setSecurity_checked] = useState(false);
+	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
+	const [notesStatus, setNotesStatus] = useState();
+	const [appointmentNotes, setAppointmentNotes] = useState();
 	const currentPatient = get(patientsToVerify, '[0]');
 	const forename = get(currentPatient, 'first_name', '');
 	const surname = get(currentPatient, 'last_name', '');
 	const [passportId, setPassportId] = useState(get(currentPatient, 'metadata.passport_number', '') || get(currentPatient, 'metadata.passportId', ''));
 	const currentPatientName = `${forename} ${surname}`;
-	const showPatientName = isTuiType && patients && patients.length > 1;
-	const isValid = !!security_checked && (isTuiType ? !!passportId : !!security_document);
+	const isValid = (!!security_checked && (isTuiType ? !!passportId : !!security_document)) || customerNotThere;
+
+	const nextStep = () => {
+		const newPatients = [...patientsToVerify];
+		newPatients.shift();
+		if (newPatients.length === 0) {
+			updateParent();
+			return;
+		}
+		setPatientsToVerify(newPatients);
+		setSecurity_checked(false);
+		setSecurity_document('');
+	};
 
     function proceed() {
-		if (isValid) {
+		if (customerNotThere) {
+			nextStep();
+		} else if (isValid) {
 			bookingService
 				.sendResult(token, appointmentId, isTuiType ? {
 					result: '',
@@ -970,15 +1008,7 @@ const PatientIdVerification = ({
 				}, currentPatient.id)
 				.then(result => {
 					if (result.success) {
-						const newPatients = [...patientsToVerify];
-						newPatients.shift();
-						if (newPatients.length === 0) {
-							updateParent();
-							return;
-						}
-						setPatientsToVerify(newPatients);
-						setSecurity_checked(false);
-						setSecurity_document('');
+						nextStep();
 					} else {
 						ToastsStore.error('Failed');
 					}
@@ -993,7 +1023,19 @@ const PatientIdVerification = ({
 		if (currentPatient) {
 			setPassportId(get(currentPatient, 'metadata.passport_number', '') || get(currentPatient, 'metadata.passportId', ''));
 		}
-	}, [patientsToVerify])
+	}, [patientsToVerify]);
+
+	useEffect(() => {
+		if (customerNotThere) {
+			setSecurity_checked(false);
+		}
+	}, [customerNotThere]);
+
+	useEffect(() => {
+		if (security_checked) {
+			setCustomerNotThere(false);
+		}
+	}, [security_checked]);
 
     return (
 		<div className='tab-container'>
@@ -1006,26 +1048,19 @@ const PatientIdVerification = ({
 							patient={patient}
 							patients={patients}
 							authToken={authToken}
-							title='Patient Details'
+							title='Customer Details'
 							patient={currentPatient}
 							appointmentId={appointmentId}
 						/>
 					</Grid>
 					<Grid item>
 						<div className='row space-between'>
-							<h3 className='no-margin'>{showPatientName ? currentPatientName : 'Patient'} ID Verification</h3>
-						</div>
-						<div className='row'>
-							<MaterialCheckbox
-								value={security_checked}
-								onChange={setSecurity_checked}
-								labelComponent='Customer security check completed'
-							/>
+							<h3 className='no-margin'>{currentPatientName} - ID Verification</h3>
 						</div>
 						{!isTuiType && (
 							<div className='row'>
 								<FormControl variant='filled' style={{ width: '100%' }}>
-									<InputLabel id='security-document-label'>{showPatientName && currentPatientName} Security Document</InputLabel>
+									<InputLabel id='security-document-label'>{currentPatientName} - Security Document</InputLabel>
 									<Select
 										labelId='security-document-label'
 										id='security-document'
@@ -1040,22 +1075,36 @@ const PatientIdVerification = ({
 								</FormControl>
 							</div>
 						)}
-						{(isTuiType && security_checked) && (
+						{(isTuiType) && (
 							<>
 								<div className='row space-between padding-top-box'>
-									<h3 className='no-margin'>{showPatientName && currentPatientName} Document ID Number</h3>
+									<h3 className='no-margin'>{currentPatientName} - ID Document Number</h3>
 								</div>
 								<div className='row'>
 									<TextInputElement
 										id='passport-id'
 										value={passportId}
-										placeholder='Document ID Number'
+										placeholder='ID Document Number'
 										onChange={setPassportId}
 										required
 									/>
 								</div>
 							</>
 						)}
+						<div className='row'>
+							<MaterialCheckbox
+								value={security_checked}
+								onChange={setSecurity_checked}
+								labelComponent='Customer ID verified'
+							/>
+						</div>
+						<div className='row'>
+							<MaterialCheckbox
+								value={customerNotThere}
+								onChange={setCustomerNotThere}
+								labelComponent='Customer not there'
+							/>
+						</div>
 					</Grid>
 					<Grid item>
 						<div className='row flex-end'>
@@ -1066,6 +1115,50 @@ const PatientIdVerification = ({
 								color={isValid ? 'green' : 'disabled'}
 							/>
 						</div>
+					</Grid>
+					<Grid item>
+						<Divider />
+						<div className='row space-between'>
+							<h3 className='no-margin'>Appointment Notes</h3>
+							{!showAppointmentNotes && (
+								<DocButton
+									color='green'
+									text='Add'
+									onClick={() => setShowAppointmentNotes(true)}
+								/>
+							)}
+						</div>
+						{showAppointmentNotes && (
+							<React.Fragment>
+								<TextInputElement
+									rows={4}
+									multiline
+									id='appointment-notes'
+									value={appointmentNotes}
+									onChange={setAppointmentNotes}
+								/>
+								<div className='row flex-end'>
+									<DocButton
+										color='green'
+										text='Submit'
+										onClick={() => {
+											updateNotes(appointmentNotes);
+											setNotesStatus({ severity: 'success', message: 'Notes updated successfully' });
+										}}
+									/>
+								</div>
+							</React.Fragment>
+						)}
+						{!!notesStatus && !!notesStatus.severity && !!notesStatus.message && (
+							<div className='row center'>
+								<Alert
+									variant="outlined"
+									severity={notesStatus.severity}
+								>
+									{notesStatus.message}
+								</Alert>
+							</div>
+						)}
 					</Grid>
 				</Grid>
 			</div>
@@ -1109,7 +1202,7 @@ const AppointmentActions = ({
 						patient={patient}
 						patients={patients}
 						authToken={authToken}
-						title='Patient Details'
+						title='Customer Details'
 						appointmentId={appointmentId}
 					/>
 					<div className='row no-margin' style={{ paddingTop: '20px' }}>

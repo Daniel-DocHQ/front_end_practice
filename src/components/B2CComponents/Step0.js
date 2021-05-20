@@ -46,14 +46,14 @@ const Step0 = ({
                                         {...field}
                                         onChange={(e) => {
                                             const value = e.target.value;
-                                            const productObj = items.find(({ product_id }) => product_id === value);
+                                            const productObj = items.find(({ ID }) => ID === value);
                                             form.setFieldValue(field.name, value);
                                             form.setFieldValue('testType', productObj);
-                                            form.setFieldValue(numberOfPeople.name, productObj.quantity);
+                                            form.setFieldValue(numberOfPeople.name, productObj.Quantity);
                                         }}
                                     >
-                                        {items.map(({ product_id, product: { title } }) => (
-                                            <MenuItem value={product_id}>{title}</MenuItem>
+                                        {items.map(({ ID, Title }) => (
+                                            <MenuItem value={ID}>{Title}</MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>

@@ -88,10 +88,8 @@ const BookingEngine = () => {
 						travelDate: new Date(usersTravelDate),
 						travelTime: new Date(usersTravelDate),
 						testType: {
-							quantity: bookingUsersQuantity,
-							product: {
-								type: bookingUsersTestType,
-							},
+							Quantity: 4,
+							type: bookingUsersTestType,
 						},
 						city: usersTimeZoneObj,
 						timezone: usersTimeZoneObj.timezone,
@@ -191,12 +189,12 @@ const BookingEngine = () => {
 								type: appointment.type,
 								booking_users,
 							};
-							await bookingService.deleteBooking(appointmentId, token).catch(() => ToastsStore.error('Something went wrong'));;
 							await bookingService
 								.paymentRequest(selectedSlot.id, body)
-								.then(result => {
+								.then(async (result) => {
 									if (result.success && result.confirmation) {
 										handleNext();
+										await bookingService.deleteBooking(appointmentId, token).catch(() => console.log('error'));
 									} else {
 										ToastsStore.error('Something went wrong');
 									}

@@ -14,12 +14,14 @@ import getURLParams from '../../helpers/getURLParams';
 import LinkButton from '../DocButton/LinkButton';
 import adminService from '../../services/adminService';
 import COUNTRIES from '../../helpers/countries';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const BookingEngine = () => {
 	const params = getURLParams(window.location.href);
 	const short_token = params['short_token'];
 	const [orderInfo, setOrderInfo] = useState();
-	// const [items, setItems] = useState([]);
+	const [items, setItems] = useState([]);
+	const [isLoading, setLoading] = useState(false);
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
@@ -28,7 +30,6 @@ const BookingEngine = () => {
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountyCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
-	const items = get(orderInfo, 'items', []);
 	const defaultTestType = get(items, '[0]', {});
 	const steps = [
         'How many people will take the test?',
@@ -61,166 +62,193 @@ const BookingEngine = () => {
 	}
 
 	useEffect(() => {
-		if (short_token) {
-			adminService.getOrderInfo(short_token)
-				.then(data => {
-					if (data.success) {
-						setOrderInfo(data.order);
-					}
-				})
-				.catch(err => ToastsStore.error('Error fetching order information'))
-			// adminService.getOrderProducts(short_token)
-			// 	.then(data => {
-			// 		if (data.success) {
-			// 			setItems(data.order);
-			// 		}
-			// 	})
-			// 	.catch(err => ToastsStore.error('Error fetching order information'))
-		}
+		(async () => {
+			await setLoading(true);
+			if (short_token) {
+				await adminService.getOrderInfo(short_token)
+					.then(data => {
+						if (data.success) {
+							setOrderInfo(data.order);
+						}
+					})
+					.catch(err => ToastsStore.error('Error fetching order information'))
+				await adminService.getOrderProducts(short_token)
+					.then(data => {
+						if (data.success) {
+							setItems(data.order);
+						}
+					})
+					.catch(err => ToastsStore.error('Error fetching order information'))
+			}
+			setLoading(false);
+		})();
 	}, []);
+
+	if (isLoading) {
+		return (
+			<BigWhiteContainer>
+				<div className='row center'>
+					<LoadingSpinner />
+				</div>
+			</BigWhiteContainer>
+		);
+	}
 
 	return (
 		<BigWhiteContainer>
-			{(short_token && !!orderInfo && !!items.length) ? (
-				<Formik
-					initialValues={{
-						...formInitialValues,
-						numberOfPeople: defaultTestType.quantity || 1,
-						product: defaultTestType.product_id || 0,
-						testType: defaultTestType,
-						passengers: [
-							{
-								firstName: get(orderInfo, 'billing_detail.first_name', ''),
-								lastName: get(orderInfo, 'billing_detail.last_name', ''),
-								email: get(orderInfo, 'billing_detail.email', ''),
-								phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : usersPhoneNumber,
-								countryCode: !!parsedPhoneNumber
-									? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
-									: defaultCountyCode,
-								dateOfBirth: '', //moment(get(orderInfo, 'billing_detail.date_of_birth', new Date)).format('DD/MM/YYYY'),
-								ethnicity: '',
-								sex: 'Female',
-								passportNumber: '',
-							},
-						],
-						city: defaultTimeZone,
-						timezone: defaultTimeZone.timezone,
-					}}
-					validationSchema={currentValidationSchema}
-					onSubmit={async (values, actions) => {
-						if (activeStep === 3) {
-							const {
-								numberOfPeople,
-								passengers,
-							} = values;
-							if (activePassenger === (numberOfPeople - 1)) {
-								actions.setSubmitting(false);
-								actions.setTouched({});
-								actions.setErrors({});
-								handleNext();
-							} else {
-								if (get(passengers, `[${activePassenger + 1}].firstName`, 'default') === 'default') {
-									const newPassengers = [...passengers];
-									newPassengers.push({ ...passengerInitialValues });
-									actions.setValues({
-										...values,
-										passengers: newPassengers,
-									});
-								}
-								setActivePassenger(activePassenger + 1);
-								actions.setSubmitting(false);
-								actions.setTouched({});
-								actions.setErrors({});
-							}
-						} else if (activeStep === 4) {
-							const {
-								shipping_address: {
-									address_1,
-									address_2,
-									town,
-									postcode,
-									county,
-								},
-							} = orderInfo;
-							const {
-								selectedSlot,
-								travelDate,
-								travelTime,
-								passengers,
-								timezone,
-								testType: {
-									product: {
-										type,
+			{(short_token && !!orderInfo) ? (
+				<>
+					{!!items.length ? (
+						<Formik
+							initialValues={{
+								...formInitialValues,
+								numberOfPeople: defaultTestType.Quantity || 1,
+								product: defaultTestType.ID || 0,
+								testType: defaultTestType,
+								passengers: [
+									{
+										firstName: get(orderInfo, 'billing_detail.first_name', ''),
+										lastName: get(orderInfo, 'billing_detail.last_name', ''),
+										email: get(orderInfo, 'billing_detail.email', ''),
+										phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : usersPhoneNumber,
+										countryCode: !!parsedPhoneNumber
+											? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
+											: defaultCountyCode,
+										dateOfBirth: '', //moment(get(orderInfo, 'billing_detail.date_of_birth', new Date)).format('DD/MM/YYYY'),
+										ethnicity: '',
+										sex: 'Female',
+										passportNumber: '',
 									},
-								},
-							} = values;
-							const booking_users = passengers.map(({
-								firstName,
-								lastName,
-								dateOfBirth,
-								passportNumber,
-								phone,
-								countryCode,
-								...rest
-							}) => ({
-								first_name: firstName,
-								last_name: lastName,
-								tz_location: timezone,
-								date_of_birth: moment.utc(dateOfBirth, 'DD/MM/YYYY').format(),
-								street_address: address_1,
-								language: 'EN',
-								extended_address: address_2,
-								postal_code: postcode,
-								phone: `${countryCode.label}${phone.trim()}`,
-								region: county,
-								country: 'GB',
-								locality: town,
-								metadata: {
-									short_token,
-									passport_number: passportNumber,
-									travel_date: moment(
-										new Date(
-											travelDate.getFullYear(),
-											travelDate.getMonth(),
-											travelDate.getDate(),
-											travelTime.getHours(),
-											travelTime.getMinutes(),
-											0,
-										)).format(),
-									test_type: type,
-								},
-								...rest,
-							}));
-							const body = {
-								type: 'video_gp_dochq',
-								booking_users,
-							};
-							bookingService
-								.paymentRequest(selectedSlot.id, body)
-								.then(result => {
-									if (result.success && result.confirmation) {
+								],
+								city: defaultTimeZone,
+								timezone: defaultTimeZone.timezone,
+							}}
+							validationSchema={currentValidationSchema}
+							onSubmit={async (values, actions) => {
+								if (activeStep === 3) {
+									const {
+										numberOfPeople,
+										passengers,
+									} = values;
+									if (activePassenger === (numberOfPeople - 1)) {
+										actions.setSubmitting(false);
+										actions.setTouched({});
+										actions.setErrors({});
 										handleNext();
 									} else {
-										ToastsStore.error('Something went wrong');
+										if (get(passengers, `[${activePassenger + 1}].firstName`, 'default') === 'default') {
+											const newPassengers = [...passengers];
+											newPassengers.push({ ...passengerInitialValues });
+											actions.setValues({
+												...values,
+												passengers: newPassengers,
+											});
+										}
+										setActivePassenger(activePassenger + 1);
+										actions.setSubmitting(false);
+										actions.setTouched({});
+										actions.setErrors({});
 									}
-								})
-								.catch(() => ToastsStore.error('Something went wrong'));
-						} else {
-							actions.setTouched({});
-							actions.setSubmitting(false);
-							actions.setErrors({});
-							handleNext();
-						}
-					}}
-				>
-					<BookingEngineForm
-						activePassenger={activePassenger}
-						activeStep={activeStep}
-						handleBack={handleBack}
-						steps={steps}
-						items={items}
-					/>
-				</Formik>
+								} else if (activeStep === 4) {
+									const {
+										shipping_address: {
+											address_1,
+											address_2,
+											town,
+											postcode,
+											county,
+										},
+									} = orderInfo;
+									const {
+										selectedSlot,
+										travelDate,
+										travelTime,
+										passengers,
+										timezone,
+										testType: { SKU },
+									} = values;
+									const booking_users = passengers.map(({
+										firstName,
+										lastName,
+										dateOfBirth,
+										passportNumber,
+										phone,
+										countryCode,
+										...rest
+									}) => ({
+										first_name: firstName,
+										last_name: lastName,
+										tz_location: timezone,
+										date_of_birth: moment.utc(dateOfBirth, 'DD/MM/YYYY').format(),
+										street_address: address_1,
+										language: 'EN',
+										extended_address: address_2,
+										postal_code: postcode,
+										phone: `${countryCode.label}${phone.trim()}`,
+										region: county,
+										country: 'GB',
+										locality: town,
+										metadata: {
+											short_token,
+											passport_number: passportNumber,
+											travel_date: moment(
+												new Date(
+													travelDate.getFullYear(),
+													travelDate.getMonth(),
+													travelDate.getDate(),
+													travelTime.getHours(),
+													travelTime.getMinutes(),
+													0,
+												)).format(),
+											test_type: SKU === 'PCR RAA-UK-ANT-BOOKING' ? 'Antigen' : 'PCR',
+										},
+										...rest,
+									}));
+									const body = {
+										type: 'video_gp_dochq',
+										booking_users,
+									};
+									bookingService
+										.paymentRequest(selectedSlot.id, body)
+										.then(result => {
+											if (result.success && result.confirmation) {
+												handleNext();
+											} else {
+												ToastsStore.error('Something went wrong');
+											}
+										})
+										.catch(() => ToastsStore.error('Something went wrong'));
+								} else {
+									actions.setTouched({});
+									actions.setSubmitting(false);
+									actions.setErrors({});
+									handleNext();
+								}
+							}}
+						>
+							<BookingEngineForm
+								activePassenger={activePassenger}
+								activeStep={activeStep}
+								handleBack={handleBack}
+								steps={steps}
+								items={items}
+							/>
+						</Formik>
+					) : (
+						<>
+							<div className="row center">
+								<h3>You don't have available appointments for that order</h3>
+							</div>
+							<div className="row center">
+								<LinkButton
+									text='Buy Now!'
+									color='green'
+									linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+								/>
+							</div>
+						</>
+					)}
+				</>
 			) : (
 				<>
 					<div className="row center">
