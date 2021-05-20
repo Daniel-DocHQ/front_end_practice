@@ -1,99 +1,18 @@
 import React from 'react';
-import { Field, useFormikContext } from 'formik';
+import { Field } from 'formik';
 import DateFnsUtils from '@date-io/date-fns';
 import cityTimezones from 'city-timezones';
-import { DatePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
-import { createMuiTheme } from '@material-ui/core';
+import {
+	MuiPickersUtilsProvider,
+	KeyboardTimePicker,
+	KeyboardDatePicker,
+} from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { ThemeProvider } from '@material-ui/styles';
 import bookingFormModel from './bookingFormModel';
-import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
-import './BookingEngine.scss';
 import Input from '../FormComponents/Input';
-
-const datePickerTheme = createMuiTheme({
-	overrides: {
-		MuiTypography: {
-			colorPrimary: { color: 'var(--doc-pink)' },
-		},
-		MuiPickersMonth: { monthSelected: { color: 'var(--doc-pink)' } },
-		MuiPickersDay: {
-			daySelected: {
-				'&:hover': { backgroundColor: 'inherit' },
-				backgroundColor: 'inherit',
-				MuiIconButton: {
-					label: { color: 'var(--doc-pink)' },
-				},
-			},
-			current: {
-				color: 'var(--doc-white)',
-			},
-			dayDisabled: {
-				color: 'var(--doc-dark-grey)',
-				opacity: '0.5',
-				backgroundColor: 'var(--doc-white)!important',
-			},
-			hidden: {
-				opacity: '0 !important',
-			},
-			day: {
-				width: '24px',
-				height: '24px',
-				marginTop: '5px',
-				marginBottom: '5px',
-				color: 'var(--doc-black)',
-			},
-		},
-		MuiIconButton: {
-			label: {
-				backgroundColor: 'inherit',
-				color: 'inherit',
-				transition: '0.3s',
-				'&:hover': { backgroundColor: 'var(--doc-pink)', color: 'var(--doc-white)' },
-				borderRadius: '50%',
-				height: '24px',
-				width: '24px',
-			},
-		},
-		MuiButton: {
-			label: {
-				color: 'var(--doc-green)',
-			},
-		},
-		MuiPickersToolbar: {
-			toolbar: { backgroundColor: 'var(--doc-green)' },
-		},
-		MuiPickersStaticWrapper: {
-			staticWrapperRoot: {
-				width: '90%',
-				border: '2px solid var(--doc-green)',
-				borderRadius: '10px',
-				minWidth: '200px',
-				maxWidth: '300px',
-			},
-		},
-		MuiPickersToolbarText: {
-			toolbarTxt: { fontSize: '22px' },
-		},
-		MuiPickersBasePicker: {
-			pickerView: {
-				maxWidth: '300px',
-				minWidth: '200px',
-			},
-		},
-		MuiPickersCalendar: {
-			week: {
-				justifyContent: 'space-evenly',
-			},
-		},
-		MuiPickersCalendarHeader: {
-			daysHeader: { justifyContent: 'space-evenly' },
-			dayLabel: {
-				width: 'auto',
-			},
-		},
-	},
-});
+import datePickerTheme from '../../helpers/datePickerTheme';
+import './BookingEngine.scss';
 
 const Step1 = () => {
 	const {
@@ -103,11 +22,7 @@ const Step1 = () => {
 			city,
         }
     } = bookingFormModel;
-
-	const { values: {
-		travelDate: selectedDate,
-		travelTime: selectedTime,
-	} } = useFormikContext();
+	const pickerTheme = datePickerTheme();
 
 	return (
 		<React.Fragment>
@@ -142,51 +57,43 @@ const Step1 = () => {
 				</div>
 			</div>
 			<div className='no-margin col'>
-				<ThemeProvider theme={datePickerTheme}>
+				<ThemeProvider theme={pickerTheme}>
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
 						<div className='row'>
 							<div className='appointment-calendar-container'>
 								<Field name={travelDate.name}>
 									{({ field, form }) => (
-										<DatePicker
+										<KeyboardDatePicker
 											{...field}
-											variant='static'
+											{...travelDate}
 											disablePast
-											label={travelDate.label}
+											inputVariant='filled'
+											format="dd/MM/yyyy"
+											KeyboardButtonProps={{
+												'aria-label': 'change date',
+											}}
 											onChange={(value) => {
-												const appointmentDate = new Date(value).setDate(value.getDate() - 1);
 												form.setFieldValue(field.name, value);
-												form.setFieldValue('appointmentDate', new Date(appointmentDate));
 											}}
 										/>
 									)}
 								</Field>
-								<div className='row'>
-									<p>
-										<strong>Selected Date:&nbsp;</strong>
-										{ddMMyyyy(selectedDate)}
-									</p>
-								</div>
 							</div>
 							<div className='appointment-calendar-container'>
 								<Field name={travelTime.name}>
 									{({ field, form }) => (
-										<TimePicker
+										<KeyboardTimePicker
 											autoOk
 											{...field}
-											openTo="hours"
-											variant="static"
-											label={travelTime.label}
+											{...travelTime}
+											inputVariant='filled'
 											onChange={(value) => form.setFieldValue(field.name, value)}
+											KeyboardButtonProps={{
+												'aria-label': 'change time',
+											}}
 										/>
 									)}
 								</Field>
-								<div className='row'>
-									<p>
-										<strong>Selected Time:&nbsp;</strong>
-										{formatTimeSlot(selectedTime)}
-									</p>
-								</div>
 							</div>
 						</div>
 					</MuiPickersUtilsProvider>

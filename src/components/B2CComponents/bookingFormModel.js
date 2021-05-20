@@ -16,7 +16,7 @@ const bookingFormModel = {
                 email: '',
                 phone: '',
                 countryCode: COUNTRIES.find(({ country }) => country === 'United Kingdom'),
-                dateOfBirth: '',
+                dateOfBirth: new Date(),
                 ethnicity: '',
                 sex: 'Female',
                 passportNumber: '',
@@ -64,11 +64,15 @@ const bookingFormModel = {
         },
         travelDate: {
             name: 'travelDate',
-            label: 'Select Date',
+            label: 'Select Flight Departure Date',
+            placeholder: 'DD/MM/YYYY',
+            required: true,
         },
         travelTime: {
             name: 'travelTime',
-            label: 'Select Time',
+            label: 'Select Flight Departure Time',
+            placeholder: '00:00 AM/PM',
+            required: true,
         },
         firstName: {
             name: 'firstName',
@@ -103,7 +107,6 @@ const bookingFormModel = {
             label: 'Date Of Birth',
             id: 'date-of-birth',
             placeholder: 'dd/mm/yyyy',
-            type: 'text',
             required: true,
         },
         ethnicity: {

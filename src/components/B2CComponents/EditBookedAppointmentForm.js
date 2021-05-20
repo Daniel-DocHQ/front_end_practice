@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Formik } from 'formik';
 import { get } from 'lodash';
 import moment from 'moment';
+import { format } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
 import cityTimezones from 'city-timezones';
 import parsePhoneNumber from 'libphonenumber-js'
@@ -47,7 +48,7 @@ const BookingEngine = () => {
 		lastName: '',
 		email: '',
 		phone: '',
-		dateOfBirth: '',
+		dateOfBirth: new Date(),
 		ethnicity: '',
 		countryCode: defaultCountyCode,
 		sex: 'Female',
@@ -107,15 +108,16 @@ const BookingEngine = () => {
 							},
 							...rest
 						}) => {
-							const parsedPhoneNumber =  parsePhoneNumber(phone);
+							const parsedPhoneNumber = parsePhoneNumber(phone);
+
 							return ({
 								firstName: first_name,
 								lastName: last_name,
-								dateOfBirth: moment(date_of_birth).format('DD/MM/YYYY'),
+								dateOfBirth: new Date(date_of_birth),
 								passportNumber: passport_number,
 								test_type,
-								phone: parsedPhoneNumber.nationalNumber,
-								countryCode: COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)),
+								phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
+								countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
 								short_token,
 								...rest,
 							});
@@ -167,7 +169,7 @@ const BookingEngine = () => {
 							}) => ({
 								first_name: firstName,
 								last_name: lastName,
-								date_of_birth: moment.utc(dateOfBirth, 'DD/MM/YYYY').format(),
+								date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
 								phone: `${countryCode.label}${phone.trim()}`,
 								metadata: {
 									travel_date: moment(

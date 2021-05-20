@@ -104,7 +104,7 @@ const TabContainer = ({
 	} = useContext(AppointmentContext);
 	const [value, setValue] = useState(0);
 	const [loading, setLoading] = useState(false);
-	const [customerNotThere, setCustomerNotThere] = useState(false);
+	const [customerNotThere, setCustomerNotThere] = useState({});
 	const patients = !!booking_users ? [...booking_users] : [];
 	let patient = !!patients.length ? patients[0] : {};
 	patient = {...patient, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})}
@@ -423,7 +423,7 @@ const SubmitPatientResult = ({
 	isTuiType,
 	authToken,
 	appointmentId,
-	customerNotThere,
+	customerNotThere: customerNotThereObj,
 }) => {
 	const {
 		updateNotes,
@@ -431,6 +431,7 @@ const SubmitPatientResult = ({
 	const { token } = useContext(AuthContext);
 	const [patientsToVerify, setPatientsToVerify] = useState([...patients]);
 	const currentPatient = get(patientsToVerify, '[0]');
+	const customerNotThere = customerNotThereObj[currentPatient.id];
 	const forename = get(currentPatient, 'first_name', '');
 	const surname = get(currentPatient, 'last_name', '');
 	const currentPatientName = `${forename} ${surname}`;
@@ -956,7 +957,7 @@ const PatientIdVerification = ({
 	authToken,
     updateParent,
     appointmentId,
-	customerNotThere,
+	customerNotThere: customerNotThereObj,
 	setCustomerNotThere,
 }) => {
 	const {
@@ -970,6 +971,7 @@ const PatientIdVerification = ({
 	const [notesStatus, setNotesStatus] = useState();
 	const [appointmentNotes, setAppointmentNotes] = useState();
 	const currentPatient = get(patientsToVerify, '[0]');
+	const customerNotThere = customerNotThereObj[currentPatient.id];
 	const forename = get(currentPatient, 'first_name', '');
 	const surname = get(currentPatient, 'last_name', '');
 	const [passportId, setPassportId] = useState(get(currentPatient, 'metadata.passport_number', '') || get(currentPatient, 'metadata.passportId', ''));
@@ -1029,11 +1031,14 @@ const PatientIdVerification = ({
 		if (customerNotThere) {
 			setSecurity_checked(false);
 		}
-	}, [customerNotThere]);
+	}, [customerNotThereObj]);
 
 	useEffect(() => {
 		if (security_checked) {
-			setCustomerNotThere(false);
+			setCustomerNotThere({
+				...customerNotThereObj,
+				[currentPatient.id]: false.length,
+			});
 		}
 	}, [security_checked]);
 
@@ -1101,7 +1106,7 @@ const PatientIdVerification = ({
 						<div className='row'>
 							<MaterialCheckbox
 								value={customerNotThere}
-								onChange={setCustomerNotThere}
+								onChange={(value) => setCustomerNotThere({ ...customerNotThereObj, [currentPatient.id]: value })}
 								labelComponent='Customer not there'
 							/>
 						</div>

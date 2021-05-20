@@ -223,7 +223,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                             <TableBody>
                                             {appointments.map((row) => (
                                                 <TableRow key={row.id}>
-                                                    <TableCell component="th" scope="row">{format(new Date(row.start_time), 'dd/mm/yyyy/ p')}</TableCell>
+                                                    <TableCell component="th" scope="row">{format(new Date(row.start_time), 'dd/MM/yyyy/ p')}</TableCell>
                                                     <TableCell align="right">
                                                         <LinkButton
                                                             className="pink"

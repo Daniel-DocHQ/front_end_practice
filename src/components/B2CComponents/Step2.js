@@ -11,7 +11,7 @@ import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
 import Slot from './Slot';
 import './BookingEngine.scss';
 
-const datePickerTheme = createMuiTheme({
+const datePickerTheme = () => createMuiTheme({
 	overrides: {
 		MuiTypography: {
 			colorPrimary: { color: 'var(--doc-pink)' },
@@ -106,6 +106,7 @@ const Step3 = () => {
 			selectedSlot,
         }
     } = bookingFormModel;
+	const pickerTheme = datePickerTheme();
 	const {
 		values: {
 			appointmentDate: selectedDate,
@@ -183,7 +184,7 @@ const Step3 = () => {
 			<div className='no-margin col' sty>
 				<div className='appointment-calendar-container'>
 					<p>Please make sure that you book an appointment in the time window required by the destination country or airline for any PCR test or Antigen test requirement.</p>
-					<ThemeProvider theme={datePickerTheme}>
+					<ThemeProvider theme={pickerTheme}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
 							<Field name={appointmentDate.name}>
 								{({ field, form }) => (

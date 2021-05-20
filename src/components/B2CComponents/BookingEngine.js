@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { get } from 'lodash';
 import moment from 'moment';
+import { format } from 'date-fns';
 import parsePhoneNumber from 'libphonenumber-js'
 import cityTimezones from 'city-timezones';
 import { ToastsStore } from 'react-toasts';
@@ -46,7 +47,7 @@ const BookingEngine = () => {
 		email: '',
 		countryCode: defaultCountyCode,
 		phone: '',
-		dateOfBirth: '',
+		dateOfBirth: new Date(),
 		ethnicity: '',
 		sex: 'Female',
 		passportNumber: '',
@@ -114,7 +115,7 @@ const BookingEngine = () => {
 										countryCode: !!parsedPhoneNumber
 											? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
 											: defaultCountyCode,
-										dateOfBirth: '', //moment(get(orderInfo, 'billing_detail.date_of_birth', new Date)).format('DD/MM/YYYY'),
+										dateOfBirth: new Date(get(orderInfo, 'billing_detail.date_of_birth', new Date())),
 										ethnicity: '',
 										sex: 'Female',
 										passportNumber: '',
@@ -179,7 +180,7 @@ const BookingEngine = () => {
 										first_name: firstName,
 										last_name: lastName,
 										tz_location: timezone,
-										date_of_birth: moment.utc(dateOfBirth, 'DD/MM/YYYY').format(),
+										date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
 										street_address: address_1,
 										language: 'EN',
 										extended_address: address_2,

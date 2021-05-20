@@ -1,4 +1,5 @@
 import React from 'react';
+import { format } from 'date-fns';
 import { useFormikContext } from 'formik';
 import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
 
@@ -51,7 +52,7 @@ const Step4 = () => {
 					<div className='row no-margin'>
 						<p>
 							<strong>Date Of Birth:&nbsp;</strong>
-							{dateOfBirth}
+							{format(dateOfBirth, 'dd/MM/yyyy')}
 						</p>
 					</div>
 					<div className='row no-margin'>

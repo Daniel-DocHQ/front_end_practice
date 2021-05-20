@@ -11,11 +11,19 @@ import {
     MenuItem,
 	makeStyles,
 } from '@material-ui/core';
+import {
+	MuiPickersUtilsProvider,
+	KeyboardDatePicker,
+} from '@material-ui/pickers';
+import moment from 'moment';
+import DateFnsUtils from '@date-io/date-fns';
+import { ThemeProvider } from '@material-ui/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Field, useFormikContext } from 'formik';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
 import COUNTRIES from '../../helpers/countries';
+import datePickerTheme from '../../helpers/datePickerTheme';
 import './BookingEngine.scss';
 
 const countryToFlag = (isoCode) => (
@@ -40,6 +48,7 @@ const Step2 = ({
     activePassenger,
 }) => {
 	const classes = useStyles();
+    const pickerTheme = datePickerTheme();
     const { touched } = useFormikContext();
     const {
         formField: {
@@ -195,34 +204,51 @@ const Step2 = ({
                     </Field>
                 </div>
 		    </div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+            <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field
-                        name={`passengers[${activePassenger}].dateOfBirth`}
-                        validate={(value) => {
-                            let error;
-                            if (!!touched && !!touched.passengers) {
-                                if ((!value && !!touched && !!touched.passengers)) {
-                                    error = 'Input date of birth';
-                                } else if (!/^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/.test(value)) {
-                                    error = 'Invalid date of birth';
-                                }
-                            }
-                            return error;
-                        }}
-                    >
-                        {({ field, meta }) => (
-                            <Input
-                                error={!!meta.error}
-                                touched={meta.touched}
-                                helperText={(meta.error && meta.touched) && meta.error}
-                                {...dateOfBirth}
-                                {...field}
-                            />
-                        )}
-                    </Field>
+                    <ThemeProvider theme={pickerTheme}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <Field
+                                name={`passengers[${activePassenger}].dateOfBirth`}
+                                validate={(value) => {
+                                    let error;
+                                    if (!!touched && !!touched.passengers) {
+                                        const date = moment(value);
+                                        if ((!value && !!touched && !!touched.passengers)) {
+                                            error = 'Input date of birth';
+                                        } else if (!date.isValid()) {
+                                            error = 'Invalid Date';
+                                        } else if (moment().diff(date, 'years') < 18) {
+                                            error = 'You must be 18+ yo to book appointment';
+                                        }
+                                    }
+                                    return error;
+                                }}
+                            >
+                                {({ field, form, meta }) => (
+                                    <KeyboardDatePicker
+                                        {...field}
+                                        {...dateOfBirth}
+                                        error={!!meta.error}
+                                        touched={meta.touched}
+                                        inputVariant='filled'
+                                        helperText={(meta.error && meta.touched) && meta.error}
+                                        variant="filled"
+                                        format="dd/MM/yyyy"
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                        style={{ width: '100%' }}
+                                        onChange={(value) => {
+                                            form.setFieldValue(field.name, value);
+                                        }}
+                                    />
+                                )}
+                            </Field>
+                        </MuiPickersUtilsProvider>
+                    </ThemeProvider>
                 </div>
-		    </div>
+            </div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                     <Field name={`passengers[${activePassenger}].ethnicity`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input ethnicity' : undefined}>
