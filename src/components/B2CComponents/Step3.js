@@ -218,8 +218,6 @@ const Step2 = ({
                                             error = 'Input date of birth';
                                         } else if (!date.isValid()) {
                                             error = 'Invalid Date';
-                                        } else if (moment().diff(date, 'years') < 18) {
-                                            error = 'You must be 18+ yo to book appointment';
                                         }
                                     }
                                     return error;
