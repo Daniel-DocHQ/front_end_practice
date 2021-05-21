@@ -219,7 +219,7 @@ const CertificatesAaron = ({
 			};
 			updatePatientInfo(body);
 		}
-	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId])
+	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId]);
 
 	return ((!!patient_data && populated) || (!patient_data && !populated)) &&  (
 		<React.Fragment>

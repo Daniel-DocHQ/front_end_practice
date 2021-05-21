@@ -158,12 +158,12 @@ const AppointmentTable = ({
 													linkSrc={`/practitioner/live/my-rooms`}
 												/>
 											</div>
-											<DocButton
+											{/* <DocButton
 												text='Release'
 												color='pink'
 												style={{ marginLeft: 10 }}
 												onClick={() => releaseAppointment(appointment.id)}
-											/>
+											/> */}
 										</div>
 									</TableCell>
 								</TableRow>

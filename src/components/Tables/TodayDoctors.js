@@ -123,11 +123,11 @@ const TodayDoctors = ({ doctors }) => (
                                     <TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         {isDoctorOffline && (
                                             <div style={{ ...styles.mainContainer }}>
-                                                <LinkButton
+                                                {/* <LinkButton
                                                     text='Release'
                                                     color='pink'
                                                     linkSrc='/'
-                                                />
+                                                /> */}
                                                 <div style={{ margin: '0 10px' }}>
                                                     <LinkButton
                                                         text='Text'
