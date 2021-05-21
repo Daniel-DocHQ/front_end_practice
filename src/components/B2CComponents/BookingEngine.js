@@ -167,7 +167,7 @@ const BookingEngine = () => {
 										travelTime,
 										passengers,
 										timezone,
-										testType: { Type },
+										testType: { ID, Type },
 									} = values;
 									const booking_users = passengers.map(({
 										firstName,
@@ -191,6 +191,7 @@ const BookingEngine = () => {
 										country: 'GB',
 										locality: town,
 										metadata: {
+											product_id: ID,
 											short_token,
 											passport_number: passportNumber,
 											travel_date: moment(
