@@ -205,21 +205,27 @@ function paymentRequest(slotId, data, auth_token) {
 					if (response.status === 200 || response.data.status === 'ok') {
 						resolve({ success: true, confirmation: response.data });
 					} else if (response.status === 204) {
-						resolve({ success: true, confirmation: {} });
+						resolve({ success: true, confirmation: {}, error: response.data.message, });
 					} else if (response.status === 403) {
 						reject({
 							success: false,
-							error: 'Unable to authenticate user.',
+							error: response.data.message,
 							authenticated: false,
 						});
 					} else {
 						reject({
 							success: false,
-							error: 'An error occurred',
+							error: response.data.message,
 						});
 					}
 				})
-				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+				.catch(errResp => {
+					if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+						reject({ success: false, error: errResp.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.'});
+					}
+				});
 		} else {
 			resolve({ success: false, error: 'Missing Details' });
 		}

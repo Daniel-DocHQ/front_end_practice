@@ -7,7 +7,7 @@ import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import bookingService from '../../services/bookingService';
 import bookingFormModel from './bookingFormModel';
-import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
+import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
 import Slot from './Slot';
 import './BookingEngine.scss';
 
@@ -220,6 +220,7 @@ const Step3 = () => {
 										<Slot
 											start_time={item.start_time}
 											key={i}
+											timezone={timezone}
 											{...field}
 											id={item.id}
 											item={item}
@@ -248,7 +249,7 @@ const Step3 = () => {
 				<div className='row no-margin'>
 					<p style={{ marginTop: 0 }}>
 						<strong>Selected appointment Time:&nbsp;</strong>
-						{formatTimeSlot(selectedSlotValue.start_time)} - {formatTimeSlot(selectedSlotValue.end_time)}
+						{formatTimeSlotWithTimeZone(selectedSlotValue.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlotValue.end_time, timezone)}
 					</p>
 				</div>
 			)}

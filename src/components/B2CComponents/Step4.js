@@ -1,9 +1,10 @@
 import React from 'react';
 import { format } from 'date-fns';
+import { Alert } from '@material-ui/lab';
 import { useFormikContext } from 'formik';
-import { ddMMyyyy, formatTimeSlot } from '../../helpers/formatDate';
+import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
 
-const Step4 = () => {
+const Step4 = ({ status }) => {
     const { values: { appointmentDate, selectedSlot, passengers, timezone } } = useFormikContext();
 
 	return (
@@ -17,7 +18,7 @@ const Step4 = () => {
 			<div className='row no-margin'>
 				<p>
 					<strong>Appointment Time:&nbsp;</strong>
-					{formatTimeSlot(selectedSlot.start_time)} - {formatTimeSlot(selectedSlot.end_time)} ({timezone})
+					{formatTimeSlotWithTimeZone(selectedSlot.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlot.end_time, timezone)} ({timezone})
 				</p>
 			</div>
             {passengers.map(({
@@ -75,6 +76,13 @@ const Step4 = () => {
 					</div>
 				</div>
 			))}
+			{typeof status !== 'undefined' && (
+				<div className='row center'>
+					<Alert severity={status.severity} variant='outlined'>
+						{status.message}
+					</Alert>
+				</div>
+			)}
 		</React.Fragment>
 	);
 };

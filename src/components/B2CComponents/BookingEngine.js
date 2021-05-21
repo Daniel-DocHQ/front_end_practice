@@ -22,6 +22,7 @@ const BookingEngine = () => {
 	const short_token = params['short_token'];
 	const [orderInfo, setOrderInfo] = useState();
 	const [items, setItems] = useState([]);
+	const [status, setStatus] = useState(); // { severity, message }
 	const [isLoading, setLoading] = useState(false);
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
@@ -215,10 +216,18 @@ const BookingEngine = () => {
 											if (result.success && result.confirmation) {
 												handleNext();
 											} else {
-												ToastsStore.error('Something went wrong');
+												setStatus({
+													severity: 'error',
+													message: result.message,
+												});
 											}
 										})
-										.catch(() => ToastsStore.error('Something went wrong'));
+										.catch(({ error }) => {
+											setStatus({
+												severity: 'error',
+												message: error,
+											})
+										});
 								} else {
 									actions.setTouched({});
 									actions.setSubmitting(false);
@@ -231,6 +240,7 @@ const BookingEngine = () => {
 								activePassenger={activePassenger}
 								activeStep={activeStep}
 								handleBack={handleBack}
+								status={status}
 								steps={steps}
 								items={items}
 							/>

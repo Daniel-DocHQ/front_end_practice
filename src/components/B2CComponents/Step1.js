@@ -42,7 +42,9 @@ const Step1 = () => {
 								style={{ width: 300 }}
 								onChange={(event, newValue) => {
 									form.setFieldValue(city.name, newValue);
-									form.setFieldValue('timezone', newValue.timezone);
+									if (!!newValue && !!newValue.timezone) {
+										form.setFieldValue('timezone', newValue.timezone);
+									}
 								}}
 								renderInput={(params) => <Input
 									{...params}

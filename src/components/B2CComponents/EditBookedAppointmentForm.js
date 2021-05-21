@@ -25,6 +25,7 @@ const BookingEngine = () => {
 	const bookingUsers = get(appointment, 'booking_users', []);
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
+	const [status, setStatus] = useState(); // { severity, message }
 	const { formInitialValues } = bookingFormModel;
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
 	const defaultCountyCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
@@ -198,10 +199,18 @@ const BookingEngine = () => {
 										handleNext();
 										await bookingService.deleteBooking(appointmentId, token).catch(() => console.log('error'));
 									} else {
-										ToastsStore.error('Something went wrong');
+										setStatus({
+											severity: 'error',
+											message: result.message,
+										});
 									}
 								})
-								.catch(() => ToastsStore.error('Something went wrong'));
+								.catch(({ error }) => {
+									setStatus({
+										severity: 'error',
+										message: error,
+									})
+								});
 						} else {
 							actions.setTouched({});
 							actions.setSubmitting(false);
@@ -212,6 +221,7 @@ const BookingEngine = () => {
 				>
 					<BookingEngineForm
 						isEdit
+						status={status}
 						activePassenger={activePassenger}
 						activeStep={activeStep}
 						handleBack={handleBack}

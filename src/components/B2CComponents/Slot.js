@@ -1,9 +1,9 @@
 import React from 'react';
-import { formatTimeSlot } from '../../helpers/formatDate';
+import { formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
 
-const Slot = ({ item, start_time, selectSlot, isSelected }) => (
+const Slot = ({ timezone, item, start_time, selectSlot, isSelected }) => (
 	<div className={`slot ${isSelected ? 'selected' : ''}`} onClick={() => selectSlot(item)}>
-		{formatTimeSlot(start_time)}
+		{formatTimeSlotWithTimeZone(start_time, timezone)}
 	</div>
 );
 

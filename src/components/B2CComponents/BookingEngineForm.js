@@ -19,6 +19,7 @@ const BookingEngineForm = ({
     items,
     bookingUsersQuantity = 0,
     isEdit = false,
+    status,
     ...restProps
 }) => {
     const isLastStep = activeStep === steps.length - 1;
@@ -47,7 +48,7 @@ const BookingEngineForm = ({
 				);
             case 4:
 				return (
-					<Step4 />
+					<Step4 status={status} />
 				);
             case 5:
 				return (

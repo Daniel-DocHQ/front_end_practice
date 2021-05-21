@@ -479,7 +479,7 @@ const SubmitPatientResult = ({
 				result: '',
 				forename,
 				surname,
-				result: sampleTaken,
+				sample_taken: sampleTaken,
 			}, true);
 		}
 	}
