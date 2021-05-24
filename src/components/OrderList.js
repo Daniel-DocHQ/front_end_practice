@@ -49,10 +49,10 @@ const OrderList = props => {
     const classes = useStyles();
     const { token } = useContext(AuthContext);
     const [rows, setRows] = useState([]);
-    const [pageSize, setPageSize] = useState(0)
+    const [pageSize, setPageSize] = useState(0);
     const [page, setPage] = useState(0);
-    const [pageCount, setPageCount] = useState(0)
-    const [error, setError] = useState(<></>)
+    const [pageCount, setPageCount] = useState(0);
+    const [error, setError] = useState(<></>);
     const [detailsOpen, setDetailsOpen] = useState(false);
     const [orderDetail, setOrderDetail] = useState({});
     const [dataTableLoading, setDataTableLoading] = useState(true);
@@ -63,7 +63,7 @@ const OrderList = props => {
             headers: { Authorization: `Bearer ${token}` },
         }).then(res)
             .catch((err) => ToastsStore.error('Error fetching orders'))
-    })
+    });
 
     const clickedRow = (param, event) => {
         setOrderDetail(param);
@@ -72,22 +72,22 @@ const OrderList = props => {
 
     useEffect(() => {
         (async () => {
-            setDataTableLoading(true)
-            const res = await apiCall
+            setDataTableLoading(true);
+            const res = await apiCall;
             if (res.status === 200 && res.data.orders) {
-                setPageSize(res.data.pagnation_page_size)
-                setPageCount(res.data.total_count)
-                setRows(res.data.orders)
+                setPageSize(res.data.pagnation_page_size);
+                setPageCount(res.data.total_count);
+                setRows(res.data.orders);
             }
             setDataTableLoading(false);
         })();
-    }, [page])
+    }, [page]);
 
     const toggleDrawer = (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
         }
-        setDetailsOpen(false)
+        setDetailsOpen(false);
     }
 
     return (

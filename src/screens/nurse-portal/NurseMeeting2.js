@@ -35,6 +35,7 @@ import getValueFromObject from '../../helpers/getValueFromObject';
 import { AuthContext } from '../../context/AuthContext';
 import '../../assets/css/NurseMeeting.scss';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import copyToClipboard from '../../helpers/copyToClipboard';
 
 const TEST_TYPES = {
 	pcr: 'PCR',
@@ -499,7 +500,7 @@ const SubmitPatientResult = ({
 						}
 						setPatientsToVerify(newPatients);
 						setNotes();
-						setSampleTaken();
+						setSampleTaken('');
 						setKitId('');
 						setAppointmentNotes();
 						setShowAppointmentNotes(false);
@@ -1308,16 +1309,6 @@ const AppointmentActions = ({
 			</div>
 		</div>
 	);
-};
-
-const copyToClipboard = (ref) => {
-	window.getSelection().removeAllRanges();
-	var range = document.createRange();
-	range.selectNode(ref.current);
-	window.getSelection().addRange(range);
-	document.execCommand("copy");
-	window.getSelection().removeAllRanges();
-	ToastsStore.success('Copied');
 };
 
 const CertificatesContainer = ({ kitProvider }) => {
