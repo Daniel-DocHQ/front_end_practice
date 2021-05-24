@@ -132,6 +132,21 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                         <List>
                             <ListItem>
                                 <ListItemText>
+                                    <b>Customer name</b>: {orderDetail.billing_detail.first_name} {orderDetail.billing_detail.last_name}
+                                </ListItemText>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemText>
+                                    <b>Email</b>: {orderDetail.billing_detail.email}
+                                </ListItemText>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemText>
+                                    <b>Phone</b>: {orderDetail.billing_address.telephone}
+                                </ListItemText>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemText>
                                     <b>Purchase Date</b>: {format(new Date(orderDetail.created_at), 'dd/MM/yyyy p')}
                                 </ListItemText>
                             </ListItem>
@@ -188,21 +203,6 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                             Billing Details
                         </Typography>
                         <List>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Customer name</b>: {orderDetail.billing_detail.first_name} {orderDetail.billing_detail.last_name}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Email</b>: {orderDetail.billing_detail.email}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Phone</b>: {orderDetail.billing_address.telephone}
-                                </ListItemText>
-                            </ListItem>
                             <ListItem>
                                 <ListItemText>
                                     <b>Address Line 1</b>: {orderDetail.billing_address.address_1}
@@ -301,6 +301,11 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                             <ListItemText>
                                                 <b>Appointment {appointmentIndx + 1}</b>:
                                             </ListItemText>
+                                            <ListItem>
+                                                <ListItemText>
+                                                    <b>Test Type</b>: {row.booking_user.metadata.test_type}
+                                                </ListItemText>
+                                            </ListItem>
                                             <ListItem>
                                                 <ListItemText>
                                                     <b>Date</b>: {format(new Date(row.start_time), 'dd/MM/yyyy p')}
