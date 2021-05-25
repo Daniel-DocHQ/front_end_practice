@@ -289,6 +289,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                             open={cancelDialogOpen}
                             onClose={handleCancelDialogToggle}
                             loading={loading}
+                            token={token}
                             setLoading={setLoading}
                         />
                         </Grid>
@@ -535,7 +536,7 @@ const AppointmentDetails = ({
     );
 };
 
-const CancelOrder = ({order, open, onClose, loading, setLoading}) => {
+const CancelOrder = ({ order, open, onClose, loading, setLoading, token }) => {
     const classes = useStyles();
     const [emailAddress, setEmailAddress] = useState("")
     const [error, setError] = useState(<></>)
@@ -547,6 +548,7 @@ const CancelOrder = ({order, open, onClose, loading, setLoading}) => {
                 axios({
                     method: 'delete',
                     url: `${orderUrl}/v1/order/${order.id}`,
+                    headers: { Authorization: `Bearer ${token}` },
                 }).then(res)
                 .catch(rej)
             })

@@ -260,7 +260,7 @@ function getClaimableAppointments(auth_token) {
 						});
 					}
 				})
-				.catch(({ response: { status }}) => reject({ success: false, error: 'Server Error Occurred', status }));
+				.catch(({ response }) => reject({ success: false, error: 'Server Error Occurred', status: !!response && !!response.status ? response.status : {} }));
 		} else if (typeof auth_token === 'undefined') {
 			reject({ success: false, error: 'Unable to authenticate user.', authenticated: false });
 		} else {
