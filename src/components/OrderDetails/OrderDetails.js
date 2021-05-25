@@ -295,61 +295,67 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                 <Typography variant="h6" className={classes.title}>
                                     Appointments Details
                                 </Typography>
-                                {appointments.map((row, appointmentIndx) => (
-                                    <div key={row.id}>
-                                        <List>
-                                            <ListItemText>
-                                                <b>Appointment {appointmentIndx + 1}</b>:
-                                            </ListItemText>
-                                            <ListItem>
+                                {appointments.map((row, appointmentIndx) => {
+                                    const flightDate = get(row, 'booking_user.metadata.travel_date');
+
+                                    return (
+                                        <div key={row.id}>
+                                            <List>
                                                 <ListItemText>
-                                                    <b>Test Type</b>: {row.booking_user.metadata.test_type}
+                                                    <b>Appointment {appointmentIndx + 1}</b>:
                                                 </ListItemText>
-                                            </ListItem>
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <b>Flight Date</b>: {format(new Date(row.booking_user.metadata.travel_date), 'dd/MM/yyyy p')}
-                                                </ListItemText>
-                                            </ListItem>
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <b>Date</b>: {format(new Date(row.start_time), 'dd/MM/yyyy p')}
-                                                </ListItemText>
-                                            </ListItem>
-                                            <ListItem>
-                                                <ListItemText>
-                                                    <Tooltip title="Click to copy">
-                                                        <Typography
-                                                            noWrap
-                                                            ref={linkRef}
-                                                            onClick={() => copyToClipboard(linkRef)}
-                                                            className='tab-row-text patient-link-text'
-                                                        >
-                                                            <b>Appointment Joining link</b>: https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={row.id}
-                                                        </Typography>
-                                                    </Tooltip>
-                                                </ListItemText>
-                                            </ListItem>
-                                            {row.booking_users.map((patient, indx) => (
-                                                <div key={indx}>
+                                                <ListItem>
                                                     <ListItemText>
-                                                        <b>Details of Passenger {indx + 1}</b>:
+                                                        <b>Test Type</b>: {row.booking_user.metadata.test_type}
                                                     </ListItemText>
-                                                    <PatientDetails patient={patient} />
-                                                </div>
-                                            ))}
-                                            <ListItemText>
-                                                <b>Appointment Status</b>: {row.status}
-                                            </ListItemText>
-                                        </List>
-                                        <LinkButton
-                                            className="pink"
-                                            linkSrc={`/customer_services/booking/edit?appointmentId=${row.id}&service=video_gp_dochq`}
-                                            text="Edit"
-                                        />
-                                        <Divider style={{ margin: '20px 0' }} />
-                                    </div>
-                                ))}
+                                                </ListItem>
+                                                {!!flightDate && (
+                                                    <ListItem>
+                                                        <ListItemText>
+                                                            <b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p')}
+                                                        </ListItemText>
+                                                    </ListItem>
+                                                )}
+                                                <ListItem>
+                                                    <ListItemText>
+                                                        <b>Date</b>: {format(new Date(row.start_time), 'dd/MM/yyyy p')}
+                                                    </ListItemText>
+                                                </ListItem>
+                                                <ListItem>
+                                                    <ListItemText>
+                                                        <Tooltip title="Click to copy">
+                                                            <Typography
+                                                                noWrap
+                                                                ref={linkRef}
+                                                                onClick={() => copyToClipboard(linkRef)}
+                                                                className='tab-row-text patient-link-text'
+                                                            >
+                                                                <b>Appointment Joining link</b>: https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={row.id}
+                                                            </Typography>
+                                                        </Tooltip>
+                                                    </ListItemText>
+                                                </ListItem>
+                                                {row.booking_users.map((patient, indx) => (
+                                                    <div key={indx}>
+                                                        <ListItemText>
+                                                            <b>Details of Passenger {indx + 1}</b>:
+                                                        </ListItemText>
+                                                        <PatientDetails patient={patient} />
+                                                    </div>
+                                                ))}
+                                                <ListItemText>
+                                                    <b>Appointment Status</b>: {row.status}
+                                                </ListItemText>
+                                            </List>
+                                            <LinkButton
+                                                className="pink"
+                                                linkSrc={`/customer_services/booking/edit?appointmentId=${row.id}&service=video_gp_dochq`}
+                                                text="Edit"
+                                            />
+                                            <Divider style={{ margin: '20px 0' }} />
+                                        </div>
+                                    );
+                                })}
                             </Grid>
                         </Grid>
                     )}
