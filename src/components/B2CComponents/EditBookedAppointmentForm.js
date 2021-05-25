@@ -49,7 +49,7 @@ const BookingEngine = () => {
 		lastName: '',
 		email: '',
 		phone: '',
-		dateOfBirth: new Date(),
+		dateOfBirth: null,
 		ethnicity: '',
 		countryCode: defaultCountyCode,
 		sex: 'Female',

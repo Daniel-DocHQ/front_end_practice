@@ -16,7 +16,7 @@ const bookingFormModel = {
                 email: '',
                 phone: '',
                 countryCode: COUNTRIES.find(({ country }) => country === 'United Kingdom'),
-                dateOfBirth: new Date(),
+                dateOfBirth: null,
                 ethnicity: '',
                 sex: 'Female',
                 passportNumber: '',
@@ -35,7 +35,7 @@ const bookingFormModel = {
         },
         product: {
             name: 'product',
-            label: 'Product',
+            label: 'Select the test you are booking for',
             id: 'product',
             type: 'text',
             required: true,
@@ -107,6 +107,7 @@ const bookingFormModel = {
             label: 'Date Of Birth',
             id: 'date-of-birth',
             placeholder: 'dd/mm/yyyy',
+            emptyLabel: 'dd/mm/yyyy',
             required: true,
         },
         ethnicity: {

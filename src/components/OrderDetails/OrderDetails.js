@@ -38,6 +38,8 @@ import DocButton from '../DocButton/DocButton';
 import LinkButton from '../DocButton/LinkButton';
 import bookingService from '../../services/bookingService';
 import copyToClipboard from '../../helpers/copyToClipboard';
+import DocModal from '../DocModal/DocModal';
+import { ToastsStore } from 'react-toasts';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -61,13 +63,16 @@ const useStyles = makeStyles((theme) => ({
 
 const OrderDetails = ({ token, order, closeHandler}) => {
     const classes = useStyles();
-    const linkRef = useRef(null);
     const [orderDetail, setOrderDetail] = useState({});
     const [appointments, setAppointments] = useState([]);
+    const [reloadInfo, setReloadInfo] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(<></>);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
-    useEffect(() =>{
+
+    const refetchData = () => setReloadInfo((value) => !value);
+
+    useEffect(() => {
         let apiCall = new Promise((res, rej) => {
             axios({
                 method: 'get',
@@ -96,7 +101,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                 setAppointments(result.appointments);
             }
         })
-    }, [order])
+    }, [order, reloadInfo]);
 
     const handleCancelDialogToggle = () => {
         setCancelDialogOpen(!cancelDialogOpen);
@@ -269,12 +274,12 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                     </Grid>
                     <Grid item xs={12}>
                         <DocButton
-                            className="pink"
+                            color="green"
                             style={{ marginRight: 10 }}
                             text="Edit order"
                         />
                         <DocButton
-                            className="pink"
+                            color="pink"
                             onClick={handleCancelDialogToggle}
                             style={{ marginRight: 10 }}
                             text="Cancel order"
@@ -295,67 +300,15 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                 <Typography variant="h6" className={classes.title}>
                                     Appointments Details
                                 </Typography>
-                                {appointments.map((row, appointmentIndx) => {
-                                    const flightDate = get(row, 'booking_user.metadata.travel_date');
-
-                                    return (
-                                        <div key={row.id}>
-                                            <List>
-                                                <ListItemText>
-                                                    <b>Appointment {appointmentIndx + 1}</b>:
-                                                </ListItemText>
-                                                <ListItem>
-                                                    <ListItemText>
-                                                        <b>Test Type</b>: {row.booking_user.metadata.test_type}
-                                                    </ListItemText>
-                                                </ListItem>
-                                                {!!flightDate && (
-                                                    <ListItem>
-                                                        <ListItemText>
-                                                            <b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p')}
-                                                        </ListItemText>
-                                                    </ListItem>
-                                                )}
-                                                <ListItem>
-                                                    <ListItemText>
-                                                        <b>Date</b>: {format(new Date(row.start_time), 'dd/MM/yyyy p')}
-                                                    </ListItemText>
-                                                </ListItem>
-                                                <ListItem>
-                                                    <ListItemText>
-                                                        <Tooltip title="Click to copy">
-                                                            <Typography
-                                                                noWrap
-                                                                ref={linkRef}
-                                                                onClick={() => copyToClipboard(linkRef)}
-                                                                className='tab-row-text patient-link-text'
-                                                            >
-                                                                <b>Appointment Joining link</b>: https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={row.id}
-                                                            </Typography>
-                                                        </Tooltip>
-                                                    </ListItemText>
-                                                </ListItem>
-                                                {row.booking_users.map((patient, indx) => (
-                                                    <div key={indx}>
-                                                        <ListItemText>
-                                                            <b>Details of Passenger {indx + 1}</b>:
-                                                        </ListItemText>
-                                                        <PatientDetails patient={patient} />
-                                                    </div>
-                                                ))}
-                                                <ListItemText>
-                                                    <b>Appointment Status</b>: {row.status}
-                                                </ListItemText>
-                                            </List>
-                                            <LinkButton
-                                                className="pink"
-                                                linkSrc={`/customer_services/booking/edit?appointmentId=${row.id}&service=video_gp_dochq`}
-                                                text="Edit"
-                                            />
-                                            <Divider style={{ margin: '20px 0' }} />
-                                        </div>
-                                    );
-                                })}
+                                {appointments.map((row, appointmentIndx) => (
+                                    <AppointmentDetails
+                                        key={row.id}
+                                        token={token}
+                                        appointment={row}
+                                        refetchData={refetchData}
+                                        appointmentIndx={appointmentIndx}
+                                    />
+                                ))}
                             </Grid>
                         </Grid>
                     )}
@@ -475,6 +428,113 @@ const PatientDetails = ({ patient }) => {
     );
 };
 
+const AppointmentDetails = ({
+    appointment,
+    appointmentIndx,
+    refetchData,
+    token,
+}) => {
+    const linkRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
+    const flightDate = get(appointment, 'booking_user.metadata.travel_date');
+
+    return (
+        <>
+            <List>
+                <ListItemText>
+                    <b>Appointment {appointmentIndx + 1}</b>:
+                </ListItemText>
+                <ListItem>
+                    <ListItemText>
+                        <b>Test Type</b>: {appointment.booking_user.metadata.test_type}
+                    </ListItemText>
+                </ListItem>
+                {!!flightDate && (
+                    <ListItem>
+                        <ListItemText>
+                            <b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p')}
+                        </ListItemText>
+                    </ListItem>
+                )}
+                <ListItem>
+                    <ListItemText>
+                        <b>Date</b>: {format(new Date(appointment.start_time), 'dd/MM/yyyy p')}
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        <Tooltip title="Click to copy">
+                            <Typography
+                                noWrap
+                                ref={linkRef}
+                                onClick={() => copyToClipboard(linkRef)}
+                                className='tab-row-text patient-link-text'
+                            >
+                                <b>Appointment Joining link</b>: https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointment.id}
+                            </Typography>
+                        </Tooltip>
+                    </ListItemText>
+                </ListItem>
+                {appointment.booking_users.map((patient, indx) => (
+                    <div key={indx}>
+                        <ListItemText>
+                            <b>Details of Passenger {indx + 1}</b>:
+                        </ListItemText>
+                        <PatientDetails patient={patient} />
+                    </div>
+                ))}
+                <ListItemText>
+                    <b>Appointment Status</b>: {appointment.status}
+                </ListItemText>
+            </List>
+            <LinkButton
+                color="green"
+                linkSrc={`/customer_services/booking/edit?appointmentId=${appointment.id}&service=video_gp_dochq`}
+                text="Edit"
+            />
+            <DocButton
+                color="pink"
+                style={{ marginLeft: 10 }}
+                text="Delete"
+                onClick={() => setIsVisible(true)}
+            />
+            <DocModal
+                isVisible={isVisible}
+                onClose={() => setIsVisible(false)}
+                content={
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <p>Are you sure you want to delete this appointment?</p>
+                        <div className="row space-between">
+                            <DocButton
+                                color='green'
+                                text='No'
+                                onClick={() => setIsVisible(false)}
+                                style={{ marginRight: '5px' }}
+                            />
+                            <DocButton
+                                color='pink'
+                                text='Yes'
+                                onClick={async () => {
+                                    await bookingService.deleteBooking(appointment.id, token).catch(() => ToastsStore.error('Something went wrong'));
+                                    refetchData();
+                                    setIsVisible(false);
+                                }}
+                            />
+                        </div>
+                    </div>
+                }
+            />
+            <Divider style={{ margin: '20px 0' }} />
+        </>
+    );
+};
+
 const CancelOrder = ({order, open, onClose, loading, setLoading}) => {
     const classes = useStyles();
     const [emailAddress, setEmailAddress] = useState("")
@@ -531,15 +591,15 @@ const CancelOrder = ({order, open, onClose, loading, setLoading}) => {
                     If you are certain you want to cancel the order, please enter the order's email address ({order.billing_detail.email})
                 </DialogContentText>
                 <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Email Address"
-                type="email"
-                value={emailAddress}
-                onChange={(e)=>setEmailAddress(e.target.value)}
-                fullWidth
-            />
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Email Address"
+                    type="email"
+                    value={emailAddress}
+                    onChange={(e)=>setEmailAddress(e.target.value)}
+                    fullWidth
+                />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} color="primary">

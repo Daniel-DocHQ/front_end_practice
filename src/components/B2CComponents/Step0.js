@@ -63,6 +63,11 @@ const Step0 = ({
                     </div>
                 </div>
             )}
+            {!isEdit && (
+                <h4 style={{ margin: 0, paddingTop: 20 }}>
+                    How many people will take the test?
+                </h4>
+            )}
             <div className='row space-between' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                     <Field
@@ -84,7 +89,6 @@ const Step0 = ({
                     </h4>
                 </div>
 		    </div>
-            
 		</React.Fragment>
 	);
 };

@@ -48,7 +48,7 @@ const BookingEngine = () => {
 		email: '',
 		countryCode: defaultCountyCode,
 		phone: '',
-		dateOfBirth: new Date(),
+		dateOfBirth: null,
 		ethnicity: '',
 		sex: 'Female',
 		passportNumber: '',
@@ -116,7 +116,7 @@ const BookingEngine = () => {
 										countryCode: !!parsedPhoneNumber
 											? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
 											: defaultCountyCode,
-										dateOfBirth: new Date(get(orderInfo, 'billing_detail.date_of_birth', new Date())),
+										dateOfBirth: new Date(get(orderInfo, 'billing_detail.date_of_birth', null)),
 										ethnicity: '',
 										sex: 'Female',
 										passportNumber: '',

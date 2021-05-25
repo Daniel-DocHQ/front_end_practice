@@ -25,8 +25,8 @@ const Meeting = () => {
 	const [step, setStep] = useState(1);
 	const [isLoading, setIsLoading] = useState(true);
 	const [videoCallToken, setVideoCallToken] = useState('');
-	const [toc_accept, setToc_accept] = useState();
-	const [marketing_accept, setMarketing_accept] = useState();
+	const [toc_accept, setToc_accept] = useState(false);
+	const [marketing_accept, setMarketing_accept] = useState(false);
 	const [isEarly, setIsEarly] = useState();
 	const [userMedia, setUserMedia] = useState(false);
 	const [questionsVisible, setQuestionsVisible] = useState(true);
