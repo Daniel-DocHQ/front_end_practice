@@ -6,7 +6,7 @@ import './BookingEngine.scss';
 const icon = require('../../assets/images/icons/circled-tick.svg');
 
 const Step5 = () => {
-    const { values: { appointmentDate, selectedSlot, passengers, timezone } } = useFormikContext();
+    const { values: { appointmentDate, selectedSlot, passengers, timezone, testType } } = useFormikContext();
     return (
         typeof isError === 'undefined' ? (
             <React.Fragment>
@@ -20,6 +20,12 @@ const Step5 = () => {
                         </div>
                         <div className='row no-margin'>
                             <p>
+                                <strong>Selected Product:&nbsp;</strong>
+                                {testType.Title}
+                            </p>
+                        </div>
+                        <div className='row no-margin'>
+                            <p>
                                 <strong>Selected Date:&nbsp;</strong>
                                 {ddMMyyyy(appointmentDate)}
                             </p>
@@ -27,7 +33,7 @@ const Step5 = () => {
                         <div className='row no-margin'>
                             <p>
                                 <strong>Selected Time:&nbsp;</strong>
-                                {formatTimeSlotWithTimeZone(selectedSlot.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlot.end_time, timezone)}
+                                {formatTimeSlotWithTimeZone(selectedSlot.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlot.end_time, timezone)} ({timezone})
                             </p>
                         </div>
                         <div className='row no-margin'>

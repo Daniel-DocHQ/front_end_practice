@@ -32,9 +32,9 @@ const BookingEngine = () => {
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountyCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
-	const defaultTestType = get(items, '[0]', {});
+	const defaultTestType = items.find(({ Quantity }) => Quantity > 0) || {};
 	const steps = [
-        'How many people will take the test?',
+        'Select Test',
         'Travel Details',
         'Booking Appointment',
         'Passenger Details',
