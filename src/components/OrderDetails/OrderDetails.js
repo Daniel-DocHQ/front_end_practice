@@ -147,7 +147,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                             </ListItem>
                             <ListItem>
                                 <ListItemText>
-                                    <b>Purchase Date</b>: {format(new Date(orderDetail.created_at), 'dd/MM/yyyy p')}
+                                    <b>Purchase Date</b>: {format(new Date(orderDetail.created_at * 1000), 'dd/MM/yyyy p')}
                                 </ListItemText>
                             </ListItem>
                             <ListItem>
@@ -304,6 +304,11 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                             <ListItem>
                                                 <ListItemText>
                                                     <b>Test Type</b>: {row.booking_user.metadata.test_type}
+                                                </ListItemText>
+                                            </ListItem>
+                                            <ListItem>
+                                                <ListItemText>
+                                                    <b>Flight Date</b>: {format(new Date(row.booking_user.metadata.travel_date), 'dd/MM/yyyy p')}
                                                 </ListItemText>
                                             </ListItem>
                                             <ListItem>
