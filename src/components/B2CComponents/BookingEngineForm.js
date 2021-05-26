@@ -17,6 +17,7 @@ const BookingEngineForm = ({
     handleBack,
     steps,
     items,
+    defaultTimezone,
     bookingUsersQuantity = 0,
     isEdit = false,
     status,
@@ -35,7 +36,7 @@ const BookingEngineForm = ({
 				);
 			case 1:
 				return (
-					<Step1 />
+					<Step1 defaultTimezone={defaultTimezone} />
 				);
 
 			case 2:

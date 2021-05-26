@@ -64,13 +64,13 @@ const bookingFormModel = {
         },
         travelDate: {
             name: 'travelDate',
-            label: 'Select Flight Departure Date',
+            label: 'Select Departure Date',
             placeholder: 'DD/MM/YYYY',
             required: true,
         },
         travelTime: {
             name: 'travelTime',
-            label: 'Select Flight Departure Time',
+            label: 'Select Departure Time',
             placeholder: '00:00 AM/PM',
             required: true,
         },

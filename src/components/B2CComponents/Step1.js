@@ -1,5 +1,5 @@
-import React from 'react';
-import { Field } from 'formik';
+import React, { useEffect } from 'react';
+import { Field, useFormikContext } from 'formik';
 import DateFnsUtils from '@date-io/date-fns';
 import cityTimezones from 'city-timezones';
 import {
@@ -14,7 +14,7 @@ import Input from '../FormComponents/Input';
 import datePickerTheme from '../../helpers/datePickerTheme';
 import './BookingEngine.scss';
 
-const Step1 = () => {
+const Step1 = ({ defaultTimezone }) => {
 	const {
         formField: {
             travelDate,
@@ -22,42 +22,55 @@ const Step1 = () => {
 			city,
         }
     } = bookingFormModel;
+	const { values: { testType: { Type } }, setFieldValue} = useFormikContext();
 	const pickerTheme = datePickerTheme();
+	const isPCR = Type === 'PCR';
+
+	useEffect(() => {
+		if (isPCR) {
+			setFieldValue('timezone', defaultTimezone);
+		}
+	}, []);
 
 	return (
 		<React.Fragment>
-			<div className='row'>
-				<div style={{ paddingRight: 50 }}>
-					<p>
+			{!isPCR && (
+				<>
+					<h4 style={{ margin: 0, paddingTop: 20 }}>
 						Where are you flying from?
-					</p>
-				</div>
-				<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
-					<Field name={city.name}>
-						{({ field, meta, form }) => (
-							<Autocomplete
-								{...field}
-								options={cityTimezones.cityMapping}
-								getOptionLabel={({city, country}) => city ? `${city}, ${country}` : ''}
-								style={{ width: 300 }}
-								onChange={(event, newValue) => {
-									form.setFieldValue(city.name, newValue);
-									if (!!newValue && !!newValue.timezone) {
-										form.setFieldValue('timezone', newValue.timezone);
-									}
-								}}
-								renderInput={(params) => <Input
-									{...params}
-									{...city}
-									error={!!meta.error}
-									touched={meta.touched}
-									helperText={(meta.error && meta.touched) && meta.error}
-								/>}
-							/>
-						)}
-					</Field>
-				</div>
-			</div>
+					</h4>
+					<div className='row'>
+						<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
+							<Field name={city.name}>
+								{({ field, meta, form }) => (
+									<Autocomplete
+										{...field}
+										options={cityTimezones.cityMapping}
+										getOptionLabel={({city, country}) => city ? `${city}, ${country}` : ''}
+										style={{ width: 300 }}
+										onChange={(event, newValue) => {
+											form.setFieldValue(city.name, newValue);
+											if (!!newValue && !!newValue.timezone) {
+												form.setFieldValue('timezone', newValue.timezone);
+											}
+										}}
+										renderInput={(params) => <Input
+											{...params}
+											{...city}
+											error={!!meta.error}
+											touched={meta.touched}
+											helperText={(meta.error && meta.touched) && meta.error}
+										/>}
+									/>
+								)}
+							</Field>
+						</div>
+					</div>
+				</>
+			)}
+			<h4 style={{ margin: 0, paddingTop: 20 }}>
+				Select Departure Date
+			</h4>
 			<div className='no-margin col'>
 				<ThemeProvider theme={pickerTheme}>
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>

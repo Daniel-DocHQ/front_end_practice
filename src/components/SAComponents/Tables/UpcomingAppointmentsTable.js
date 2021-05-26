@@ -29,11 +29,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const styles = {
-	smallCol: {
-		width: '15%',
-		maxWidth: '15%',
-	},
-	medCol: { width: '25%', maxWidth: '25%' },
 	tableText: {
 		fontSize: 16,
 	},
@@ -123,25 +118,25 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 
 							return (
 								<TableRow key={appointment.id}>
-									<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='left' style={{ ...styles.tableText }}>
 										{get(appointment, 'user_name', '')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{appointmentStartTime.toLocaleDateString()}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='center' style={{  ...styles.tableText }}>
 										{format(appointmentStartTime, 'p')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{type && (type === 'video_gp_dochq' ? 'DocHQ' : 'TUI')}
 									</TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_users.length', '')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
-									<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='right' style={{  ...styles.tableText }}>
 										<LinkButton
 											text='View'
 											color='green'

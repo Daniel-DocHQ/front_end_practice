@@ -34,6 +34,7 @@ const BookingEngine = () => {
 	const usersTimeZone = get(bookingUsers, '[0].tz_location', defaultTimeZone.timezone);
 	const bookingUsersQuantity = get(bookingUsers, 'length', 0);
 	const bookingUsersTestType = get(bookingUsers, '[0].test_type', 'Antigen');
+	const bookingUsersTestTitle = get(bookingUsers, '[0].metadata.Title', '');
 	const usersTimeZoneObj = cityTimezones.cityMapping.find(({ timezone }) => timezone === usersTimeZone);
 	const steps = [
         'How many people will take the test?',
@@ -91,7 +92,8 @@ const BookingEngine = () => {
 						travelTime: new Date(usersTravelDate),
 						testType: {
 							Quantity: 4,
-							type: bookingUsersTestType,
+							Title: bookingUsersTestTitle,
+							Type: bookingUsersTestType,
 						},
 						city: usersTimeZoneObj,
 						timezone: usersTimeZoneObj.timezone,
@@ -166,13 +168,16 @@ const BookingEngine = () => {
 								phone,
 								countryCode,
 								short_token,
+								metadata,
 								...rest
 							}) => ({
+								...rest,
 								first_name: firstName,
 								last_name: lastName,
 								date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
 								phone: `${countryCode.label}${phone.trim()}`,
 								metadata: {
+									...metadata,
 									travel_date: moment(
 										new Date(
 											travelDate.getFullYear(),
@@ -186,7 +191,6 @@ const BookingEngine = () => {
 									test_type,
 									short_token,
 								},
-								...rest,
 							}));
 							const body = {
 								type: appointment.type,
@@ -225,6 +229,7 @@ const BookingEngine = () => {
 						activePassenger={activePassenger}
 						activeStep={activeStep}
 						handleBack={handleBack}
+						defaultTimezone={defaultTimeZone.timezone}
 						bookingUsersQuantity={bookingUsersQuantity}
 						steps={steps}
 					/>

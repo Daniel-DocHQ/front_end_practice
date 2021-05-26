@@ -167,7 +167,7 @@ const BookingEngine = () => {
 										travelTime,
 										passengers,
 										timezone,
-										testType: { ID, Type },
+										testType: { ID, Type, Title },
 									} = values;
 									const booking_users = passengers.map(({
 										firstName,
@@ -191,6 +191,7 @@ const BookingEngine = () => {
 										country: 'GB',
 										locality: town,
 										metadata: {
+											Title,
 											product_id: ID,
 											short_token,
 											passport_number: passportNumber,
@@ -240,6 +241,7 @@ const BookingEngine = () => {
 							<BookingEngineForm
 								activePassenger={activePassenger}
 								activeStep={activeStep}
+								defaultTimezone={defaultTimeZone.timezone}
 								handleBack={handleBack}
 								status={status}
 								steps={steps}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-// import moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import { Field, useFormikContext, ErrorMessage } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createMuiTheme } from '@material-ui/core';
@@ -39,7 +39,7 @@ const datePickerTheme = () => createMuiTheme({
 			day: {
 				width: '24px',
 				height: '24px',
-				backgroundColor: 'var(--doc-green)',
+				backgroundColor: 'var(--doc-green)!important',
 				marginTop: '5px',
 				marginBottom: '5px',
 				color: 'var(--doc-white)',
@@ -111,9 +111,12 @@ const Step3 = () => {
 		values: {
 			appointmentDate: selectedDate,
 			selectedSlot: selectedSlotValue,
-			// travelDate,
-			// travelTime,
+			travelDate,
+			travelTime,
 			timezone,
+			testType: {
+				Title,
+			}
 			// testType: {
 			// 	product: {
 			// 		type,
@@ -123,6 +126,10 @@ const Step3 = () => {
 		setFieldValue,
 	} = useFormikContext();
 
+	const isFitToTravelPCR = Title === 'Fit to Travel [PCR]';
+	const maxDate = new Date(new Date(new Date(travelDate).setHours(travelTime.getHours() - 60)).setMinutes(travelTime.getMinutes()));
+	const startDateTime = new Date(new Date(maxDate).setHours(maxDate.getHours() - 12));
+	const startDate = new Date(startDateTime).setHours(0,0,0,0);
 	// const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - (type === 'Antigen' ? 1 : 3))).setHours(0,0,0,0);
 	// const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
 
@@ -160,22 +167,43 @@ const Step3 = () => {
 		}
 	}, [selectedDate]);
 	function getSlots() {
-		bookingService
-			.getSlots(selectedDate)
-			.then(result => {
-				if (result.success && result.appointments) {
-					const newAppointments = result.appointments;
-					if (new Date(selectedDate).setHours(0,0,0,0) === today) {
-						const in30min = new Date(new Date().getTime() + 30 * 60000).getTime();
-						setAppointments(newAppointments.filter(({ start_time }) => new Date(start_time).getTime() > in30min));
+		if (isFitToTravelPCR) {
+			const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
+			bookingService
+				.getSlotsByTime({
+					date_time: moment(new Date(new Date(startDate).setHours(startDateTime.getHours())).setMinutes(startDateTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
+					date_time_to: moment(new Date(new Date(maxDate).setHours(maxDate.getHours())).setMinutes(maxDate.getMinutes())).tz(timezone).format().replace('+', '%2B'),
+					language: 'EN',
+				})
+				.then(result => {
+					if (result.success && result.appointments) {
+						setAppointments([...result.appointments].filter(({ start_time }) => new Date(start_time).setHours(0,0,0,0) === selectedDateTime));
 					} else {
-						setAppointments(newAppointments);
+						setAppointments([]);
 					}
-				} else {
+				})
+				.catch(err => {
+					console.log(err);
 					setAppointments([]);
-				}
-			})
-			.catch(err => setAppointments([]));
+				});
+		} else {
+			bookingService
+				.getSlots(selectedDate)
+				.then(result => {
+					if (result.success && result.appointments) {
+						const newAppointments = result.appointments;
+						if (new Date(selectedDate).setHours(0,0,0,0) === today) {
+							const in30min = new Date(new Date().getTime() + 30 * 60000).getTime();
+							setAppointments(newAppointments.filter(({ start_time }) => new Date(start_time).getTime() > in30min));
+						} else {
+							setAppointments(newAppointments);
+						}
+					} else {
+						setAppointments([]);
+					}
+				})
+				.catch(err => setAppointments([]));
+		}
 		setFieldValue(selectedSlot.name, null);
 	}
 
@@ -192,10 +220,10 @@ const Step3 = () => {
 										{...field}
 										disablePast
 										variant='static'
-										// maxDate={travelDate}
+										maxDate={isFitToTravelPCR ? maxDate : travelDate}
 										label={appointmentDate.label}
 										onChange={(value) => form.setFieldValue(field.name, value)}
-										// shouldDisableDate={(date) => date.setHours(0,0,0,0) < startDate}
+										shouldDisableDate={isFitToTravelPCR ? (date) => date.setHours(0,0,0,0) < startDate : (date) => false}
 									/>
 								)}
 							</Field>

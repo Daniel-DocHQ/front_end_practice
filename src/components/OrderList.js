@@ -15,6 +15,7 @@ const orderUrl = process.env.REACT_APP_API_URL
 const useStyles = makeStyles(() => ({
     root: {
         flexGrow: 1,
+        maxWidth: 'unset',
     },
     data_grid: {
         marginTop: 30,
@@ -25,7 +26,7 @@ const useStyles = makeStyles(() => ({
 
 const date_format = {
     type: 'dateTime',
-    width: 150,
+    width: 200,
     valueFormatter: ({ value })  => value ? format(new Date(value * 1000), "P p") : '-',
 };
 
@@ -34,8 +35,8 @@ const price_format = {
 };
 const columns = [
     { field: 'id', headerName: 'ID', width: 60 },
-    { field: 'billing_detail', headerName: 'Customer Email', width: 170, valueFormatter: ({value}) => value.email},
-    { field: 'short_token', headerName: 'Short Token', width: 150 },
+    { field: 'billing_detail', headerName: 'Customer Email', width: 250, valueFormatter: ({value}) => value.email},
+    { field: 'short_token', headerName: 'Short Token', width: 200 },
     { field: 'shipping_flag', headerName: 'Shipping status', width: 150 },
     { field: 'payment_flag', headerName: 'Payment status', width: 150 },
     { field: 'price', headerName: 'Amount', width: 90, ...price_format},

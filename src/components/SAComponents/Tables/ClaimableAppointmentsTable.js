@@ -122,22 +122,22 @@ const ClaimableAppointmentsTable = ({ appointments = [] }) => {
 
 							return (
 								<TableRow key={appointment.id}>
-									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{appointmentStartTime.toLocaleDateString()}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{format(appointmentStartTime, 'p')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{type && (type === 'video_gp_dochq' ? 'DocHQ' : 'TUI')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_users.length', '')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
-									<TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='right' style={{  ...styles.tableText }}>
 										<LinkButton
 											text='Assign'
 											color='pink'
