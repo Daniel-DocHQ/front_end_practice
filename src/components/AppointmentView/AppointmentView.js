@@ -143,7 +143,7 @@ const PatientInfo = ({ patient }) => {
     const invalidNotes = get(patient, 'metadata.invalid_notes', '');
     const sampleTaken = get(patient, 'metadata.sample_taken', '');
     const kitProvider = get(patient, 'metadata.kitProvider', '');
-    const kitId = get(patient, 'metadata.kitId', '');
+    const kitId = get(patient, 'metadata.kit_id', '');
     const samplingDate = get(patient, 'metadata.date_sampled', '');
     const reportedDate = get(patient, 'metadata.date_reported', '');
 

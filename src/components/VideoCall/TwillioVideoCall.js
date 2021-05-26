@@ -1,6 +1,5 @@
 import React, { useEffect, useState, memo, useContext } from 'react';
 import { get } from 'lodash';
-import './VideoCallAppointment.scss';
 import Controls from '../Controls/Controls';
 import InVid from '../IncomingVideo/InVid';
 import OutVid from '../OutgoingVideo/OutVid';
@@ -10,6 +9,7 @@ import Video from 'twilio-video';
 import { Redirect } from 'react-router-dom';
 import bookingService from '../../services/bookingService';
 import { AppointmentContext, useBookingUsers } from '../../context/AppointmentContext';
+import './VideoCallAppointment.scss';
 
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
@@ -26,6 +26,7 @@ function TwillioVideoCall({
 }) {
 	const { storeImage, displayCertificates } = useContext(AppointmentContext);
 	const patients = useBookingUsers();
+	const [counter, setCounter] = useState(0);
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
@@ -96,6 +97,18 @@ function TwillioVideoCall({
 			});
 		};
 	}, [token]);
+
+
+	useEffect(() => {
+		if (counter < 180 && !isNurse) { // 3 min until show message
+			const interval = setInterval(() => {
+				setCounter((prev) => prev + 1);
+			}, 1000);
+			return () => clearInterval(interval);
+		} else if (!isNurse) {
+			setMessage('Apologies for the delay. Your practitioner is running late on the previous appointment but will be with you as soon as possible. Thank you very much for your understanding.');
+		}
+	}, [counter]);
 
 	const handleDisconnect = () => {
 		if (isNurse) {
