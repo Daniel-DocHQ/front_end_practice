@@ -137,11 +137,12 @@ const ClaimableAppointmentsTable = ({ appointments = [] }) => {
 									<TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
-									<TableCell align='right' style={{  ...styles.tableText }}>
+                                    <TableCell align='right' style={{  ...styles.tableText }}>
+                                        {/*
 										<LinkButton
 											text='Assign'
 											color='pink'
-										/>
+                                        />*/}
 									</TableCell>
 								</TableRow>
 							);
