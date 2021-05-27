@@ -70,7 +70,7 @@ const DoctorsManagement = props => {
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<ClaimableAppointmentsTable
-					appointments={appointments.filter(({ status, user }) => (status.toLowerCase() === 'waiting' && parseFloat(user) < 20))}
+					appointments={appointments.filter(({ status, user, claimable_slot }) => (status.toLowerCase() === 'waiting' && claimable_slot))}
 				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
