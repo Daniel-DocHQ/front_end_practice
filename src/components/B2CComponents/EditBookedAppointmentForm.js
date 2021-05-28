@@ -16,12 +16,17 @@ import LinkButton from '../DocButton/LinkButton';
 import nurseSvc from '../../services/nurseService';
 import { AuthContext } from '../../context/AuthContext';
 import COUNTRIES from '../../helpers/countries';
+import adminService from '../../services/adminService';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const BookingEngine = () => {
 	const { token } = useContext(AuthContext);
+	const [items, setItems] = useState([]);
+	const [isLoading, setLoading] = useState(false);
 	const [appointment, setAppointment] = useState();
 	const params = getURLParams(window.location.href);
 	const appointmentId = params['appointmentId'];
+	const short_token = params['short_token'];
 	const bookingUsers = get(appointment, 'booking_users', []);
 	const [activeStep, setActiveStep] = useState(0);
 	const [activePassenger, setActivePassenger] = useState(0);
@@ -31,10 +36,13 @@ const BookingEngine = () => {
 	const defaultCountyCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
 	const usersTravelDate = get(bookingUsers, '[0].metadata.travel_date', new Date ());
+	const usersLandingDate = get(bookingUsers, '[0].metadata.landing_date', '');
+	const usersFlightNumber = get(bookingUsers, '[0].metadata.flight_number', '');
 	const usersTimeZone = get(bookingUsers, '[0].tz_location', defaultTimeZone.timezone);
 	const bookingUsersQuantity = get(bookingUsers, 'length', 0);
 	const bookingUsersTestType = get(bookingUsers, '[0].test_type', 'Antigen');
-	const bookingUsersTestTitle = get(bookingUsers, '[0].metadata.Title', '');
+	const bookingUsersProductId = get(bookingUsers, '[0].metadata.product_id');
+	const bookingUsersProduct = items.find(({ ID }) => bookingUsersProductId === ID);
 	const usersTimeZoneObj = cityTimezones.cityMapping.find(({ timezone }) => timezone === usersTimeZone);
 	const steps = [
         'How many people will take the test?',
@@ -68,19 +76,41 @@ const BookingEngine = () => {
 	}
 
 	useEffect(() => {
-		if (appointmentId) {
-			nurseSvc
-            .getAppointmentDetails(appointmentId, token)
-            .then(result => {
-                if (result.success && result.appointment) {
-                    setAppointment(result.appointment);
-                } else {
-                    ToastsStore.error(`Cannot find appointment details`);
-                }
-            })
-            .catch(() => ToastsStore.error(`Cannot find appointment details`))
-		}
+		(async () => {
+			await setLoading(true);
+			if (short_token && appointmentId) {
+				await nurseSvc
+					.getAppointmentDetails(appointmentId, token)
+					.then(result => {
+						if (result.success && result.appointment) {
+							setAppointment(result.appointment);
+						} else {
+							ToastsStore.error(`Cannot find appointment details`);
+						}
+					})
+					.catch(() => ToastsStore.error(`Cannot find appointment details`));
+				await adminService.getOrderProducts(short_token)
+					.then(data => {
+						if (data.success) {
+							setItems(data.order);
+						}
+					})
+					.catch(err => ToastsStore.error('Error fetching order information'))
+			}
+			setLoading(false);
+		})();
 	}, []);
+
+
+	if (isLoading) {
+		return (
+			<BigWhiteContainer>
+				<div className='row center'>
+					<LoadingSpinner />
+				</div>
+			</BigWhiteContainer>
+		);
+	}
 
 	return (
 		<BigWhiteContainer>
@@ -90,10 +120,15 @@ const BookingEngine = () => {
 						...formInitialValues,
 						travelDate: new Date(usersTravelDate),
 						travelTime: new Date(usersTravelDate),
+						...(!!usersLandingDate ? {
+							landingDate: new Date(usersLandingDate),
+							landingTime: new Date(usersLandingDate),
+							flightNumber: usersFlightNumber,
+						} : {}),
 						testType: {
 							Quantity: 4,
-							Title: bookingUsersTestTitle,
-							Type: bookingUsersTestType,
+							Title: bookingUsersProduct.Title,
+							Type: bookingUsersProduct.Type,
 						},
 						city: usersTimeZoneObj,
 						timezone: usersTimeZoneObj.timezone,
@@ -108,6 +143,7 @@ const BookingEngine = () => {
 								passport_number,
 								test_type,
 								short_token,
+								...restMetadata
 							},
 							...rest
 						}) => {
@@ -119,6 +155,9 @@ const BookingEngine = () => {
 								dateOfBirth: new Date(date_of_birth),
 								passportNumber: passport_number,
 								test_type,
+								metadata: {
+									...restMetadata,
+								},
 								phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
 								countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
 								short_token,
@@ -158,6 +197,9 @@ const BookingEngine = () => {
 								travelDate,
 								travelTime,
 								passengers,
+								landingDate,
+								landingTime,
+								flightNumber,
 							} = values;
 							const booking_users = passengers.map(({
 								firstName,
@@ -190,6 +232,18 @@ const BookingEngine = () => {
 									passport_number: passportNumber,
 									test_type,
 									short_token,
+									...(!!usersLandingDate ? {
+										landing_date: moment(
+											new Date(
+												landingDate.getFullYear(),
+												landingDate.getMonth(),
+												landingDate.getDate(),
+												landingTime.getHours(),
+												landingTime.getMinutes(),
+												0,
+											)).format(),
+										flight_number: flightNumber,
+									} : {}),
 								},
 							}));
 							const body = {

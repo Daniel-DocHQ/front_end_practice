@@ -129,14 +129,16 @@ function TwillioVideoCall({
 	}
 
 	const handleToggleAudio = () => {
-		room.localParticipant.audioTracks.forEach(track => {
-			if (track.track.isEnabled) {
-				track.track.disable();
-			} else {
-				track.track.enable();
-			}
-			setIsMuted(!track.track.isEnabled);
-		});
+		if (!!room && !!room.localParticipant) {
+			room.localParticipant.audioTracks.forEach(track => {
+				if (track.track.isEnabled) {
+					track.track.disable();
+				} else {
+					track.track.enable();
+				}
+				setIsMuted(!track.track.isEnabled);
+			});
+		}
 	};
 	return isSupported ? (
 		<React.Fragment>

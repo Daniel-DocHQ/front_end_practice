@@ -305,6 +305,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                     <AppointmentDetails
                                         key={row.id}
                                         token={token}
+                                        shortToken={order.id}
                                         appointment={row}
                                         refetchData={refetchData}
                                         appointmentIndx={appointmentIndx}
@@ -434,6 +435,7 @@ const AppointmentDetails = ({
     appointmentIndx,
     refetchData,
     token,
+    shortToken,
 }) => {
     const linkRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
@@ -490,7 +492,7 @@ const AppointmentDetails = ({
             </List>
             <LinkButton
                 color="green"
-                linkSrc={`/customer_services/booking/edit?appointmentId=${appointment.id}&service=video_gp_dochq`}
+                linkSrc={`/customer_services/booking/edit?appointmentId=${appointment.id}&short_token=${shortToken}&service=video_gp_dochq`}
                 text="Edit"
             />
             <DocButton

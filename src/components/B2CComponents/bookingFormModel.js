@@ -24,6 +24,9 @@ const bookingFormModel = {
         ],
         appointmentDate: new Date(),
         selectedSlot: null,
+        landingDate: new Date(),
+        landingTime: new Date(),
+        flightNumber: '',
     },
     formField: {
         numberOfPeople: {
@@ -72,6 +75,26 @@ const bookingFormModel = {
             name: 'travelTime',
             label: 'Select Departure Time',
             placeholder: '00:00 AM/PM',
+            required: true,
+        },
+        landingDate: {
+            name: 'landingDate',
+            label: 'Select Landing Date',
+            placeholder: 'DD/MM/YYYY',
+            required: true,
+        },
+        landingTime: {
+            name: 'landingTime',
+            label: 'Select Landing Time',
+            placeholder: '00:00 AM/PM',
+            required: true,
+        },
+        flightNumber: {
+            name: 'flightNumber',
+            label: 'Flight Number',
+            placeholder: 'EY402',
+            id: 'flight-number',
+            type: 'text',
             required: true,
         },
         firstName: {

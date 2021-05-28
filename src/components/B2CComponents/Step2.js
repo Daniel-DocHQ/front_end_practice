@@ -9,6 +9,7 @@ import bookingService from '../../services/bookingService';
 import bookingFormModel from './bookingFormModel';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
 import Slot from './Slot';
+import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
 const datePickerTheme = () => createMuiTheme({
@@ -99,7 +100,6 @@ const datePickerTheme = () => createMuiTheme({
 const Step3 = () => {
 	const [appointments, setAppointments] = useState([]);
 	const today = new Date().setHours(0, 0, 0, 0);
-	// const [filteredAppointments, setFilteredAppointments] = useState([]);
 	const {
         formField: {
             appointmentDate,
@@ -114,22 +114,21 @@ const Step3 = () => {
 			travelDate,
 			travelTime,
 			timezone,
+			landingDate,
 			testType: {
+				Type,
 				Title,
 			}
-			// testType: {
-			// 	product: {
-			// 		type,
-			// 	},
-			// },
 		},
 		setFieldValue,
 	} = useFormikContext();
 
-	const isFitToTravelPCR = Title === 'Fit to Travel [PCR]';
+	const isPCR = Type === 'PCR' && Title.includes('Fit to Travel');
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
 	const maxDate = new Date(new Date(new Date(travelDate).setHours(travelTime.getHours() - 60)).setMinutes(travelTime.getMinutes()));
 	const startDateTime = new Date(new Date(maxDate).setHours(maxDate.getHours() - 12));
 	const startDate = new Date(startDateTime).setHours(0,0,0,0);
+	const landingDateTime = new Date(landingDate).setHours(0,0,0,0);
 	// const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - (type === 'Antigen' ? 1 : 3))).setHours(0,0,0,0);
 	// const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
 
@@ -167,7 +166,7 @@ const Step3 = () => {
 		}
 	}, [selectedDate]);
 	function getSlots() {
-		if (isFitToTravelPCR) {
+		if (isPCR) {
 			const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
 			bookingService
 				.getSlotsByTime({
@@ -220,10 +219,14 @@ const Step3 = () => {
 										{...field}
 										disablePast
 										variant='static'
-										maxDate={isFitToTravelPCR ? maxDate : travelDate}
+										maxDate={isPCR ? maxDate : (isBundle ? undefined : travelDate)}
 										label={appointmentDate.label}
 										onChange={(value) => form.setFieldValue(field.name, value)}
-										shouldDisableDate={isFitToTravelPCR ? (date) => date.setHours(0,0,0,0) < startDate : (date) => false}
+										shouldDisableDate={isPCR
+											? (date) => date.setHours(0,0,0,0) < startDate
+											: (isBundle
+												? (date) => date.setHours(0,0,0,0) < landingDateTime
+												: (date) => false)}
 									/>
 								)}
 							</Field>

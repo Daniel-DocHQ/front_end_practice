@@ -12,7 +12,7 @@ const Controls = ({
 }) => (
 	<>
 		<div className="top-container">
-			{isNurse && (
+			{isNurse && !captureDisabled && (
 				<div className='control-container'>
 					<div className='control-item' onClick={handlePause}>
 						<i className='fa fa-pause'></i>

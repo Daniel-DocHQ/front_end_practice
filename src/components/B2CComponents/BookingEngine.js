@@ -16,6 +16,7 @@ import LinkButton from '../DocButton/LinkButton';
 import adminService from '../../services/adminService';
 import COUNTRIES from '../../helpers/countries';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
 
 const BookingEngine = () => {
 	const params = getURLParams(window.location.href);
@@ -168,6 +169,10 @@ const BookingEngine = () => {
 										passengers,
 										timezone,
 										testType: { ID, Type, Title },
+										flightNumber,
+										landingDate,
+										landingTime,
+										city,
 									} = values;
 									const booking_users = passengers.map(({
 										firstName,
@@ -191,7 +196,6 @@ const BookingEngine = () => {
 										country: 'GB',
 										locality: town,
 										metadata: {
-											Title,
 											product_id: ID,
 											short_token,
 											passport_number: passportNumber,
@@ -205,6 +209,19 @@ const BookingEngine = () => {
 													0,
 												)).format(),
 											test_type: Type,
+											...(PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title) ? {
+												flight_number: flightNumber,
+												country_from: city.country,
+												landing_date: moment(
+													new Date(
+														landingDate.getFullYear(),
+														landingDate.getMonth(),
+														landingDate.getDate(),
+														landingTime.getHours(),
+														landingTime.getMinutes(),
+														0,
+													)).format(),
+											} : {}),
 										},
 										...rest,
 									}));
