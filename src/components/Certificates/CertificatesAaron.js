@@ -168,10 +168,12 @@ const CertificatesAaron = ({
 
 	function sendResult(formData) {
 		const body = formData;
-		body.medicalprofessional = (!!user && !!user.first_name && !!user.last_name) ? `${user.first_name} ${user.last_name}` : '';
-		body.date_sampled = moment().subtract(20, "minutes").format();
-		body.date_reported = moment().format();
-		body.security_checked = 'true';
+		if (submitCallback === null) {
+			body.medicalprofessional = (!!user && !!user.first_name && !!user.last_name) ? `${user.first_name} ${user.last_name}` : '';
+			body.date_sampled = moment().subtract(20, "minutes").format();
+			body.date_reported = moment().format();
+			body.security_checked = 'true';
+		}
 
 		if (isValid(body)) {
 			if (kitProvider === 'Roche') {
