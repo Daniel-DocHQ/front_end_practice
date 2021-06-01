@@ -29,6 +29,7 @@ const Step4 = ({ status }) => {
 				dateOfBirth,
 				ethnicity,
 				sex,
+				countryCode,
 				passportNumber,
 			}, i) => (
 				<div key={i}>
@@ -47,7 +48,7 @@ const Step4 = ({ status }) => {
 					<div className='row no-margin'>
 						<p>
 							<strong>Phone:&nbsp;</strong>
-							{phone}
+							{countryCode.label}{phone.trim()}
 						</p>
 					</div>
 					<div className='row no-margin'>

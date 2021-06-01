@@ -26,6 +26,7 @@ const Step1 = ({ defaultTimezone }) => {
 	const {
         formField: {
 			vaccineType,
+			vaccineNumber,
 			vaccineTypeName,
 			vaccineStatus,
 			transportType,
@@ -296,6 +297,37 @@ const Step1 = ({ defaultTimezone }) => {
 									</div>
 								</>
 							)}
+							<div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
+								<div style={{ maxWidth: '40%', minWidth: '320px' }}>
+									<Field
+										name={vaccineNumber.name}
+									>
+										{({ field, form, meta }) => (
+											<FormControl component='fieldset' style={{ width: '100%' }}>
+												<FormLabel required={vaccineNumber.required} component='legend'>
+													{vaccineNumber.label}
+												</FormLabel>
+												<RadioGroup
+													error={!!meta.error}
+													touched={meta.touched}
+													helperText={(meta.error && meta.touched) && meta.error}
+													aria-label={vaccineNumber.name}
+													name={vaccineNumber.name}
+													value={field.value}
+													{...vaccineNumber}
+													{...field}
+													onChange={(({ target: { value } }) => {
+														form.setFieldValue(field.name, value);
+													})}
+												>
+													<FormControlLabel value="One dose of vaccine" control={<Radio />} label="One dose of vaccine" />
+													<FormControlLabel value="Two doses of vaccine" control={<Radio />} label="Two doses of vaccine" />
+												</RadioGroup>
+											</FormControl>
+										)}
+									</Field>
+								</div>
+							</div>
 						</>
 					)}
 					<div className='no-margin col'>

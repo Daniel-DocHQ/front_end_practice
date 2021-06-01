@@ -29,7 +29,8 @@ const BookingEngine = () => {
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
-	const usersPhoneNumber = get(orderInfo, 'shipping_address.telephone', '')
+	const usersPhoneNumber = get(orderInfo, 'shipping_address.telephone', '');
+	const orderId = get(orderInfo, 'id', 0);
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountyCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
@@ -174,6 +175,7 @@ const BookingEngine = () => {
 										landingTime,
 										city,
 									} = values;
+									const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
 									const booking_users = passengers.map(({
 										firstName,
 										lastName,
@@ -198,6 +200,7 @@ const BookingEngine = () => {
 										metadata: {
 											product_id: ID,
 											short_token,
+											order_id: orderId.toString(),
 											passport_number: passportNumber,
 											travel_date: moment(
 												new Date(
@@ -209,10 +212,15 @@ const BookingEngine = () => {
 													0,
 												)).format(),
 											test_type: Type,
-											...(PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title) ? {
-												flight_number: transportNumber,
-												country_from: city.country,
-												landing_date: moment(
+										},
+										...rest,
+									}));
+									const body = {
+										type: 'video_gp_dochq',
+										booking_users,
+										flight_details: {
+											flight_arrival_country: isAdditionalProduct ? 'GB' : timezone,
+											flight_arrival_date_time: moment(
 													new Date(
 														landingDate.getFullYear(),
 														landingDate.getMonth(),
@@ -221,13 +229,18 @@ const BookingEngine = () => {
 														landingTime.getMinutes(),
 														0,
 													)).format(),
-											} : {}),
+											flight_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
+											flight_departure_date_time: moment(
+												new Date(
+													travelDate.getFullYear(),
+													travelDate.getMonth(),
+													travelDate.getDate(),
+													travelTime.getHours(),
+													travelTime.getMinutes(),
+													0,
+												)).format(),
+											flight_number: transportNumber,
 										},
-										...rest,
-									}));
-									const body = {
-										type: 'video_gp_dochq',
-										booking_users,
 									};
 									bookingService
 										.paymentRequest(selectedSlot.id, body)

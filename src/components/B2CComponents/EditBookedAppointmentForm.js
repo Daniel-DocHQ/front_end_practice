@@ -42,7 +42,7 @@ const BookingEngine = () => {
 	const bookingUsersQuantity = get(bookingUsers, 'length', 0);
 	const bookingUsersTestType = get(bookingUsers, '[0].test_type', 'Antigen');
 	const bookingUsersProductId = get(bookingUsers, '[0].metadata.product_id');
-	const bookingUsersProduct = items.find(({ ID }) => bookingUsersProductId === ID);
+	const bookingUsersProduct = items.find(({ ID }) => bookingUsersProductId === ID) || get(items, '[0]', {});
 	const usersTimeZoneObj = cityTimezones.cityMapping.find(({ timezone }) => timezone === usersTimeZone);
 	const steps = [
         'How many people will take the test?',
