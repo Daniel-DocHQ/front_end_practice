@@ -9,6 +9,7 @@ import getURLParams from '../../helpers/getURLParams';
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import nurseSvc from '../../services/nurseService';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import AppointmentNotes from './AppointmentNotes';
 import './AppointmentView.scss';
 
 const AppointmentView = (props) => {
@@ -185,14 +186,4 @@ const PatientInfo = ({ patient }) => {
     );
 };
 
-const AppointmentNotes = ({ notes }) => {
-    const filteredNotes = notes.filter(({ content }) => !content.includes('Status Change') && !content.includes('GDPR Terms Change:'));
-    const notesLength = filteredNotes.length;
 
-    return !!notesLength && (
-        <Box>
-           <Typography className="row-text"><b>Appointment Notes:</b></Typography>
-            <Typography>{get(filteredNotes, `${notesLength - 1}.content`, '')}</Typography>
-        </Box>
-    );
-};

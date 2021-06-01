@@ -123,7 +123,7 @@ const BookingEngine = () => {
 						...(!!usersLandingDate ? {
 							landingDate: new Date(usersLandingDate),
 							landingTime: new Date(usersLandingDate),
-							flightNumber: usersFlightNumber,
+							transportNumber: usersFlightNumber,
 						} : {}),
 						testType: {
 							Quantity: 4,
@@ -199,7 +199,7 @@ const BookingEngine = () => {
 								passengers,
 								landingDate,
 								landingTime,
-								flightNumber,
+								transportNumber,
 							} = values;
 							const booking_users = passengers.map(({
 								firstName,
@@ -242,7 +242,7 @@ const BookingEngine = () => {
 												landingTime.getMinutes(),
 												0,
 											)).format(),
-										flight_number: flightNumber,
+										flight_number: transportNumber,
 									} : {}),
 								},
 							}));

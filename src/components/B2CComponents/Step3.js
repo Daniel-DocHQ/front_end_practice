@@ -45,11 +45,12 @@ const useStyles = makeStyles({
 });
 
 const Step2 = ({
+    isEdit,
     activePassenger,
 }) => {
 	const classes = useStyles();
     const pickerTheme = datePickerTheme();
-    const { touched } = useFormikContext();
+    const { values: { passengers } ,touched } = useFormikContext();
     const {
         formField: {
 			firstName,
@@ -61,6 +62,7 @@ const Step2 = ({
 			ethnicity,
 			sex,
 			passportNumber,
+            passportNumberConfirmation,
         }
     } = bookingFormModel;
 
@@ -314,9 +316,12 @@ const Step2 = ({
 					)}
 				</Field>
 			</div>
+            <h4 style={{ margin: 0, paddingTop: 20 }}>
+                {passportNumber.label}
+            </h4>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].passportNumber`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input passport number' : undefined}>
+                    <Field name={`passengers[${activePassenger}].passportNumber`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input ID Document number' : undefined}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
@@ -329,6 +334,45 @@ const Step2 = ({
                     </Field>
                 </div>
 		    </div>
+            {!isEdit && (
+                <>
+                    <h4 style={{ margin: 0, paddingTop: 20 }}>
+						{passportNumberConfirmation.label}
+					</h4>
+                    <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                        <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                            <Field
+                                name={`passengers[${activePassenger}].passportNumberConfirmation`}
+                                validate={(value) => {
+                                    let error;
+                                    if (!value && !!touched && !!touched.passengers) {
+                                        error = 'Input ID Document number confirmation';
+                                    } else if (value !== passengers[activePassenger].passportNumber) {
+                                        error = 'ID Document Numbers should match';
+                                    }
+                                    return error;
+                                }}
+                            >
+                                {({ field, meta }) => (
+                                    <Input
+                                        error={!!meta.error}
+                                        touched={meta.touched}
+                                        helperText={(meta.error && meta.touched) && meta.error}
+                                        {...passportNumberConfirmation}
+                                        {...field}
+                                    />
+                                )}
+                            </Field>
+                        </div>
+                    </div>
+                    <p style={{ maxWidth: '50%' }}>
+                        This document number will be shown on your test result certificate.<br />
+                        Please enter the number of the ID document you will be used for travelling.<br />
+                        Please make sure you have entered the correct ID document number.<br />
+                        After you submit this number, you will not be able to change it at any point.
+                    </p>
+                </>
+            )}
 		</React.Fragment>
 	);
 };

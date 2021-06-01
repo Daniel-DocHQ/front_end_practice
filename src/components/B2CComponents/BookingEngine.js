@@ -169,7 +169,7 @@ const BookingEngine = () => {
 										passengers,
 										timezone,
 										testType: { ID, Type, Title },
-										flightNumber,
+										transportNumber,
 										landingDate,
 										landingTime,
 										city,
@@ -210,7 +210,7 @@ const BookingEngine = () => {
 												)).format(),
 											test_type: Type,
 											...(PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title) ? {
-												flight_number: flightNumber,
+												flight_number: transportNumber,
 												country_from: city.country,
 												landing_date: moment(
 													new Date(

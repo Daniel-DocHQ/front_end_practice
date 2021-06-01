@@ -23,18 +23,18 @@ import TextInputElement from '../FormComponents/TextInputElement';
 import bookingService from '../../services/bookingService';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import { useAppointmentId } from '../../context/AppointmentContext';
 
 const CertificatesAaron = ({
 	img,
 	patient_data,
+	appointmentId,
+	submitCallback = null,
 	kitProvider: preselectedKidProvider,
 }) => {
 	const { user, token } = useContext(AuthContext);
-	const appointmentId = useAppointmentId();
 	const [populated, setPopulated] = useState(false);
 	const [patientId, setPatientId] = useState();
-	const [doneBy8x8, setDoneBy8x8] = useState(false);
+	const [doneBy8x8, setDoneBy8x8] = useState(submitCallback === null ? false : true);
 	// Form fields
 	const [forename, setForename] = useState('');
 	const [surname, setSurname] = useState('');
@@ -104,13 +104,14 @@ const CertificatesAaron = ({
 	function populate() {
 		const firstName = get(patient_data, 'metadata.forename', '') || patient_data.first_name;
 		const lastName = get(patient_data, 'metadata.surname', '') || patient_data.last_name;
-		const kitProvider = get(patient_data, 'metadata.kitProvider', '') || preselectedKidProvider;
+		const result = get(patient_data, 'metadata.result', '');
+		const kitProvider = get(patient_data, 'metadata.kit_provider', '') || preselectedKidProvider;
 		const email = get(patient_data, 'metadata.email', '') || patient_data.email;
 		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
 		const dob = get(patient_data, 'metadata.date_of_birth', '') || patient_data.date_of_birth;
 		const securityChecked = get(patient_data, 'metadata.security_checked', false);
 		const passportNumber = get(patient_data, 'metadata.passport_number', '') || get(patient_data, 'metadata.passportId', '');
-
+		console.log(result, patient_data);
 		if (patient_data.id) {
 			setPatientId(patient_data.id)
 		}
@@ -125,6 +126,9 @@ const CertificatesAaron = ({
 		}
 		if (!!kitProvider) {
 			setKitProvider(kitProvider);
+		}
+		if (!!result) {
+			setResult(result);
 		}
 		if (email) {
 			setEmail(email);
@@ -151,6 +155,7 @@ const CertificatesAaron = ({
 			result,
 			passport_number: passportId,
 			kit_provider: kitProvider,
+			reject_notes: '',
 			...(isResultRejected && { reject_notes: isOtherOption ? reject_notes : reasonForRejected }),
 		};
 		if (canCreateCertificate && isValid(body) && errors.length === 0) {
@@ -184,6 +189,7 @@ const CertificatesAaron = ({
 						setStatus({ severity: 'success', message: 'Certificate successfully generated .' });
 						setIsLoading(false);
 						setCanCreateCertificate(false);
+						if (submitCallback) submitCallback();
 					} else {
 						ToastsStore.error('Failed to generate certificate');
 						setStatus({
@@ -318,6 +324,7 @@ const CertificatesAaron = ({
 						id='passport-number'
 						label='ID document number'
 						onChange={setPassportId}
+						disabled
 						inputProps={{ minLength: '5' }}
 						required
 						updateStatus={updateErrors}
@@ -362,6 +369,7 @@ const CertificatesAaron = ({
 							labelId='test-result-label'
 							id='test-result'
 							label='Test Result'
+							disabled={!!submitCallback}
 							onChange={e => setResult(e.target.value)}
 							value={result}
 							required
@@ -433,13 +441,15 @@ const CertificatesAaron = ({
 										<h3 className='no-margin'>Test Results</h3>
 									</div>
 								)}
-								<div className='row'>
-									<MaterialCheckbox
-										value={doneBy8x8}
-										onChange={setDoneBy8x8}
-										labelComponent='Done by Alternative Video platform'
-									/>
-								</div>
+								{submitCallback === null && (
+									<div className='row'>
+										<MaterialCheckbox
+											value={doneBy8x8}
+											onChange={setDoneBy8x8}
+											labelComponent='Done by Alternative Video platform'
+										/>
+									</div>
+								)}
 							</>
 						)}
 						{(attemptedSubmit && !img && !doneBy8x8) && (

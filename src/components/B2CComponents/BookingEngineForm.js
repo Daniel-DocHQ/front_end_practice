@@ -45,7 +45,7 @@ const BookingEngineForm = ({
 				);
 			case 3:
 				return (
-					<Step3 activePassenger={activePassenger} />
+					<Step3 activePassenger={activePassenger} isEdit={isEdit} />
 				);
             case 4:
 				return (

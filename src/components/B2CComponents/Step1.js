@@ -3,6 +3,13 @@ import { Field, useFormikContext } from 'formik';
 import DateFnsUtils from '@date-io/date-fns';
 import cityTimezones from 'city-timezones';
 import {
+    Radio,
+    FormLabel,
+    RadioGroup,
+    FormControlLabel,
+	FormControl,
+} from '@material-ui/core';
+import {
 	MuiPickersUtilsProvider,
 	KeyboardTimePicker,
 	KeyboardDatePicker,
@@ -18,7 +25,11 @@ import './BookingEngine.scss';
 const Step1 = ({ defaultTimezone }) => {
 	const {
         formField: {
-			flightNumber,
+			vaccineType,
+			vaccineTypeName,
+			vaccineStatus,
+			transportType,
+			transportNumber,
             travelDate,
 			travelTime,
 			landingDate,
@@ -32,6 +43,9 @@ const Step1 = ({ defaultTimezone }) => {
 				Type,
 				Title,
 			},
+			vaccineStatus: vaccineStatusValue,
+			vaccineType: vaccineTypeValue,
+			transportType: transportTypeValue,
 		},
 		setFieldValue,
 		touched,
@@ -39,6 +53,7 @@ const Step1 = ({ defaultTimezone }) => {
 	const pickerTheme = datePickerTheme();
 	const isPCR = Type === 'PCR' && Title.includes('Fit to Travel');
 	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
+	const transportNumberLabel = `${transportTypeValue === 'Other' ? 'Transport' : transportTypeValue} Number`;
 
 	useEffect(() => {
 		if (isPCR || isBundle) {
@@ -93,7 +108,7 @@ const Step1 = ({ defaultTimezone }) => {
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
 						<div className='row'>
 							<div className='appointment-calendar-container'>
-								<h4 style={{ marginTop: 0, paddingTop: 20 }}>
+								<h4 style={{ margin: 0, paddingTop: 20 }}>
 									Select Departure Date
 								</h4>
 								<Field name={travelDate.name}>
@@ -115,7 +130,7 @@ const Step1 = ({ defaultTimezone }) => {
 								</Field>
 							</div>
 							<div className='appointment-calendar-container'>
-								<h4 style={{ marginTop: 0, paddingTop: 20 }}>
+								<h4 style={{ margin: 0, paddingTop: 20 }}>
 									Select Departure Time
 								</h4>
 								<Field name={travelTime.name}>
@@ -139,30 +154,156 @@ const Step1 = ({ defaultTimezone }) => {
 			</div>
 			{isBundle && (
 				<>
-					<h4 style={{ marginTop: 0, paddingTop: 20 }}>
-						Flight Number
+					<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+						<div style={{ maxWidth: '40%', minWidth: '320px' }}>
+							<Field
+								name={transportType.name}
+							>
+								{({ field, form, meta }) => (
+									<FormControl component='fieldset' style={{ width: '100%' }}>
+										<FormLabel required={transportType.required} component='legend'>
+											{transportType.label}
+										</FormLabel>
+										<RadioGroup
+											error={!!meta.error}
+											touched={meta.touched}
+											helperText={(meta.error && meta.touched) && meta.error}
+											aria-label={transportType.name}
+											name={transportType.name}
+											value={field.value}
+											{...transportType}
+											{...field}
+											onChange={(({ target: { value } }) => {
+												form.setFieldValue(field.name, value);
+											})}
+										>
+											<FormControlLabel value="Flight" control={<Radio />} label="Flight" />
+											<FormControlLabel value="Train" control={<Radio />} label="Train" />
+											<FormControlLabel value="Other" control={<Radio />} label="Other" />
+										</RadioGroup>
+									</FormControl>
+								)}
+							</Field>
+						</div>
+					</div>
+					<h4 style={{ margin: 0, paddingTop: 20 }}>
+						{transportNumberLabel}
 					</h4>
 					<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
 						<div style={{ maxWidth: '40%', minWidth: '300px' }}>
-							<Field name={flightNumber.name} validate={(value) => (!value && touched.flightNumber) ? 'Input Flight Number' : undefined}>
+							<Field name={transportNumber.name} validate={(value) => (!value && touched.transportNumber) ? `Input ${transportNumberLabel}` : undefined}>
 								{({ field, meta }) => (
 									<Input
+										{...field}
+										{...transportNumber}
+										label={transportNumberLabel}
 										error={!!meta.error}
 										touched={meta.touched}
 										helperText={(meta.error && meta.touched) && meta.error}
-										{...flightNumber}
-										{...field}
 									/>
 								)}
 							</Field>
 						</div>
 					</div>
+					<div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
+						<div style={{ maxWidth: '40%', minWidth: '320px' }}>
+							<Field
+								name={vaccineStatus.name}
+							>
+								{({ field, form, meta }) => (
+									<FormControl component='fieldset' style={{ width: '100%' }}>
+										<FormLabel required={vaccineStatus.required} component='legend'>
+											{vaccineStatus.label}
+										</FormLabel>
+										<RadioGroup
+											error={!!meta.error}
+											touched={meta.touched}
+											helperText={(meta.error && meta.touched) && meta.error}
+											aria-label={vaccineStatus.name}
+											name={vaccineStatus.name}
+											value={field.value}
+											style={{ display: 'inline' }}
+											{...vaccineStatus}
+											{...field}
+											onChange={(({ target: { value } }) => {
+												form.setFieldValue(field.name, value);
+											})}
+										>
+											<FormControlLabel value='yes' control={<Radio />} label="Yes" />
+											<FormControlLabel value='no' control={<Radio />} label="No" />
+										</RadioGroup>
+									</FormControl>
+								)}
+							</Field>
+						</div>
+					</div>
+					{vaccineStatusValue === 'yes' && (
+						<>
+							<div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
+								<div style={{ maxWidth: '40%', minWidth: '320px' }}>
+									<Field
+										name={vaccineType.name}
+									>
+										{({ field, form, meta }) => (
+											<FormControl component='fieldset' style={{ width: '100%' }}>
+												<FormLabel required={vaccineType.required} component='legend'>
+													{vaccineType.label}
+												</FormLabel>
+												<RadioGroup
+													error={!!meta.error}
+													touched={meta.touched}
+													helperText={(meta.error && meta.touched) && meta.error}
+													aria-label={vaccineType.name}
+													name={vaccineType.name}
+													value={field.value}
+													{...vaccineType}
+													{...field}
+													onChange={(({ target: { value } }) => {
+														form.setFieldValue(field.name, value);
+													})}
+												>
+													<FormControlLabel value="Pfizer" control={<Radio />} label="Pfizer" />
+													<FormControlLabel value="AstraZenica" control={<Radio />} label="AstraZenica" />
+													<FormControlLabel value="Moderna" control={<Radio />} label="Moderna" />
+													<FormControlLabel value="Janssen" control={<Radio />} label="Janssen" />
+													<FormControlLabel value="Sputnik" control={<Radio />} label="Sputnik" />
+													<FormControlLabel value="Other" control={<Radio />} label="Other" />
+												</RadioGroup>
+											</FormControl>
+										)}
+									</Field>
+								</div>
+							</div>
+							{vaccineTypeValue === 'Other' && (
+								<>
+									<h4 style={{ margin: 0, paddingTop: 20 }}>
+										{vaccineTypeName.label}
+									</h4>
+									<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+										<div style={{ maxWidth: '40%', minWidth: '300px' }}>
+											<Field name={vaccineTypeName.name} validate={(value) => (!value && touched.vaccineTypeName) ? 'Input Vaccine Name' : undefined}>
+												{({ field, meta }) => (
+													<Input
+														error={!!meta.error}
+														touched={meta.touched}
+														helperText={(meta.error && meta.touched) && meta.error}
+														{...vaccineTypeName}
+														{...field}
+													/>
+												)}
+											</Field>
+										</div>
+									</div>
+								</>
+							)}
+						</>
+					)}
 					<div className='no-margin col'>
 						<ThemeProvider theme={pickerTheme}>
 							<MuiPickersUtilsProvider utils={DateFnsUtils}>
 								<div className='row'>
 									<div className='appointment-calendar-container'>
-										<h4 style={{ marginTop: 0, paddingTop: 20 }}>
+										<h4 style={{ margin: 0, paddingTop: 20 }}>
 											Select Landing Date (UK)
 										</h4>
 										<Field name={landingDate.name}>
@@ -185,7 +326,7 @@ const Step1 = ({ defaultTimezone }) => {
 										</Field>
 									</div>
 									<div className='appointment-calendar-container'>
-										<h4 style={{ marginTop: 0, paddingTop: 20 }}>
+										<h4 style={{ margin: 0, paddingTop: 20 }}>
 											Select Landing Time (UK)
 										</h4>
 										<Field name={landingTime.name}>

@@ -1091,6 +1091,7 @@ const PatientIdVerification = ({
 										id='passport-id'
 										value={passportId}
 										placeholder='ID Document Number'
+										disabled
 										onChange={setPassportId}
 										required
 									/>
@@ -1312,7 +1313,7 @@ const AppointmentActions = ({
 };
 
 const CertificatesContainer = ({ kitProvider }) => {
-	const { displayCertificates, booking_users, img } = useContext(AppointmentContext);
+	const { displayCertificates, booking_users, img, appointmentId } = useContext(AppointmentContext);
 	return displayCertificates ? (
 		<div
 			style={{
@@ -1325,6 +1326,7 @@ const CertificatesContainer = ({ kitProvider }) => {
 			{!!booking_users &&
 				booking_users.map((user, i) => <CertificatesAaron
 					key={i}
+					appointmentId={appointmentId}
 					img={get(img, `[${i}]`, '')}
 					patient_data={user}
 					kitProvider={kitProvider}

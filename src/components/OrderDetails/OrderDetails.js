@@ -40,6 +40,9 @@ import bookingService from '../../services/bookingService';
 import copyToClipboard from '../../helpers/copyToClipboard';
 import DocModal from '../DocModal/DocModal';
 import { ToastsStore } from 'react-toasts';
+import CertificatesAaron from '../Certificates/CertificatesAaron';
+import AppointmentNotes from '../AppointmentView/AppointmentNotes';
+import adminService from '../../services/adminService';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -102,6 +105,8 @@ const OrderDetails = ({ token, order, closeHandler}) => {
             }
         })
     }, [order, reloadInfo]);
+
+    console.log(orderDetail);
 
     const handleCancelDialogToggle = () => {
         setCancelDialogOpen(!cancelDialogOpen);
@@ -273,59 +278,85 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <DocButton
-                            color="green"
-                            style={{ marginRight: 10 }}
-                            text="Edit order"
-                        />
-                        <DocButton
-                            color="pink"
-                            onClick={handleCancelDialogToggle}
-                            style={{ marginRight: 10 }}
-                            text="Cancel order"
-                        />
-                        <CancelOrder
-                            order={orderDetail}
-                            open={cancelDialogOpen}
-                            onClose={handleCancelDialogToggle}
-                            loading={loading}
-                            token={token}
-                            setLoading={setLoading}
-                        />
-                        </Grid>
-                    </Grid>
-                    {!!appointments.length && (
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <Divider style={{ margin: '20px 0' }} />
-                                <Typography variant="h6" className={classes.title}>
-                                    Appointments Details
-                                </Typography>
-                                {appointments.map((row, appointmentIndx) => (
-                                    <AppointmentDetails
-                                        key={row.id}
-                                        token={token}
-                                        shortToken={order.id}
-                                        appointment={row}
-                                        refetchData={refetchData}
-                                        appointmentIndx={appointmentIndx}
-                                    />
-                                ))}
+                        <Grid container justify="space-between">
+                            <Grid item xs={9}>
+                                <DocButton
+                                    color="green"
+                                    style={{ marginRight: 10 }}
+                                    text="Send Order Confirmation"
+                                    onClick={() => adminService.resendMessages({
+                                        organisation_id: "1",
+                                        event: "order.payment.complete",
+                                        context: {
+                                            "order_id": orderDetail.id.toString(),
+                                        },
+                                    }, token).then(result => {
+                                        if (result.success) {
+                                            ToastsStore.success('Message has been resent successfully!');
+                                        } else {
+                                            ToastsStore.error('Something went wrong!');
+                                        }
+                                    }).catch(() => ToastsStore.error('Something went wrong!'))}
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <DocButton
+                                    color="green"
+                                    style={{ marginRight: 10 }}
+                                    text="Edit order"
+                                />
+                                <DocButton
+                                    color="pink"
+                                    onClick={handleCancelDialogToggle}
+                                    style={{ marginRight: 10 }}
+                                    text="Cancel order"
+                                />
+                                <CancelOrder
+                                    order={orderDetail}
+                                    open={cancelDialogOpen}
+                                    onClose={handleCancelDialogToggle}
+                                    loading={loading}
+                                    token={token}
+                                    setLoading={setLoading}
+                                />
                             </Grid>
                         </Grid>
-                    )}
+                    </Grid>
+                </Grid>
+                {!!appointments.length && (
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <Divider style={{ margin: '20px 0' }} />
+                            <Typography variant="h6" className={classes.title}>
+                                Appointments Details
+                            </Typography>
+                            {appointments.map((row, appointmentIndx) => (
+                                <AppointmentDetails
+                                    key={row.id}
+                                    token={token}
+                                    shortToken={order.id}
+                                    appointment={row}
+                                    refetchData={refetchData}
+                                    appointmentIndx={appointmentIndx}
+                                />
+                            ))}
+                        </Grid>
+                    </Grid>
+                )}
             </Container>
         </div>
     )
 }
 
-const PatientDetails = ({ patient }) => {
-    const firstName = get(patient, 'first_name', '');
-    const lastName = get(patient, 'last_name', '');
-    const email = get(patient, 'email', '');
+const PatientDetails = ({ patient, appointmentId, refetchData }) => {
+    const [isEditShow, setIsEditShow] = useState(false);
+    const firstName = get(patient, 'metadata.forename', '') || patient.first_name;
+    const lastName = get(patient, 'metadata.surname', '') || patient.last_name;
+    const email = get(patient, 'metadata.email', '') || patient.email;
+    const sex = get(patient, 'metadata.sex', '') || patient.sex;
+    const date_of_birth = get(patient, 'metadata.date_of_birth', '') || patient.date_of_birth;
+    const testType = get(patient, 'metadata.test_type', '');
     const phone = get(patient, 'phone', '');
-    const date_of_birth = get(patient, 'date_of_birth', '') || get(patient, 'metadata.date_of_birth', '');
-    const sex = get(patient, 'sex', '');
     const ethnicity = get(patient, 'ethnicity', '');
     const passportNumber = get(patient, 'metadata.passport_number', '') || get(patient, 'metadata.passportId', '');
     const result = get(patient, 'metadata.result', '');
@@ -337,96 +368,121 @@ const PatientDetails = ({ patient }) => {
     const reportedDate = get(patient, 'metadata.date_reported', '');
 
     return (
-        <List component="div" disablePadding>
-            <ListItem>
-                <ListItemText>
-                    <b>Name</b>: {firstName} {lastName}
-                </ListItemText>
-            </ListItem>
-            <ListItem>
-                <ListItemText>
-                    <b>Email</b>: {email}
-                </ListItemText>
-            </ListItem>
-            <ListItem>
-                <ListItemText>
-                    <b>Phone Number</b>: {phone}
-                </ListItemText>
-            </ListItem>
-            <ListItem>
-                <ListItemText>
-                    <b>Date of Birth</b>: {format(new Date(date_of_birth), 'dd/MM/yyyy')}
-                </ListItemText>
-            </ListItem>
-            <ListItem>
-                <ListItemText>
-                    <b>Ethnicity</b>: {ethnicity}
-                </ListItemText>
-            </ListItem>
-            <ListItem>
-                <ListItemText>
-                    <b>Sex</b>: {sex}
-                </ListItemText>
-            </ListItem>
-            <ListItem>
-                <ListItemText>
-                    <b>Passport Number</b>: {passportNumber}
-                </ListItemText>
-            </ListItem>
-            {samplingDate && (
+        <>
+            <List component="div" disablePadding>
                 <ListItem>
                     <ListItemText>
-                        <b>Sampling Date and Time: </b>{new Date(samplingDate).toUTCString()}
+                        <b>Name</b>: {firstName} {lastName}
                     </ListItemText>
                 </ListItem>
-            )}
-            {reportedDate && (
                 <ListItem>
                     <ListItemText>
-                        <b>Reported Date and Time: </b>{new Date(reportedDate).toUTCString()}
+                        <b>Email</b>: {email}
                     </ListItemText>
                 </ListItem>
-            )}
-            <Box pt={2}>
-                {kitProvider && (
-                    <ListItem>
-                        <ListItemText>
-                            <b>KIT provider</b>: {kitProvider}
-                        </ListItemText>
-                    </ListItem>
-                )}
-                {sampleTaken && (
-                    <ListItem>
-                        <ListItemText>
-                            <b>Sample: </b>
-                            <span className={sampleTaken.toLowerCase()}>{sampleTaken}</span>
-                        </ListItemText>
-                    </ListItem>
-                )}
-                {result && (
-                    <ListItem>
-                        <ListItemText>
-                            <b>Test Result: </b>
-                            <span className={result.toLowerCase()}>{result}</span>
-                        </ListItemText>
-                    </ListItem>
-                )}
-                {rejectedNotes && (
-                    <ListItem>
-                        <ListItemText>
-                            <b>Rejection Notes: </b>{rejectedNotes}
-                        </ListItemText>
-                    </ListItem>
-                )}
-                {invalidNotes && (
-                    <ListItem>
-                        <ListItemText>
-                            <b>Invalid Notes: </b>{invalidNotes}
-                        </ListItemText>
+                <ListItem>
+                    <ListItemText>
+                        <b>Phone Number</b>: {phone}
+                    </ListItemText>
                 </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        <b>Date of Birth</b>: {format(new Date(date_of_birth), 'dd/MM/yyyy')}
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        <b>Ethnicity</b>: {ethnicity}
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        <b>Sex</b>: {sex}
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        <b>Passport Number</b>: {passportNumber}
+                    </ListItemText>
+                </ListItem>
+                {samplingDate && (
+                    <>
+                        <Divider style={{ margin: '20px 0', width: '20%' }} />
+                        <ListItem>
+                            <ListItemText>
+                                <b>Sampling Date and Time: </b>{new Date(samplingDate).toUTCString()}
+                            </ListItemText>
+                        </ListItem>
+                    </>
                 )}
-            </Box>
-        </List>
+                {reportedDate && (
+                    <ListItem>
+                        <ListItemText>
+                            <b>Reported Date and Time: </b>{new Date(reportedDate).toUTCString()}
+                        </ListItemText>
+                    </ListItem>
+                )}
+                <Box>
+                    {kitProvider && (
+                        <ListItem>
+                            <ListItemText>
+                                <b>KIT provider</b>: {kitProvider}
+                            </ListItemText>
+                        </ListItem>
+                    )}
+                    {sampleTaken && (
+                        <ListItem>
+                            <ListItemText>
+                                <b>Sample: </b>
+                                <span className={sampleTaken.toLowerCase()}>{sampleTaken}</span>
+                            </ListItemText>
+                        </ListItem>
+                    )}
+                    {result && (
+                        <ListItem>
+                            <ListItemText>
+                                <b>Test Result: </b>
+                                <span className={result.toLowerCase()}>{result}</span>
+                            </ListItemText>
+                        </ListItem>
+                    )}
+                    {rejectedNotes && (
+                        <ListItem>
+                            <ListItemText>
+                                <b>Rejection Notes: </b>{rejectedNotes}
+                            </ListItemText>
+                        </ListItem>
+                    )}
+                    {invalidNotes && (
+                        <ListItem>
+                            <ListItemText>
+                                <b>Invalid Notes: </b>{invalidNotes}
+                            </ListItemText>
+                    </ListItem>
+                    )}
+                </Box>
+            </List>
+            {testType === 'Antigen' && (
+                <>
+                    {isEditShow && (
+                        <CertificatesAaron
+                            patient_data={patient}
+                            appointmentId={appointmentId}
+                            submitCallback={() => {
+                                setIsEditShow(false);
+                                refetchData();
+                            }}
+                        />
+                    )}
+                    <DocButton
+                        text={isEditShow ? 'Cancel' : 'Reissue Certificate'}
+                        color={isEditShow ? 'pink' : 'green'}
+                        style={{ marginTop: isEditShow ? 20 : 0, marginLeft: 10 }}
+                        onClick={() => setIsEditShow(!isEditShow)}
+                    />
+                </>
+            )}
+        </>
     );
 };
 
@@ -438,6 +494,7 @@ const AppointmentDetails = ({
     shortToken,
 }) => {
     const linkRef = useRef(null);
+    const notes = get(appointment, 'notes', []);
     const [isVisible, setIsVisible] = useState(false);
     const flightDate = get(appointment, 'booking_user.metadata.travel_date');
 
@@ -445,13 +502,8 @@ const AppointmentDetails = ({
         <>
             <List>
                 <ListItemText>
-                    <b>Appointment {appointmentIndx + 1}</b>:
+                    <b>Appointment {appointmentIndx + 1}</b>
                 </ListItemText>
-                <ListItem>
-                    <ListItemText>
-                        <b>Test Type</b>: {appointment.booking_user.metadata.test_type}
-                    </ListItemText>
-                </ListItem>
                 {!!flightDate && (
                     <ListItem>
                         <ListItemText>
@@ -461,9 +513,19 @@ const AppointmentDetails = ({
                 )}
                 <ListItem>
                     <ListItemText>
-                        <b>Date</b>: {format(new Date(appointment.start_time), 'dd/MM/yyyy p')}
+                        <b>Test Type</b>: {appointment.booking_user.metadata.test_type}
                     </ListItemText>
                 </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        <b>Appointment Date</b>: {format(new Date(appointment.start_time), 'dd/MM/yyyy p')}
+                    </ListItemText>
+                </ListItem>
+                {!!notes.length && (
+                    <ListItem>
+                        <AppointmentNotes notes={notes} />
+                    </ListItem>
+                )}
                 <ListItem>
                     <ListItemText>
                         <Tooltip title="Click to copy">
@@ -478,29 +540,61 @@ const AppointmentDetails = ({
                         </Tooltip>
                     </ListItemText>
                 </ListItem>
+                <Divider style={{ margin: '20px 0', width: '30%' }} />
                 {appointment.booking_users.map((patient, indx) => (
                     <div key={indx}>
                         <ListItemText>
-                            <b>Details of Passenger {indx + 1}</b>:
+                            <b>Details of Passenger {indx + 1}</b>
                         </ListItemText>
-                        <PatientDetails patient={patient} />
+                        <PatientDetails
+                            patient={patient}
+                            refetchData={refetchData}
+                            appointmentId={appointment.id}
+                        />
                     </div>
                 ))}
-                <ListItemText>
-                    <b>Appointment Status</b>: {appointment.status}
-                </ListItemText>
+                <Divider style={{ margin: '20px 0', width: '30%' }} />
+                <ListItem>
+                    <ListItemText>
+                         <b>Appointment Status</b>: {appointment.status}
+                    </ListItemText>
+                </ListItem>
             </List>
-            <LinkButton
-                color="green"
-                linkSrc={`/customer_services/booking/edit?appointmentId=${appointment.id}&short_token=${shortToken}&service=video_gp_dochq`}
-                text="Edit"
-            />
-            <DocButton
-                color="pink"
-                style={{ marginLeft: 10 }}
-                text="Delete"
-                onClick={() => setIsVisible(true)}
-            />
+            <Grid container justify="space-between">
+                <Grid item xs={9}>
+                    <DocButton
+                        color="green"
+                        style={{ marginLeft: 10 }}
+                        text="Send Appointment Confirmation"
+                        onClick={() => adminService.resendMessages({
+                            organisation_id: "1",
+                            event: "appointment.booked",
+                            context: {
+                                "appointment_id": appointment.id
+                            },
+                        }, token).then(result => {
+                            if (result.success) {
+                                ToastsStore.success('Message has been resent successfully!');
+                            } else {
+                                ToastsStore.error(`Something went wrong!`);
+                            }
+                        }).catch(() => ToastsStore.error('Something went wrong!'))}
+                    />
+                </Grid>
+                <Grid item xs={2}>
+                    <LinkButton
+                        color="green"
+                        linkSrc={`/customer_services/booking/edit?appointmentId=${appointment.id}&short_token=${shortToken}&service=video_gp_dochq`}
+                        text="Edit"
+                    />
+                    <DocButton
+                        color="pink"
+                        style={{ marginLeft: 10 }}
+                        text="Delete"
+                        onClick={() => setIsVisible(true)}
+                    />
+                </Grid>
+            </Grid>
             <DocModal
                 isVisible={isVisible}
                 onClose={() => setIsVisible(false)}
