@@ -71,6 +71,7 @@ const BookingEngineForm = ({
                                     <DocButton
                                         flat
                                         text='Back'
+                                        color="grey"
                                         onClick={handleBack}
                                         style={{ marginRight: '20px' }}
                                     />

@@ -273,13 +273,13 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                         </List>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="h6" className={classes.title}>
-                            <b>Shipping status</b>: {orderDetail.shipping_flag}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Grid container justify="space-between">
+                        <Grid container justify="space-between" alignItems="center">
                             <Grid item xs={9}>
+                                <Typography variant="h6" className={classes.title}>
+                                    <b>Shipping status</b>: {orderDetail.shipping_flag}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={3}>
                                 <DocButton
                                     color="green"
                                     style={{ marginRight: 10 }}
@@ -298,17 +298,9 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                         }
                                     }).catch(() => ToastsStore.error('Something went wrong!'))}
                                 />
-                            </Grid>
-                            <Grid item xs={2}>
-                                <DocButton
-                                    color="green"
-                                    style={{ marginRight: 10 }}
-                                    text="Edit order"
-                                />
                                 <DocButton
                                     color="pink"
                                     onClick={handleCancelDialogToggle}
-                                    style={{ marginRight: 10 }}
                                     text="Cancel order"
                                 />
                                 <CancelOrder
@@ -440,10 +432,24 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
                     )}
                     {result && (
                         <ListItem>
-                            <ListItemText>
-                                <b>Test Result: </b>
-                                <span className={result.toLowerCase()}>{result}</span>
-                            </ListItemText>
+                            <Grid container justify="space-between">
+                                <Grid item>
+                                    <ListItemText>
+                                        <b>Test Result: </b>
+                                        <span className={result.toLowerCase()}>{result}</span>
+                                    </ListItemText>
+                                </Grid>
+                                {(testType === 'Antigen' && isCompleted && !isEditShow) && (
+                                    <Grid item>
+                                        <DocButton
+                                            text="Reissue Certificate"
+                                            color="green"
+                                            style={{ marginTop: 0, marginLeft: 10 }}
+                                            onClick={() => setIsEditShow(!isEditShow)}
+                                        />
+                                    </Grid>
+                                )}
+                            </Grid>
                         </ListItem>
                     )}
                     {rejectedNotes && (
@@ -458,29 +464,26 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
                             <ListItemText>
                                 <b>Invalid Notes: </b>{invalidNotes}
                             </ListItemText>
-                    </ListItem>
+                        </ListItem>
                     )}
                 </Box>
             </List>
-            {(testType === 'Antigen' && isCompleted) && (
-                <>
-                    {isEditShow && (
-                        <CertificatesAaron
-                            patient_data={patient}
-                            appointmentId={appointmentId}
-                            submitCallback={() => {
-                                setIsEditShow(false);
-                                refetchData();
-                            }}
+            {isEditShow && (
+                <CertificatesAaron
+                    patient_data={patient}
+                    appointmentId={appointmentId}
+                    submitCallback={() => {
+                        setIsEditShow(false);
+                        refetchData();
+                    }}
+                    cancelBtn={
+                        <DocButton
+                            text="Cancel"
+                            color="pink"
+                            onClick={() => setIsEditShow(!isEditShow)}
                         />
-                    )}
-                    <DocButton
-                        text={isEditShow ? 'Cancel' : 'Reissue Certificate'}
-                        color={isEditShow ? 'pink' : 'green'}
-                        style={{ marginTop: isEditShow ? 20 : 0, marginLeft: 10 }}
-                        onClick={() => setIsEditShow(!isEditShow)}
-                    />
-                </>
+                    }
+                />
             )}
         </>
     );
@@ -522,11 +525,6 @@ const AppointmentDetails = ({
                         <b>Appointment Date</b>: {format(new Date(appointment.start_time), 'dd/MM/yyyy p')}
                     </ListItemText>
                 </ListItem>
-                {!!notes.length && (
-                    <ListItem>
-                        <AppointmentNotes notes={notes} />
-                    </ListItem>
-                )}
                 <ListItem>
                     <ListItemText>
                         <Tooltip title="Click to copy">
@@ -561,6 +559,11 @@ const AppointmentDetails = ({
                          <b>Appointment Status</b>: {appointment.status}
                     </ListItemText>
                 </ListItem>
+                {!!notes.length && (
+                    <ListItem>
+                        <AppointmentNotes notes={notes} />
+                    </ListItem>
+                )}
             </List>
             {!isCompleted && (
                 <Grid container justify="space-between">

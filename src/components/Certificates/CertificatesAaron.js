@@ -28,13 +28,15 @@ const CertificatesAaron = ({
 	img,
 	patient_data,
 	appointmentId,
+	cancelBtn = null,
 	submitCallback = null,
 	kitProvider: preselectedKidProvider,
 }) => {
+	const isVideoAppointment = submitCallback === null;
 	const { user, token } = useContext(AuthContext);
 	const [populated, setPopulated] = useState(false);
 	const [patientId, setPatientId] = useState();
-	const [doneBy8x8, setDoneBy8x8] = useState(submitCallback === null ? false : true);
+	const [doneBy8x8, setDoneBy8x8] = useState(isVideoAppointment ? false : true);
 	// Form fields
 	const [forename, setForename] = useState('');
 	const [surname, setSurname] = useState('');
@@ -80,6 +82,14 @@ const CertificatesAaron = ({
 			setPopulated(true);
 		}
 	}, []);
+
+
+	useEffect(() => {
+		if (status && status.severity === 'success' && !isVideoAppointment) {
+			const timer = setTimeout(() => submitCallback(), 5000);
+			return () => clearTimeout(timer);
+		}
+	}, [status]);
 
 	useEffect(() => {
 		if (preselectedKidProvider) {
@@ -168,7 +178,7 @@ const CertificatesAaron = ({
 
 	function sendResult(formData) {
 		const body = formData;
-		if (submitCallback === null) {
+		if (isVideoAppointment) {
 			body.medicalprofessional = (!!user && !!user.first_name && !!user.last_name) ? `${user.first_name} ${user.last_name}` : '';
 			body.date_sampled = moment().subtract(20, "minutes").format();
 			body.date_reported = moment().format();
@@ -191,7 +201,6 @@ const CertificatesAaron = ({
 						setStatus({ severity: 'success', message: 'Certificate successfully generated .' });
 						setIsLoading(false);
 						setCanCreateCertificate(false);
-						if (submitCallback) submitCallback();
 					} else {
 						ToastsStore.error('Failed to generate certificate');
 						setStatus({
@@ -213,7 +222,7 @@ const CertificatesAaron = ({
 	}
 
 	useDebounce(() => {
-		if (!status && populated) {
+		if (!status && populated && isVideoAppointment) {
 			const body = {
 				forename,
 				surname,
@@ -235,11 +244,6 @@ const CertificatesAaron = ({
 				<div className='row space-between'>
 					<h3 className='no-margin'>Certificate Form</h3>
 				</div>
-				{/* {typeof patient_data !== 'undefined' && (
-					<div className='row flex-end'>
-						<DocButton text='Autofill with Patient data' color='green' onClick={populate} />
-					</div>
-				)} */}
 				<div className='row'>
 					<TextInputElement
 						value={forename}
@@ -443,7 +447,7 @@ const CertificatesAaron = ({
 										<h3 className='no-margin'>Test Results</h3>
 									</div>
 								)}
-								{submitCallback === null && (
+								{isVideoAppointment && (
 									<div className='row'>
 										<MaterialCheckbox
 											value={doneBy8x8}
@@ -491,7 +495,8 @@ const CertificatesAaron = ({
 						</div>
 					)
 				) : (
-					<div className='row flex-end'>
+					<div className={`row ${isVideoAppointment ? 'flex-end' : 'space-between'}`}>
+						{cancelBtn}
 						<DocButton text='Submit' color='green' onClick={proceed} />
 					</div>
 				)}
