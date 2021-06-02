@@ -348,7 +348,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
     )
 }
 
-const PatientDetails = ({ patient, appointmentId, refetchData }) => {
+const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) => {
     const [isEditShow, setIsEditShow] = useState(false);
     const firstName = get(patient, 'metadata.forename', '') || patient.first_name;
     const lastName = get(patient, 'metadata.surname', '') || patient.last_name;
@@ -462,7 +462,7 @@ const PatientDetails = ({ patient, appointmentId, refetchData }) => {
                     )}
                 </Box>
             </List>
-            {testType === 'Antigen' && (
+            {(testType === 'Antigen' && isCompleted) && (
                 <>
                     {isEditShow && (
                         <CertificatesAaron
@@ -496,6 +496,7 @@ const AppointmentDetails = ({
     const linkRef = useRef(null);
     const notes = get(appointment, 'notes', []);
     const [isVisible, setIsVisible] = useState(false);
+    const isCompleted = appointment.status = 'COMPLETED';
     const flightDate = get(appointment, 'booking_user.metadata.travel_date');
 
     return (
@@ -548,6 +549,7 @@ const AppointmentDetails = ({
                         </ListItemText>
                         <PatientDetails
                             patient={patient}
+                            isCompleted={isCompleted}
                             refetchData={refetchData}
                             appointmentId={appointment.id}
                         />
@@ -560,41 +562,43 @@ const AppointmentDetails = ({
                     </ListItemText>
                 </ListItem>
             </List>
-            <Grid container justify="space-between">
-                <Grid item xs={9}>
-                    <DocButton
-                        color="green"
-                        style={{ marginLeft: 10 }}
-                        text="Send Appointment Confirmation"
-                        onClick={() => adminService.resendMessages({
-                            organisation_id: "1",
-                            event: "appointment.booked",
-                            context: {
-                                "appointment_id": appointment.id
-                            },
-                        }, token).then(result => {
-                            if (result.success) {
-                                ToastsStore.success('Message has been resent successfully!');
-                            } else {
-                                ToastsStore.error(`Something went wrong!`);
-                            }
-                        }).catch(() => ToastsStore.error('Something went wrong!'))}
-                    />
+            {!isCompleted && (
+                <Grid container justify="space-between">
+                    <Grid item xs={9}>
+                        <DocButton
+                            color="green"
+                            style={{ marginLeft: 10 }}
+                            text="Send Appointment Confirmation"
+                            onClick={() => adminService.resendMessages({
+                                organisation_id: "1",
+                                event: "appointment.booked",
+                                context: {
+                                    "appointment_id": appointment.id
+                                },
+                            }, token).then(result => {
+                                if (result.success) {
+                                    ToastsStore.success('Message has been resent successfully!');
+                                } else {
+                                    ToastsStore.error(`Something went wrong!`);
+                                }
+                            }).catch(() => ToastsStore.error('Something went wrong!'))}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <LinkButton
+                            color="green"
+                            linkSrc={`/customer_services/booking/edit?appointmentId=${appointment.id}&short_token=${shortToken}&service=video_gp_dochq`}
+                            text="Edit"
+                        />
+                        <DocButton
+                            color="pink"
+                            style={{ marginLeft: 10 }}
+                            text="Delete"
+                            onClick={() => setIsVisible(true)}
+                        />
+                    </Grid>
                 </Grid>
-                <Grid item xs={2}>
-                    <LinkButton
-                        color="green"
-                        linkSrc={`/customer_services/booking/edit?appointmentId=${appointment.id}&short_token=${shortToken}&service=video_gp_dochq`}
-                        text="Edit"
-                    />
-                    <DocButton
-                        color="pink"
-                        style={{ marginLeft: 10 }}
-                        text="Delete"
-                        onClick={() => setIsVisible(true)}
-                    />
-                </Grid>
-            </Grid>
+            )}
             <DocModal
                 isVisible={isVisible}
                 onClose={() => setIsVisible(false)}

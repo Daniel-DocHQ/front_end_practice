@@ -176,7 +176,13 @@ const Step3 = () => {
 				})
 				.then(result => {
 					if (result.success && result.appointments) {
-						setAppointments([...result.appointments].filter(({ start_time }) => new Date(start_time).setHours(0,0,0,0) === selectedDateTime));
+						const newAppointments = [...result.appointments].filter(({ start_time }) => new Date(start_time).setHours(0,0,0,0) === selectedDateTime);
+						if (new Date(selectedDate).setHours(0,0,0,0) === today) {
+							const in30min = new Date(new Date().getTime() + 30 * 60000).getTime();
+							setAppointments(newAppointments.filter(({ start_time }) => new Date(start_time).getTime() > in30min));
+						} else {
+							setAppointments(newAppointments);
+						}
 					} else {
 						setAppointments([]);
 					}

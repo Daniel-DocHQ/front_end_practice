@@ -75,7 +75,10 @@ function TwillioVideoCall({
 		Video.connect(token, {
 			name: appointmentId,
 			audio: true,
-			video: { width: 720 },
+			video: {
+				width: { ideal: 1280 },
+				height: { ideal: 720 },
+			}
 		}).then(room => {
 			setRoom(room);
 			room.on('participantConnected', participantConnected);
@@ -219,8 +222,9 @@ function TwillioVideoCall({
 					<React.Fragment>
 						{room && <OutVid participant={room.localParticipant} />}
 						{participants.length !== 0 &&
-							participants.map(participant => (
+							participants.map((participant, indx) => (
 								<InVid
+									key={indx}
 									takePhoto={takePhoto}
 									participant={participant}
 									updateImageData={updateImage}
