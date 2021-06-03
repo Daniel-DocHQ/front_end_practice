@@ -975,6 +975,7 @@ const PatientIdVerification = ({
 	const customerNotThere = customerNotThereObj[currentPatient.id];
 	const forename = get(currentPatient, 'first_name', '');
 	const surname = get(currentPatient, 'last_name', '');
+	const dateOfBirth = get(currentPatient, 'date_of_birth', '');
 	const [passportId, setPassportId] = useState(get(currentPatient, 'metadata.passport_number', '') || get(currentPatient, 'metadata.passportId', ''));
 	const currentPatientName = `${forename} ${surname}`;
 	const isValid = (!!security_checked && (isTuiType ? !!passportId : !!security_document)) || customerNotThere;
@@ -1062,6 +1063,9 @@ const PatientIdVerification = ({
 					<Grid item>
 						<div className='row space-between'>
 							<h3 className='no-margin'>{currentPatientName} - ID Verification</h3>
+						</div>
+						<div className='row space-between'>
+							<p><b>Date of Birth</b> - {dateOfBirth}</p>
 						</div>
 						{!isTuiType && (
 							<div className='row'>

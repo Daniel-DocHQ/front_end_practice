@@ -66,6 +66,10 @@ const Step2 = ({
         }
     } = bookingFormModel;
 
+    const handleCopyPaste = (e) => {
+        e.preventDefault();
+    };
+
 	return (
 		<React.Fragment>
             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
@@ -324,6 +328,10 @@ const Step2 = ({
                     <Field name={`passengers[${activePassenger}].passportNumber`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input ID Document number' : undefined}>
                         {({ field, meta }) => (
                             <Input
+                                onCopy={handleCopyPaste}
+                                onDrag={handleCopyPaste}
+                                onDrop={handleCopyPaste}
+                                onPaste={handleCopyPaste}
                                 error={!!meta.error}
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
@@ -355,6 +363,10 @@ const Step2 = ({
                             >
                                 {({ field, meta }) => (
                                     <Input
+                                        onCopy={handleCopyPaste}
+                                        onDrag={handleCopyPaste}
+                                        onDrop={handleCopyPaste}
+                                        onPaste={handleCopyPaste}
                                         error={!!meta.error}
                                         touched={meta.touched}
                                         helperText={(meta.error && meta.touched) && meta.error}
@@ -365,11 +377,12 @@ const Step2 = ({
                             </Field>
                         </div>
                     </div>
-                    <p style={{ maxWidth: '50%' }}>
+                    <p style={{ maxWidth: '50%', fontWeight: 'bold' }} className="pink-text">
                         This document number will be shown on your test result certificate.<br />
-                        Please enter the number of the ID document you will be used for travelling.<br />
+                        Please enter the number of the document you will be using for travelling.<br />
                         Please make sure you have entered the correct ID document number.<br />
-                        After you submit this number, you will not be able to change it at any point.
+                        After you submit this number, you will not be able to change it at any point.<br />
+                        Please enter the number of the document you will be using for travelling.
                     </p>
                 </>
             )}
