@@ -499,7 +499,7 @@ const AppointmentDetails = ({
     const linkRef = useRef(null);
     const notes = get(appointment, 'notes', []);
     const [isVisible, setIsVisible] = useState(false);
-    const isCompleted = appointment.status = 'COMPLETED';
+    const isCompleted = appointment.status === 'COMPLETED';
     const flightDate = get(appointment, 'booking_user.metadata.travel_date');
 
     return (

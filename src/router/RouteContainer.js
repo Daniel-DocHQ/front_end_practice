@@ -38,6 +38,7 @@ import TermsConditionsEn from '../screens/TermsConditionsEn';
 import MyRooms from '../screens/nurse-portal/MyRooms';
 import SADashboard from '../screens/super-admin-portal/SADashboard';
 import DoctorsManagement from '../screens/super-admin-portal/DoctorsManagement';
+import LiveDoctorsManagement from '../screens/super-admin-portal/LiveDoctorsManagement';
 import CertificatesList from '../screens/super-admin-portal/CertificatesList';
 import CSOrderList from '../screens/cs-portal/CSOrderList';
 import SAOrderList from '../screens/super-admin-portal/SAOrderList';
@@ -255,6 +256,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/doctors-management' requiredRole='super_admin'>
 				<Layout title='Doctors Management'>
 					<DoctorsManagement />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/live-doctors-management' requiredRole='super_admin'>
+				<Layout title='Live Doctors Management'>
+					<LiveDoctorsManagement />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/order-list' requiredRole='super_admin'>

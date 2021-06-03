@@ -56,10 +56,10 @@ const NurseDashboard = props => {
 				} else if (!data.authenticated) {
 					logoutUser();
 				} else {
-					ToastsStore.error('Error fetching appointments');
+					ToastsStore.error('Error fetching doctors');
 				}
 			})
-			.catch(err => ToastsStore.error('Error fetching appointments'));
+			.catch(err => ToastsStore.error('Error fetching doctors'));
 	}
 	const getPastAppointments = async () => {
 		await nurseService
