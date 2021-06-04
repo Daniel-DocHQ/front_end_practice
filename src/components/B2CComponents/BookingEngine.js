@@ -54,6 +54,7 @@ const BookingEngine = () => {
 		ethnicity: '',
 		sex: 'Female',
 		passportNumber: '',
+		passportNumberConfirmation: '',
 	};
 
 	function handleBack() {
@@ -111,6 +112,7 @@ const BookingEngine = () => {
 							testType: defaultTestType,
 							passengers: [
 								{
+									...passengerInitialValues,
 									firstName: get(orderInfo, 'billing_detail.first_name', ''),
 									lastName: get(orderInfo, 'billing_detail.last_name', ''),
 									email: get(orderInfo, 'billing_detail.email', ''),
@@ -119,9 +121,6 @@ const BookingEngine = () => {
 									? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
 									: defaultCountyCode,
 									dateOfBirth: new Date(get(orderInfo, 'billing_detail.date_of_birth', null)),
-									ethnicity: '',
-									sex: 'Female',
-									passportNumber: '',
 								},
 							],
 							city: defaultTimeZone,
@@ -203,7 +202,7 @@ const BookingEngine = () => {
 								country: 'GB',
 								locality: town,
 								metadata: {
-									product_id: ID,
+									product_id: parseInt(ID),
 									short_token,
 									order_id: orderId.toString(),
 									passport_number: passportNumber,
@@ -248,7 +247,7 @@ const BookingEngine = () => {
 									transport_type: transportType,
 									vaccine_number: vaccineNumber,
 									vaccine_status: vaccineStatus,
-									vaccine_type: vaccineType,
+									vaccine_type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
 								},
 							};
 							bookingService

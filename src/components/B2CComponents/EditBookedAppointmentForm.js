@@ -63,6 +63,7 @@ const BookingEngine = () => {
 		countryCode: defaultCountyCode,
 		sex: 'Female',
 		passportNumber: '',
+		passportNumberConfirmation: '',
 		test_type: bookingUsersTestType,
 	};
 
