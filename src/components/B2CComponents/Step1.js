@@ -264,7 +264,7 @@ const Step1 = ({ defaultTimezone }) => {
 													})}
 												>
 													<FormControlLabel value="Pfizer" control={<Radio />} label="Pfizer" />
-													<FormControlLabel value="AstraZenica" control={<Radio />} label="AstraZenica" />
+													<FormControlLabel value="Astrazeneca" control={<Radio />} label="Astrazeneca" />
 													<FormControlLabel value="Moderna" control={<Radio />} label="Moderna" />
 													<FormControlLabel value="Janssen" control={<Radio />} label="Janssen" />
 													<FormControlLabel value="Sputnik" control={<Radio />} label="Sputnik" />
