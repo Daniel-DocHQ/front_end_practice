@@ -1064,9 +1064,13 @@ const PatientIdVerification = ({
 						<div className='row space-between'>
 							<h3 className='no-margin'>{currentPatientName} - ID Verification</h3>
 						</div>
-						<div className='row space-between'>
-							<p><b>Date of Birth</b> - {dateOfBirth}</p>
-						</div>
+						{!!dateOfBirth && (
+							<div className='row space-between'>
+								<p>
+									<b>Date of Birth</b> - {format(new Date(dateOfBirth), 'dd-MM-yyyy')}
+								</p>
+							</div>
+						)}
 						{!isTuiType && (
 							<div className='row'>
 								<FormControl variant='filled' style={{ width: '100%' }}>
