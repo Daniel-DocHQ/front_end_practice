@@ -3,10 +3,10 @@ import { Field, useFormikContext } from 'formik';
 import DateFnsUtils from '@date-io/date-fns';
 import cityTimezones from 'city-timezones';
 import {
-    Radio,
-    FormLabel,
-    RadioGroup,
-    FormControlLabel,
+	Radio,
+	FormLabel,
+	RadioGroup,
+	FormControlLabel,
 	FormControl,
 } from '@material-ui/core';
 import {
@@ -24,20 +24,20 @@ import './BookingEngine.scss';
 
 const Step1 = ({ defaultTimezone }) => {
 	const {
-        formField: {
+		formField: {
 			vaccineType,
 			vaccineNumber,
 			vaccineTypeName,
 			vaccineStatus,
 			transportType,
 			transportNumber,
-            travelDate,
+			travelDate,
 			travelTime,
 			landingDate,
 			landingTime,
 			city,
-        }
-    } = bookingFormModel;
+		}
+	} = bookingFormModel;
 	const {
 		values: {
 			testType: {
@@ -72,7 +72,7 @@ const Step1 = ({ defaultTimezone }) => {
 			{!isPCR && (
 				<>
 					<h4 style={{ margin: 0, paddingTop: 20 }}>
-						Where are you flying from?
+						Where are you travelling from?
 					</h4>
 					<div className='row'>
 						<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
@@ -153,6 +153,56 @@ const Step1 = ({ defaultTimezone }) => {
 					</MuiPickersUtilsProvider>
 				</ThemeProvider>
 			</div>
+			<div className='no-margin col'>
+				<ThemeProvider theme={pickerTheme}>
+					<MuiPickersUtilsProvider utils={DateFnsUtils}>
+						<div className='row'>
+							<div className='appointment-calendar-container'>
+								<h4 style={{ margin: 0, paddingTop: 20 }}>
+									Select Arrival Date (UK)
+								</h4>
+								<Field name={landingDate.name}>
+									{({ field, form }) => (
+										<KeyboardDatePicker
+										{...field}
+										{...landingDate}
+										disablePast
+										inputVariant='filled'
+										format="dd/MM/yyyy"
+										KeyboardButtonProps={{
+											'aria-label': 'change date',
+										}}
+										onChange={(value) => {
+											form.setFieldValue(field.name, value);
+											form.setFieldValue('appointmentDate', value);
+										}}
+									/>
+									)}
+									</Field>
+								</div>
+								<div className='appointment-calendar-container'>
+									<h4 style={{ margin: 0, paddingTop: 20 }}>
+										Select Arrival Time (UK)
+									</h4>
+									<Field name={landingTime.name}>
+										{({ field, form }) => (
+											<KeyboardTimePicker
+											autoOk
+											{...field}
+											{...landingTime}
+											inputVariant='filled'
+											onChange={(value) => form.setFieldValue(field.name, value)}
+											KeyboardButtonProps={{
+												'aria-label': 'change time',
+											}}
+										/>
+										)}
+										</Field>
+									</div>
+								</div>
+							</MuiPickersUtilsProvider>
+						</ThemeProvider>
+					</div>
 			{isBundle && (
 				<>
 					<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
@@ -330,56 +380,6 @@ const Step1 = ({ defaultTimezone }) => {
 							</div>
 						</>
 					)}
-					<div className='no-margin col'>
-						<ThemeProvider theme={pickerTheme}>
-							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-								<div className='row'>
-									<div className='appointment-calendar-container'>
-										<h4 style={{ margin: 0, paddingTop: 20 }}>
-											Select Landing Date (UK)
-										</h4>
-										<Field name={landingDate.name}>
-											{({ field, form }) => (
-												<KeyboardDatePicker
-													{...field}
-													{...landingDate}
-													disablePast
-													inputVariant='filled'
-													format="dd/MM/yyyy"
-													KeyboardButtonProps={{
-														'aria-label': 'change date',
-													}}
-													onChange={(value) => {
-														form.setFieldValue(field.name, value);
-														form.setFieldValue('appointmentDate', value);
-													}}
-												/>
-											)}
-										</Field>
-									</div>
-									<div className='appointment-calendar-container'>
-										<h4 style={{ margin: 0, paddingTop: 20 }}>
-											Select Landing Time (UK)
-										</h4>
-										<Field name={landingTime.name}>
-											{({ field, form }) => (
-												<KeyboardTimePicker
-													autoOk
-													{...field}
-													{...landingTime}
-													inputVariant='filled'
-													onChange={(value) => form.setFieldValue(field.name, value)}
-													KeyboardButtonProps={{
-														'aria-label': 'change time',
-													}}
-												/>
-											)}
-										</Field>
-									</div>
-								</div>
-							</MuiPickersUtilsProvider>
-						</ThemeProvider>
-					</div>
 				</>
 			)}
 		</React.Fragment>
