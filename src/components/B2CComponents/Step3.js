@@ -381,8 +381,7 @@ const Step2 = ({
                         This document number will be shown on your test result certificate.<br />
                         Please enter the number of the document you will be using for travelling.<br />
                         Please make sure you have entered the correct ID document number.<br />
-                        After you submit this number, you will not be able to change it at any point.<br />
-                        Please enter the number of the document you will be using for travelling.
+                        After you submit this number, you will not be able to change it at any point.
                     </p>
                 </>
             )}
