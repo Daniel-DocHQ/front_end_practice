@@ -6,13 +6,15 @@ import Drawer from '@material-ui/core/Drawer';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid, GridToolbar  } from '@material-ui/data-grid';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import OrderDetails from './OrderDetails/OrderDetails';
 import { AuthContext } from '../context/AuthContext';
 import { ToastsStore } from 'react-toasts';
 
 const orderUrl = process.env.REACT_APP_API_URL
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         maxWidth: 'unset',
@@ -21,6 +23,11 @@ const useStyles = makeStyles(() => ({
         marginTop: 30,
         height: 700,
         width: '100%',
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: '25ch',
     },
 }));
 
@@ -57,6 +64,7 @@ const OrderList = props => {
     const [detailsOpen, setDetailsOpen] = useState(false);
     const [orderDetail, setOrderDetail] = useState({});
     const [dataTableLoading, setDataTableLoading] = useState(true);
+    const [searchBox, setSearchBox] = useState("");
     const apiCall = new Promise((res, rej) => {
         axios({
             method: 'get',
@@ -91,10 +99,23 @@ const OrderList = props => {
         setDetailsOpen(false);
     }
 
+    const searchButtonClick =() => {
+        if (searchBox == "") {
+            return 
+        }
+
+        setOrderDetail({id: searchBox});
+        setDetailsOpen(true);
+    }
+
     return (
         <Container className={classes.root}>
             <Grid container spacing={3} direction="column">
                 <Grid item></Grid>
+                <Grid item>
+                    <TextField className={classes.textField} id="standard-basic" label="Insert order short token (reference number)" value={searchBox} onChange={(e) => setSearchBox(e.target.value)} />
+                    <Button variant="contained" color="primary" onClick={searchButtonClick}>Search</Button>
+                </Grid>
                 <Grid item className={classes.data_grid}>
                     <DataGrid
                         pagination
