@@ -36,13 +36,13 @@ const BookingEngine = () => {
 	const currentValidationSchema = validationSchema[activeStep];
 	const defaultTestType = items.find(({ Quantity }) => Quantity > 0) || {};
 	const steps = [
-        'Select Test',
-        'Travel Details',
-        'Booking Appointment',
-        'Passenger Details',
-        'Summary',
-        'Booking Confirmation',
-    ];
+		'Select Test',
+		'Travel Details',
+		'Booking Appointment',
+		'Passenger Details',
+		'Summary',
+		'Booking Confirmation',
+	];
 
 	const passengerInitialValues = {
 		firstName: '',
@@ -102,208 +102,217 @@ const BookingEngine = () => {
 		<BigWhiteContainer>
 			{(short_token && !!orderInfo) ? (
 				<>
-					{!!items.length ? (
-						<Formik
-							initialValues={{
-								...formInitialValues,
-								numberOfPeople: defaultTestType.Quantity || 1,
-								product: defaultTestType.ID || 0,
-								testType: defaultTestType,
-								passengers: [
-									{
-										firstName: get(orderInfo, 'billing_detail.first_name', ''),
-										lastName: get(orderInfo, 'billing_detail.last_name', ''),
-										email: get(orderInfo, 'billing_detail.email', ''),
-										phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : usersPhoneNumber,
-										countryCode: !!parsedPhoneNumber
-											? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
-											: defaultCountyCode,
-										dateOfBirth: new Date(get(orderInfo, 'billing_detail.date_of_birth', null)),
-										ethnicity: '',
-										sex: 'Female',
-										passportNumber: '',
-									},
-								],
-								city: defaultTimeZone,
-								timezone: defaultTimeZone.timezone,
-							}}
-							validationSchema={currentValidationSchema}
-							onSubmit={async (values, actions) => {
-								if (activeStep === 3) {
-									const {
-										numberOfPeople,
-										passengers,
-									} = values;
-									if (activePassenger === (numberOfPeople - 1)) {
-										actions.setSubmitting(false);
-										actions.setTouched({});
-										actions.setErrors({});
+				{!!items.length ? (
+					<Formik
+					initialValues={{
+						...formInitialValues,
+							numberOfPeople: defaultTestType.Quantity || 1,
+							product: defaultTestType.ID || 0,
+							testType: defaultTestType,
+							passengers: [
+								{
+									firstName: get(orderInfo, 'billing_detail.first_name', ''),
+									lastName: get(orderInfo, 'billing_detail.last_name', ''),
+									email: get(orderInfo, 'billing_detail.email', ''),
+									phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : usersPhoneNumber,
+									countryCode: !!parsedPhoneNumber
+									? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
+									: defaultCountyCode,
+									dateOfBirth: new Date(get(orderInfo, 'billing_detail.date_of_birth', null)),
+									ethnicity: '',
+									sex: 'Female',
+									passportNumber: '',
+								},
+							],
+							city: defaultTimeZone,
+							timezone: defaultTimeZone.timezone,
+					}}
+					validationSchema={currentValidationSchema}
+					onSubmit={async (values, actions) => {
+						if (activeStep === 3) {
+							const {
+								numberOfPeople,
+								passengers,
+							} = values;
+							if (activePassenger === (numberOfPeople - 1)) {
+								actions.setSubmitting(false);
+								actions.setTouched({});
+								actions.setErrors({});
+								handleNext();
+							} else {
+								if (get(passengers, `[${activePassenger + 1}].firstName`, 'default') === 'default') {
+									const newPassengers = [...passengers];
+									newPassengers.push({ ...passengerInitialValues });
+									actions.setValues({
+										...values,
+										passengers: newPassengers,
+									});
+								}
+								setActivePassenger(activePassenger + 1);
+								actions.setSubmitting(false);
+								actions.setTouched({});
+								actions.setErrors({});
+							}
+						} else if (activeStep === 4) {
+							const {
+								shipping_address: {
+									address_1,
+									address_2,
+									town,
+									postcode,
+									county,
+								},
+							} = orderInfo;
+							const {
+								selectedSlot,
+								travelDate,
+								travelTime,
+								passengers,
+								timezone,
+								testType: { ID, Type, Title },
+								transportNumber,
+								transportType,
+								landingDate,
+								landingTime,
+								vaccineNumber,
+								vaccineStatus,
+								vaccineType,
+								vaccineTypeName,
+								city,
+							} = values;
+							const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
+							const booking_users = passengers.map(({
+								firstName,
+								lastName,
+								dateOfBirth,
+								passportNumber,
+								phone,
+								countryCode,
+								...rest
+							}) => ({
+								first_name: firstName,
+								last_name: lastName,
+								tz_location: timezone,
+								date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
+								street_address: address_1,
+								language: 'EN',
+								extended_address: address_2,
+								postal_code: postcode,
+								phone: `${countryCode.label}${phone.trim()}`,
+								region: county,
+								country: 'GB',
+								locality: town,
+								metadata: {
+									product_id: ID,
+									short_token,
+									order_id: orderId.toString(),
+									passport_number: passportNumber,
+									travel_date: moment(
+										new Date(
+											travelDate.getFullYear(),
+											travelDate.getMonth(),
+											travelDate.getDate(),
+											travelTime.getHours(),
+											travelTime.getMinutes(),
+											0,
+										)).format(),
+									test_type: Type,
+								},
+								...rest,
+							}));
+							const body = {
+								type: 'video_gp_dochq',
+								booking_users,
+								flight_details: {
+									transport_arrival_country: isAdditionalProduct ? 'GB' : timezone,
+									transport_arrival_date_time: moment(
+										new Date(
+											landingDate.getFullYear(),
+											landingDate.getMonth(),
+											landingDate.getDate(),
+											landingTime.getHours(),
+											landingTime.getMinutes(),
+											0,
+										)).format(),
+									transport_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
+									transpor_departure_date_time: moment(
+										new Date(
+											travelDate.getFullYear(),
+											travelDate.getMonth(),
+											travelDate.getDate(),
+											travelTime.getHours(),
+											travelTime.getMinutes(),
+											0,
+										)).format(),
+									transport_number: transportNumber,
+									transport_type: transportType,
+									vaccine_number: vaccineNumber,
+									vaccine_status: vaccineStatus,
+									vaccine_type: vaccineType,
+								},
+							};
+							bookingService
+								.paymentRequest(selectedSlot.id, body)
+								.then(result => {
+									if (result.success && result.confirmation) {
 										handleNext();
 									} else {
-										if (get(passengers, `[${activePassenger + 1}].firstName`, 'default') === 'default') {
-											const newPassengers = [...passengers];
-											newPassengers.push({ ...passengerInitialValues });
-											actions.setValues({
-												...values,
-												passengers: newPassengers,
-											});
-										}
-										setActivePassenger(activePassenger + 1);
-										actions.setSubmitting(false);
-										actions.setTouched({});
-										actions.setErrors({});
-									}
-								} else if (activeStep === 4) {
-									const {
-										shipping_address: {
-											address_1,
-											address_2,
-											town,
-											postcode,
-											county,
-										},
-									} = orderInfo;
-									const {
-										selectedSlot,
-										travelDate,
-										travelTime,
-										passengers,
-										timezone,
-										testType: { ID, Type, Title },
-										transportNumber,
-										landingDate,
-										landingTime,
-										city,
-									} = values;
-									const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
-									const booking_users = passengers.map(({
-										firstName,
-										lastName,
-										dateOfBirth,
-										passportNumber,
-										phone,
-										countryCode,
-										...rest
-									}) => ({
-										first_name: firstName,
-										last_name: lastName,
-										tz_location: timezone,
-										date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
-										street_address: address_1,
-										language: 'EN',
-										extended_address: address_2,
-										postal_code: postcode,
-										phone: `${countryCode.label}${phone.trim()}`,
-										region: county,
-										country: 'GB',
-										locality: town,
-										metadata: {
-											product_id: ID,
-											short_token,
-											order_id: orderId.toString(),
-											passport_number: passportNumber,
-											travel_date: moment(
-												new Date(
-													travelDate.getFullYear(),
-													travelDate.getMonth(),
-													travelDate.getDate(),
-													travelTime.getHours(),
-													travelTime.getMinutes(),
-													0,
-												)).format(),
-											test_type: Type,
-										},
-										...rest,
-									}));
-									const body = {
-										type: 'video_gp_dochq',
-										booking_users,
-										flight_details: {
-											flight_arrival_country: isAdditionalProduct ? 'GB' : timezone,
-											flight_arrival_date_time: moment(
-													new Date(
-														landingDate.getFullYear(),
-														landingDate.getMonth(),
-														landingDate.getDate(),
-														landingTime.getHours(),
-														landingTime.getMinutes(),
-														0,
-													)).format(),
-											flight_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
-											flight_departure_date_time: moment(
-												new Date(
-													travelDate.getFullYear(),
-													travelDate.getMonth(),
-													travelDate.getDate(),
-													travelTime.getHours(),
-													travelTime.getMinutes(),
-													0,
-												)).format(),
-											flight_number: transportNumber,
-										},
-									};
-									bookingService
-										.paymentRequest(selectedSlot.id, body)
-										.then(result => {
-											if (result.success && result.confirmation) {
-												handleNext();
-											} else {
-												setStatus({
-													severity: 'error',
-													message: result.message,
-												});
-											}
-										})
-										.catch(({ error }) => {
-											setStatus({
-												severity: 'error',
-												message: error,
-											})
+										setStatus({
+											severity: 'error',
+											message: result.message,
 										});
-								} else {
-									actions.setTouched({});
-									actions.setSubmitting(false);
-									actions.setErrors({});
-									handleNext();
-								}
-							}}
-						>
-							<BookingEngineForm
-								activePassenger={activePassenger}
-								activeStep={activeStep}
-								defaultTimezone={defaultTimeZone.timezone}
-								handleBack={handleBack}
-								status={status}
-								steps={steps}
-								items={items}
-							/>
-						</Formik>
-					) : (
-						<>
-							<div className="row center">
-								<h3>You don't have available appointments for that order</h3>
-							</div>
-							<div className="row center">
-								<LinkButton
-									text='Buy Now!'
-									color='green'
-									linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
-								/>
-							</div>
-						</>
-					)}
-				</>
-			) : (
-				<>
+									}
+								})
+								.catch(({ error }) => {
+									setStatus({
+										severity: 'error',
+										message: error,
+									})
+								});
+						} else {
+							actions.setTouched({});
+							actions.setSubmitting(false);
+							actions.setErrors({});
+							handleNext();
+						}
+					}}
+					>
+					<BookingEngineForm
+					activePassenger={activePassenger}
+					activeStep={activeStep}
+					defaultTimezone={defaultTimeZone.timezone}
+					handleBack={handleBack}
+					status={status}
+					steps={steps}
+					items={items}
+				/>
+					</Formik>
+				) : (
+					<>
 					<div className="row center">
-						<h3>You haven't bought any test kit yet</h3>
+						<h3>You don't have available appointments for that order</h3>
 					</div>
 					<div className="row center">
 						<LinkButton
-							text='Buy Now!'
-							color='green'
-							linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
-						/>
+						text='Buy Now!'
+						color='green'
+						linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+					/>
+						</div>
+					</>
+				)}
+			</>
+			) : (
+				<>
+				<div className="row center">
+					<h3>You haven't bought any test kit yet</h3>
+				</div>
+				<div className="row center">
+					<LinkButton
+					text='Buy Now!'
+					color='green'
+					linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+				/>
 					</div>
 				</>
 			)}
