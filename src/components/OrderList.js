@@ -113,7 +113,7 @@ const OrderList = props => {
             <Grid container spacing={3} direction="column">
                 <Grid item></Grid>
                 <Grid item>
-                    <TextField className={classes.textField} id="standard-basic" label="Insert order short token (reference number)" value={searchBox} onChange={(e) => setSearchBox(e.target.value)} />
+                    <TextField className={classes.textField} id="standard-basic" label="Search DocHQ order number" value={searchBox} onChange={(e) => setSearchBox(e.target.value)} />
                     <Button variant="contained" color="primary" onClick={searchButtonClick}>Search</Button>
                 </Grid>
                 <Grid item className={classes.data_grid}>
