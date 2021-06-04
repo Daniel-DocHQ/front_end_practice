@@ -263,11 +263,11 @@ const Step1 = ({ defaultTimezone }) => {
 														form.setFieldValue(field.name, value);
 													})}
 												>
-													<FormControlLabel value="Pfizer" control={<Radio />} label="Pfizer" />
-													<FormControlLabel value="Astrazeneca" control={<Radio />} label="Astrazeneca" />
+													<FormControlLabel value="Pfizer" control={<Radio />} label="Pfizer/BioNTech" />
+													<FormControlLabel value="Astrazeneca" control={<Radio />} label="Oxford/AstraZeneca" />
 													<FormControlLabel value="Moderna" control={<Radio />} label="Moderna" />
 													<FormControlLabel value="Johnson & Johnson" control={<Radio />} label="Johnson & Johnson" />
-													<FormControlLabel value="Sputnik" control={<Radio />} label="Sputnik" />
+													<FormControlLabel value="Sputnik" control={<Radio />} label="Sputnik V" />
 													<FormControlLabel value="Other" control={<Radio />} label="Other" />
 												</RadioGroup>
 											</FormControl>
