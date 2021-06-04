@@ -235,7 +235,7 @@ const BookingEngine = () => {
 											0,
 										)).format(),
 									transport_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
-									transpor_departure_date_time: moment(
+									transport_departure_date_time: moment(
 										new Date(
 											travelDate.getFullYear(),
 											travelDate.getMonth(),
