@@ -109,7 +109,12 @@ function TwillioVideoCall({
 			}, 1000);
 			return () => clearInterval(interval);
 		} else if (!isNurse) {
-			setMessage('Apologies for the delay. Your practitioner is running late on the previous appointment but will be with you as soon as possible. Thank you very much for your understanding.');
+			setMessage(
+				<p>
+					Apologies for the delay. Your practitioner is running late on the previous appointment but will be with you as soon as possible. Thank you very much for your understanding.<br/><br/>
+					If you are waiting for your test results, no worries, your health care professional will be back with you on time to read your test results.
+				</p>
+			);
 		}
 	}, [counter]);
 

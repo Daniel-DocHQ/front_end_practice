@@ -71,11 +71,11 @@ const Step1 = ({ defaultTimezone }) => {
 		<React.Fragment>
 			{!isPCR && (
 				<>
-					<h4 style={{ margin: 0, paddingTop: 20 }}>
-						Where are you travelling from?
-					</h4>
 					<div className='row'>
 						<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
+							<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+								Where are you travelling from?
+							</h4>
 							<Field name={city.name}>
 								{({ field, meta, form }) => (
 									<Autocomplete
@@ -109,7 +109,7 @@ const Step1 = ({ defaultTimezone }) => {
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
 						<div className='row'>
 							<div className='appointment-calendar-container'>
-								<h4 style={{ margin: 0, paddingTop: 20 }}>
+								<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
 									Select Departure Date
 								</h4>
 								<Field name={travelDate.name}>
@@ -131,7 +131,7 @@ const Step1 = ({ defaultTimezone }) => {
 								</Field>
 							</div>
 							<div className='appointment-calendar-container'>
-								<h4 style={{ margin: 0, paddingTop: 20 }}>
+								<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
 									Select Departure Time
 								</h4>
 								<Field name={travelTime.name}>
@@ -153,58 +153,58 @@ const Step1 = ({ defaultTimezone }) => {
 					</MuiPickersUtilsProvider>
 				</ThemeProvider>
 			</div>
-			<div className='no-margin col'>
-				<ThemeProvider theme={pickerTheme}>
-					<MuiPickersUtilsProvider utils={DateFnsUtils}>
-						<div className='row'>
-							<div className='appointment-calendar-container'>
-								<h4 style={{ margin: 0, paddingTop: 20 }}>
-									Select Arrival Date (UK)
-								</h4>
-								<Field name={landingDate.name}>
-									{({ field, form }) => (
-										<KeyboardDatePicker
-										{...field}
-										{...landingDate}
-										disablePast
-										inputVariant='filled'
-										format="dd/MM/yyyy"
-										KeyboardButtonProps={{
-											'aria-label': 'change date',
-										}}
-										onChange={(value) => {
-											form.setFieldValue(field.name, value);
-											form.setFieldValue('appointmentDate', value);
-										}}
-									/>
-									)}
-									</Field>
-								</div>
-								<div className='appointment-calendar-container'>
-									<h4 style={{ margin: 0, paddingTop: 20 }}>
-										Select Arrival Time (UK)
-									</h4>
-									<Field name={landingTime.name}>
-										{({ field, form }) => (
-											<KeyboardTimePicker
-											autoOk
-											{...field}
-											{...landingTime}
-											inputVariant='filled'
-											onChange={(value) => form.setFieldValue(field.name, value)}
-											KeyboardButtonProps={{
-												'aria-label': 'change time',
-											}}
-										/>
-										)}
+			{isBundle && (
+				<>
+					<div className='no-margin col'>
+						<ThemeProvider theme={pickerTheme}>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<div className='row'>
+									<div className='appointment-calendar-container'>
+										<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+											Select Arrival Date (UK)
+										</h4>
+										<Field name={landingDate.name}>
+											{({ field, form }) => (
+												<KeyboardDatePicker
+												{...field}
+												{...landingDate}
+												disablePast
+												inputVariant='filled'
+												format="dd/MM/yyyy"
+												KeyboardButtonProps={{
+													'aria-label': 'change date',
+												}}
+												onChange={(value) => {
+													form.setFieldValue(field.name, value);
+													form.setFieldValue('appointmentDate', value);
+												}}
+											/>
+											)}
+										</Field>
+									</div>
+									<div className='appointment-calendar-container'>
+										<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+											Select Arrival Time (UK)
+										</h4>
+										<Field name={landingTime.name}>
+											{({ field, form }) => (
+												<KeyboardTimePicker
+												autoOk
+												{...field}
+												{...landingTime}
+												inputVariant='filled'
+												onChange={(value) => form.setFieldValue(field.name, value)}
+												KeyboardButtonProps={{
+													'aria-label': 'change time',
+												}}
+											/>
+											)}
 										</Field>
 									</div>
 								</div>
 							</MuiPickersUtilsProvider>
 						</ThemeProvider>
 					</div>
-			{isBundle && (
-				<>
 					<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
 						<div style={{ maxWidth: '40%', minWidth: '320px' }}>
 							<Field
@@ -237,11 +237,11 @@ const Step1 = ({ defaultTimezone }) => {
 							</Field>
 						</div>
 					</div>
-					<h4 style={{ margin: 0, paddingTop: 20 }}>
-						{transportNumberLabel}
-					</h4>
 					<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
 						<div style={{ maxWidth: '40%', minWidth: '300px' }}>
+							<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+								{transportNumberLabel}
+							</h4>
 							<Field name={transportNumber.name} validate={(value) => (!value && touched.transportNumber) ? `Input ${transportNumberLabel}` : undefined}>
 								{({ field, meta }) => (
 									<Input
@@ -326,26 +326,24 @@ const Step1 = ({ defaultTimezone }) => {
 								</div>
 							</div>
 							{vaccineTypeValue === 'Other' && (
-								<>
-									<h4 style={{ margin: 0, paddingTop: 20 }}>
-										{vaccineTypeName.label}
-									</h4>
-									<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-										<div style={{ maxWidth: '40%', minWidth: '300px' }}>
-											<Field name={vaccineTypeName.name} validate={(value) => (!value && touched.vaccineTypeName) ? 'Input Vaccine Name' : undefined}>
-												{({ field, meta }) => (
-													<Input
-														error={!!meta.error}
-														touched={meta.touched}
-														helperText={(meta.error && meta.touched) && meta.error}
-														{...vaccineTypeName}
-														{...field}
-													/>
-												)}
-											</Field>
-										</div>
+								<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+									<div style={{ maxWidth: '40%', minWidth: '300px' }}>
+										<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+											{vaccineTypeName.label}
+										</h4>
+										<Field name={vaccineTypeName.name} validate={(value) => (!value && touched.vaccineTypeName) ? 'Input Vaccine Name' : undefined}>
+											{({ field, meta }) => (
+												<Input
+													error={!!meta.error}
+													touched={meta.touched}
+													helperText={(meta.error && meta.touched) && meta.error}
+													{...vaccineTypeName}
+													{...field}
+												/>
+											)}
+										</Field>
 									</div>
-								</>
+								</div>
 							)}
 							<div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
 								<div style={{ maxWidth: '40%', minWidth: '320px' }}>

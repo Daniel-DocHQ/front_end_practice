@@ -421,7 +421,6 @@ const PatientDetails = ({
 
 const SubmitPatientResult = ({
 	patients,
-	isTuiType,
 	authToken,
 	appointmentId,
 	customerNotThere: customerNotThereObj,
@@ -526,6 +525,13 @@ const SubmitPatientResult = ({
 		setReasonForRejected('');
 		setNotes('');
 	}, [sampleTaken]);
+
+	useEffect(() => {
+		if (sampleTakenStatus && sampleTakenStatus.severity === 'success') {
+			const timer = setTimeout(() => setSampleTakenStatus(), 5000);
+			return () => clearTimeout(timer);
+		}
+	}, [sampleTakenStatus]);
 
 	return (
 		<div className='tab-container'>
