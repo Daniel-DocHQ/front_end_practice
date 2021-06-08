@@ -101,7 +101,7 @@ const OrderList = props => {
 
     const searchButtonClick =() => {
         if (searchBox == "") {
-            return 
+            return
         }
 
         setOrderDetail({id: searchBox});

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { get } from 'lodash';
+import { get, startCase } from 'lodash';
 import { format } from 'date-fns';
 import {
     AppBar,
@@ -86,7 +86,6 @@ const OrderDetails = ({ token, order, closeHandler}) => {
         })
 
         apiCall.then(res => {
-            console.log(res)
             if (res.status === 200 && typeof res.data) {
                 setOrderDetail(res.data)
                 setLoading(false)
@@ -105,8 +104,6 @@ const OrderDetails = ({ token, order, closeHandler}) => {
             }
         })
     }, [order, reloadInfo]);
-
-    console.log(orderDetail);
 
     const handleCancelDialogToggle = () => {
         setCancelDialogOpen(!cancelDialogOpen);
@@ -274,12 +271,12 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                     </Grid>
                     <Grid item xs={12}>
                         <Grid container justify="space-between" alignItems="center">
-                            <Grid item xs={9}>
+                            <Grid item xs={7}>
                                 <Typography variant="h6" className={classes.title}>
                                     <b>Shipping status</b>: {orderDetail.shipping_flag}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item xs={5}>
                                 <DocButton
                                     color="green"
                                     style={{ marginRight: 10 }}
@@ -298,8 +295,14 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                         }
                                     }).catch(() => ToastsStore.error('Something went wrong!'))}
                                 />
+                                <LinkButton
+                                    color="green"
+                                    linkSrc={`/b2c/book-appointment?short_token=${order.id}&service=video_gp_dochq`}
+                                    text="Book an Appointment"
+                                />
                                 <DocButton
                                     color="pink"
+                                    style={{ marginLeft: 10 }}
                                     onClick={handleCancelDialogToggle}
                                     text="Cancel order"
                                 />
@@ -497,8 +500,10 @@ const AppointmentDetails = ({
     shortToken,
 }) => {
     const linkRef = useRef(null);
+    const timezone = get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time');
     const notes = get(appointment, 'notes', []);
     const [isVisible, setIsVisible] = useState(false);
+    const statusChanges = get(appointment, 'status_changes', []) || [];
     const isCompleted = appointment.status === 'COMPLETED';
     const flightDate = get(appointment, 'booking_user.metadata.travel_date');
 
@@ -511,7 +516,7 @@ const AppointmentDetails = ({
                 {!!flightDate && (
                     <ListItem>
                         <ListItemText>
-                            <b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p')}
+                            <b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p')} ({timezone})
                         </ListItemText>
                     </ListItem>
                 )}
@@ -522,7 +527,7 @@ const AppointmentDetails = ({
                 </ListItem>
                 <ListItem>
                     <ListItemText>
-                        <b>Appointment Date</b>: {format(new Date(appointment.start_time), 'dd/MM/yyyy p')}
+                        <b>Appointment Date</b>: {format(new Date(appointment.start_time), 'dd/MM/yyyy p')}  ({timezone})
                     </ListItemText>
                 </ListItem>
                 <ListItem>
@@ -556,12 +561,26 @@ const AppointmentDetails = ({
                 <Divider style={{ margin: '20px 0', width: '30%' }} />
                 <ListItem>
                     <ListItemText>
-                         <b>Appointment Status</b>: {appointment.status}
+                         <b>Appointment Status</b>: {startCase(appointment.status.replace('_', ' ').toLowerCase())}
                     </ListItemText>
                 </ListItem>
                 {!!notes.length && (
                     <ListItem>
                         <AppointmentNotes notes={notes} />
+                    </ListItem>
+                )}
+                {statusChanges.length && (
+                    <ListItem>
+                        <ListItemText>
+                            <b>Appointment Status Changes</b>:
+                            {statusChanges.map(({ changed_to, created_at }, indx) => (
+                                <ListItem key={indx}>
+                                    <ListItemText>
+                                        <b>{startCase(changed_to.replace('_', ' ').toLowerCase())}</b> - {format(new Date(created_at), 'dd/MM/yyyy p')} ({timezone})
+                                    </ListItemText>
+                                </ListItem>
+                            ))}
+                        </ListItemText>
                     </ListItem>
                 )}
             </List>
