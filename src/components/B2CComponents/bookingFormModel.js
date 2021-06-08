@@ -23,6 +23,7 @@ const bookingFormModel = {
                 passportNumberConfirmation: '',
             },
         ],
+        tocAccept: false,
         appointmentDate: new Date(),
         selectedSlot: null,
         landingDate: new Date(),
@@ -87,6 +88,10 @@ const bookingFormModel = {
             name: 'landingDate',
             label: 'Select Landing Date',
             placeholder: 'DD/MM/YYYY',
+            required: true,
+        },
+        tocAccept: {
+            name: 'tocAccept',
             required: true,
         },
         landingTime: {

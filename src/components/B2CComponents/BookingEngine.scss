@@ -8,9 +8,9 @@
 	box-sizing: border-box;
 	.appointment-guide {
 		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		align-items: flex-start;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
 		margin-top: 10px;
 		.guide {
 			> span {
@@ -89,4 +89,9 @@
 			width: 40px;
 		}
 	}
+}
+
+.list-title {
+	color: var(--doc-green) !important;
+	font-weight: bold;
 }

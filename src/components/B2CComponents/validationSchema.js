@@ -9,6 +9,7 @@ const {
     travelTime,
     selectedSlot,
     city,
+    tocAccept,
   }
 } = bookingFormModel;
 
@@ -37,6 +38,11 @@ export default [
     }).required('You should select appointment time'),
   }),
   Yup.object().shape(),
-  Yup.object().shape(),
+  Yup.object().shape({
+    [tocAccept.name]: Yup.boolean().test('accept', 'You must accept this acknowledge',
+    function accept(value) {
+      return value;
+    }),
+  }),
   Yup.object().shape(),
 ];

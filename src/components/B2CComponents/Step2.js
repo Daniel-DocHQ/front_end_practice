@@ -3,7 +3,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import moment from 'moment-timezone';
 import { Field, useFormikContext, ErrorMessage } from 'formik';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { createMuiTheme } from '@material-ui/core';
+import { createMuiTheme, Divider } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import bookingService from '../../services/bookingService';
 import bookingFormModel from './bookingFormModel';
@@ -239,16 +239,22 @@ const Step3 = () => {
 						</MuiPickersUtilsProvider>
 					</ThemeProvider>
 					<div className='appointment-guide'>
-						<div className='available guide'>
+						<div className='available guide' style={{ marginRight: 10 }}>
 							<i className='fa fa-circle'></i>
 							<span>Available Date(s)</span>
 						</div>
+						<div className='selected guide'>
+							<i className='fa fa-circle'></i>
+							<span>Selected Date</span>
+						</div>
 					</div>
 				</div>
-				{appointments.length > 0 && (
+				{appointments.length > 0 ? (
 					<div className='appointment-slot-container'>
 						<div className='row flex-start' >
-							<h3 style={{ marginBottom: 0 }}>Appointments Available (selected timezone: {timezone})</h3>
+							<p style={{ margin: 0, width: 'max-content' }}>
+								<b>Appointments Available (selected timezone: {timezone})</b>
+							</p>
 						</div>
 						<div className='slot-container'>
 							<Field name={selectedSlot.name}>
@@ -271,17 +277,19 @@ const Step3 = () => {
 							</Field>
 						</div>
 					</div>
+				) : (
+					<p style={{ marginBottom: 0, width: 'max-content' }}>
+						No available appointments at this day
+					</p>
 				)}
 			</div>
+			<Divider style={{ width: '35%', margin: '20px 0 10px 0px' }} />
 			<div className='row no-margin'>
-				<p >
+				<p>
 					<strong>Selected appointment Date:&nbsp;</strong>
 					{ddMMyyyy(selectedDate)}
 				</p>
 			</div>
-			{appointments.length <= 0 && (
-				<>No available appointments at this day</>
-			)}
 			{selectedSlotValue && (
 				<div className='row no-margin'>
 					<p style={{ marginTop: 0 }}>
