@@ -19,7 +19,7 @@ const bookingFormModel = {
                 countryCode: COUNTRIES.find(({ country }) => country === 'United Kingdom'),
                 dateOfBirth: null,
                 ethnicity: '',
-                sex: 'Female',
+                sex: '',
                 passportNumber: '',
                 fillWithBookingUser: '',
                 passportNumberConfirmation: '',

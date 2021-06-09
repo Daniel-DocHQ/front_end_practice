@@ -54,7 +54,7 @@ const BookingEngine = () => {
 		phone: '',
 		dateOfBirth: null,
 		ethnicity: '',
-		sex: 'Female',
+		sex: '',
 		passportNumber: '',
 		passportNumberConfirmation: '',
 	};

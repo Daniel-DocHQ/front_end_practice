@@ -10,6 +10,7 @@ import {
     Select,
     MenuItem,
 	makeStyles,
+    FormHelperText,
 } from '@material-ui/core';
 import {
 	MuiPickersUtilsProvider,
@@ -19,7 +20,7 @@ import moment from 'moment';
 import DateFnsUtils from '@date-io/date-fns';
 import { ThemeProvider } from '@material-ui/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { Field, useFormikContext } from 'formik';
+import { ErrorMessage, Field, useFormikContext } from 'formik';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
 import COUNTRIES from '../../helpers/countries';
@@ -108,7 +109,13 @@ const Step2 = ({
                                         })}
                                     >
                                         {bookingUsers.map(({ firstName, lastName }, indx) => (
-                                            <FormControlLabel key={indx} value={String(indx)} control={<Radio />} label={`${firstName} ${lastName}`} />
+                                            <FormControlLabel
+                                                disabled={!!passengers.find(({ fillWithBookingUser }, tmp) => (fillWithBookingUser === String(indx) && tmp !== activePassenger))}
+                                                key={indx}
+                                                value={String(indx)}
+                                                control={<Radio />}
+                                                label={`${firstName} ${lastName}`}
+                                            />
                                         ))}
                                     </RadioGroup>
                                 </FormControl>
@@ -348,14 +355,27 @@ const Step2 = ({
                 </div>
 		    </div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <Field name={`passengers[${activePassenger}].sex`}>
-					{({ field, form }) => (
-						<FormControl component='fieldset' validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Select sex' : undefined}>
-							<FormLabel component='legend'>{sex.label} *</FormLabel>
+                <Field
+                    name={`passengers[${activePassenger}].sex`}
+                    validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Select sex' : undefined}
+                >
+					{({ field, form, meta }) => (
+						<FormControl
+                            component='fieldset'
+                            {...sex}
+                            {...field}
+                            error={!!meta.error}
+                            touched={meta.touched}
+                            helperText={(meta.error && meta.touched) && meta.error}
+                        >
+							<FormLabel
+                                required
+                                component='legend'
+                            >
+                                {sex.label}
+                            </FormLabel>
 							<RadioGroup
 								style={{ display: 'inline' }}
-								aria-label={sex.name}
-								name={sex.name}
 								value={field.value}
                       			onChange={(({ target: { value } }) => form.setFieldValue(field.name, value))}
 							>
@@ -363,6 +383,7 @@ const Step2 = ({
 								<FormControlLabel value='Male' control={<Radio />} label='Male' />
 								<FormControlLabel value='Other' control={<Radio />} label='Other' />
 							</RadioGroup>
+                            <FormHelperText>{(meta.error && meta.touched) && meta.error}</FormHelperText>
 						</FormControl>
 					)}
 				</Field>

@@ -61,7 +61,7 @@ const BookingEngine = () => {
 		dateOfBirth: null,
 		ethnicity: '',
 		countryCode: defaultCountyCode,
-		sex: 'Female',
+		sex: '',
 		passportNumber: '',
 		passportNumberConfirmation: '',
 		test_type: bookingUsersTestType,
