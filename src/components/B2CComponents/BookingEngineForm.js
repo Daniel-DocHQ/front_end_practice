@@ -41,7 +41,7 @@ const BookingEngineForm = ({
 
 			case 2:
 				return (
-					<Step2 />
+					<Step2 defaultTimezone={defaultTimezone} />
 				);
 			case 3:
 				return (
@@ -77,11 +77,19 @@ const BookingEngineForm = ({
                                     />
                                 )}
                                 {isLastStep ? (
-                                    <LinkButton
-                                        text='Back to Home'
-                                        color='green'
-                                        linkSrc={isEdit ? '/customer_services/dashboard' : process.env.REACT_APP_WEBSITE_LINK}
-                                    />
+                                    <>
+                                        <LinkButton
+                                            text='Back to Home'
+                                            color='green'
+                                            linkSrc={isEdit ? '/customer_services/dashboard' : process.env.REACT_APP_WEBSITE_LINK}
+                                        />
+                                        <DocButton
+                                            style={{ marginLeft: 10 }}
+                                            text='Book one more Appointment'
+                                            color='green'
+                                            onClick={() => window.location.reload()}
+                                        />
+                                    </>
                                 ) : (
                                     <DocButton
                                         text='Confirm'

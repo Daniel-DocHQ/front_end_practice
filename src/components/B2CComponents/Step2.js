@@ -97,7 +97,7 @@ const datePickerTheme = () => createMuiTheme({
 	},
 });
 
-const Step3 = () => {
+const Step3 = ({ defaultTimezone }) => {
 	const [appointments, setAppointments] = useState([]);
 	const today = new Date().setHours(0, 0, 0, 0);
 	const {
@@ -113,7 +113,7 @@ const Step3 = () => {
 			selectedSlot: selectedSlotValue,
 			travelDate,
 			travelTime,
-			timezone,
+			timezone: timezoneValue,
 			landingDate,
 			testType: {
 				Type,
@@ -125,6 +125,7 @@ const Step3 = () => {
 
 	const isPCR = Type === 'PCR' && Title.includes('Fit to Travel');
 	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
+	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
 	const maxDate = new Date(new Date(new Date(travelDate).setHours(travelTime.getHours() - 60)).setMinutes(travelTime.getMinutes()));
 	const startDateTime = new Date(new Date(maxDate).setHours(maxDate.getHours() - 12));
 	const startDate = new Date(startDateTime).setHours(0,0,0,0);

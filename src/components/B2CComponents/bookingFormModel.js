@@ -7,6 +7,7 @@ const bookingFormModel = {
         testType: {},
         city: '',
         timezone: '',
+        bookingUsers: [],
         travelDate: new Date(),
         travelTime: new Date(),
         passengers: [
@@ -20,6 +21,7 @@ const bookingFormModel = {
                 ethnicity: '',
                 sex: 'Female',
                 passportNumber: '',
+                fillWithBookingUser: '',
                 passportNumberConfirmation: '',
             },
         ],
@@ -36,6 +38,12 @@ const bookingFormModel = {
         vaccineType: 'Pfizer',
     },
     formField: {
+        fillWithBookingUser: {
+            name: 'fillWithBookingUser',
+            label: 'Fill with passenger details',
+            id: 'fill-with-booking-user',
+            type: 'text',
+        },
         numberOfPeople: {
             name: 'numberOfPeople',
             label: 'Number of People',

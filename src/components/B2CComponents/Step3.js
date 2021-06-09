@@ -50,7 +50,13 @@ const Step2 = ({
 }) => {
 	const classes = useStyles();
     const pickerTheme = datePickerTheme();
-    const { values: { passengers } ,touched } = useFormikContext();
+    const {
+        values: {
+            passengers,
+            bookingUsers,
+        },
+        touched,
+    } = useFormikContext();
     const {
         formField: {
 			firstName,
@@ -63,6 +69,7 @@ const Step2 = ({
 			sex,
 			passportNumber,
             passportNumberConfirmation,
+            fillWithBookingUser,
         }
     } = bookingFormModel;
 
@@ -72,6 +79,44 @@ const Step2 = ({
 
 	return (
 		<React.Fragment>
+            {(!!bookingUsers.length && !isEdit) && (
+                <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                    <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                        <Field
+                            name={`passengers[${activePassenger}].fillWithBookingUser`}
+                        >
+                            {({ field, form, meta }) => (
+                                <FormControl component='fieldset' style={{ width: '100%' }}>
+                                    <FormLabel component='legend'>
+                                        {fillWithBookingUser.label}
+                                    </FormLabel>
+                                    <RadioGroup
+                                        error={!!meta.error}
+                                        touched={meta.touched}
+                                        helperText={(meta.error && meta.touched) && meta.error}
+                                        value={field.value}
+                                        aria-label={fillWithBookingUser.name}
+								        name={fillWithBookingUser.name}
+                                        {...fillWithBookingUser}
+                                        {...field}
+                                        onChange={(({ target: { value } }) => {
+                                            form.setFieldValue(field.name, value);
+                                            form.setFieldValue(`passengers[${activePassenger}]`, {
+                                                ...bookingUsers[parseInt(value)],
+                                                fillWithBookingUser: value,
+                                            });
+                                        })}
+                                    >
+                                        {bookingUsers.map(({ firstName, lastName }, indx) => (
+                                            <FormControlLabel key={indx} value={String(indx)} control={<Radio />} label={`${firstName} ${lastName}`} />
+                                        ))}
+                                    </RadioGroup>
+                                </FormControl>
+                            )}
+                        </Field>
+                    </div>
+                </div>
+            )}
             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                     <Field name={`passengers[${activePassenger}].firstName`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input first name' : undefined}>

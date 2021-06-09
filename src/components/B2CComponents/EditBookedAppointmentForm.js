@@ -151,6 +151,7 @@ const BookingEngine = () => {
 							const parsedPhoneNumber = parsePhoneNumber(phone);
 
 							return ({
+								...passengerInitialValues,
 								firstName: first_name,
 								lastName: last_name,
 								dateOfBirth: new Date(date_of_birth),

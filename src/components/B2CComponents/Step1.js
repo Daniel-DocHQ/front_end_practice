@@ -57,14 +57,13 @@ const Step1 = ({ defaultTimezone }) => {
 	const transportNumberLabel = `${transportTypeValue === 'Other' ? 'Transport' : transportTypeValue} Number`;
 
 	useEffect(() => {
-		if (isPCR || isBundle) {
-			setFieldValue('timezone', defaultTimezone);
+		if (isBundle) {
+			setFieldValue('timezone', undefined);
+			setFieldValue('city', undefined);
+		} else {
+			setFieldValue('timezone', defaultTimezone.timezone);
+			setFieldValue('city', defaultTimezone);
 		}
-		return (() => {
-			if (isPCR || isBundle) {
-				setFieldValue('timezone', defaultTimezone);
-			}
-		})
 	}, []);
 
 	return (
@@ -84,7 +83,6 @@ const Step1 = ({ defaultTimezone }) => {
 										getOptionLabel={({city, country}) => city ? `${city}, ${country}` : ''}
 										style={{ width: 300 }}
 										onChange={(event, newValue) => {
-											console.log(newValue);
 											form.setFieldValue(city.name, newValue);
 											if (!!newValue && !!newValue.timezone) {
 												form.setFieldValue('timezone', newValue.timezone);
