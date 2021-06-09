@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from 'axios';
 import LinkButton from '../DocButton/LinkButton';
 import DocCard from '../DocCard/DocCard';
 import DocCardContainer from '../DocCard/DocCardContainer';
 
 const BookAppointmentIcon = require('../../assets/images/icons/homepage-book-appointment.svg');
+const apiUrl  = process.env.REACT_APP_API_URL;
 
 const SAHomepageCards = () => {
-	const cards = [
+	const [cards, setCards] = useState([
 		{
 			display: true,
 			title: 'Live Doctors Management',
@@ -75,7 +77,37 @@ const SAHomepageCards = () => {
 				/>
 			),
 		},
-	];
+    ]);
+    useEffect(() => {
+        // Check if the logged in user has access to the processor system 
+        axios({
+            url: `${apiUrl}/v1/processor`,
+            method: "GET",
+            headers: {
+                'Authorization': localStorage.getItem("auth_token")
+            }
+        }).then((response) => {
+            if (response.status == 200) {
+                setCards([...cards, {
+                    display: true,
+                    title: 'Processor',
+                    icon: <img src={BookAppointmentIcon} alt='Order Management' />,
+                    content: (
+                        <React.Fragment>
+                            <p>Processor task management</p>
+                        </React.Fragment>
+                    ),
+                    actions: (
+                        <LinkButton
+                        color='green'
+                        text='Processor management'
+                        linkSrc='/super_admin/processor'
+                    />
+                    ),
+                }])
+            }
+        }).catch(() => {})
+    }, [])
 
 	return (
 		<DocCardContainer>

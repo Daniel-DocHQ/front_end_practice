@@ -40,6 +40,8 @@ import SADashboard from '../screens/super-admin-portal/SADashboard';
 import DoctorsManagement from '../screens/super-admin-portal/DoctorsManagement';
 import LiveDoctorsManagement from '../screens/super-admin-portal/LiveDoctorsManagement';
 import CertificatesList from '../screens/super-admin-portal/CertificatesList';
+import ProcessorManagement from '../screens/super-admin-portal/ProcessorManagement';
+import ProcessorTaskEdit from '../screens/super-admin-portal/ProcessorTaskEdit';
 import CSOrderList from '../screens/cs-portal/CSOrderList';
 import SAOrderList from '../screens/super-admin-portal/SAOrderList';
 import CSDashboard from '../screens/cs-portal/CSDashboard';
@@ -266,6 +268,16 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/order-list' requiredRole='super_admin'>
 				<Layout title='Order List'>
 					<SAOrderList {...ctx} />
+				</Layout>
+			</PrivateRoute>
+            <PrivateRoute path='/super_admin/processor/edit/:id' requiredRole='super_admin'>
+				<Layout title='Processor Task Edit'>
+					<ProcessorTaskEdit {...ctx} />
+				</Layout>
+			</PrivateRoute>
+            <PrivateRoute path='/super_admin/processor' requiredRole='super_admin'>
+				<Layout title='Processor Management'>
+					<ProcessorManagement {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			{/* Customer Services Routes */}
