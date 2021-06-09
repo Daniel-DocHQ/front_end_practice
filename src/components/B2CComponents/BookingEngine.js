@@ -163,8 +163,8 @@ const BookingEngine = () => {
 										},
 									],
 								}),
-								city: defaultTimeZone,
-								timezone: defaultTimeZone.timezone,
+								city: undefined,
+								timezone: undefined,
 						}}
 							validationSchema={currentValidationSchema}
 							onSubmit={async (values, actions) => {

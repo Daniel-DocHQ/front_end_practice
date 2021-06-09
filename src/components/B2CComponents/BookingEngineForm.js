@@ -36,7 +36,7 @@ const BookingEngineForm = ({
 				);
 			case 1:
 				return (
-					<Step1 defaultTimezone={defaultTimezone} />
+					<Step1 />
 				);
 
 			case 2:

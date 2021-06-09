@@ -22,7 +22,7 @@ import datePickerTheme from '../../helpers/datePickerTheme';
 import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
-const Step1 = ({ defaultTimezone }) => {
+const Step1 = () => {
 	const {
 		formField: {
 			vaccineType,
@@ -48,23 +48,12 @@ const Step1 = ({ defaultTimezone }) => {
 			vaccineType: vaccineTypeValue,
 			transportType: transportTypeValue,
 		},
-		setFieldValue,
 		touched,
 	} = useFormikContext();
 	const pickerTheme = datePickerTheme();
 	const isPCR = Type === 'PCR' && Title.includes('Fit to Travel');
 	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
 	const transportNumberLabel = `${transportTypeValue === 'Other' ? 'Transport' : transportTypeValue} Number`;
-
-	useEffect(() => {
-		if (isBundle) {
-			setFieldValue('timezone', undefined);
-			setFieldValue('city', undefined);
-		} else {
-			setFieldValue('timezone', defaultTimezone.timezone);
-			setFieldValue('city', defaultTimezone);
-		}
-	}, []);
 
 	return (
 		<React.Fragment>

@@ -238,6 +238,8 @@ const Step2 = ({
                                     error = 'Input phone';
                                 } else if (value.length < 5) {
                                     error = 'Invalid phone number';
+                                } else if (value.includes('+')) {
+                                    error = 'Input number without Country Code';
                                 }
                             }
                             return error;
