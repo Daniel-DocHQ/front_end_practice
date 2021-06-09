@@ -235,7 +235,7 @@ const BookingEngine = () => {
 										return ({
 											first_name: firstName,
 											last_name: lastName,
-											tz_location: timezone,
+											tz_location: timezone || defaultTimeZone.timezone,
 											date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
 											street_address: address_1,
 											language: 'EN',

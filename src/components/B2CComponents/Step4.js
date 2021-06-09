@@ -12,13 +12,14 @@ import {
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
 import bookingFormModel from './bookingFormModel';
 
-const Step4 = ({ status }) => {
+const Step4 = ({ status, defaultTimezone }) => {
 	const {
         formField: {
             tocAccept,
         }
     } = bookingFormModel;
-    const { values: { appointmentDate, selectedSlot, passengers, timezone } } = useFormikContext();
+    const { values: { appointmentDate, selectedSlot, passengers, timezone: timezoneValue } } = useFormikContext();
+	const timezone = timezoneValue || defaultTimezone.timezone;
 
 	return (
 		<React.Fragment>

@@ -5,8 +5,10 @@ import './BookingEngine.scss';
 
 const icon = require('../../assets/images/icons/circled-tick.svg');
 
-const Step5 = () => {
-    const { values: { appointmentDate, selectedSlot, passengers, timezone, testType } } = useFormikContext();
+const Step5 = ({ defaultTimezone }) => {
+    const { values: { appointmentDate, selectedSlot, passengers, timezone: timezoneValue, testType } } = useFormikContext();
+    const timezone = timezoneValue || defaultTimezone.timezone;
+
     return (
         typeof isError === 'undefined' ? (
             <React.Fragment>

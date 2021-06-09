@@ -49,11 +49,11 @@ const BookingEngineForm = ({
 				);
             case 4:
 				return (
-					<Step4 status={status} />
+					<Step4 status={status} defaultTimezone={defaultTimezone} />
 				);
             case 5:
 				return (
-					<Step5 />
+					<Step5 defaultTimezone={defaultTimezone} />
 				);
 		};
 	};
