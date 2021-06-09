@@ -3,7 +3,7 @@ const PRODUCTS_WITH_ADDITIONAL_INFO = [
 	'Green Bundle',
 	'Day 8 PCR Test',
 	'Day 2 PCR Test',
-	'Amber Short Stay Bundle',
+	'Amber Short Stay',
 	'Amber Bundle',
 ];
 
