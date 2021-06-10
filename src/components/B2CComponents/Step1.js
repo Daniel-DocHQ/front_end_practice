@@ -120,6 +120,7 @@ const Step1 = () => {
 											}}
 											onChange={(value) => {
 												form.setFieldValue(field.name, value);
+												form.setFieldValue(landingDate.name, value);
 											}}
 										/>
 									)}
@@ -136,7 +137,10 @@ const Step1 = () => {
 											{...field}
 											{...travelTime}
 											inputVariant='filled'
-											onChange={(value) => form.setFieldValue(field.name, value)}
+											onChange={(value) => {
+												form.setFieldValue(field.name, value);
+												form.setFieldValue(landingTime.name, value);
+											}}
 											KeyboardButtonProps={{
 												'aria-label': 'change time',
 											}}
