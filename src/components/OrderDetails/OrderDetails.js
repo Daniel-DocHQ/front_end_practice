@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { get, startCase } from 'lodash';
-import { toDate, format } from 'date-fns-tz';
+import { format } from 'date-fns-tz';
 import {
     AppBar,
     Box,

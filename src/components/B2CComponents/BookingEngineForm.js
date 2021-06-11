@@ -17,11 +17,13 @@ const BookingEngineForm = ({
     handleBack,
     steps,
     items,
-    defaultCountyCode,
+    defaultCountryCode,
     defaultTimezone,
     bookingUsersQuantity = 0,
     isEdit = false,
     status,
+    dropTimer,
+    timer,
     ...restProps
 }) => {
     const isLastStep = activeStep === steps.length - 1;
@@ -42,11 +44,15 @@ const BookingEngineForm = ({
 
 			case 2:
 				return (
-					<Step2 defaultTimezone={defaultTimezone} />
+					<Step2
+                        defaultTimezone={defaultTimezone}
+                        dropTimer={dropTimer}
+                        timer={timer}
+                    />
 				);
 			case 3:
 				return (
-					<Step3 activePassenger={activePassenger} defaultCountyCode={defaultCountyCode} isEdit={isEdit} />
+					<Step3 activePassenger={activePassenger} defaultCountryCode={defaultCountryCode} isEdit={isEdit} />
 				);
             case 4:
 				return (

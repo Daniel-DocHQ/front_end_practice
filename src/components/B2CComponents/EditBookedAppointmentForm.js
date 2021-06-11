@@ -35,7 +35,7 @@ const BookingEngine = () => {
 	const [status, setStatus] = useState(); // { severity, message }
 	const { formInitialValues } = bookingFormModel;
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
-	const defaultCountyCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
+	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
 	const usersTravelDate = get(bookingUsers, '[0].metadata.travel_date', new Date ());
 	const usersLandingDate = get(bookingUsers, '[0].metadata.landing_date', '');
@@ -62,7 +62,7 @@ const BookingEngine = () => {
 		phone: '',
 		dateOfBirth: null,
 		ethnicity: '',
-		countryCode: defaultCountyCode,
+		countryCode: defaultCountryCode,
 		sex: '',
 		passportNumber: '',
 		passportNumberConfirmation: '',
@@ -164,7 +164,7 @@ const BookingEngine = () => {
 										...restMetadata,
 									},
 									phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
-									countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
+									countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountryCode,
 									short_token,
 									...rest,
 								});
@@ -299,13 +299,15 @@ const BookingEngine = () => {
 						<BookingEngineForm
 							isEdit
 							status={status}
-							defaultCountyCode={defaultCountyCode}
+							defaultCountryCode={defaultCountryCode}
 							activePassenger={activePassenger}
 							activeStep={activeStep}
 							handleBack={handleBack}
 							defaultTimezone={defaultTimeZone}
 							bookingUsersQuantity={bookingUsersQuantity}
 							steps={steps}
+							timer={timerStart}
+							dropTimer={() => setTimerStart()}
 						/>
 					</Formik>
 					{timerStart && (

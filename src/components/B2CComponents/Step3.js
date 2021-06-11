@@ -49,7 +49,7 @@ const useStyles = makeStyles({
 
 const Step2 = ({
     isEdit,
-    defaultCountyCode,
+    defaultCountryCode,
     activePassenger,
 }) => {
 	const classes = useStyles();
@@ -111,7 +111,7 @@ const Step2 = ({
                                             form.setFieldValue(`passengers[${activePassenger}]`, {
                                                 ...bookingUser,
                                                 phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
-								                countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
+								                countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)) : defaultCountryCode,
                                                 fillWithBookingUser: value,
                                             });
                                         })}

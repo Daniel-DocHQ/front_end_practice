@@ -35,7 +35,7 @@ const BookingEngine = () => {
 	const usersPhoneNumber = get(orderInfo, 'shipping_address.telephone', '');
 	const orderId = get(orderInfo, 'id', 0);
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
-	const defaultCountyCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
+	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
 	const defaultTestType = items.find(({ Quantity }) => Quantity > 0) || {};
 	const steps = [
@@ -52,7 +52,7 @@ const BookingEngine = () => {
 		firstName: '',
 		lastName: '',
 		email: '',
-		countryCode: defaultCountyCode,
+		countryCode: defaultCountryCode,
 		phone: '',
 		dateOfBirth: null,
 		ethnicity: '',
@@ -144,7 +144,7 @@ const BookingEngine = () => {
 												dateOfBirth: new Date(date_of_birth),
 												passportNumber: passport_number,
 												phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
-												countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
+												countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)) : defaultCountryCode,
 												ethnicity,
 												sex,
 												email,
@@ -160,7 +160,7 @@ const BookingEngine = () => {
 												phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : usersPhoneNumber,
 												countryCode: !!parsedPhoneNumber
 												? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
-												: defaultCountyCode,
+												: defaultCountryCode,
 												dateOfBirth: new Date(get(orderInfo, 'billing_detail.date_of_birth', null)),
 											},
 										],
@@ -312,7 +312,7 @@ const BookingEngine = () => {
 												vaccine_type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
 											},
 										};
-										bookingService
+										await bookingService
 											.paymentRequest(selectedSlot.id, body)
 											.then(result => {
 												if (result.success && result.confirmation) {
@@ -346,6 +346,9 @@ const BookingEngine = () => {
 									status={status}
 									steps={steps}
 									items={items}
+									timer={timerStart}
+									defaultCountryCode={defaultCountryCode}
+									dropTimer={() => setTimerStart()}
 								/>
 							</Formik>
 							{timerStart && (

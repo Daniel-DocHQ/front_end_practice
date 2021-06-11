@@ -98,7 +98,7 @@ const datePickerTheme = () => createMuiTheme({
 	},
 });
 
-const Step3 = ({ defaultTimezone }) => {
+const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 	const [showMore, setShowMore] = useState(false);
 	const [appointments, setAppointments] = useState([]);
 	const today = new Date().setHours(0, 0, 0, 0);
@@ -126,7 +126,11 @@ const Step3 = ({ defaultTimezone }) => {
 	} = useFormikContext();
 
 	const isPCR = Type === 'PCR' && Title.includes('Fit to Travel');
+	const isSelectedSlotToday = !!selectedSlotValue && new Date(selectedSlotValue.start_time).setHours(0, 0, 0, 0) === new Date(selectedDate).setHours(0, 0, 0, 0);
 	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
+	const filteredAppointments = (isSelectedSlotToday && !!timer)
+		? [...appointments, selectedSlotValue].sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime())
+		: [...appointments];
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
 	const maxDate = new Date(new Date(new Date(travelDate).setHours(travelTime.getHours() - 60)).setMinutes(travelTime.getMinutes()));
 	const startDateTime = new Date(new Date(maxDate).setHours(maxDate.getHours() - 12));
@@ -168,10 +172,11 @@ const Step3 = ({ defaultTimezone }) => {
 			getSlots();
 		}
 	}, [selectedDate]);
-	function getSlots() {
+
+	const getSlots = async () => {
 		if (isPCR) {
 			const selectedDateTime = new Date(selectedDate).setHours(0,0,0,0);
-			bookingService
+			await bookingService
 				.getSlotsByTime({
 					date_time: moment(new Date(new Date(startDate).setHours(startDateTime.getHours())).setMinutes(startDateTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
 					date_time_to: moment(new Date(new Date(maxDate).setHours(maxDate.getHours())).setMinutes(maxDate.getMinutes())).tz(timezone).format().replace('+', '%2B'),
@@ -195,7 +200,7 @@ const Step3 = ({ defaultTimezone }) => {
 					setAppointments([]);
 				});
 		} else {
-			bookingService
+			await bookingService
 				.getSlots(selectedDate)
 				.then(result => {
 					if (result.success && result.appointments) {
@@ -212,7 +217,14 @@ const Step3 = ({ defaultTimezone }) => {
 				})
 				.catch(err => setAppointments([]));
 		}
-		// setFieldValue(selectedSlot.name, null);
+		if (!!selectedSlotValue && !isSelectedSlotToday) {
+			await bookingService.updateAppointmentStatus(
+				selectedSlotValue.id,
+				{ status: 'AVAILABLE' },
+			).catch(() => console.log('error'));
+			setFieldValue(selectedSlot.name, null);
+			dropTimer();
+		}
 	}
 
 	return (
@@ -252,7 +264,7 @@ const Step3 = ({ defaultTimezone }) => {
 						</div>
 					</div>
 				</div>
-				{appointments.length > 0 ? (
+				{filteredAppointments.length > 0 ? (
 					<div className='appointment-slot-container'>
 						<div className='row flex-start' >
 							<p style={{ margin: 0, width: 'max-content' }}>
@@ -262,7 +274,7 @@ const Step3 = ({ defaultTimezone }) => {
 						<div className='slot-container'>
 							<Field name={selectedSlot.name}>
 								{({ field, form }) =>
-									(showMore ? appointments : appointments.slice(0, 18)).map((item, i) => (
+									(showMore ? filteredAppointments : filteredAppointments.slice(0, 18)).map((item, i) => (
 										<Slot
 											start_time={item.start_time}
 											key={i}
@@ -287,7 +299,7 @@ const Step3 = ({ defaultTimezone }) => {
 								}
 							</Field>
 						</div>
-						{appointments.length > 18 && (
+						{filteredAppointments.length > 18 && (
 							<div className="row center">
 								<DocButton
 									text={showMore ? 'Show less'  : 'Show more'}
@@ -304,21 +316,19 @@ const Step3 = ({ defaultTimezone }) => {
 				)}
 			</div>
 			<Divider style={{ width: '522px', margin: '20px 0 10px 0px' }} />
+			<div className='row no-margin'>
+				<p>
+					<strong>Selected appointment Date:&nbsp;</strong>
+					{ddMMyyyy(selectedDate)}
+				</p>
+			</div>
 			{selectedSlotValue && (
-				<>
-					<div className='row no-margin'>
-						<p>
-							<strong>Selected appointment Date:&nbsp;</strong>
-							{ddMMyyyy(selectedSlotValue.start_time)}
-						</p>
-					</div>
 					<div className='row no-margin'>
 						<p style={{ marginTop: 0 }}>
 							<strong>Selected appointment Time:&nbsp;</strong>
 							{formatTimeSlotWithTimeZone(selectedSlotValue.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlotValue.end_time, timezone)}
 						</p>
 					</div>
-				</>
 			)}
 			<ErrorMessage component="p" className="error" name={selectedSlot.name} />
 		</React.Fragment>
