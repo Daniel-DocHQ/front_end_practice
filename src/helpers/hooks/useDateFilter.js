@@ -19,21 +19,20 @@ const useDateFilter = (appointments) => {
 			switch (filter) {
 				case 'last month':
 					newAppointments = [...appointments].filter((appointment) => {
-						const appointmentDate = new Date(appointment.start_time).getTime();
-						return appointmentDate >= lastMonth && appointmentDate <= today;
+						const appointmentDate = new Date(appointment.start_time).setHours(0,0,0,0);
+						return appointmentDate >= lastMonth && appointmentDate <= todayTime;
 					});
 					break;
 				case 'last week':
 					newAppointments = [...appointments].filter((appointment) => {
-						const appointmentDate = new Date(appointment.start_time).getTime();
-						return appointmentDate >= firstDayOfWeek && appointmentDate <= today;
+						const appointmentDate = new Date(appointment.start_time).setHours(0,0,0,0);
+						return appointmentDate >= firstDayOfWeek && appointmentDate <= todayTime;
 					});
 					break;
 				case 'yesterday':
 					newAppointments = [...appointments].filter((appointment) =>
 						new Date(appointment.start_time).setHours(0,0,0,0) === yesterdayTime
 					);
-					console.log(newAppointments);
 					break;
 				case 'today':
 					newAppointments = [...appointments].filter((appointment) =>
@@ -45,14 +44,14 @@ const useDateFilter = (appointments) => {
 					break;
 				case 'week':
 					newAppointments = [...appointments].filter((appointment) => {
-						const appointmentDate = new Date(appointment.start_time).getTime();
-						return appointmentDate >= today && appointmentDate <= lastDayOfWeek;
+						const appointmentDate = new Date(appointment.start_time).setHours(0,0,0,0);
+						return appointmentDate >= todayTime && appointmentDate <= lastDayOfWeek;
 					});
 					break;
 				case 'month':
 					newAppointments = [...appointments].filter((appointment) => {
-						const appointmentDate = new Date(appointment.start_time).getTime();
-						return appointmentDate >= today && appointmentDate <= nextMonth;
+						const appointmentDate = new Date(appointment.start_time).setHours(0,0,0,0);
+						return appointmentDate >= todayTime && appointmentDate <= nextMonth;
 					});
 					break;
 				default:
