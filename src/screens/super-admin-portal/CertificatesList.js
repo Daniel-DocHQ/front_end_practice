@@ -81,8 +81,11 @@ const CertificatesList = props => {
 	// }, []);
 
 	return !!certificates
-		? <UploadedPositiveResultsTable results={certificates} back={() => setCertificates()} />
-		: <CertificatesListTable certificates={certificatesTemplates} />;
+		? <UploadedPositiveResultsTable
+			token={props.token}
+			results={certificates}
+			back={() => setCertificates()}
+		/> : <CertificatesListTable certificates={certificatesTemplates} />;
 };
 
 export default memo(CertificatesList);

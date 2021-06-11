@@ -39,7 +39,7 @@ const Box = ({
 			}).then(res => res.json());
 			setVideoCallToken(data.token);
 			bookingService
-				.updateAppointmentStatus(token, appointmentId, {
+				.updateAppointmentStatus(appointmentId, {
 					status: isNurse ? 'PRACTITIONER_ATTENDED' : 'PATIENT_ATTENDED',
 				});
 		},

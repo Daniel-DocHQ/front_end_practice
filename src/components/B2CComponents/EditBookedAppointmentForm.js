@@ -18,10 +18,12 @@ import { AuthContext } from '../../context/AuthContext';
 import COUNTRIES from '../../helpers/countries';
 import adminService from '../../services/adminService';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import CountdownTimer from '../CountdownTimer';
 
 const BookingEngine = () => {
 	const { token } = useContext(AuthContext);
 	const [items, setItems] = useState([]);
+	const [timerStart, setTimerStart] = useState();
 	const [isLoading, setLoading] = useState(false);
 	const [appointment, setAppointment] = useState();
 	const params = getURLParams(window.location.href);
@@ -116,180 +118,214 @@ const BookingEngine = () => {
 	return (
 		<BigWhiteContainer>
 			{!!appointment && !!bookingUsersQuantity ? (
-				<Formik
-					initialValues={{
-						...formInitialValues,
-						travelDate: new Date(usersTravelDate),
-						travelTime: new Date(usersTravelDate),
-						...(!!usersLandingDate ? {
-							landingDate: new Date(usersLandingDate),
-							landingTime: new Date(usersLandingDate),
-							transportNumber: usersFlightNumber,
-						} : {}),
-						testType: {
-							Quantity: 4,
-							Title: bookingUsersProduct.Title,
-							Type: bookingUsersProduct.Type,
-						},
-						city: usersTimeZoneObj,
-						timezone: usersTimeZoneObj.timezone,
-						numberOfPeople: bookingUsersQuantity,
-						passengers: bookingUsers.map(({
-							id,
-							first_name,
-							date_of_birth,
-							last_name,
-							phone,
-							metadata: {
-								passport_number,
-								test_type,
-								short_token,
-								...restMetadata
+				<>
+					<Formik
+						initialValues={{
+							...formInitialValues,
+							travelDate: new Date(usersTravelDate),
+							travelTime: new Date(usersTravelDate),
+							...(!!usersLandingDate ? {
+								landingDate: new Date(usersLandingDate),
+								landingTime: new Date(usersLandingDate),
+								transportNumber: usersFlightNumber,
+							} : {}),
+							testType: {
+								Quantity: 4,
+								Title: bookingUsersProduct.Title,
+								Type: bookingUsersProduct.Type,
 							},
-							...rest
-						}) => {
-							const parsedPhoneNumber = parsePhoneNumber(phone);
-
-							return ({
-								...passengerInitialValues,
-								firstName: first_name,
-								lastName: last_name,
-								dateOfBirth: new Date(date_of_birth),
-								passportNumber: passport_number,
-								test_type,
-								metadata: {
-									...restMetadata,
-								},
-								phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
-								countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
-								short_token,
-								...rest,
-							});
-						}),
-					}}
-					validationSchema={currentValidationSchema}
-					onSubmit={async (values, actions) => {
-						if (activeStep === 3) {
-							const {
-								numberOfPeople,
-								passengers,
-							} = values;
-							if (activePassenger === (numberOfPeople  - 1)) {
-								actions.setSubmitting(false);
-								actions.setTouched({});
-								actions.setErrors({});
-								handleNext();
-							} else {
-								if (get(passengers, `[${activePassenger + 1}].firstName`, 'default') === 'default') {
-									const newPassengers = [...passengers];
-									newPassengers.push({ ...passengerInitialValues });
-									actions.setValues({
-										...values,
-										passengers: newPassengers,
-									});
-								}
-								setActivePassenger(activePassenger + 1);
-								actions.setSubmitting(false);
-								actions.setTouched({});
-								actions.setErrors({});
-							}
-						} else if (activeStep === 4) {
-							const {
-								selectedSlot,
-								travelDate,
-								travelTime,
-								passengers,
-								landingDate,
-								landingTime,
-								transportNumber,
-							} = values;
-							const booking_users = passengers.map(({
-								firstName,
-								lastName,
-								dateOfBirth,
-								passportNumber,
-								test_type,
+							city: usersTimeZoneObj,
+							timezone: usersTimeZoneObj.timezone,
+							numberOfPeople: bookingUsersQuantity,
+							passengers: bookingUsers.map(({
+								id,
+								first_name,
+								date_of_birth,
+								last_name,
 								phone,
-								countryCode,
-								short_token,
-								metadata,
-								...rest
-							}) => ({
-								...rest,
-								first_name: firstName,
-								last_name: lastName,
-								date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
-								phone: `${countryCode.label}${phone.trim()}`,
 								metadata: {
-									...metadata,
-									travel_date: moment(
-										new Date(
-											travelDate.getFullYear(),
-											travelDate.getMonth(),
-											travelDate.getDate(),
-											travelTime.getHours(),
-											travelTime.getMinutes(),
-											0,
-										)).format(),
-									passport_number: passportNumber,
+									passport_number,
 									test_type,
 									short_token,
-									...(!!usersLandingDate ? {
-										landing_date: moment(
-											new Date(
-												landingDate.getFullYear(),
-												landingDate.getMonth(),
-												landingDate.getDate(),
-												landingTime.getHours(),
-												landingTime.getMinutes(),
-												0,
-											)).format(),
-										flight_number: transportNumber,
-									} : {}),
+									...restMetadata
 								},
-							}));
-							const body = {
-								type: appointment.type,
-								booking_users,
-							};
-							await bookingService
-								.paymentRequest(selectedSlot.id, body)
-								.then(async (result) => {
-									if (result.success && result.confirmation) {
-										handleNext();
-										await bookingService.deleteBooking(appointmentId, token).catch(() => console.log('error'));
-									} else {
-										setStatus({
-											severity: 'error',
-											message: result.message,
+								...rest
+							}) => {
+								const parsedPhoneNumber = parsePhoneNumber(phone);
+
+								return ({
+									...passengerInitialValues,
+									firstName: first_name,
+									lastName: last_name,
+									dateOfBirth: new Date(date_of_birth),
+									passportNumber: passport_number,
+									test_type,
+									metadata: {
+										...restMetadata,
+									},
+									phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
+									countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
+									short_token,
+									...rest,
+								});
+							}),
+						}}
+						validationSchema={currentValidationSchema}
+						onSubmit={async (values, actions) => {
+							if (activeStep === 2) {
+								const { selectedSlot } = values;
+								await bookingService.updateAppointmentStatus(
+									selectedSlot.id,
+									{ status: 'LOCKED' },
+								).then((response) => {
+									if (response.success) {
+										setTimerStart(new Date());
+									}
+								}).catch(() => console.log('error'));
+								actions.setTouched({});
+								actions.setSubmitting(false);
+								actions.setErrors({});
+								handleNext();
+							} else if (activeStep === 3) {
+								const {
+									numberOfPeople,
+									passengers,
+								} = values;
+								if (activePassenger === (numberOfPeople  - 1)) {
+									actions.setSubmitting(false);
+									actions.setTouched({});
+									actions.setErrors({});
+									handleNext();
+								} else {
+									if (get(passengers, `[${activePassenger + 1}].firstName`, 'default') === 'default') {
+										const newPassengers = [...passengers];
+										newPassengers.push({ ...passengerInitialValues });
+										actions.setValues({
+											...values,
+											passengers: newPassengers,
 										});
 									}
-								})
-								.catch(({ error }) => {
-									setStatus({
-										severity: 'error',
-										message: error,
+									setActivePassenger(activePassenger + 1);
+									actions.setSubmitting(false);
+									actions.setTouched({});
+									actions.setErrors({});
+								}
+							} else if (activeStep === 4) {
+								const {
+									selectedSlot,
+									travelDate,
+									travelTime,
+									passengers,
+									landingDate,
+									landingTime,
+									transportNumber,
+								} = values;
+								const booking_users = passengers.map(({
+									firstName,
+									lastName,
+									dateOfBirth,
+									passportNumber,
+									test_type,
+									phone,
+									countryCode,
+									short_token,
+									metadata,
+									...rest
+								}) => ({
+									...rest,
+									first_name: firstName,
+									last_name: lastName,
+									date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
+									phone: `${countryCode.label}${phone.trim()}`,
+									metadata: {
+										...metadata,
+										travel_date: moment(
+											new Date(
+												travelDate.getFullYear(),
+												travelDate.getMonth(),
+												travelDate.getDate(),
+												travelTime.getHours(),
+												travelTime.getMinutes(),
+												0,
+											)).format(),
+										passport_number: passportNumber,
+										test_type,
+										short_token,
+										...(!!usersLandingDate ? {
+											landing_date: moment(
+												new Date(
+													landingDate.getFullYear(),
+													landingDate.getMonth(),
+													landingDate.getDate(),
+													landingTime.getHours(),
+													landingTime.getMinutes(),
+													0,
+												)).format(),
+											flight_number: transportNumber,
+										} : {}),
+									},
+								}));
+								const body = {
+									type: appointment.type,
+									booking_users,
+								};
+								await bookingService
+									.paymentRequest(selectedSlot.id, body)
+									.then(async (result) => {
+										if (result.success && result.confirmation) {
+											handleNext();
+											await bookingService.deleteBooking(appointmentId, token).catch(() => console.log('error'));
+										} else {
+											setStatus({
+												severity: 'error',
+												message: result.message,
+											});
+										}
 									})
-								});
-						} else {
-							actions.setTouched({});
-							actions.setSubmitting(false);
-							actions.setErrors({});
-							handleNext();
-						}
-					}}
-				>
-					<BookingEngineForm
-						isEdit
-						status={status}
-						activePassenger={activePassenger}
-						activeStep={activeStep}
-						handleBack={handleBack}
-						defaultTimezone={defaultTimeZone.timezone}
-						bookingUsersQuantity={bookingUsersQuantity}
-						steps={steps}
-					/>
-				</Formik>
+									.catch(({ error }) => {
+										setStatus({
+											severity: 'error',
+											message: error,
+										})
+									});
+							} else {
+								actions.setTouched({});
+								actions.setSubmitting(false);
+								actions.setErrors({});
+								handleNext();
+							}
+						}}
+					>
+						<BookingEngineForm
+							isEdit
+							status={status}
+							defaultCountyCode={defaultCountyCode}
+							activePassenger={activePassenger}
+							activeStep={activeStep}
+							handleBack={handleBack}
+							defaultTimezone={defaultTimeZone}
+							bookingUsersQuantity={bookingUsersQuantity}
+							steps={steps}
+						/>
+					</Formik>
+					{timerStart && (
+						<div className="countdown-timer">
+							<p>
+								Your appointment is available for the next&nbsp;
+								<CountdownTimer
+									timerStart={timerStart.getTime()}
+									timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 1)).getTime()}
+									onTimeEnd={() => {
+										setTimerStart();
+										setActiveStep(2);
+										setActivePassenger(0);
+									}}
+								/> min<br />
+								If you do not complete the booking you might need to select another appointment
+							</p>
+						</div>
+					)}
+				</>
 			) : (
 				<>
 					<div className="row center">

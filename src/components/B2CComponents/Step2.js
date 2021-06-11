@@ -10,6 +10,7 @@ import bookingFormModel from './bookingFormModel';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
 import Slot from './Slot';
 import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
+import DocButton from '../DocButton/DocButton';
 import './BookingEngine.scss';
 
 const datePickerTheme = () => createMuiTheme({
@@ -98,6 +99,7 @@ const datePickerTheme = () => createMuiTheme({
 });
 
 const Step3 = ({ defaultTimezone }) => {
+	const [showMore, setShowMore] = useState(false);
 	const [appointments, setAppointments] = useState([]);
 	const today = new Date().setHours(0, 0, 0, 0);
 	const {
@@ -210,12 +212,12 @@ const Step3 = ({ defaultTimezone }) => {
 				})
 				.catch(err => setAppointments([]));
 		}
-		setFieldValue(selectedSlot.name, null);
+		// setFieldValue(selectedSlot.name, null);
 	}
 
 	return (
 		<React.Fragment>
-			<div className='no-margin col' sty>
+			<div className='no-margin col'>
 				<div className='appointment-calendar-container'>
 					<p>Please make sure that you book an appointment in the time window required by the destination country or airline for any PCR test or Antigen test requirement.</p>
 					<ThemeProvider theme={pickerTheme}>
@@ -260,7 +262,7 @@ const Step3 = ({ defaultTimezone }) => {
 						<div className='slot-container'>
 							<Field name={selectedSlot.name}>
 								{({ field, form }) =>
-									appointments.map((item, i) => (
+									(showMore ? appointments : appointments.slice(0, 18)).map((item, i) => (
 										<Slot
 											start_time={item.start_time}
 											key={i}
@@ -268,7 +270,15 @@ const Step3 = ({ defaultTimezone }) => {
 											{...field}
 											id={item.id}
 											item={item}
-											selectSlot={(value) => form.setFieldValue(field.name, value)}
+											selectSlot={async (value) => {
+												if (!!selectedSlotValue) {
+													await bookingService.updateAppointmentStatus(
+														selectedSlotValue.id,
+														{ status: 'AVAILABLE' },
+													).catch(() => console.log('error'));
+												}
+												form.setFieldValue(field.name, value);
+											}}
 											isSelected={
 												!!selectedSlotValue ? item.id === selectedSlotValue.id : false
 											}
@@ -277,6 +287,15 @@ const Step3 = ({ defaultTimezone }) => {
 								}
 							</Field>
 						</div>
+						{appointments.length > 18 && (
+							<div className="row center">
+								<DocButton
+									text={showMore ? 'Show less'  : 'Show more'}
+									color='green'
+									onClick={() => setShowMore(!showMore)}
+								/>
+							</div>
+						)}
 					</div>
 				) : (
 					<p style={{ marginBottom: 0, width: 'max-content' }}>
@@ -284,20 +303,22 @@ const Step3 = ({ defaultTimezone }) => {
 					</p>
 				)}
 			</div>
-			<Divider style={{ width: '35%', margin: '20px 0 10px 0px' }} />
-			<div className='row no-margin'>
-				<p>
-					<strong>Selected appointment Date:&nbsp;</strong>
-					{ddMMyyyy(selectedDate)}
-				</p>
-			</div>
+			<Divider style={{ width: '522px', margin: '20px 0 10px 0px' }} />
 			{selectedSlotValue && (
-				<div className='row no-margin'>
-					<p style={{ marginTop: 0 }}>
-						<strong>Selected appointment Time:&nbsp;</strong>
-						{formatTimeSlotWithTimeZone(selectedSlotValue.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlotValue.end_time, timezone)}
-					</p>
-				</div>
+				<>
+					<div className='row no-margin'>
+						<p>
+							<strong>Selected appointment Date:&nbsp;</strong>
+							{ddMMyyyy(selectedSlotValue.start_time)}
+						</p>
+					</div>
+					<div className='row no-margin'>
+						<p style={{ marginTop: 0 }}>
+							<strong>Selected appointment Time:&nbsp;</strong>
+							{formatTimeSlotWithTimeZone(selectedSlotValue.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlotValue.end_time, timezone)}
+						</p>
+					</div>
+				</>
 			)}
 			<ErrorMessage component="p" className="error" name={selectedSlot.name} />
 		</React.Fragment>

@@ -143,7 +143,7 @@ const adminService = {
 	uploadCsvFile(type, data, token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
-				axios.post(`${baseUrl}/v1/certificate-auth/upload?type=${type}`, data, {
+				axios.post(`${baseUrl}/v1/certificate/upload?type=${type}`, data, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -165,6 +165,38 @@ const adminService = {
 						reject({
 							success: false,
 							error: 'Unable to upload file',
+						});
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	sendCertificateEmail(id, token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.post(`${baseUrl}/v1/certificate/${id}/email`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to send email',
+							});
+						}
+					})
+					.catch(err => {
+						reject({
+							success: false,
+							error: 'Unable to send email',
 						});
 					});
 			} else {

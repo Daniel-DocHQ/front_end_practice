@@ -17,6 +17,7 @@ const BookingEngineForm = ({
     handleBack,
     steps,
     items,
+    defaultCountyCode,
     defaultTimezone,
     bookingUsersQuantity = 0,
     isEdit = false,
@@ -45,7 +46,7 @@ const BookingEngineForm = ({
 				);
 			case 3:
 				return (
-					<Step3 activePassenger={activePassenger} isEdit={isEdit} />
+					<Step3 activePassenger={activePassenger} defaultCountyCode={defaultCountyCode} isEdit={isEdit} />
 				);
             case 4:
 				return (

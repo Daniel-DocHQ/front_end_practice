@@ -16,11 +16,13 @@ import {
 	MuiPickersUtilsProvider,
 	KeyboardDatePicker,
 } from '@material-ui/pickers';
+import { get } from 'lodash';
 import moment from 'moment';
+import parsePhoneNumber, { isValidPhoneNumber } from 'libphonenumber-js'
 import DateFnsUtils from '@date-io/date-fns';
 import { ThemeProvider } from '@material-ui/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { ErrorMessage, Field, useFormikContext } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
 import COUNTRIES from '../../helpers/countries';
@@ -47,6 +49,7 @@ const useStyles = makeStyles({
 
 const Step2 = ({
     isEdit,
+    defaultCountyCode,
     activePassenger,
 }) => {
 	const classes = useStyles();
@@ -102,8 +105,13 @@ const Step2 = ({
                                         {...field}
                                         onChange={(({ target: { value } }) => {
                                             form.setFieldValue(field.name, value);
+                                            const bookingUser = bookingUsers[parseInt(value)];
+                                            const { phone } = bookingUser;
+                                            const parsedPhoneNumber = parsePhoneNumber(phone);
                                             form.setFieldValue(`passengers[${activePassenger}]`, {
-                                                ...bookingUsers[parseInt(value)],
+                                                ...bookingUser,
+                                                phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
+								                countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
                                                 fillWithBookingUser: value,
                                             });
                                         })}
@@ -182,7 +190,7 @@ const Step2 = ({
                     </Field>
                 </div>
 			</div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+			<div className='row' style={{ flexWrap: 'wrap', width: '60%', alignItems: 'self-start' }}>
 				<div style={{ maxWidth: '50%', marginRight: 30 }}>
                     <Field
                         name={`passengers[${activePassenger}].countryCode`}
@@ -240,13 +248,12 @@ const Step2 = ({
                         name={`passengers[${activePassenger}].phone`}
                         validate={(value) => {
                             let error;
+                            const countryCode = get(passengers, `[${activePassenger}].countryCode.label`, '+44');
                             if (!!touched && !!touched.passengers) {
                                 if (!value) {
                                     error = 'Input phone';
-                                } else if (value.length < 5) {
-                                    error = 'Invalid phone number';
-                                } else if (value.includes('+')) {
-                                    error = 'Input number without Country Code';
+                                } else if (!isValidPhoneNumber(countryCode + value)) {
+                                    error = 'Invalid phone number. Input phone without country code';
                                 }
                             }
                             return error;

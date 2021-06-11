@@ -17,11 +17,13 @@ import adminService from '../../services/adminService';
 import COUNTRIES from '../../helpers/countries';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
+import CountdownTimer from '../CountdownTimer';
 
 const BookingEngine = () => {
 	const params = getURLParams(window.location.href);
 	const short_token = params['short_token'];
 	const [orderInfo, setOrderInfo] = useState();
+	const [timerStart, setTimerStart] = useState();
 	const [appointments, setAppointments] = useState([]);
 	const [items, setItems] = useState([]);
 	const [status, setStatus] = useState(); // { severity, message }
@@ -114,144 +116,187 @@ const BookingEngine = () => {
 				<>
 					{!!items.length ? (
 						<>
-						<Formik
-							initialValues={{
-								...formInitialValues,
-								numberOfPeople: (defaultTestType.Quantity || 1) > 4 ? 4 : defaultTestType.Quantity,
-								product: defaultTestType.ID || 0,
-								testType: defaultTestType,
-								...(!!appointments.length ? {
-									bookingUsers: appointments[0].booking_users.map(({
-										first_name,
-										date_of_birth,
-										last_name,
-										phone,
-										ethnicity,
-										sex,
-										email,
-										metadata: {
-											passport_number,
-										},
-									}) => {
-										const parsedPhoneNumber = parsePhoneNumber(phone);
-
-										return ({
-											...passengerInitialValues,
-											firstName: first_name,
-											lastName: last_name,
-											dateOfBirth: new Date(date_of_birth),
-											passportNumber: passport_number,
-											phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
-											countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
+							<Formik
+								initialValues={{
+									...formInitialValues,
+									numberOfPeople: (defaultTestType.Quantity || 1) > 4 ? 4 : defaultTestType.Quantity,
+									product: defaultTestType.ID || 0,
+									testType: defaultTestType,
+									...(!!appointments.length ? {
+										bookingUsers: appointments[0].booking_users.map(({
+											first_name,
+											date_of_birth,
+											last_name,
+											phone,
 											ethnicity,
 											sex,
 											email,
-										});
+											metadata: {
+												passport_number,
+											},
+										}) => {
+											const parsedPhoneNumber = parsePhoneNumber(phone);
+
+											return ({
+												...passengerInitialValues,
+												firstName: first_name,
+												lastName: last_name,
+												dateOfBirth: new Date(date_of_birth),
+												passportNumber: passport_number,
+												phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
+												countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountyCode,
+												ethnicity,
+												sex,
+												email,
+											});
+										}),
+									} : {
+										passengers: [
+											{
+												...passengerInitialValues,
+												firstName: get(orderInfo, 'billing_detail.first_name', ''),
+												lastName: get(orderInfo, 'billing_detail.last_name', ''),
+												email: get(orderInfo, 'billing_detail.email', ''),
+												phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : usersPhoneNumber,
+												countryCode: !!parsedPhoneNumber
+												? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
+												: defaultCountyCode,
+												dateOfBirth: new Date(get(orderInfo, 'billing_detail.date_of_birth', null)),
+											},
+										],
 									}),
-								} : {
-									passengers: [
-										{
-											...passengerInitialValues,
-											firstName: get(orderInfo, 'billing_detail.first_name', ''),
-											lastName: get(orderInfo, 'billing_detail.last_name', ''),
-											email: get(orderInfo, 'billing_detail.email', ''),
-											phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : usersPhoneNumber,
-											countryCode: !!parsedPhoneNumber
-											? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`))
-											: defaultCountyCode,
-											dateOfBirth: new Date(get(orderInfo, 'billing_detail.date_of_birth', null)),
-										},
-									],
-								}),
-								city: undefined,
-								timezone: undefined,
-						}}
-							validationSchema={currentValidationSchema}
-							onSubmit={async (values, actions) => {
-								if (activeStep === 3) {
-									const {
-										numberOfPeople,
-										passengers,
-									} = values;
-									if (activePassenger === (numberOfPeople - 1)) {
-										actions.setSubmitting(false);
+									city: undefined,
+									timezone: undefined,
+								}}
+								validationSchema={currentValidationSchema}
+								onSubmit={async (values, actions) => {
+									if (activeStep === 2) {
+										const { selectedSlot } = values;
+										await bookingService.updateAppointmentStatus(
+											selectedSlot.id,
+											{ status: 'LOCKED' },
+										).then((response) => {
+											if (response.success) {
+												setTimerStart(new Date());
+											}
+										}).catch(() => console.log('error'));
 										actions.setTouched({});
+										actions.setSubmitting(false);
 										actions.setErrors({});
 										handleNext();
-									} else {
-										if (get(passengers, `[${activePassenger + 1}].firstName`, 'default') === 'default') {
-											const newPassengers = [...passengers];
-											newPassengers.push({ ...passengerInitialValues });
-											actions.setValues({
-												...values,
-												passengers: newPassengers,
-											});
-										}
-										setActivePassenger(activePassenger + 1);
-										actions.setSubmitting(false);
-										actions.setTouched({});
-										actions.setErrors({});
-									}
-								} else if (activeStep === 4) {
-									const {
-										shipping_address: {
-											address_1,
-											address_2,
-											town,
-											postcode,
-											county,
-										},
-									} = orderInfo;
-									const {
-										numberOfPeople,
-										selectedSlot,
-										travelDate,
-										travelTime,
-										passengers,
-										timezone,
-										testType: { ID, Type, Title },
-										transportNumber,
-										transportType,
-										landingDate,
-										landingTime,
-										vaccineNumber,
-										vaccineStatus,
-										vaccineType,
-										vaccineTypeName,
-										city,
-										tocAccept,
-									} = values;
-									const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
-									const booking_users = Array.from(Array(numberOfPeople).keys()).map((item) => {
+									} else if (activeStep === 3) {
 										const {
-											firstName,
-											lastName,
-											dateOfBirth,
-											passportNumber,
-											phone,
-											countryCode,
-											...rest
-										} = passengers[item];
-										return ({
-											first_name: firstName,
-											last_name: lastName,
-											tz_location: timezone || defaultTimeZone.timezone,
-											date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
-											street_address: address_1,
-											language: 'EN',
-											extended_address: address_2,
-											postal_code: postcode,
-											phone: `${countryCode.label}${phone.trim()}`,
-											region: county,
-											country: 'GB',
-											toc_accept: tocAccept,
-											locality: town,
-											metadata: {
-												product_id: parseInt(ID),
-												short_token,
-												order_id: orderId.toString(),
-												passport_number: passportNumber,
-												travel_date: moment(
+											numberOfPeople,
+											passengers,
+										} = values;
+										if (activePassenger === (numberOfPeople - 1)) {
+											actions.setSubmitting(false);
+											actions.setTouched({});
+											actions.setErrors({});
+											handleNext();
+										} else {
+											if (get(passengers, `[${activePassenger + 1}].firstName`, 'default') === 'default') {
+												const newPassengers = [...passengers];
+												newPassengers.push({ ...passengerInitialValues });
+												actions.setValues({
+													...values,
+													passengers: newPassengers,
+												});
+											}
+											setActivePassenger(activePassenger + 1);
+											actions.setSubmitting(false);
+											actions.setTouched({});
+											actions.setErrors({});
+										}
+									} else if (activeStep === 4) {
+										const {
+											shipping_address: {
+												address_1,
+												address_2,
+												town,
+												postcode,
+												county,
+											},
+										} = orderInfo;
+										const {
+											numberOfPeople,
+											selectedSlot,
+											travelDate,
+											travelTime,
+											passengers,
+											timezone,
+											testType: { ID, Type, Title },
+											transportNumber,
+											transportType,
+											landingDate,
+											landingTime,
+											vaccineNumber,
+											vaccineStatus,
+											vaccineType,
+											vaccineTypeName,
+											city,
+											tocAccept,
+										} = values;
+										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
+										const booking_users = Array.from(Array(numberOfPeople).keys()).map((item) => {
+											const {
+												firstName,
+												lastName,
+												dateOfBirth,
+												passportNumber,
+												phone,
+												countryCode,
+												...rest
+											} = passengers[item];
+											return ({
+												first_name: firstName,
+												last_name: lastName,
+												tz_location: timezone || defaultTimeZone.timezone,
+												date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
+												street_address: address_1,
+												language: 'EN',
+												extended_address: address_2,
+												postal_code: postcode,
+												phone: `${countryCode.label}${phone.trim()}`,
+												region: county,
+												country: 'GB',
+												toc_accept: tocAccept,
+												locality: town,
+												metadata: {
+													product_id: parseInt(ID),
+													short_token,
+													order_id: orderId.toString(),
+													passport_number: passportNumber,
+													travel_date: moment(
+														new Date(
+															travelDate.getFullYear(),
+															travelDate.getMonth(),
+															travelDate.getDate(),
+															travelTime.getHours(),
+															travelTime.getMinutes(),
+															0,
+														)).format(),
+													test_type: Type,
+												},
+												...rest,
+											});
+										})
+										const body = {
+											type: 'video_gp_dochq',
+											booking_users,
+											flight_details: {
+												transport_arrival_country: isAdditionalProduct ? 'GB' : timezone,
+												transport_arrival_date_time: moment(
+													new Date(
+														landingDate.getFullYear(),
+														landingDate.getMonth(),
+														landingDate.getDate(),
+														landingTime.getHours(),
+														landingTime.getMinutes(),
+														0,
+													)).format(),
+												transport_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
+												transport_departure_date_time: moment(
 													new Date(
 														travelDate.getFullYear(),
 														travelDate.getMonth(),
@@ -260,94 +305,83 @@ const BookingEngine = () => {
 														travelTime.getMinutes(),
 														0,
 													)).format(),
-												test_type: Type,
+												transport_number: transportNumber,
+												transport_type: transportType,
+												vaccine_number: vaccineNumber,
+												vaccine_status: vaccineStatus,
+												vaccine_type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
 											},
-											...rest,
-										});
-									})
-									const body = {
-										type: 'video_gp_dochq',
-										booking_users,
-										flight_details: {
-											transport_arrival_country: isAdditionalProduct ? 'GB' : timezone,
-											transport_arrival_date_time: moment(
-												new Date(
-													landingDate.getFullYear(),
-													landingDate.getMonth(),
-													landingDate.getDate(),
-													landingTime.getHours(),
-													landingTime.getMinutes(),
-													0,
-												)).format(),
-											transport_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
-											transport_departure_date_time: moment(
-												new Date(
-													travelDate.getFullYear(),
-													travelDate.getMonth(),
-													travelDate.getDate(),
-													travelTime.getHours(),
-													travelTime.getMinutes(),
-													0,
-												)).format(),
-											transport_number: transportNumber,
-											transport_type: transportType,
-											vaccine_number: vaccineNumber,
-											vaccine_status: vaccineStatus,
-											vaccine_type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
-										},
-									};
-									bookingService
-										.paymentRequest(selectedSlot.id, body)
-										.then(result => {
-											if (result.success && result.confirmation) {
-												handleNext();
-											} else {
+										};
+										bookingService
+											.paymentRequest(selectedSlot.id, body)
+											.then(result => {
+												if (result.success && result.confirmation) {
+													handleNext();
+												} else {
+													setStatus({
+														severity: 'error',
+														message: result.message,
+													});
+												}
+											})
+											.catch(({ error }) => {
 												setStatus({
 													severity: 'error',
-													message: result.message,
-												});
-											}
-										})
-										.catch(({ error }) => {
-											setStatus({
-												severity: 'error',
-												message: error,
-											})
-										});
-								} else {
-									actions.setTouched({});
-									actions.setSubmitting(false);
-									actions.setErrors({});
-									handleNext();
-								}
-							}}
-						>
-							<BookingEngineForm
-								activePassenger={activePassenger}
-								activeStep={activeStep}
-								defaultTimezone={defaultTimeZone}
-								handleBack={handleBack}
-								status={status}
-								steps={steps}
-								items={items}
-							/>
-						</Formik>
-					</>
-				) : (
-					<>
-						<div className="row center">
-							<h3>You don't have available appointments for that order</h3>
-						</div>
-						<div className="row center">
-							<LinkButton
-							text='Buy Now!'
-							color='green'
-							linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
-						/>
+													message: error,
+												})
+											});
+									} else {
+										actions.setTouched({});
+										actions.setSubmitting(false);
+										actions.setErrors({});
+										handleNext();
+									}
+								}}
+							>
+								<BookingEngineForm
+									activePassenger={activePassenger}
+									activeStep={activeStep}
+									defaultTimezone={defaultTimeZone}
+									handleBack={handleBack}
+									status={status}
+									steps={steps}
+									items={items}
+								/>
+							</Formik>
+							{timerStart && (
+								<div className="countdown-timer">
+									<p>
+										Your appointment is available for the next&nbsp;
+										<CountdownTimer
+											timerStart={timerStart.getTime()}
+											timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 30)).getTime()}
+											onTimeEnd={() => {
+												setTimerStart();
+												setActiveStep(2);
+												setActivePassenger(0);
+											}}
+										/> min<br />
+										If you do not complete the booking you might need to select another appointment
+									</p>
+								</div>
+							)}
+						</>
+					) : (
+						<>
+							<div className="row center">
+								<h3>You don't have available appointments for that order</h3>
 							</div>
-					</>
-				)}
-			</>) : (
+							<div className="row center">
+								<LinkButton
+								text='Buy Now!'
+								color='green'
+								linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+							/>
+								</div>
+						</>
+					)}
+				</>
+			) : (
 				<>
 					<div className="row center">
 						<h3>You haven't bought any test kit yet</h3>

@@ -10,6 +10,8 @@ import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../DocButton/LinkButton';
 import DocButton from '../DocButton/DocButton';
 import './Tables.scss';
+import adminService from '../../services/adminService';
+import { ToastsStore } from 'react-toasts';
 
 const styles = {
 	smallCol: {
@@ -35,7 +37,7 @@ const styles = {
 	},
 };
 
-const UploadedPositiveResultsTable = ({ results = [], back }) => (
+const UploadedPositiveResultsTable = ({ results = [], back, token }) => (
     <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
         <div style={styles.mainContainer}>
             <h2>Uploaded/Positive Results</h2>
@@ -110,6 +112,17 @@ const UploadedPositiveResultsTable = ({ results = [], back }) => (
                                             <DocButton
                                                 text='Send certificate'
                                                 color='pink'
+                                                onClick={() => {
+                                                   adminService.sendCertificateEmail(result.id, token)
+                                                   .then(data => {
+                                                        if (data.success) {
+                                                            ToastsStore.success('Email has been sent successfully!');
+                                                        } else {
+                                                            ToastsStore.success('Something went wrong!');
+                                                        }
+                                                    })
+                                                    .catch(err => ToastsStore.error('Something went wrong!'))
+                                                }}
                                                 style={{ marginLeft: 10, width: 'max-content' }}
                                             />
                                         </div>

@@ -31,8 +31,17 @@
 		}
 	}
 }
+.countdown-timer {
+	position: fixed;
+	top: 50%;
+	right: 10%;
+	text-align: center;
+	padding: 10px;
+	width: 400px;
+	border: 1px solid var(--doc-green);
+}
 .appointment-slot-container {
-	width: 500px;
+	width: 522px;
 	max-width: 95%;
 	.slot {
 		height: 40px;

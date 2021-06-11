@@ -25,7 +25,7 @@ const Meeting = () => {
 	const [step, setStep] = useState(1);
 	const [isLoading, setIsLoading] = useState(true);
 	const [videoCallToken, setVideoCallToken] = useState('');
-	const [toc_accept, setToc_accept] = useState(false);
+	const [toc_accept, setToc_accept] = useState(true);
 	const [marketing_accept, setMarketing_accept] = useState(false);
 	const [isEarly, setIsEarly] = useState();
 	const [userMedia, setUserMedia] = useState(false);
@@ -73,6 +73,12 @@ const Meeting = () => {
 		setIsLoading(false);
 	}, [isEarly]);
 
+	useEffect(() => {
+		if (videoType && appointmentInfo && !isVista) {
+			videoType === 'video_gp_dochq' ? setStep(2) : setStep(1);
+		}
+	}, [appointmentInfo])
+
 	const increaseStep = (value) => setStep(step + value);
 	const displayContent = () => {
 		if (questionsVisible) {
@@ -95,12 +101,8 @@ const Meeting = () => {
 			}
 			if (isVista) {
 				switch (step) {
-					case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
-						setToc_accept(true);
-						increaseStep(1);
-					}} />;
-					case 2: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
-					case 3: return <TestKit isEnglish={isEnglish} next={() => {
+					case 1: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
+					case 2: return <TestKit isEnglish={isEnglish} next={() => {
 						increaseStep(1);
 						bookingService
 							.updateTerms(appointmentId, {
@@ -113,17 +115,12 @@ const Meeting = () => {
 				}
 			} else {
 				switch (step) {
-					case 1: return <TermsConditional isEnglish={isEnglish} next={() => {
-						setToc_accept(true);
-						increaseStep(1);
-						increaseStep(videoType === 'video_gp_dochq' ? 2 : 1);
-					}} />;
-					case 2: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
+					case 1: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
 						setMarketing_accept(value);
 						increaseStep(1);
 					}} />;
-					case 3: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
-					case 4: return <TestKit isEnglish={isEnglish} next={() => {
+					case 2: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
+					case 3: return <TestKit isEnglish={isEnglish} next={() => {
 						increaseStep(1);
 						bookingService
 							.updateTerms(appointmentId, {

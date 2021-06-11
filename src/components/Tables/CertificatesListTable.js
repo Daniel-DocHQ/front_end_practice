@@ -53,8 +53,8 @@ const CertificatesListTable = ({ certificates = [] }) => (
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {certificates.length > 0 && certificates.map(certificate => (
-                        <TableRow key={certificate.id}>
+                    {certificates.length > 0 && certificates.map((certificate, indx) => (
+                        <TableRow key={indx}>
                             <TableCell
                                 align='left'
                                 style={styles.tableText}

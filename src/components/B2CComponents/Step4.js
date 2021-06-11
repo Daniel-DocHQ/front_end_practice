@@ -35,7 +35,7 @@ const Step4 = ({ status, defaultTimezone }) => {
 					{formatTimeSlotWithTimeZone(selectedSlot.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlot.end_time, timezone)} ({timezone})
 				</p>
 			</div>
-			<Divider style={{ width: '35%' }} />
+			<Divider style={{ width: '45%' }} />
             {passengers.map(({
 				firstName,
 				lastName,
@@ -92,7 +92,8 @@ const Step4 = ({ status, defaultTimezone }) => {
 					</div>
 				</div>
 			))}
-			<div className='row no-margin'>
+			<Divider style={{ width: '45%' }} />
+			<div className='row'>
 				<Field name={tocAccept.name}>
 					{({ field, form, meta }) => (
 						<FormControl
@@ -113,13 +114,13 @@ const Step4 = ({ status, defaultTimezone }) => {
 									}
 									label={
 										<p>
-											I have read and understand the{' '}
+											I have read and agree to{' '}
 											<a
 												target='_blank'
 												rel='noopener noreferrer'
 												href='/en/consultation/terms'
 											>
-												DocHQ T&Cs
+												DocHQ Limited Medical Terms and Conditions
 											</a>
 										</p>
 									}
