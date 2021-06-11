@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { get, startCase } from 'lodash';
-import { format } from 'date-fns';
+import { toDate, format } from 'date-fns-tz';
 import {
     AppBar,
     Box,
@@ -516,7 +516,7 @@ const AppointmentDetails = ({
                 {!!flightDate && (
                     <ListItem>
                         <ListItemText>
-                            <b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p')} ({timezone})
+                            <b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p', {timeZone: appointment.booking_user.tz_location})} ({appointment.booking_user.tz_location})
                         </ListItemText>
                     </ListItem>
                 )}
