@@ -283,11 +283,13 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 											id={item.id}
 											item={item}
 											selectSlot={async (value) => {
-												if (!!selectedSlotValue) {
+												if (!!selectedSlotValue && !!timer) {
 													await bookingService.updateAppointmentStatus(
 														selectedSlotValue.id,
 														{ status: 'AVAILABLE' },
 													).catch(() => console.log('error'));
+													await getSlots();
+													dropTimer();
 												}
 												form.setFieldValue(field.name, value);
 											}}
