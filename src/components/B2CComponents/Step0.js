@@ -11,10 +11,15 @@ import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
 import './BookingEngine.scss';
 
+const ADDITIONAL_PRODUCT_TEXT = {
+    'Fit to Travel [Antigen]': 'book this appointment no more than 24h before your travel',
+    'Fit to Travel [PCR]': 'appointment available between 72 hours and 57 hour of your flight',
+};
+
 const Step0 = ({
+    isEdit,
     items = [],
     bookingUsersQuantity,
-    isEdit,
 }) => {
     const {
         formField: {
@@ -54,7 +59,25 @@ const Step0 = ({
                                         })}
                                     >
                                         {items.map(({ ID, Title, Quantity }) => (
-                                            <FormControlLabel disabled={Quantity <= 0} key={ID + Title} value={ID} control={<Radio />} label={Title} />
+                                            <FormControlLabel
+                                                value={ID}
+                                                key={ID + Title}
+                                                control={<Radio />}
+                                                disabled={Quantity <= 0}
+                                                style={{ width: 'max-content', paddingTop: 10 }}
+                                                label={
+                                                    <>
+                                                        {Title}<br/>
+                                                        <span className="additional-option-text">
+                                                            {Quantity <= 0
+                                                                ? 'you have booked all appointment for this product'
+                                                                : !!ADDITIONAL_PRODUCT_TEXT[Title]
+                                                                    ? ADDITIONAL_PRODUCT_TEXT[Title]
+                                                                    : ''}
+                                                        </span>
+                                                    </>
+                                                }
+                                            />
                                         ))}
                                     </RadioGroup>
                                 </FormControl>

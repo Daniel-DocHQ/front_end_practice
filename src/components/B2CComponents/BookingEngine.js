@@ -37,7 +37,7 @@ const BookingEngine = () => {
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
-	const defaultTestType = items.find(({ Quantity }) => Quantity > 0) || {};
+	const defaultTestType = items.find(({ Quantity }) => Quantity > 0) || null;
 	const steps = [
 		'Select Test',
 		'Travel Details',
@@ -114,7 +114,7 @@ const BookingEngine = () => {
 		<BigWhiteContainer>
 			{(short_token && !!orderInfo) ? (
 				<>
-					{!!items.length ? (
+					{(!!items.length && !!defaultTestType) ? (
 						<>
 							<Formik
 								initialValues={{
