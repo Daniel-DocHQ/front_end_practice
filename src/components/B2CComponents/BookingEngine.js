@@ -116,6 +116,23 @@ const BookingEngine = () => {
 				<>
 					{(!!items.length && !!defaultTestType) ? (
 						<>
+							{timerStart && (
+								<div className="countdown-timer">
+									<p>
+										Your appointment is available for the next&nbsp;
+										<CountdownTimer
+											timerStart={timerStart.getTime()}
+											timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 30)).getTime()}
+											onTimeEnd={() => {
+												setTimerStart();
+												setActiveStep(2);
+												setActivePassenger(0);
+											}}
+										/> min<br />
+										If you do not complete the booking you might need to select another appointment
+									</p>
+								</div>
+							)}
 							<Formik
 								initialValues={{
 									...formInitialValues,
@@ -351,23 +368,6 @@ const BookingEngine = () => {
 									dropTimer={() => setTimerStart()}
 								/>
 							</Formik>
-							{timerStart && (
-								<div className="countdown-timer">
-									<p>
-										Your appointment is available for the next&nbsp;
-										<CountdownTimer
-											timerStart={timerStart.getTime()}
-											timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 30)).getTime()}
-											onTimeEnd={() => {
-												setTimerStart();
-												setActiveStep(2);
-												setActivePassenger(0);
-											}}
-										/> min<br />
-										If you do not complete the booking you might need to select another appointment
-									</p>
-								</div>
-							)}
 						</>
 					) : (
 						<>
