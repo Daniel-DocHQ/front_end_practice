@@ -132,8 +132,8 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 		? [...appointments, selectedSlotValue].sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime())
 		: [...appointments];
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
-	const maxDate = new Date(new Date(new Date(travelDate).setHours(travelTime.getHours() - 60)).setMinutes(travelTime.getMinutes()));
-	const startDateTime = new Date(new Date(maxDate).setHours(maxDate.getHours() - 12));
+	const maxDate = new Date(new Date(new Date(travelDate).setHours(travelTime.getHours() - 57)).setMinutes(travelTime.getMinutes()));
+	const startDateTime = new Date(new Date(maxDate).setHours(maxDate.getHours() - 15));
 	const startDate = new Date(startDateTime).setHours(0,0,0,0);
 	const landingDateTime = new Date(landingDate).setHours(0,0,0,0);
 	// const startDate = new Date(new Date(travelDate).setDate(new Date(travelDate).getDate() - (type === 'Antigen' ? 1 : 3))).setHours(0,0,0,0);
