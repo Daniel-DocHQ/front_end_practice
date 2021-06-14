@@ -594,6 +594,17 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions) => {
         ]
     })
     .addNodeType({
+        type: "boolFailOnFalse",
+        label: "Fail task on false input",
+        initalWidth: 200,
+        inputs: ports => [
+            ports.boolean({
+                name: "input",
+                label: "Input"
+            }),
+        ]
+    })
+    .addNodeType({
         type: "sendSMS",
         label: "Send SMS",
         initalWidth: 200,
