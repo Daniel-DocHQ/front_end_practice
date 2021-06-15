@@ -57,27 +57,27 @@ const Step0 = ({
                                         {...field}
                                         onChange={(({ target: { value } }) => {
                                             const intValue = parseInt(value);
-                                            const productObj = items.find(({ ID }) => ID === intValue);
+                                            const productObj = items.find(({ id }) => id === intValue);
                                             form.setFieldValue(field.name, intValue);
                                             form.setFieldValue('testType', productObj);
-                                            form.setFieldValue(numberOfPeople.name, productObj.Quantity);
+                                            form.setFieldValue(numberOfPeople.name, productObj.quantity);
                                         })}
                                     >
-                                        {items.map(({ ID, Title, Quantity }) => (
+                                        {items.map(({ id, title, quantity }) => (
                                             <FormControlLabel
-                                                value={ID}
-                                                key={ID + Title}
+                                                value={id}
+                                                key={id + title}
                                                 control={<Radio />}
-                                                disabled={Quantity <= 0}
+                                                disabled={quantity < 1}
                                                 style={{ width: 'max-content', paddingTop: 10 }}
                                                 label={
                                                     <>
-                                                        {Title}<br/>
+                                                        {title}<br/>
                                                         <span className="additional-option-text">
-                                                            {Quantity <= 0
+                                                            {quantity < 1
                                                                 ? 'you have booked all appointment for this product'
-                                                                : !!ADDITIONAL_PRODUCT_TEXT[Title]
-                                                                    ? ADDITIONAL_PRODUCT_TEXT[Title]
+                                                                : !!ADDITIONAL_PRODUCT_TEXT[title]
+                                                                    ? ADDITIONAL_PRODUCT_TEXT[title]
                                                                     : ''}
                                                         </span>
                                                     </>

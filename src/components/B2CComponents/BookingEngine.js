@@ -37,7 +37,7 @@ const BookingEngine = () => {
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
-	const defaultTestType = items.find(({ Quantity }) => Quantity > 0) || null;
+	const defaultTestType = items.find(({ quantity }) => quantity > 0) || null;
 	const steps = [
 		'Select Test',
 		'Travel Details',
@@ -136,8 +136,8 @@ const BookingEngine = () => {
 							<Formik
 								initialValues={{
 									...formInitialValues,
-									numberOfPeople: (defaultTestType.Quantity || 1) > 4 ? 4 : defaultTestType.Quantity,
-									product: defaultTestType.ID || 0,
+									numberOfPeople: (defaultTestType.quantity || 1) > 4 ? 4 : defaultTestType.quantity,
+									product: defaultTestType.id || 0,
 									testType: defaultTestType,
 									...(!!appointments.length ? {
 										bookingUsers: appointments[0].booking_users.map(({
@@ -243,7 +243,7 @@ const BookingEngine = () => {
 											travelTime,
 											passengers,
 											timezone,
-											testType: { ID, Type, Title },
+											testType: { id, type, title },
 											transportNumber,
 											transportType,
 											landingDate,
@@ -255,7 +255,7 @@ const BookingEngine = () => {
 											city,
 											tocAccept,
 										} = values;
-										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
+										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
 										const booking_users = Array.from(Array(numberOfPeople).keys()).map((item) => {
 											const {
 												firstName,
@@ -281,7 +281,7 @@ const BookingEngine = () => {
 												toc_accept: tocAccept,
 												locality: town,
 												metadata: {
-													product_id: parseInt(ID),
+													product_id: parseInt(id),
 													short_token,
 													order_id: orderId.toString(),
 													passport_number: passportNumber,
@@ -294,7 +294,7 @@ const BookingEngine = () => {
 															travelTime.getMinutes(),
 															0,
 														)).format(),
-													test_type: Type,
+													test_type: type,
 												},
 												...rest,
 											});
@@ -335,6 +335,7 @@ const BookingEngine = () => {
 											.then(result => {
 												if (result.success && result.confirmation) {
 													handleNext();
+													setTimerStart();
 												} else {
 													setStatus({
 														severity: 'error',

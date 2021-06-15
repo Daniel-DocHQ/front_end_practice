@@ -23,7 +23,7 @@ const Step5 = ({ defaultTimezone }) => {
                         <div className='row no-margin'>
                             <p>
                                 <strong>Selected Product:&nbsp;</strong>
-                                {testType.Title}
+                                {testType.title}
                             </p>
                         </div>
                         <div className='row no-margin'>
@@ -39,7 +39,9 @@ const Step5 = ({ defaultTimezone }) => {
                             </p>
                         </div>
                         <div className='row no-margin'>
-                            <p>A confirmation email will be sent to: {passengers[0].email}</p>
+                            <p><strong>
+                                A confirmation email will be sent to: {passengers[0].email}
+                            </strong></p>
                         </div>
                     </div>
                 </div>

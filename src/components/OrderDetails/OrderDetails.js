@@ -180,7 +180,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                         <TableCell>Name</TableCell>
                                         <TableCell align="right">Description</TableCell>
                                         <TableCell align="right">Type</TableCell>
-                                        <TableCell align="right">Quantity</TableCell>
+                                        <TableCell align="right">quantity</TableCell>
                                         <TableCell align="right">Price</TableCell>
                                     </TableRow>
                                 </TableHead>

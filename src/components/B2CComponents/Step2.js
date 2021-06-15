@@ -118,16 +118,16 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 			timezone: timezoneValue,
 			landingDate,
 			testType: {
-				Type,
-				Title,
+				type,
+				title,
 			}
 		},
 		setFieldValue,
 	} = useFormikContext();
 
-	const isPCR = Type === 'PCR' && Title.includes('Fit to Travel');
+	const isPCR = type === 'PCR' && title.includes('Fit to Travel');
 	const isSelectedSlotToday = !!selectedSlotValue && new Date(selectedSlotValue.start_time).setHours(0, 0, 0, 0) === new Date(selectedDate).setHours(0, 0, 0, 0);
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(Title);
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
 	const filteredAppointments = (isSelectedSlotToday && !!timer)
 		? [...appointments, selectedSlotValue].sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime())
 		: [...appointments];
