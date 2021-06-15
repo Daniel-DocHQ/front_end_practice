@@ -177,6 +177,7 @@ const BookingEngine = () => {
 								await bookingService.updateAppointmentStatus(
 									selectedSlot.id,
 									{ status: 'LOCKED' },
+									'token',
 								).then((response) => {
 									if (response.success) {
 										setTimerStart(new Date());

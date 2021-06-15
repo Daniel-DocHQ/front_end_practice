@@ -41,7 +41,7 @@ const Box = ({
 			bookingService
 				.updateAppointmentStatus(appointmentId, {
 					status: isNurse ? 'PRACTITIONER_ATTENDED' : 'PATIENT_ATTENDED',
-				});
+				}, token);
 		},
 		[params, isNurse]
 	);

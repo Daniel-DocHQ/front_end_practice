@@ -221,6 +221,7 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 			await bookingService.updateAppointmentStatus(
 				selectedSlotValue.id,
 				{ status: 'AVAILABLE' },
+				'token',
 			).catch(() => console.log('error'));
 			setFieldValue(selectedSlot.name, null);
 			dropTimer();
@@ -287,6 +288,7 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 													await bookingService.updateAppointmentStatus(
 														selectedSlotValue.id,
 														{ status: 'AVAILABLE' },
+														'token',
 													).catch(() => console.log('error'));
 													await getSlots();
 													dropTimer();
