@@ -38,6 +38,7 @@ const BookingEngine = () => {
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = validationSchema[activeStep];
 	const defaultTestType = items.find(({ quantity }) => quantity > 0) || null;
+	const totalAvailableQuantity = items.reduce((sum, { quantity }) => quantity + sum, 0);
 	const steps = [
 		'Select Test',
 		'Travel Details',
@@ -366,6 +367,7 @@ const BookingEngine = () => {
 									steps={steps}
 									items={items}
 									timer={timerStart}
+									totalAvailableQuantity={totalAvailableQuantity}
 									defaultCountryCode={defaultCountryCode}
 									dropTimer={() => setTimerStart()}
 								/>

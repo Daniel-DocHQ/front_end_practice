@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form } from 'formik';
+import { Form, useFormikContext } from 'formik';
 import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import Step0 from './Step0';
 import Step1 from './Step1';
@@ -24,9 +24,11 @@ const BookingEngineForm = ({
     status,
     dropTimer,
     timer,
+    totalAvailableQuantity = 0,
     ...restProps
 }) => {
     const isLastStep = activeStep === steps.length - 1;
+    const { values: { numberOfPeople }} = useFormikContext();
 	const renderSteps = () => {
 		switch (activeStep) {
             case 0:
@@ -90,12 +92,14 @@ const BookingEngineForm = ({
                                             color='green'
                                             linkSrc={isEdit ? '/customer_services/dashboard' : process.env.REACT_APP_WEBSITE_LINK}
                                         />
-                                        <DocButton
-                                            style={{ marginLeft: 10 }}
-                                            text='Book one more Appointment'
-                                            color='green'
-                                            onClick={() => window.location.reload()}
-                                        />
+                                        {(totalAvailableQuantity > numberOfPeople && !isEdit) && (
+                                            <DocButton
+                                                style={{ marginLeft: 10 }}
+                                                text='Book one more Appointment'
+                                                color='green'
+                                                onClick={() => window.location.reload()}
+                                            />
+                                        )}
                                     </>
                                 ) : (
                                     <DocButton
