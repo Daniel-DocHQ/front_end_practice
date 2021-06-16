@@ -216,7 +216,7 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ]
     })
     .addNodeType({
-        type: "checkorderForProduct",
+        type: "checkOrderForProduct",
         label: "Check Order for product",
         description: "Check an order for a product",
         initialWidth: 220,
