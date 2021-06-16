@@ -91,7 +91,9 @@ const BookingEngineForm = ({
                                                 style={{ marginLeft: 10 }}
                                                 text='Book one more Appointment'
                                                 color='green'
-                                                onClick={() => window.location.reload()}
+                                                onClick={() => {
+                                                    if (typeof window !== 'undefined') window.location.reload();
+                                                }}
                                             />
                                         )}
                                     </>

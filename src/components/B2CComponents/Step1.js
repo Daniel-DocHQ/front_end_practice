@@ -22,13 +22,6 @@ import datePickerTheme from '../../helpers/datePickerTheme';
 import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
-const ALLOW_PAST_DATE = [
-	'Test to Release [England]',
-	'Green Bundle',
-	'Amber Short Stay',
-	'Amber Bundle',
-];
-
 const Step1 = () => {
 	const {
 		formField: {
@@ -60,7 +53,6 @@ const Step1 = () => {
 	const pickerTheme = datePickerTheme();
 	const isPCR = type === 'PCR' && title.includes('Fit to Travel');
 	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
-	const allowPast = ALLOW_PAST_DATE.includes(title);
 	const transportNumberLabel = `${transportTypeValue === 'Other' ? 'Transport' : transportTypeValue} Number`;
 
 	return (
@@ -112,7 +104,7 @@ const Step1 = () => {
 										<KeyboardDatePicker
 											{...field}
 											{...travelDate}
-											disablePast={!allowPast}
+											disablePast={!isBundle}
 											inputVariant='filled'
 											format="dd/MM/yyyy"
 											KeyboardButtonProps={{
@@ -167,7 +159,7 @@ const Step1 = () => {
 												<KeyboardDatePicker
 												{...field}
 												{...landingDate}
-												disablePast={!allowPast}
+												disablePast={!isBundle}
 												inputVariant='filled'
 												format="dd/MM/yyyy"
 												KeyboardButtonProps={{
