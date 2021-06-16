@@ -38,36 +38,35 @@ const nurseSvc = {
 		});
 	},
 	getAppointmentDetails(appointmentId, token) {
-		return new Promise((resolve, reject) => {
-			if (typeof token !== 'undefined') {
-				axios({
-					method: 'get',
-					url: `${baseUrl}/${appointmentId}`,
-					headers: { Authorization: `Bearer ${token}` },
-				})
-					.then(response => {
-						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
-							resolve({
-								success: true,
-								appointment: response.data,
-							});
-						} else if (response.status === 200 && response.data === null) {
-							resolve({
-								success: true,
-								appointment: [],
-							});
-						} else {
-							resolve({
-								success: false,
-								error: 'Unable to retrieve appointments.',
-							});
-						}
-					})
-					.catch(err => reject(err));
-			} else {
-				// return unauthorized
-				resolve({ success: false, authenticated: false });
-			}
+        return new Promise((resolve, reject) => {
+            let thing = {
+                method: 'get',
+                url: `${baseUrl}/${appointmentId}`,
+            }
+
+            if (typeof token !== 'undefined') {
+                thing.headers =  { Authorization: `Bearer ${token}` }
+            }
+            axios(thing)
+                .then(response => {
+                    if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+                        resolve({
+                            success: true,
+                            appointment: response.data,
+                        });
+                    } else if (response.status === 200 && response.data === null) {
+                        resolve({
+                            success: true,
+                            appointment: [],
+                        });
+                    } else {
+                        resolve({
+                            success: false,
+                            error: 'Unable to retrieve appointments.',
+                        });
+                    }
+                })
+                .catch(err => reject(err));
 		});
 	},
 	getPastAppointments(token) {
@@ -386,6 +385,33 @@ const nurseSvc = {
 				resolve({ success: false, authenticated: false });
 			}
 		});
-	},
+    },
+    putBookingUserMetadata(appointmentId, userId, data) {
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'put',
+                url: `${baseUrl}/${appointmentId}/booking-users/${userId}`,
+                data: data,
+            })
+                .then(response => {
+                    if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+                        resolve({
+                            success: true,
+                            appointments: response.data,
+                        });
+                    } else  {
+                        resolve({
+                            success: true,
+                            appointments: [],
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error(err)
+                    resolve({success: true, appointment: []})
+                });
+
+        })
+    }
 };
 export default nurseSvc;

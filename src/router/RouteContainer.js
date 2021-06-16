@@ -45,6 +45,7 @@ import ProcessorTaskEdit from '../screens/super-admin-portal/ProcessorTaskEdit';
 import CSOrderList from '../screens/cs-portal/CSOrderList';
 import SAOrderList from '../screens/super-admin-portal/SAOrderList';
 import CSDashboard from '../screens/cs-portal/CSDashboard';
+import RegisterKit from '../screens/RegisterKit';
 
 const { isSupported } = require('twilio-video');
 
@@ -71,13 +72,10 @@ const RouteHandler = () => {
 			</Route>
 
 			{/* Identities redirects to /verify-token */}
-
 			<Route path='/verify-token'>
 				<VerifyToken {...ctx} />
 			</Route>
-
 			{/* Unauthenticated routes */}
-
 			<Route path='/book'>
 				<Layout title='Book Appointment'>
 					<div className='booking-engine'>
@@ -91,17 +89,20 @@ const RouteHandler = () => {
 						/>
 					</div>
 				</Layout>
-			</Route>
+            </Route>
+            <Route path="/register-kit/:id">
+				<Layout title='Register Kit'>
+                    <RegisterKit {...ctx} />
+                </Layout>
+            </Route>
 			<Route exact path='/unsupported-browser'>
 				<Unsupported />
 			</Route>
-
 			<PrivateRoute path='/authenticated/book'>
 				<Layout title='Book Appointment'>
 					<BookingEngine {...ctx} />
 				</Layout>
 			</PrivateRoute>
-
 			<Route path='/en/consultation/terms'>
 				<Layout title='Terms and Conditions'>
 					<TermsConditionsEn {...ctx} />
@@ -112,7 +113,6 @@ const RouteHandler = () => {
 					<TermsConditionsDe {...ctx} />
 				</Layout>
 			</Route>
-
 			<Route path='/appointment'>
 				{isSupported ? <Meeting /> : <Redirect to='/unsupported-browser' />}
 			</Route>
