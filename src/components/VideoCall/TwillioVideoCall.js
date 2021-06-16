@@ -59,7 +59,7 @@ function TwillioVideoCall({
 	const [isMuted, setIsMuted] = useState(false);
 
 	const updateAppointmentStatus = (status) =>
-		bookingService.updateAppointmentStatus(appointmentId, { status });
+		bookingService.updateAppointmentStatus(appointmentId, { status }, authToken);
 
 	useEffect(() => {
 		const participantConnected = participant => {

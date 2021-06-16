@@ -44,7 +44,7 @@ const BookingEngine = () => {
 	const bookingUsersQuantity = get(bookingUsers, 'length', 0);
 	const bookingUsersTestType = get(bookingUsers, '[0].test_type', 'Antigen');
 	const bookingUsersProductId = get(bookingUsers, '[0].metadata.product_id');
-	const bookingUsersProduct = items.find(({ ID }) => bookingUsersProductId === ID) || get(items, '[0]', {});
+	const bookingUsersProduct = items.find(({ id }) => bookingUsersProductId === id) || get(items, '[0]', {});
 	const usersTimeZoneObj = cityTimezones.cityMapping.find(({ timezone }) => timezone === usersTimeZone);
 	const steps = [
         'How many people will take the test?',
@@ -130,9 +130,9 @@ const BookingEngine = () => {
 								transportNumber: usersFlightNumber,
 							} : {}),
 							testType: {
-								Quantity: 4,
-								Title: bookingUsersProduct.Title,
-								Type: bookingUsersProduct.Type,
+								quantity: 4,
+								title: bookingUsersProduct.title,
+								type: bookingUsersProduct.type,
 							},
 							city: usersTimeZoneObj,
 							timezone: usersTimeZoneObj.timezone,
@@ -177,6 +177,7 @@ const BookingEngine = () => {
 								await bookingService.updateAppointmentStatus(
 									selectedSlot.id,
 									{ status: 'LOCKED' },
+									'token',
 								).then((response) => {
 									if (response.success) {
 										setTimerStart(new Date());
@@ -274,6 +275,7 @@ const BookingEngine = () => {
 									.then(async (result) => {
 										if (result.success && result.confirmation) {
 											handleNext();
+											setTimerStart();
 											await bookingService.deleteBooking(appointmentId, token).catch(() => console.log('error'));
 										} else {
 											setStatus({

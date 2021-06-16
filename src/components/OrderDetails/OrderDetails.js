@@ -180,7 +180,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                         <TableCell>Name</TableCell>
                                         <TableCell align="right">Description</TableCell>
                                         <TableCell align="right">Type</TableCell>
-                                        <TableCell align="right">Quantity</TableCell>
+                                        <TableCell align="right">quantity</TableCell>
                                         <TableCell align="right">Price</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -361,6 +361,7 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
     const kitProvider = get(patient, 'metadata.kitProvider', '');
     const samplingDate = get(patient, 'metadata.date_sampled', '');
     const reportedDate = get(patient, 'metadata.date_reported', '');
+    const receiptId = get(patient, 'metadata.receipt_id', '');
 
     return (
         <>
@@ -400,7 +401,7 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
                         <b>Passport Number</b>: {passportNumber}
                     </ListItemText>
                 </ListItem>
-                {samplingDate && (
+                {!!samplingDate && (
                     <>
                         <Divider style={{ margin: '20px 0', width: '20%' }} />
                         <ListItem>
@@ -410,7 +411,7 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
                         </ListItem>
                     </>
                 )}
-                {reportedDate && (
+                {!!reportedDate && (
                     <ListItem>
                         <ListItemText>
                             <b>Reported Date and Time: </b>{new Date(reportedDate).toUTCString()}
@@ -418,14 +419,14 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
                     </ListItem>
                 )}
                 <Box>
-                    {kitProvider && (
+                    {!!kitProvider && (
                         <ListItem>
                             <ListItemText>
                                 <b>KIT provider</b>: {kitProvider}
                             </ListItemText>
                         </ListItem>
                     )}
-                    {sampleTaken && (
+                    {!!sampleTaken && (
                         <ListItem>
                             <ListItemText>
                                 <b>Sample: </b>
@@ -433,7 +434,14 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
                             </ListItemText>
                         </ListItem>
                     )}
-                    {result && (
+                    {!!receiptId && (
+                        <ListItem>
+                            <ListItemText>
+                                <b>Received by Lab: </b>Yes
+                            </ListItemText>
+                        </ListItem>
+                    )}
+                    {!!result && (
                         <ListItem>
                             <Grid container justify="space-between">
                                 <Grid item>
@@ -455,14 +463,14 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
                             </Grid>
                         </ListItem>
                     )}
-                    {rejectedNotes && (
+                    {!!rejectedNotes && (
                         <ListItem>
                             <ListItemText>
                                 <b>Rejection Notes: </b>{rejectedNotes}
                             </ListItemText>
                         </ListItem>
                     )}
-                    {invalidNotes && (
+                    {!!invalidNotes && (
                         <ListItem>
                             <ListItemText>
                                 <b>Invalid Notes: </b>{invalidNotes}
@@ -503,8 +511,9 @@ const AppointmentDetails = ({
     const timezone = get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time');
     const notes = get(appointment, 'notes', []);
     const [isVisible, setIsVisible] = useState(false);
+    const appointmentStatus = appointment.status;
     const statusChanges = get(appointment, 'status_changes', []) || [];
-    const isCompleted = appointment.status === 'COMPLETED';
+    const isCompleted = appointmentStatus === 'COMPLETED';
     const flightDate = get(appointment, 'booking_user.metadata.travel_date');
 
     return (
@@ -544,24 +553,26 @@ const AppointmentDetails = ({
                         </Tooltip>
                     </ListItemText>
                 </ListItem>
-                <Divider style={{ margin: '20px 0', width: '30%' }} />
                 {appointment.booking_users.map((patient, indx) => (
-                    <div key={indx}>
-                        <ListItemText>
-                            <b>Details of Passenger {indx + 1}</b>
-                        </ListItemText>
-                        <PatientDetails
-                            patient={patient}
-                            isCompleted={isCompleted}
-                            refetchData={refetchData}
-                            appointmentId={appointment.id}
-                        />
-                    </div>
+                    <>
+                        <Divider style={{ margin: '20px 0', width: '30%' }} />
+                        <div key={indx}>
+                            <ListItemText>
+                                <b>Details of Passenger {indx + 1}</b>
+                            </ListItemText>
+                            <PatientDetails
+                                patient={patient}
+                                isCompleted={isCompleted}
+                                refetchData={refetchData}
+                                appointmentId={appointment.id}
+                            />
+                        </div>
+                    </>
                 ))}
                 <Divider style={{ margin: '20px 0', width: '30%' }} />
                 <ListItem>
                     <ListItemText>
-                         <b>Appointment Status</b>: {startCase(appointment.status.replace('_', ' ').toLowerCase())}
+                        <b>Appointment Status</b>: {startCase(appointmentStatus === 'LOCKED' ? 'Locked' : appointmentStatus.replace('_', ' ').toLowerCase())}
                     </ListItemText>
                 </ListItem>
                 {!!notes.length && (
@@ -569,7 +580,7 @@ const AppointmentDetails = ({
                         <AppointmentNotes notes={notes} />
                     </ListItem>
                 )}
-                {statusChanges.length && (
+                {!!statusChanges.length && (
                     <ListItem>
                         <ListItemText>
                             <b>Appointment Status Changes</b>:

@@ -20,7 +20,7 @@ export default [
     .test('maximum', 'You can\'t have more people that quantity of test that you bought',
       function checkNumberOfPeople(value) {
         const { testType } = this.parent;
-        return value <= testType.Quantity;
+        return value <= testType.quantity;
       }),
   }),
   Yup.object().shape({

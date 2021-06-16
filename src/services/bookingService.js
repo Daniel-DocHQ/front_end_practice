@@ -325,13 +325,13 @@ function claimAppointment(auth_token, slot_id) {
 		}
 	});
 }
-function updateAppointmentStatus(slot_id, body) {
+function updateAppointmentStatus(slot_id, body, authToken) {
 	return new Promise((resolve, reject) => {
-		if (!!slot_id) {
+		if (!!authToken && !!slot_id) {
 			axios({
 				url: `${baseURL}/${slot_id}/status`,
 				method: 'POST',
-				headers: { 'Content-type': 'application,json' },
+				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${authToken}`  },
 				data: body,
 			})
 				.then(response => {

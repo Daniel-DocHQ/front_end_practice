@@ -533,6 +533,13 @@ const SubmitPatientResult = ({
 		}
 	}, [sampleTakenStatus]);
 
+	useEffect(() => {
+		if (notesStatus && notesStatus.severity === 'success') {
+			const timer = setTimeout(() => setNotesStatus(), 5000);
+			return () => clearTimeout(timer);
+		}
+	}, [notesStatus]);
+
 	return (
 		<div className='tab-container'>
 			<div className='tab-content'>
@@ -1049,6 +1056,13 @@ const PatientIdVerification = ({
 			});
 		}
 	}, [security_checked]);
+
+	useEffect(() => {
+		if (notesStatus && notesStatus.severity === 'success') {
+			const timer = setTimeout(() => setNotesStatus(), 5000);
+			return () => clearTimeout(timer);
+		}
+	}, [notesStatus]);
 
     return (
 		<div className='tab-container'>

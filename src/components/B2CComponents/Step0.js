@@ -12,8 +12,13 @@ import bookingFormModel from './bookingFormModel';
 import './BookingEngine.scss';
 
 const ADDITIONAL_PRODUCT_TEXT = {
-    'Fit to Travel [Antigen]': 'book this appointment no more than 24h before your travel',
-    'Fit to Travel [PCR]': 'appointment available between 72 hours and 57 hour of your flight',
+    'Fit to Travel [Antigen]': 'book an appointment within 24 hours of your travel',
+    'Fit to Travel [PCR]': 'appointment available between 72 hours and 57 hours prior to your flight',
+    'Day 2 PCR Test': 'book an appointment within 2 days of your arrival in the UK',
+    'Day 8 PCR Test': 'book an appointment on the 8th day after your arrival in the UK',
+    'Pre Departure Test [United Kingdom]': 'book an appointment with 48 hours of your travel',
+    'Amber Short Stay': 'book an appointment within 2 days of your arrival in the UK',
+    'Test to Release [England]': 'book an appointment on the 5th day after your arrival in the UK',
 };
 
 const Step0 = ({
@@ -52,27 +57,27 @@ const Step0 = ({
                                         {...field}
                                         onChange={(({ target: { value } }) => {
                                             const intValue = parseInt(value);
-                                            const productObj = items.find(({ ID }) => ID === intValue);
+                                            const productObj = items.find(({ id }) => id === intValue);
                                             form.setFieldValue(field.name, intValue);
                                             form.setFieldValue('testType', productObj);
-                                            form.setFieldValue(numberOfPeople.name, productObj.Quantity);
+                                            form.setFieldValue(numberOfPeople.name, productObj.quantity);
                                         })}
                                     >
-                                        {items.map(({ ID, Title, Quantity }) => (
+                                        {items.map(({ id, title, quantity }) => (
                                             <FormControlLabel
-                                                value={ID}
-                                                key={ID + Title}
+                                                value={id}
+                                                key={id + title}
                                                 control={<Radio />}
-                                                disabled={Quantity <= 0}
+                                                disabled={quantity < 1}
                                                 style={{ width: 'max-content', paddingTop: 10 }}
                                                 label={
                                                     <>
-                                                        {Title}<br/>
+                                                        {title}<br/>
                                                         <span className="additional-option-text">
-                                                            {Quantity <= 0
+                                                            {quantity < 1
                                                                 ? 'you have booked all appointment for this product'
-                                                                : !!ADDITIONAL_PRODUCT_TEXT[Title]
-                                                                    ? ADDITIONAL_PRODUCT_TEXT[Title]
+                                                                : !!ADDITIONAL_PRODUCT_TEXT[title]
+                                                                    ? ADDITIONAL_PRODUCT_TEXT[title]
                                                                     : ''}
                                                         </span>
                                                     </>
