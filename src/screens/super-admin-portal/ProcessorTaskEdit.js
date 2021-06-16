@@ -11,7 +11,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import LogView from '../../components/Processor/LogView/LogView.js';
 import {getNodeTypes } from '../../components/Processor/nodeTypes';
 
-const processor = process.env.REACT_APP_PROCESSOR_URL || "https://processor-service-staging.dochq.co.uk";
+const processor = process.env.REACT_APP_PROCESSOR_URL;
 
 const useStyles = makeStyles((theme) => ({
     root: {

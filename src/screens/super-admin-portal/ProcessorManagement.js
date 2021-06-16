@@ -22,7 +22,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import CreateNewTask from '../../components/Processor/CreateNewTask/CreateNewTask.js';
 
-const processor = process.env.REACT_APP_PROCESSOR_URL || "https://processor-service-staging.dochq.co.uk";
+const processor = process.env.REACT_APP_PROCESSOR_URL;
 const processor_new = process.env.REACT_APP_API_URL;
 
 const useStyles = makeStyles((theme) => ({
