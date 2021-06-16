@@ -361,7 +361,7 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
     const kitProvider = get(patient, 'metadata.kitProvider', '');
     const samplingDate = get(patient, 'metadata.date_sampled', '');
     const reportedDate = get(patient, 'metadata.date_reported', '');
-    const receiptId = get(patient, 'metadata.receipt_id', '');
+    const dateOfReceipt = get(patient, 'metadata.date_of_receipt', '');
 
     return (
         <>
@@ -434,10 +434,10 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
                             </ListItemText>
                         </ListItem>
                     )}
-                    {!!receiptId && (
+                    {!!dateOfReceipt && (
                         <ListItem>
                             <ListItemText>
-                                <b>Received by Lab: </b>Yes
+                                <b>Received by Lab: </b>{new Date(dateOfReceipt).toUTCString()}
                             </ListItemText>
                         </ListItem>
                     )}
