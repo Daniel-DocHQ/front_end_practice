@@ -194,7 +194,10 @@ function paymentRequest(slotId, data, auth_token) {
 			const headers = { 'Content-type': 'application,json' };
 			if (auth_token) {
 				headers.Authorization = `Bearer ${auth_token}`;
-			}
+            }
+            if slotId {
+                data.type = "self_swab"
+            }
 			axios({
 				url: !!slotId ? `${baseURL}/${slotId}/payment` : `${baseURL}/`,
 				method: 'POST',
