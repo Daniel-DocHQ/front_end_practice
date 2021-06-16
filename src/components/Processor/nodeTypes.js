@@ -229,6 +229,10 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             ports.string({
                 name: "order",
                 label: "Order"
+            }),
+            ports.boolean({
+                name: "incBundles",
+                label: "include bundles"
             })
         ],
         outputs: ports => [
