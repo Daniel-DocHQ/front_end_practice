@@ -95,14 +95,14 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ]
     })
     .addPortType({
-        type: "productList",
-        name: "productList",
+        type: "productsList",
+        name: "productsList",
         label: "Product List",
         color: Colors.green,
         acceptTypes: ["string"],
         controls: [
             Controls.select({
-                name: "productList",
+                name: "productsList",
                 label: "Template",
                 options: productsList,
             })
