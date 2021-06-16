@@ -1,9 +1,9 @@
 import React from 'react';
 import { FlumeConfig, Colors, Controls } from 'flume';
 
-const processor = process.env.REACT_APP_PROCESSOR_URL || "https://processor-service-staging.dochq.co.uk";
+const processor = process.env.REACT_APP_PROCESSOR_URL;
 
-export const getNodeTypes = (templateOptions, issueCertificateListOptions) => {
+export const getNodeTypes = (templateOptions, issueCertificateListOptions, productsList) => {
     return new FlumeConfig()
     // All port types
     .addPortType({
@@ -54,7 +54,7 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions) => {
         type: "string",
         name: "string",
         label: "Text",
-        acceptTypes: ["string", "orgForm", "emailTemplate", "stringCompare", "issueCertificateList"],
+        acceptTypes: ["string", "orgForm", "emailTemplate", "stringCompare", "issueCertificateList", "productList"],
         color: Colors.green,
         controls: [
             Controls.text({
@@ -91,6 +91,20 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions) => {
                 name: "emailTemplate",
                 label: "Template",
                 options: templateOptions,
+            })
+        ]
+    })
+    .addPortType({
+        type: "productList",
+        name: "productList",
+        label: "Product List",
+        color: Colors.green,
+        acceptTypes: ["string"],
+        controls: [
+            Controls.select({
+                name: "productList",
+                label: "Template",
+                options: productsList,
             })
         ]
     })
@@ -178,6 +192,49 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions) => {
             ports.emailTemplate({
                 name: "value",
                 label: "Value"
+            })
+        ]
+    })
+    .addNodeType({
+        type: "productListString",
+        name: "productsListString",
+        label: "Products List",
+        description: "All the available productsd",
+        initalWidth: 120,
+        inputs: ports => [
+            ports.productsList({
+                hidePort: true,
+                name: "product",
+                label: "Product"
+            })
+        ],
+        outputs: ports => [
+            ports.productsList({
+                name: "product",
+                label: "Product"
+            })
+        ]
+    })
+    .addNodeType({
+        type: "checkorderForProduct",
+        label: "Check Order for product",
+        description: "Check an order for a product",
+        initialWidth: 220,
+        actionNode: true,
+        inputs: ports => [
+            ports.productsList({
+                name: "product",
+                label: "Product ID"
+            }),
+            ports.string({
+                name: "order",
+                label: "Order"
+            })
+        ],
+        outputs: ports => [
+            ports.boolean({
+                name: "productPresent",
+                label: "Product present on order",
             })
         ]
     })

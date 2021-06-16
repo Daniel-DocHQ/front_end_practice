@@ -12,6 +12,7 @@ import LogView from '../../components/Processor/LogView/LogView.js';
 import {getNodeTypes } from '../../components/Processor/nodeTypes';
 
 const processor = process.env.REACT_APP_PROCESSOR_URL;
+const processor_new = process.env.REACT_APP_API_URL;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,6 +50,7 @@ const ProcessorTaskEdit = () => {
     const [templates, setTemplates] = useState([]);
     const [issueCertificateListOptions, setIssueCertificateListOptions] = useState([]);
     const [comments, setComments] = useState([]);
+    const [productList, setProductsList] = useState([]);
     const { id } = useParams();
     const nodeTypes = getNodeTypes(templates, issueCertificateListOptions);
 
@@ -105,6 +107,28 @@ const ProcessorTaskEdit = () => {
                     setEnabled(res.data.enabled);
                     setTask(res.data)
                     setComments(res.data.comments)
+                } else {
+                    console.error(res)
+                }
+            }),
+            new Promise((res, rej) => {
+                axios({
+                    url: `${processor_new}/v1/product`,
+                    method: "GET",
+                })
+                    .then(response => {
+                        if (response.status === 200) res(response)
+                        else rej(response)
+                    })
+                    .catch(console.error)
+            })
+            .then(res => {
+                if(res.status === 200 && res.data !== 'undefined') {
+                    var options = []
+                    res.data.products.map(row => {
+                        options.push({value: row.id.toString(), label: row.title})
+                    })
+                    setProductsList(options)
                 } else {
                     console.error(res)
                 }
