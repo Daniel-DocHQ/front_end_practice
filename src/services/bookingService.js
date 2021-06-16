@@ -195,7 +195,7 @@ function paymentRequest(slotId, data, auth_token) {
 			if (auth_token) {
 				headers.Authorization = `Bearer ${auth_token}`;
             }
-            if slotId {
+            if (slotId) {
                 data.type = "self_swab"
             }
 			axios({
