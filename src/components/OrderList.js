@@ -106,6 +106,7 @@ const OrderList = props => {
 
         setOrderDetail({id: searchBox});
         setDetailsOpen(true);
+        //setPage(0);
     }
 
     return (
@@ -113,7 +114,7 @@ const OrderList = props => {
             <Grid container spacing={3} direction="column">
                 <Grid item></Grid>
                 <Grid item>
-                    <TextField className={classes.textField} id="standard-basic" label="Search DocHQ order number" value={searchBox} onChange={(e) => setSearchBox(e.target.value)} />
+                    <TextField className={classes.textField} id="standard-basic" label="Order search" value={searchBox} onChange={(e) => setSearchBox(e.target.value)} />
                     <Button variant="contained" onClick={searchButtonClick}>Search</Button>
                 </Grid>
                 <Grid item className={classes.data_grid}>

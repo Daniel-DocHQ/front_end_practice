@@ -9,7 +9,7 @@ import { ToastsStore } from 'react-toasts';
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import BookingEngineForm from './BookingEngineForm';
 import bookingFormModel from './bookingFormModel';
-import validationSchema from './validationSchema';
+import useValidationSchema from './validationSchema';
 import bookingService from '../../services/bookingService';
 import getURLParams from '../../helpers/getURLParams';
 import LinkButton from '../DocButton/LinkButton';
@@ -34,15 +34,16 @@ const BookingEngine = () => {
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
 	const usersPhoneNumber = get(orderInfo, 'shipping_address.telephone', '');
 	const orderId = get(orderInfo, 'id', 0);
+	const isBookingSkip = items.find(({ sku }) => (sku === 'FACE-2-FACE-HOTEL' || sku === 'SELF-SWABBING'));
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
-	const currentValidationSchema = validationSchema[activeStep];
+	const currentValidationSchema = useValidationSchema(activeStep, isBookingSkip);
 	const defaultTestType = items.find(({ quantity }) => quantity > 0) || null;
 	const totalAvailableQuantity = items.reduce((sum, { quantity }) => quantity + sum, 0);
 	const steps = [
 		'Select Test',
 		'Travel Details',
-		'Booking Appointment',
+		...(isBookingSkip ? [] : ['Booking Appointment']),
 		'Passenger Details',
 		'Summary',
 		'Booking Confirmation',
@@ -63,7 +64,7 @@ const BookingEngine = () => {
 	};
 
 	function handleBack() {
-		activeStep === 3 && activePassenger !== 0
+		(steps[activeStep] === 'Passenger Details' && activePassenger !== 0)
 			? setActivePassenger(activePassenger - 1)
 			: setActiveStep(activeStep - 1);
 	}
@@ -188,7 +189,7 @@ const BookingEngine = () => {
 								}}
 								validationSchema={currentValidationSchema}
 								onSubmit={async (values, actions) => {
-									if (activeStep === 2) {
+									if (steps[activeStep] === 'Booking Appointment') {
 										const { selectedSlot } = values;
 										await bookingService.updateAppointmentStatus(
 											selectedSlot.id,
@@ -203,7 +204,7 @@ const BookingEngine = () => {
 										actions.setSubmitting(false);
 										actions.setErrors({});
 										handleNext();
-									} else if (activeStep === 3) {
+									} else if (steps[activeStep] === 'Passenger Details') {
 										const {
 											numberOfPeople,
 											passengers,
@@ -227,7 +228,7 @@ const BookingEngine = () => {
 											actions.setTouched({});
 											actions.setErrors({});
 										}
-									} else if (activeStep === 4) {
+									} else if (steps[activeStep] === 'Summary') {
 										const {
 											shipping_address: {
 												address_1,
@@ -332,7 +333,7 @@ const BookingEngine = () => {
 											},
 										};
 										await bookingService
-											.paymentRequest(selectedSlot.id, body)
+											.paymentRequest(isBookingSkip ? '' : selectedSlot.id, body)
 											.then(result => {
 												if (result.success && result.confirmation) {
 													handleNext();
@@ -367,6 +368,7 @@ const BookingEngine = () => {
 									steps={steps}
 									items={items}
 									timer={timerStart}
+									isBookingSkip={isBookingSkip}
 									totalAvailableQuantity={totalAvailableQuantity}
 									defaultCountryCode={defaultCountryCode}
 									dropTimer={() => setTimerStart()}

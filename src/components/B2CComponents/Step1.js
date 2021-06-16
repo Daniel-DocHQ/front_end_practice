@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Field, useFormikContext } from 'formik';
 import DateFnsUtils from '@date-io/date-fns';
 import cityTimezones from 'city-timezones';

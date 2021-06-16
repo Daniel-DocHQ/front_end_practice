@@ -5,7 +5,7 @@ import './BookingEngine.scss';
 
 const icon = require('../../assets/images/icons/circled-tick.svg');
 
-const Step5 = ({ defaultTimezone }) => {
+const Step5 = ({ isBookingSkip, defaultTimezone }) => {
     const { values: { appointmentDate, selectedSlot, passengers, timezone: timezoneValue, testType } } = useFormikContext();
     const timezone = timezoneValue || defaultTimezone.timezone;
 
@@ -26,18 +26,22 @@ const Step5 = ({ defaultTimezone }) => {
                                 {testType.title}
                             </p>
                         </div>
-                        <div className='row no-margin'>
-                            <p>
-                                <strong>Selected Date:&nbsp;</strong>
-                                {ddMMyyyy(appointmentDate)}
-                            </p>
-                        </div>
-                        <div className='row no-margin'>
-                            <p>
-                                <strong>Selected Time:&nbsp;</strong>
-                                {formatTimeSlotWithTimeZone(selectedSlot.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlot.end_time, timezone)} ({timezone})
-                            </p>
-                        </div>
+                        {!isBookingSkip && (
+                            <>
+                                <div className='row no-margin'>
+                                    <p>
+                                        <strong>Selected Date:&nbsp;</strong>
+                                        {ddMMyyyy(appointmentDate)}
+                                    </p>
+                                </div>
+                                <div className='row no-margin'>
+                                    <p>
+                                        <strong>Selected Time:&nbsp;</strong>
+                                        {formatTimeSlotWithTimeZone(selectedSlot.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlot.end_time, timezone)} ({timezone})
+                                    </p>
+                                </div>
+                            </>
+                        )}
                         <div className='row no-margin'>
                             <p><strong>
                                 A confirmation email will be sent to: {passengers[0].email}

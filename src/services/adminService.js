@@ -37,6 +37,75 @@ const adminService = {
 			}
 		});
 	},
+	getOrderDetails(orderId, token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/order/${orderId}`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+							resolve({
+								success: true,
+								data: null,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to fetch order details.',
+							});
+						}
+					})
+					.catch(err => {
+						console.log(err);
+						reject({
+							success: false,
+						});
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	validateDiscountCode(discountCode) {
+		return new Promise((resolve, reject) => {
+			if (discountCode) {
+				axios({
+					url: `${baseUrl}/v1/discount/${discountCode}`,
+					method: 'GET',
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							// postUrl, reference
+							resolve({ success: true, data: response.data });
+						} else {
+							// TODO needs better error handling
+							reject({
+								success: false,
+								error: 'Something went wrong, please try again.',
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.message) {
+							reject({ success: false, error: errResp.response.message });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
+					});
+			} else {
+				reject({ success: false, error: 'Missing details' });
+			}
+		});
+	},
 	getAllAppointments(dateRange, token) {
 		const { start_time, end_time } = dateRange;
 		return new Promise((resolve, reject) => {

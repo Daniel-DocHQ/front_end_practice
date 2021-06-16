@@ -33,6 +33,8 @@ const Step0 = ({
         }
     } = bookingFormModel;
 
+    const filteredItems = items.filter(({ type }) => type !== 'Virtual');
+
 	return (
 		<React.Fragment>
             {!isEdit && (
@@ -57,13 +59,13 @@ const Step0 = ({
                                         {...field}
                                         onChange={(({ target: { value } }) => {
                                             const intValue = parseInt(value);
-                                            const productObj = items.find(({ id }) => id === intValue);
+                                            const productObj = filteredItems.find(({ id }) => id === intValue);
                                             form.setFieldValue(field.name, intValue);
                                             form.setFieldValue('testType', productObj);
                                             form.setFieldValue(numberOfPeople.name, productObj.quantity);
                                         })}
                                     >
-                                        {items.map(({ id, title, quantity }) => (
+                                        {filteredItems.map(({ id, title, quantity }) => (
                                             <FormControlLabel
                                                 value={id}
                                                 key={id + title}

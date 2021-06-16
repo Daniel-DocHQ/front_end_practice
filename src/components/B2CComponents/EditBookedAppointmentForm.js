@@ -9,7 +9,7 @@ import parsePhoneNumber from 'libphonenumber-js'
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import BookingEngineForm from './BookingEngineForm';
 import bookingFormModel from './bookingFormModel';
-import validationSchema from './validationSchema';
+import useValidationSchema from './validationSchema';
 import bookingService from '../../services/bookingService';
 import getURLParams from '../../helpers/getURLParams';
 import LinkButton from '../DocButton/LinkButton';
@@ -36,7 +36,7 @@ const BookingEngine = () => {
 	const { formInitialValues } = bookingFormModel;
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
-	const currentValidationSchema = validationSchema[activeStep];
+	const currentValidationSchema = useValidationSchema(activeStep);
 	const usersTravelDate = get(bookingUsers, '[0].metadata.travel_date', new Date ());
 	const usersLandingDate = get(bookingUsers, '[0].metadata.landing_date', '');
 	const usersFlightNumber = get(bookingUsers, '[0].metadata.flight_number', '');

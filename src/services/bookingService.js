@@ -190,13 +190,13 @@ function paymentRequest(slotId, data, auth_token) {
 	}
 
 	return new Promise((resolve, reject) => {
-		if (slotId && data) {
+		if (data) {
 			const headers = { 'Content-type': 'application,json' };
 			if (auth_token) {
 				headers.Authorization = `Bearer ${auth_token}`;
 			}
 			axios({
-				url: `${baseURL}/${slotId}/payment`,
+				url: !!slotId ? `${baseURL}/${slotId}/payment` : `${baseURL}/`,
 				method: 'POST',
 				headers: headers,
 				data: data,

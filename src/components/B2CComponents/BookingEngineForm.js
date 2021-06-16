@@ -24,57 +24,51 @@ const BookingEngineForm = ({
     status,
     dropTimer,
     timer,
+    isBookingSkip = false,
     totalAvailableQuantity = 0,
     ...restProps
 }) => {
     const isLastStep = activeStep === steps.length - 1;
     const { values: { numberOfPeople }} = useFormikContext();
-	const renderSteps = () => {
-		switch (activeStep) {
-            case 0:
-				return (
-					<Step0
-                        items={items}
-                        isEdit={isEdit}
-                        bookingUsersQuantity={bookingUsersQuantity}
-                    />
-				);
-			case 1:
-				return (
-					<Step1 />
-				);
 
-			case 2:
-				return (
-					<Step2
-                        defaultTimezone={defaultTimezone}
-                        dropTimer={dropTimer}
-                        timer={timer}
-                    />
-				);
-			case 3:
-				return (
-					<Step3 activePassenger={activePassenger} defaultCountryCode={defaultCountryCode} isEdit={isEdit} />
-				);
-            case 4:
-				return (
-					<Step4 status={status} defaultTimezone={defaultTimezone} />
-				);
-            case 5:
-				return (
-					<Step5 defaultTimezone={defaultTimezone} />
-				);
-		};
-	};
+    const stepsComponents = [
+        <Step0
+            items={items}
+            isEdit={isEdit}
+            bookingUsersQuantity={bookingUsersQuantity}
+        />,
+        <Step1 />,
+        ...(isBookingSkip ? [] : [
+            <Step2
+                defaultTimezone={defaultTimezone}
+                dropTimer={dropTimer}
+                timer={timer}
+            />,
+        ]),
+        <Step3
+            activePassenger={activePassenger}
+            defaultCountryCode={defaultCountryCode}
+            isEdit={isEdit}
+        />,
+        <Step4
+            isBookingSkip={isBookingSkip}
+            status={status}
+            defaultTimezone={defaultTimezone}
+        />,
+        <Step5
+            isBookingSkip={isBookingSkip}
+            defaultTimezone={defaultTimezone}
+        />,
+    ];
 
 	return (
         <Form {...restProps}>
             <Stepper activeStep={activeStep} orientation='vertical'>
                 {steps.map((label, i) => (
                     <Step key={label}>
-                        <StepLabel>{label}{(activeStep === 3 && i == 3) && ` ${activePassenger + 1}`}</StepLabel>
+                        <StepLabel>{label}{(steps[activeStep] === 'Passenger Details' && i === activeStep) && ` ${activePassenger + 1}`}</StepLabel>
                         <StepContent>
-                            {renderSteps()}
+                            {stepsComponents[activeStep]}
                             <div className='row flex-start'>
                                 {activeStep > 0 && activeStep < 5 && (
                                     <DocButton
