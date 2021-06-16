@@ -54,7 +54,7 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         type: "string",
         name: "string",
         label: "Text",
-        acceptTypes: ["string", "orgForm", "emailTemplate", "stringCompare", "issueCertificateList", "productList"],
+        acceptTypes: ["string", "orgForm", "emailTemplate", "stringCompare", "issueCertificateList", "productsList"],
         color: Colors.green,
         controls: [
             Controls.text({
@@ -738,7 +738,7 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         label: "Get Shop Product",
         initalWidth: 160,
         inputs: ports => [
-            ports.string({
+            ports.productsList({
                 name: "id",
                 label: "Product ID",
             })
