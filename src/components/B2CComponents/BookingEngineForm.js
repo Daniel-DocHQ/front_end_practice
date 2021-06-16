@@ -70,7 +70,7 @@ const BookingEngineForm = ({
                         <StepContent>
                             {stepsComponents[activeStep]}
                             <div className='row flex-start'>
-                                {activeStep > 0 && activeStep < 5 && (
+                                {(activeStep > 0 && steps[activeStep] !== 'Booking Confirmation') && (
                                     <DocButton
                                         flat
                                         text='Back'
