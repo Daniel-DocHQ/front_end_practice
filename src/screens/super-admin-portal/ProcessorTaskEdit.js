@@ -52,7 +52,7 @@ const ProcessorTaskEdit = () => {
     const [comments, setComments] = useState([]);
     const [productList, setProductsList] = useState([]);
     const { id } = useParams();
-    const nodeTypes = getNodeTypes(templates, issueCertificateListOptions);
+    const nodeTypes = getNodeTypes(templates, issueCertificateListOptions, productList);
 
     const handleChange = (event) => {
         setDescription(event.target.value);
