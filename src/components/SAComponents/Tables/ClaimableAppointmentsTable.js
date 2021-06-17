@@ -107,6 +107,7 @@ const ClaimableAppointmentsTable = ({ appointments = [] }) => {
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
+							<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
 							<TableCell align='center' style={styles.tableText}>Project</TableCell>
@@ -122,6 +123,9 @@ const ClaimableAppointmentsTable = ({ appointments = [] }) => {
 
 							return (
 								<TableRow key={appointment.id}>
+									<TableCell align='left' style={{ ...styles.tableText }}>
+										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
+									</TableCell>
 									<TableCell align='center' style={{ ...styles.tableText }}>
 										{appointmentStartTime.toLocaleDateString()}
 									</TableCell>
@@ -152,6 +156,7 @@ const ClaimableAppointmentsTable = ({ appointments = [] }) => {
 								<TableCell style={styles.tableText}>
 									<p>No appointments to display</p>
 								</TableCell>
+								<TableCell />
 								<TableCell />
 								<TableCell />
 								<TableCell />

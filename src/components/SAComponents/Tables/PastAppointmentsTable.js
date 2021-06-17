@@ -98,6 +98,7 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
                     <TableHead>
                         <TableRow>
                             <TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
+                            <TableCell align='center' style={styles.tableText}>Patient Name</TableCell>
                             <TableCell align='center' style={styles.tableText}>Date</TableCell>
                             <TableCell align='center' style={styles.tableText}>Time</TableCell>
                             <TableCell align='center' style={styles.tableText}>Project</TableCell>
@@ -117,6 +118,9 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
                                     <TableCell align='left' style={{ ...styles.tableText }}>
                                         {get(appointment, 'user_name', '')}
                                     </TableCell>
+                                    <TableCell align='center' style={{ ...styles.tableText }}>
+										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
+									</TableCell>
                                     <TableCell align='center' style={{ ...styles.tableText }}>
                                         {appointmentStartTime.toLocaleDateString()}
                                     </TableCell>
@@ -153,6 +157,7 @@ const PastAppointmentsTable = ({ appointments = [] }) => {
                                 <TableCell/>
                                 <TableCell/>
                                 <TableCell/>
+                                <TableCell />
                                 <TableCell />
                                 <TableCell />
                                 <TableCell />

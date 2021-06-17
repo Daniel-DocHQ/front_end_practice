@@ -18,7 +18,7 @@ const ADDITIONAL_PRODUCT_TEXT = {
     'Day 8 PCR Test': 'book an appointment on the 8th day after your arrival in the UK',
     'Pre Departure Test [United Kingdom]': 'book an appointment with 48 hours of your travel',
     'Amber Short Stay': 'book an appointment within 2 days of your arrival in the UK',
-    'Test to Release [England]': 'book an appointment on the 5th day after your arrival in the UK',
+    'Test to Release': 'book an appointment on the 5th day after your arrival in the UK',
 };
 
 const Step0 = ({

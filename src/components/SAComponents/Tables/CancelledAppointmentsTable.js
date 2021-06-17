@@ -108,6 +108,7 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => {
 					<TableHead>
 						<TableRow>
 							<TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
+							<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
 							<TableCell align='center' style={styles.tableText}>People</TableCell>
@@ -123,6 +124,9 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => {
 								<TableRow key={appointment.id}>
 									<TableCell align='left' style={{ ...styles.tableText }}>
 										{get(appointment, 'user_name', '')}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.tableText }}>
+										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.tableText }}>
 										{appointmentStartTime.toLocaleDateString()}
@@ -151,6 +155,7 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => {
 								<TableCell style={styles.tableText}>
 									<p>No appointments to display</p>
 								</TableCell>
+								<TableCell />
 								<TableCell />
 								<TableCell />
 								<TableCell />

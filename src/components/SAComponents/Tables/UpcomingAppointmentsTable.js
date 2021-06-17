@@ -103,6 +103,7 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 					<TableHead>
 						<TableRow>
 							<TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
+							<TableCell align='center' style={styles.tableText}>Patient Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
 							<TableCell align='center' style={styles.tableText}>Project</TableCell>
@@ -120,6 +121,9 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 								<TableRow key={appointment.id}>
 									<TableCell align='left' style={{ ...styles.tableText }}>
 										{get(appointment, 'user_name', '')}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.tableText }}>
+										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.tableText }}>
 										{appointmentStartTime.toLocaleDateString()}
@@ -156,6 +160,7 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 								<TableCell/>
 								<TableCell />
                                 <TableCell />
+								<TableCell />
 								<TableCell />
 							</TableRow>
 						) : null}
