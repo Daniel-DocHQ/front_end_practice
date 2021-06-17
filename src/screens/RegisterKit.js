@@ -49,6 +49,9 @@ const RegisterKit = ({token}) => {
             metadata: {
                 kit_id: kitId,
                 sample_taken: "valid",
+                date_sampled: new Date().toISOString(),
+                first_name: booking.booking_user.first_name,
+                last_name: booking.booking_user.last_name,
             }
         }).then(res => {
             console.log(res)
@@ -84,7 +87,7 @@ const RegisterKit = ({token}) => {
                     <Input id="component-simple" value={kitId} onChange={handleChange} />
                 </FormControl>
                 <Button variant="contained" color="secondary" onClick={handleSubmit}>
-                    Secondary
+                    Submit
                 </Button>
             </Grid>
         </Contain>
