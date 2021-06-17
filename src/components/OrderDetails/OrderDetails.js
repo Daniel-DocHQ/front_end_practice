@@ -559,11 +559,13 @@ const AppointmentDetails = ({
                         <b>Test Type</b>: {appointment.booking_user.metadata.test_type}
                     </ListItemText>
                 </ListItem>
+                {!!appointment.start_time && (
                 <ListItem>
                     <ListItemText>
                         <b>Appointment Date</b>: {format(new Date(appointment.start_time), 'dd/MM/yyyy p')}  ({timezone})
                     </ListItemText>
                 </ListItem>
+                )}
                 <ListItem>
                     <ListItemText>
                         <Tooltip title="Click to copy">
