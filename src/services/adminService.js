@@ -37,6 +37,34 @@ const adminService = {
 			}
 		});
 	},
+	getOrders(token, page, email) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/order?page=${page}${!!email ? `&email=${email}`: ''}`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to fetch orders',
+							});
+						}
+					})
+					.catch(err => console.error(err));
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getOrderDetails(orderId, token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {

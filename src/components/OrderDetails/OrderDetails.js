@@ -73,44 +73,41 @@ const OrderDetails = ({ token, order, closeHandler}) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(<></>);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
-    const apiCall = new Promise((res, rej) => {
-        axios({
-            method: 'get',
-            url: `${orderUrl}/v1/order/${order.id}`,
-            headers: { Authorization: `Bearer ${token}` },
-        }).then(res)
-        .catch(rej);
-    })
     const refetchData = () => setReloadInfo((value) => !value);
 
-    useEffect(async () => {
-        await adminService.getOrderDetails(order.id, token).then(res => {
-            if (res.success && res.data) {
-                setOrderDetail(res.data);
-                if (!!res.data.discount) {
-                    adminService.validateDiscountCode(res.data.discount)
-                        .then(result => {
-                            if (result.success && result.data && result.data.value) {
-                                setDiscountValue(result.data);
-                            }
-                        }).catch(() => console.log('error'));
+    const fetchData = async () => {
+        if (!!order && !!order.id) {
+            await adminService.getOrderDetails(order.id, token).then(res => {
+                if (res.success && res.data) {
+                    setOrderDetail(res.data);
+                    if (!!res.data.discount) {
+                        adminService.validateDiscountCode(res.data.discount)
+                            .then(result => {
+                                if (result.success && result.data && result.data.value) {
+                                    setDiscountValue(result.data);
+                                }
+                            }).catch(() => console.log('error'));
+                    }
+                } else {
+                    setError(<>Something bad happened</>)
                 }
-            } else {
-                setError(<>Something bad happened</>)
-            }
-            }).catch(res => {
-                setError(<>{res.message}</>)
-            });
-        await apiCall.then(res => {
-            bookingService.getAppointmentsByShortToken(order.id)
-            .then(result => {
-                if (result.success && result.appointments) {
-                    setAppointments(result.appointments);
-                }
-            })
-        })
+                }).catch(res => {
+                    setError(<>{res.message}</>)
+                });
+            await bookingService.getAppointmentsByShortToken(order.id)
+                .then(result => {
+                    if (result.success && result.appointments) {
+                        setAppointments(result.appointments);
+                    }
+                });
+        }
         setLoading(false);
-    }, [order, reloadInfo]);
+
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [reloadInfo]);
 
     const handleCancelDialogToggle = () => {
         setCancelDialogOpen(!cancelDialogOpen);
@@ -190,7 +187,10 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                         <TableCell align="right">Quantity</TableCell>
                                         <TableCell align="right">Price</TableCell>
                                         {discountValue && (
-                                            <TableCell align="right">Discount Price</TableCell>
+                                            <>
+                                                <TableCell align="right">Discount Value</TableCell>
+                                                <TableCell align="right">Discount Price</TableCell>
+                                            </>
                                         )}
                                     </TableRow>
                                 </TableHead>
@@ -203,9 +203,14 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                             <TableCell align="right">{row.quantity}</TableCell>
                                             <TableCell align="right">£{row.product.price}</TableCell>
                                             {discountValue && (
-                                                <TableCell align="right">
-                                                    £{discountValue.type === 'percentage' ? (row.product.price * (discountValue.value / 100)) : '-'}
-                                                </TableCell>
+                                                <>
+                                                    <TableCell align="right">
+                                                        {discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        £{discountValue.type === 'percentage' ? (row.product.price * (discountValue.value / 100)) : '-'}
+                                                    </TableCell>
+                                                </>
                                             )}
                                         </TableRow>
                                     ))}
@@ -216,19 +221,19 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                         <TableCell align="right">{orderDetail.items.reduce((sum, { quantity }) => (sum + quantity), 0)}</TableCell>
                                         <TableCell align="right">£{orderDetail.items.reduce((sum, { quantity, product: { price } }) => (sum + price * quantity), 0)}</TableCell>
                                         {discountValue && (
-                                            <TableCell align="right">
-                                                £{orderDetail.items.reduce((sum, { product: { price }, quantity }) => (sum + ((price - (discountValue.type === 'percentage' ? (price * (discountValue.value / 100)) : discountValue.value)) * parseFloat(quantity || 0))), 0)}
-                                            </TableCell>
+                                            <>
+                                                <TableCell align="right">
+                                                    {discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    £{orderDetail.items.reduce((sum, { product: { price }, quantity }) => (sum + ((price - (discountValue.type === 'percentage' ? (price * (discountValue.value / 100)) : discountValue.value)) * parseFloat(quantity || 0))), 0)}
+                                                </TableCell>
+                                            </>
                                         )}
                                     </TableRow>
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        {discountValue && (
-                            <Typography variant="h6" className={classes.title}>
-                                Discount Value: {discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
-                            </Typography>
-                        )}
                     </Grid>
                     <Grid item xs={6}>
                         <Typography variant="h6" className={classes.title}>

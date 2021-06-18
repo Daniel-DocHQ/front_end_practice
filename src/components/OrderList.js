@@ -1,18 +1,17 @@
 import React, { useEffect, memo, useState, useContext } from 'react';
 import {format} from 'date-fns';
-import axios from 'axios';
+import { useDebounce } from 'react-use';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid, GridToolbar  } from '@material-ui/data-grid';
+import { GridOverlay, DataGrid, GridToolbar  } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import OrderDetails from './OrderDetails/OrderDetails';
 import { AuthContext } from '../context/AuthContext';
 import { ToastsStore } from 'react-toasts';
-
-const orderUrl = process.env.REACT_APP_API_URL
+import adminService from '../services/adminService';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     textField: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
-        width: '75ch',
+        width: '40ch',
     },
 }));
 
@@ -61,18 +60,12 @@ const OrderList = props => {
     const [page, setPage] = useState(0);
     const [pageCount, setPageCount] = useState(0);
     const [error, setError] = useState(<></>);
+    const [search, setSearch] = useState(false);
     const [detailsOpen, setDetailsOpen] = useState(false);
-    const [orderDetail, setOrderDetail] = useState({});
+    const [orderDetail, setOrderDetail] = useState();
     const [dataTableLoading, setDataTableLoading] = useState(true);
     const [searchBox, setSearchBox] = useState("");
-    const apiCall = new Promise((res, rej) => {
-        axios({
-            method: 'get',
-            url: `${orderUrl}/v1/order?page=${page}`,
-            headers: { Authorization: `Bearer ${token}` },
-        }).then(res)
-            .catch((err) => ToastsStore.error('Error fetching orders'))
-    });
+    const [searchEmail, setSearchEmail] = useState("");
 
     const clickedRow = (param, event) => {
         setOrderDetail(param);
@@ -80,17 +73,22 @@ const OrderList = props => {
     }
 
     useEffect(() => {
-        (async () => {
-            setDataTableLoading(true);
-            const res = await apiCall;
-            if (res.status === 200 && res.data.orders) {
-                setPageSize(res.data.pagnation_page_size);
-                setPageCount(res.data.total_count);
-                setRows(res.data.orders);
-            }
-            setDataTableLoading(false);
-        })();
-    }, [page]);
+        setDataTableLoading(true);
+        adminService.getOrders(token, page, searchEmail)
+            .then(res => {
+                if (res.success && res.data) {
+                    setPageSize(res.data.pagnation_page_size);
+                    setPageCount(!!res.data.total_count ? res.data.total_count : !!res.data.orders ? pageCount : 0);
+                    setRows(res.data.orders || []);
+                }
+            }).catch((err) => ToastsStore.error('Error fetching orders'));
+        setDataTableLoading(false);
+    }, [page, search]);
+
+    useDebounce(async () => {
+        setPage(0);
+        setSearch(!search);
+	}, 300, [searchEmail]);
 
     const toggleDrawer = (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -106,16 +104,19 @@ const OrderList = props => {
 
         setOrderDetail({id: searchBox});
         setDetailsOpen(true);
-        //setPage(0);
     }
 
     return (
         <Container className={classes.root}>
             <Grid container spacing={3} direction="column">
-                <Grid item></Grid>
-                <Grid item>
-                    <TextField className={classes.textField} id="standard-basic" label="Order search" value={searchBox} onChange={(e) => setSearchBox(e.target.value)} />
-                    <Button variant="contained" onClick={searchButtonClick}>Search</Button>
+                <Grid container item xs={12} justify="space-between" alignItems="center">
+                    <Grid item xs={6} alignItems="center">
+                        <TextField className={classes.textField} id="standard-basic" label="Order search by short token" value={searchBox} onChange={(e) => setSearchBox(e.target.value)} />
+                        <Button variant="contained" onClick={searchButtonClick}>Search</Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField className={classes.textField} id="standard-basic" label="Order search by email" value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+                    </Grid>
                 </Grid>
                 <Grid item className={classes.data_grid}>
                     <DataGrid
@@ -125,6 +126,7 @@ const OrderList = props => {
                         pageSize={pageSize}
                         components={{
                             Toolbar: GridToolbar,
+                            NoRowsOverlay: CustomNoRowsOverlay,
                         }}
                         onRowClick={clickedRow}
                         paginationMode="server"
@@ -142,5 +144,14 @@ const OrderList = props => {
         </Container>
     )
 };
+
+function CustomNoRowsOverlay() {
+    const classes = useStyles();
+    return (
+        <GridOverlay>
+            <div className={classes.label}>No Orders Found</div>
+        </GridOverlay>
+    );
+  }
 
 export default memo(OrderList);

@@ -22,23 +22,26 @@ const TermsConditionsEn = () => {
 			<h2 style={{ textAlign:'center' }}>DocHQ medical Terms and Conditions</h2>
 			<p>
 				This COVID test is a screening test for asymptomatic individuals. In the event of symptoms and/or
-				clinical suspicion of an infection with the coronavirus COVID-19 you need a diagnostic test instead,
-				please contact your family doctor or another local medical facility.
+				clinical suspicion of infection with the coronavirus COVID-19 you need a diagnostic test instead,
+				please contact your family doctor or another local medical facility
 			</p>
 			<p>
-				In case of a positive test result (virus detected) you must consider yourself infectious and follow local rules regarding self-isolation and diagnostic confirmation.
+				These tests offered by DocHQ Limited are self tests only. DocHQ Limited does not perform any tests according to the coronavirus test regulation. Anyone who is entitled to a coronavirus test at the expense of their own health insurance or due to a suspicious activity report from the corona warning up or any other circumstance that suggests an infection with the coronavirus should see their family doctor, another suitable doctor or an official test site of the public health authorities.
 			</p>
 			<p>
-				A negative test result (no virus detected) does not release you from your duty to follow local government Covid rules and guidelines .
+				In case of a positive test result (virus detected), you must consider yourself infectious and follow local rules regarding self-isolation and diagnostic confirmation.
 			</p>
 			<p>
-				Errors that occur during the sampling and shipment processes can lead to delays or make a sample unreadable or invalid
+				A negative test result (no virus detected) does not release you from your duty to follow local government Covid rules and guidelines.
+			</p>
+			<p>
+				Errors that occur during the sampling and shipment processes can lead to delays or make a sample unreadable or invalid.
 			</p>
 			<p>
 				If done correctly the test sampling is harmless, however unpleasant body reactions can occur. These can vary depending upon the individual and the sampling method used. Possible reactions are gagging, coughing, sneezing, watery eyes, slight bleeding from the mucous membranes and dizziness.
 			</p>
 			<p>
-				We recommend informing an adult who is nearby about the upcoming test, so that they can provide help if necessary. Your address will be requested for your online guidance, so that our employees can organise help if necessary. If you feel any discomfort during the video conference, please inform your healthcare professional immediately.
+				We recommend informing an adult who is nearby about the upcoming test, so that they can provide help if necessary. Your address will be requested for your online guidance so that our employees can organise help if necessary. If you feel any discomfort during the video conference, please inform your healthcare professional immediately.
 			</p>
 			<p>
 				The quality of the sample depends largely on the correct sampling. It is therefore important that you follow instructions provided in writing and given during the video conference.
@@ -47,16 +50,10 @@ const TermsConditionsEn = () => {
 				It is important that the person being tested does not drink, eat, use mouthwash, brush teeth, or chew gum 30 minutes prior to the test.
 			</p>
 			<p>
-				This COVID test is a self test taken whilst accompanied by our specially trained medical staff via video conference. If you have any questions about the background of a PCR test for COVID diagnostics, which you would like to discuss with a doctor before carrying out the test, please contact our customer service (klaritysupport@dochq.co.uk).
+				This COVID test is a self-test taken whilst accompanied by our specially trained healthcare professionals via video conference. If you have any questions about the background of a PCR test for COVID diagnostics, which you would like to discuss with a doctor before carrying out the test, please contact our customer service (covidtesthelp@dochq.co.uk).
 			</p>
 			<p>
-				As part of the online guidance for sampling, your identity will be checked against a valid identification document. DocHQ Limited aims to produce valid and correct results through controlled processes under medical control and in accordance with medical standards. A test certificate can only be issued if the sampling is carried out under the supervision of the medical staff during the video conference and the specified processes are followed. DocHQ’s representatives are instructed not to accept the sample if there is doubt about the identity of the person to be tested, if the instructions for taking the sample are not followed or if there are other doubts about the correctness of the sample. In such a case, any reimbursement of costs and liability on the part of DocHQ Limited or one of its partners for any damage incurred is excluded.
-			</p>
-			<p>
-				This online guided COVID self-test is a screening test for asymptomatic individuals. It is not a medical or diagnostic service and does not replace a consultation with a medical doctor. In the event of symptoms and/or clinical suspicion of an infection with the coronavirus COVID-19 you need a diagnostic test, please contact your family doctor or another local medical facility.
-			</p>
-			<p>
-				These tests offered by DocHQ Limited are self tests only. DocHQ Limited does not perform any tests according to the coronavirus test regulation. Anyone who is entitled to a coronavirus test at the expense of their own health insurance or due to a suspicious activity report from the corona warning up or any other circumstance that suggests an infection with the coronavirus should see their family doctor, another suitable doctor or an official test site of the public health authorities.
+				As part of the online guidance for sampling, your identity will be checked against a valid identification document. DocHQ Limited aims to produce valid and correct results through controlled processes under medical control and in accordance with medical standards. A test certificate can only be issued if the sampling is carried out under the supervision of the healthcare professionals during the video conference and the specified processes are followed. DocHQ’s representatives are instructed not to accept the sample if there is doubt about the identity of the person to be tested, if the instructions for taking the sample are not followed or if there are other doubts about the correctness of the sample. In such a case, any reimbursement of costs and liability on the part of DocHQ Limited or one of its partners for any damage incurred is excluded.
 			</p>
 			<p>
 				We will do our best to issue your test result as quickly as possible. However, delays in the process are possible, therefore, the timely presentation of the test results (e.g. before departure of a flight) cannot be guaranteed. Incorrect packaging or labelling can mean that a sample cannot be assigned or used so it’s essential that you follow the instructions provided. On rare occasions a sample may not be evaluated by the laboratory (so called inhibited sample, termination of the run, etc.) or the result takes longer without DocHQ Limited or its partners being at fault. In these cases we will offer you a repeat test at no additional cost. However, in such instances the test result will take additional time and we are not liable for any damage or travel disruption caused by such a delay.
@@ -74,24 +71,17 @@ const TermsConditionsEn = () => {
 				<ul>
 					<li>to enable our healthcare professionals to carry out your online guided COVID test and fulfill their contractual obligations with you;</li>
 					<li>communication of the test result to the specified contact person;</li>
-					<li>fulfilment of statutory reporting and retention requirements for the results; </li>
-					<li>data transmission to Managed Self Limited to issue a test certificate accessible in the Klarity app- if desired.</li>
+					<li>fulfilment of statutory reporting and retention requirements for the results;</li>
 				</ul>
 			</p>
-			<p>We store this data in accordance with the applicable statutory provisions hostel.</p>
+			<p>By providing an email address, the customer assures that the e-mail address belongs to the customer and that the customer wants the test results (which contain health data) to be sent to this email address and that he or she agrees to the non-secure communication channel.</p>
 			<p>
-				But providing an email address, the customer assures that the e-mail address belongs to the customer and that the customer wants the test results (which contain health data) to be sent to this email address and that he or she agrees to the non-secure communication channel.
-			</p>
-			<p>
-				I give permission for DocHQ Limited to share my personal and medical data for this process with their necessary partners for the test process, <b>Public Health England (PHE)</b>, any relevant regulatory authorities, and release the involved doctors and medical staff from their duty of confidentiality.
+				I give permission for DocHQ Limited to share my personal and medical data for this process with their necessary partners for the test process, Public Health England (PHE), any relevant regulatory authorities, and release the involved doctors and medical staff from their duty of confidentiality.
 			</p>
 			<p>
 				The necessarily involved partners are:<br/>
-				Dr. Simon Chaplin-Rogers, Park and St Francis Surgery, Ciconia Recovery Ltd.<br/>
-				In case of PCR testing, also: SYNLAB Group, Eurofins Scientific, 2030 Labs Limited, Oncologica UK Limited and any other laboratory that DocHQ Limited will contract with in future.
-			</p>
-			<p>
-				DocHQ Limited will not share your medical data with the Robert Koch Institute; it is optional to the users to do so if they wish to.
+				Dr. Simon Chaplin-Rogers, Park and St Francis Surgery, Ciconia Recovery Ltd any other Medical professional services that DocHQ Limited contract with in future.<br/>
+				In case of PCR testing, also: SYNLAB Group, Eurofins Scientific, 2030 Labs Limited, Oncologica UK Limited and any other laboratory that DocHQ Limited contract with in future.
 			</p>
 			<h3>Liability</h3>
 			<p>
