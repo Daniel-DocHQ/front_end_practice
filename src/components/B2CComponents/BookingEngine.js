@@ -72,34 +72,36 @@ const BookingEngine = () => {
 		setActiveStep(activeStep + 1);
 	}
 
-	useEffect(() => {
-		(async () => {
-			setLoading(true);
-			if (short_token) {
-				await adminService.getOrderInfo(short_token)
-					.then(data => {
-						if (data.success) {
-							setOrderInfo(data.order);
-						}
-					})
-					.catch(err => ToastsStore.error('Error fetching order information'))
-				await adminService.getOrderProducts(short_token)
-					.then(data => {
-						if (data.success) {
-							setItems(data.order);
-						}
-					})
-					.catch(err => ToastsStore.error('Error fetching order information'))
+	const getData = async () => {
+		setLoading(true);
+		if (short_token) {
+			await adminService.getOrderInfo(short_token)
+				.then(data => {
+					if (data.success) {
+						setOrderInfo(data.order);
+					}
+				})
+				.catch(err => ToastsStore.error('Error fetching order information'))
+			await adminService.getOrderProducts(short_token)
+				.then(data => {
+					if (data.success) {
+						setItems(data.order);
+					}
+				})
+				.catch(err => ToastsStore.error('Error fetching order information'))
 
-				await bookingService.getAppointmentsByShortToken(short_token)
-					.then(result => {
-						if (result.success && result.appointments) {
-							setAppointments(result.appointments);
-						}
-					});
-			}
-			setLoading(false);
-		})();
+			await bookingService.getAppointmentsByShortToken(short_token)
+				.then(result => {
+					if (result.success && result.appointments) {
+						setAppointments(result.appointments);
+					}
+				});
+		}
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		getData();
 	}, []);
 
 	if (isLoading) {
@@ -138,7 +140,7 @@ const BookingEngine = () => {
 							<Formik
 								initialValues={{
 									...formInitialValues,
-									numberOfPeople: (defaultTestType.quantity || 1) > 4 ? 4 : defaultTestType.quantity,
+									numberOfPeople: 1,
 									product: defaultTestType.id || 0,
 									testType: defaultTestType,
 									...(!!appointments.length ? {

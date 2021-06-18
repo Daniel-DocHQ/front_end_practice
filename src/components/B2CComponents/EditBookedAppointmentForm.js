@@ -78,30 +78,32 @@ const BookingEngine = () => {
 		setActiveStep(activeStep + 1);
 	}
 
+	const getData = async () => {
+		await setLoading(true);
+		if (short_token && appointmentId) {
+			await nurseSvc
+				.getAppointmentDetails(appointmentId, token)
+				.then(result => {
+					if (result.success && result.appointment) {
+						setAppointment(result.appointment);
+					} else {
+						ToastsStore.error(`Cannot find appointment details`);
+					}
+				})
+				.catch(() => ToastsStore.error(`Cannot find appointment details`));
+			await adminService.getOrderProducts(short_token)
+				.then(data => {
+					if (data.success) {
+						setItems(data.order);
+					}
+				})
+				.catch(err => ToastsStore.error('Error fetching order information'))
+		}
+		setLoading(false);
+	};
+
 	useEffect(() => {
-		(async () => {
-			await setLoading(true);
-			if (short_token && appointmentId) {
-				await nurseSvc
-					.getAppointmentDetails(appointmentId, token)
-					.then(result => {
-						if (result.success && result.appointment) {
-							setAppointment(result.appointment);
-						} else {
-							ToastsStore.error(`Cannot find appointment details`);
-						}
-					})
-					.catch(() => ToastsStore.error(`Cannot find appointment details`));
-				await adminService.getOrderProducts(short_token)
-					.then(data => {
-						if (data.success) {
-							setItems(data.order);
-						}
-					})
-					.catch(err => ToastsStore.error('Error fetching order information'))
-			}
-			setLoading(false);
-		})();
+		getData();
 	}, []);
 
 

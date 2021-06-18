@@ -27,6 +27,7 @@ import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
 import COUNTRIES from '../../helpers/countries';
 import datePickerTheme from '../../helpers/datePickerTheme';
+import preventCopyPaste from '../../helpers/preventCopyPaste';
 import './BookingEngine.scss';
 
 const countryToFlag = (isoCode) => (
@@ -76,10 +77,6 @@ const Step2 = ({
             fillWithBookingUser,
         }
     } = bookingFormModel;
-
-    const handleCopyPaste = (e) => {
-        e.preventDefault();
-    };
 
 	return (
 		<React.Fragment>
@@ -403,10 +400,10 @@ const Step2 = ({
                     <Field name={`passengers[${activePassenger}].passportNumber`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input ID Document number' : undefined}>
                         {({ field, meta }) => (
                             <Input
-                                onCopy={handleCopyPaste}
-                                onDrag={handleCopyPaste}
-                                onDrop={handleCopyPaste}
-                                onPaste={handleCopyPaste}
+                                onCopy={preventCopyPaste}
+                                onDrag={preventCopyPaste}
+                                onDrop={preventCopyPaste}
+                                onPaste={preventCopyPaste}
                                 error={!!meta.error}
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
@@ -438,10 +435,10 @@ const Step2 = ({
                             >
                                 {({ field, meta }) => (
                                     <Input
-                                        onCopy={handleCopyPaste}
-                                        onDrag={handleCopyPaste}
-                                        onDrop={handleCopyPaste}
-                                        onPaste={handleCopyPaste}
+                                        onCopy={preventCopyPaste}
+                                        onDrag={preventCopyPaste}
+                                        onDrop={preventCopyPaste}
+                                        onPaste={preventCopyPaste}
                                         error={!!meta.error}
                                         touched={meta.touched}
                                         helperText={(meta.error && meta.touched) && meta.error}

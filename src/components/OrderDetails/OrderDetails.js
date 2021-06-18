@@ -74,6 +74,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
     const [error, setError] = useState(<></>);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const refetchData = () => setReloadInfo((value) => !value);
+    const orderItems = get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual');
 
     const fetchData = async () => {
         if (!!order && !!order.id) {
@@ -195,7 +196,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {orderDetail.items.map((row) => (
+                                    {orderItems.map((row) => (
                                         <TableRow key={row.order_id + row.product_id}>
                                             <TableCell component="th" scope="row">{row.product.title}</TableCell>
                                             <TableCell align="right">{row.product.description}</TableCell>
@@ -218,15 +219,15 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                         <TableCell align="left">Total</TableCell>
                                         <TableCell align="right"></TableCell>
                                         <TableCell align="right"></TableCell>
-                                        <TableCell align="right">{orderDetail.items.reduce((sum, { quantity }) => (sum + quantity), 0)}</TableCell>
-                                        <TableCell align="right">£{orderDetail.items.reduce((sum, { quantity, product: { price } }) => (sum + price * quantity), 0)}</TableCell>
+                                        <TableCell align="right">{orderItems.reduce((sum, { quantity }) => (sum + quantity), 0)}</TableCell>
+                                        <TableCell align="right">£{orderItems.reduce((sum, { quantity, product: { price } }) => (sum + price * quantity), 0)}</TableCell>
                                         {discountValue && (
                                             <>
                                                 <TableCell align="right">
                                                     {discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
                                                 </TableCell>
                                                 <TableCell align="right">
-                                                    £{orderDetail.items.reduce((sum, { product: { price }, quantity }) => (sum + ((price - (discountValue.type === 'percentage' ? (price * (discountValue.value / 100)) : discountValue.value)) * parseFloat(quantity || 0))), 0)}
+                                                    £{orderItems.reduce((sum, { product: { price }, quantity }) => (sum + ((price - (discountValue.type === 'percentage' ? (price * (discountValue.value / 100)) : discountValue.value)) * parseFloat(quantity || 0))), 0)}
                                                 </TableCell>
                                             </>
                                         )}

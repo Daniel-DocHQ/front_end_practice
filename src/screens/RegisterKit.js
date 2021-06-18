@@ -16,6 +16,9 @@ import {
 	Checkbox,
 	FormControlLabel,
 	FormGroup,
+    ListItemText,
+    List,
+    ListItem,
     makeStyles,
     CircularProgress,
     Typography,
@@ -31,6 +34,7 @@ import Input from '../components/FormComponents/Input';
 import adminService from '../services/adminService';
 import DocButton from '../components/DocButton/DocButton';
 import datePickerTheme from '../helpers/datePickerTheme';
+import preventCopyPaste from '../helpers/preventCopyPaste';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,24 +48,13 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 2px',
     transform: 'scale(0.8)',
   },
-  title: {
-    fontSize: 24,
-  },
   text: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
+    fontSize: 16,
   },
   redText: {
     color: 'var(--doc-pink)',
   },
 }));
-
-const SWABBING_METHODS = {
-    'FACE-2-FACE-HOTEL': 'FACE-2-FACE-HOTEL',
-    'SELF-SWABBING': '',
-};
 
 const Contain = ({ children }) => {
     const classes = useStyles();
@@ -89,7 +82,7 @@ const RegisterKit = ({ token }) => {
     const email = get(booking, 'booking_user.email', '');
     const productId = get(booking, 'booking_user.metadata.product_id', '');
     const kitType = get(items.find(({ id }) => id === productId), 'title', '');
-    const swabMethod = SWABBING_METHODS[get(items.find(({ type }) => type === 'virtual'), 'sku')];
+    const swabMethod = get(items.find(({ type }) => type === 'Virtual'), 'title', '');
 
     const handleSubmit = ({
         kitId,
@@ -114,7 +107,7 @@ const RegisterKit = ({ token }) => {
         }));
     }
 
-    useEffect(async () => {
+    const getData = async () => {
         await service.getAppointmentDetails(id, "").then(res => {
             if (res.success && res.appointment) {
                 setBooking(res.appointment);
@@ -129,6 +122,10 @@ const RegisterKit = ({ token }) => {
             }
         }).catch((err) => console.log(err));
         setLoading(false);
+    };
+
+    useEffect(() => {
+        getData();
     }, []);
 
     return loading ? (
@@ -143,20 +140,60 @@ const RegisterKit = ({ token }) => {
                 <Grid item>
                     <Card className={classes.card} variant="outlined">
                         <CardContent>
-                            <Typography className={classes.title}>
+                            <h3 className='no-margin'>
                                 {booking.booking_user.first_name} {booking.booking_user.last_name}
-                            </Typography>
-                            <Typography className={classes.text} color="textSecondary" gutterBottom>
-                                Order number: {booking.booking_user.metadata.short_token}
-                            </Typography>
+                            </h3>
+                            <List>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Order number</b>: {booking.booking_user.metadata.short_token}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Date of Birth</b>: {format(new Date(dateOfBirth), 'dd-MM-yyyy')}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>ID Document Number</b>: {passportNumber}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Email address</b>: {email}
+                                    </ListItemText>
+                                </ListItem>
+                            </List>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item style={{ paddingTop: 20 }}>
+                    <Card className={classes.card} variant="outlined">
+                        <CardContent>
+                            <h3 className='no-margin'>
+                               Test Details
+                            </h3>
+                            <List>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Test</b>: {kitType}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Swab method</b>: {swabMethod}
+                                    </ListItemText>
+                                </ListItem>
+                            </List>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item style={{ paddingTop: 20 }}>
+                    <Card className={classes.card} variant="outlined">
+                        <CardContent>
                             <Typography className={classes.text}>
-                                <b>Date of Birth: </b>{format(new Date(dateOfBirth), 'dd-MM-yyyy')}
-                            </Typography>
-                            <Typography className={classes.text}>
-                                <b>ID Document Number: </b>{passportNumber}
-                            </Typography>
-                            <Typography className={classes.text}>
-                                <b>Email address: </b>{email}
+                                Please ensure the kit is registered as soon as possible <span className={classes.redText}>AFTER</span> the sample has been taken. Delaying registering your kit may lead to delays and possible disruptions to your journey.
                             </Typography>
                         </CardContent>
                     </Card>
@@ -164,33 +201,9 @@ const RegisterKit = ({ token }) => {
                 <Grid item style={{ paddingTop: 20 }}>
                     <Card className={classes.card} variant="outlined">
                         <CardContent>
-                            <Typography className={classes.title} gutterBottom>
-                                Text Kit Details
-                            </Typography>
-                            <Typography className={classes.text}>
-                                <b>Kit Type: </b>{kitType}
-                            </Typography>
-                            <Typography className={classes.text}>
-                                <b>Swab method: </b>{swabMethod}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item style={{ paddingTop: 20 }}>
-                    <Card className={classes.card} variant="outlined">
-                        <CardContent>
-                            <Typography className={classes.text} color="textSecondary">
-                                Please ensure the kit is registered as soon as possible <span className={classes.redText}>AFTER</span> the sample has been taken, delaying registering your kit lay lead to delays and possible disruptions to your journey
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item style={{ paddingTop: 20 }}>
-                    <Card className={classes.card} variant="outlined">
-                        <CardContent>
-                            <Typography className={classes.title} gutterBottom>
+                            <h3 className='no-margin'>
                                 Register Kit
-                            </Typography>
+                            </h3>
                             <Formik
 								initialValues={{
 									kitId: '',
@@ -281,6 +294,9 @@ const RegisterKit = ({ token }) => {
                                             </div>
                                         </MuiPickersUtilsProvider>
                                     </ThemeProvider>
+                                    <h4 style={{ margin: 0 }}>
+                                        Enter your kit ID
+                                    </h4>
                                     <div className="row">
                                         <Field name="kitId">
                                             {({ field, meta }) => (
@@ -289,6 +305,10 @@ const RegisterKit = ({ token }) => {
                                                     id="kit-id"
                                                     label="Kit ID"
                                                     placeholder="Eg: 20P456632"
+                                                    onCopy={preventCopyPaste}
+                                                    onDrag={preventCopyPaste}
+                                                    onDrop={preventCopyPaste}
+                                                    onPaste={preventCopyPaste}
                                                     error={!!meta.error}
                                                     touched={meta.touched}
                                                     helperText={(meta.error && meta.touched) && meta.error}
@@ -297,6 +317,9 @@ const RegisterKit = ({ token }) => {
                                             )}
                                         </Field>
                                     </div>
+                                    <h4 style={{ margin: 0 }}>
+                                        Kit ID confirmation
+                                    </h4>
                                     <div className="row">
                                         <Field name="confirmKitId">
                                             {({ field, meta }) => (
@@ -304,6 +327,10 @@ const RegisterKit = ({ token }) => {
                                                     required
                                                     id="confirm-kit-id"
                                                     label="Confirm Kit ID"
+                                                    onCopy={preventCopyPaste}
+                                                    onDrag={preventCopyPaste}
+                                                    onDrop={preventCopyPaste}
+                                                    onPaste={preventCopyPaste}
                                                     placeholder="Eg: 20P456632"
                                                     error={!!meta.error}
                                                     touched={meta.touched}
