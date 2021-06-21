@@ -69,41 +69,39 @@ const UploadedPositiveResultsTable = ({ results = [], back, token }) => (
                 <TableBody>
                     {results.length > 0 &&
                         results.map(result => {
-                            const testResult = get(result, 'result', '');
+                            const testResult = get(result, 'meta_data.result', '');
                             let sampledDate = get(result, 'meta_data.date_sampled', '');
                             let reportedDate = get(result, 'meta_data.date_reported');
                             reportedDate = !!reportedDate ? new Date(reportedDate) : '';
-                            sampledDate = !!sampledDate ? new Date(sampledDate).toLocaleDateString() : '';
+                            sampledDate = !!sampledDate ? format(new Date(sampledDate), 'dd/MM/yyyy p') : '';
 
                             return (
                                 <TableRow key={result.id}>
-                                    <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='left' style={{ ...styles.tableText }}>
                                         {get(result, 'meta_data.first_name', '')}
                                     </TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='center' style={{ ...styles.tableText }}>
                                         {get(result, 'meta_data.last_name', '')}
                                     </TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {get(result, 'meta_data.test_type', '')}
-                                    </TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='center' style={{ ...styles.tableText }}>
                                         {sampledDate}
+                                    </TableCell>
+                                    <TableCell align='center' style={{ ...styles.tableText }}>
+                                        {get(result, 'meta_data.sample_type', '')}
                                     </TableCell>
                                     <TableCell
                                         align='center'
-                                        style={{ ...styles.medCol, ...styles.tableText }}
+                                        style={{ ...styles.tableText }}
                                         className={testResult === 'Positive' && 'red-bold-text'}
                                     >
                                         {testResult}
                                     </TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {!!reportedDate ? reportedDate.toLocaleTimeString() : ''}
+                                    <TableCell align='center' style={{ ...styles.tableText }}>
                                     </TableCell>
-                                    <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                        {!!reportedDate ? format(reportedDate, 'p') : ''}
+                                    <TableCell align='center' style={{ ...styles.tableText }}>
                                     </TableCell>
-                                    <TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
-                                        <div style={{ display: 'flex' }}>
+                                    <TableCell align='right' style={{ ...styles.tableText }}>
+                                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                             <LinkButton
                                                 text='View'
                                                 color='green'
