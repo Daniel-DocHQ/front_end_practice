@@ -620,7 +620,7 @@ const AppointmentDetails = ({
                             {statusChanges.map(({ changed_to, created_at }, indx) => (
                                 <ListItem key={indx}>
                                     <ListItemText>
-                                        <b>{startCase(changed_to.replace('_', ' ').toLowerCase())}</b> - {format(new Date(created_at), 'dd/MM/yyyy p')} ({timezone})
+                                        <b>{startCase(changed_to.replace('_', ' ').toLowerCase())}</b> - {format(new Date(created_at), 'dd/MM/yyyy pp')} ({timezone})
                                     </ListItemText>
                                 </ListItem>
                             ))}

@@ -37,6 +37,34 @@ const adminService = {
 			}
 		});
 	},
+	getPrcTests(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/result?inc_booking=true`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								results: response.data,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to fetch results',
+							});
+						}
+					})
+					.catch(err => console.error(err));
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getOrders(token, page, email) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {

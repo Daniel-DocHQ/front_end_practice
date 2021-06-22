@@ -38,6 +38,10 @@ tr.MuiTableRow-root:nth-of-type(even) {
 	font-weight: 700 !important;
 	color: var(--doc-pink) !important;
 }
+.orange-bold-text {
+	font-weight: 700 !important;
+	color: var(--doc-orange) !important;
+}
 .status-inProgress, .status-online {
 	background-color: var(--doc-green);
 }
