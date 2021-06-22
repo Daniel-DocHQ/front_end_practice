@@ -385,7 +385,7 @@ const PatientDetails = ({
 									onClick={() => copyToClipboard(alternativeLinkRef)}
 									className='tab-row-text patient-link-text'
 								>
-									https://8x8.vc/dochq/{process.env.REACT_APP_JOIN_LINK_PREFIX}-{appointmentId}
+                                    https://8x8.vc/dochq/{patient.metadata.short_token}
 								</Typography>
 							</Tooltip>
 						</div>
