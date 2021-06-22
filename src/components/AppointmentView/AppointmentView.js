@@ -93,8 +93,8 @@ const AppointmentView = (props) => {
 export default memo(AppointmentView);
 
 const AppointmentInfo = ({ appointment }) => {
-    const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
-    const appointmentEndTime = new Date(get(appointment, 'end_time', ''));
+    const appointmentStartTime = new Date(get(appointment, 'start_time', undefined));
+    const appointmentEndTime = new Date(get(appointment, 'end_time', undefined));
 
     return (
         <Box>

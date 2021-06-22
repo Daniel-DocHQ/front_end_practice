@@ -100,6 +100,7 @@ const Step0 = ({
                                 error={!!meta.error}
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
+                                inputProps={{ min: 1 }}
                                 {...numberOfPeople}
                                 {...field}
                             />

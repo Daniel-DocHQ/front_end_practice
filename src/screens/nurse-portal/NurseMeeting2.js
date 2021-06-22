@@ -29,6 +29,7 @@ import Box from '../../components/TwilioVideo/Box';
 import MaterialCheckbox from '../../components/FormComponents/MaterialCheckbox/MaterialCheckbox';
 import CertificatesAaron from '../../components/Certificates/CertificatesAaron';
 import DocButton from '../../components/DocButton/DocButton';
+import LinkButton from '../../components/DocButton/LinkButton';
 import TextInputElement from '../../components/FormComponents/TextInputElement';
 import bookingService from '../../services/bookingService';
 import getValueFromObject from '../../helpers/getValueFromObject';
@@ -374,20 +375,13 @@ const PatientDetails = ({
 								</Typography>
 							</Tooltip>
 						</div>
-						<div className='no-margin' style={{ padding: '20px 0' }}>
-							<p className='tab-row-text title-info'>
-								Alternative Customer Joining link:
-							</p>
-							<Tooltip title="Click to copy">
-								<Typography
-									noWrap
-									ref={alternativeLinkRef}
-									onClick={() => copyToClipboard(alternativeLinkRef)}
-									className='tab-row-text patient-link-text'
-								>
-                                    https://8x8.vc/dochq/{patient.metadata.short_token}
-								</Typography>
-							</Tooltip>
+						<div className='row center no-margin' style={{ padding: '20px 0' }}>
+							<LinkButton
+								newTab
+								color='green'
+								text='Join customer on alternative video'
+								linkSrc={`https://8x8.vc/dochq/${patient.metadata.short_token}`}
+							/>
 						</div>
 						<div className='row center no-margin' style={{ padding: '20px 0' }}>
 							<DocButton

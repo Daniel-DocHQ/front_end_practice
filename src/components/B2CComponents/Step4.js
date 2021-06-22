@@ -30,6 +30,12 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 				<>
 					<div className='row no-margin'>
 						<p>
+							<strong>Selected Product:&nbsp;</strong>
+							{title}
+						</p>
+					</div>
+					<div className='row no-margin'>
+						<p>
 							<strong>Appointment Date:&nbsp;</strong>
 							{ddMMyyyy(appointmentDate)}
 						</p>
@@ -40,12 +46,6 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 							{formatTimeSlotWithTimeZone(selectedSlot.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlot.end_time, timezone)} ({timezone})
 						</p>
 					</div>
-					<div className='row no-margin'>
-                            <p>
-                                <strong>Selected Product:&nbsp;</strong>
-                                {title}
-                            </p>
-                        </div>
 					<Divider style={{ width: '45%' }} />
 				</>
 			)}

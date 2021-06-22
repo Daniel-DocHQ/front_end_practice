@@ -7,7 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import DocButton from '../../DocButton/DocButton';
+import LinkButton from '../../DocButton/LinkButton';
 import '../../Tables/Tables.scss';
 
 const styles = {
@@ -29,6 +29,12 @@ const styles = {
 	},
 };
 
+const RESULT_STATUS = {
+    ND: 'Non Detected',
+    DE: 'Detected',
+    IDT: 'Indetermined',
+};
+
 const PcrTestsTable = ({ results = [] }) => {
     const today = new Date();
 
@@ -48,7 +54,6 @@ const PcrTestsTable = ({ results = [] }) => {
                             <TableCell align='left' style={styles.tableText}>First Name</TableCell>
                             <TableCell align='center' style={styles.tableText}>Last Name</TableCell>
                             <TableCell align='center' style={styles.tableText}>Sampling date</TableCell>
-                            <TableCell align='center' style={styles.tableText}>Sampling Time</TableCell>
                             <TableCell align='center' style={styles.tableText}>Kit ID</TableCell>
                             <TableCell align='center' style={styles.tableText}>In lab</TableCell>
                             <TableCell align='center' style={styles.tableText}>Test Result</TableCell>
@@ -62,9 +67,12 @@ const PcrTestsTable = ({ results = [] }) => {
                             results.map(result => {
                                 let dateSampled = get(result, 'metadata.date_sampled');
                                 dateSampled = !!dateSampled ? new Date(dateSampled) : '';
-                                const isTestInLab = !!get(result, 'metadata.receipt_id');
+                                let date_of_receipt = get(result, 'metadata.date_of_receipt');
+                                date_of_receipt = !!date_of_receipt ? new Date(date_of_receipt) : '';
+                                const isTestInLab = !!get(result, 'metadata.receipt_id') && date_of_receipt;
                                 const sinceDateSampled = !!dateSampled ? differenceInHours(today, dateSampled) : 0;
                                 const kitIdStatus = (sinceDateSampled >= 48 && !isTestInLab) ? 'red-bold-text' : (sinceDateSampled >= 24 && !isTestInLab) ? 'orange-bold-text' : '';
+                                const appointmentId = get(result, 'metadata.appointment_id', '');
                                 return (
                                     <TableRow key={result.id}>
                                         <TableCell
@@ -80,25 +88,25 @@ const PcrTestsTable = ({ results = [] }) => {
                                             {result.last_name}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
-                                            {dateSampled ? format(dateSampled, 'dd-MM-yyyy') : ''}
-                                        </TableCell>
-                                        <TableCell align='center' style={{ ...styles.tableText }}>
-                                            {dateSampled ? format(dateSampled, 'p') : ''}
+                                            {dateSampled ? format(dateSampled, 'dd/MM/yyyy p'): ''}
                                         </TableCell>
                                         <TableCell align='center' className={kitIdStatus} style={{ ...styles.tableText }}>
                                             {result.kit_id}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
-                                            {isTestInLab ? 'Yes' : 'No'}
+                                            {date_of_receipt ? format(date_of_receipt, 'dd/MM/yyyy p'): ''}
                                         </TableCell>
                                         <TableCell align='center' className={result.result === 'Positive' && 'red-bold-text'} style={{ ...styles.tableText }}>
-                                            {result.result}
+                                            {RESULT_STATUS[result.result]}
                                         </TableCell>
                                         <TableCell align='right' style={{ ...styles.tableText }}>
-                                            <DocButton
-                                                text='View'
-                                                color='green'
-                                            />
+                                            {appointmentId && (
+                                                <LinkButton
+                                                    text='View'
+                                                    color='green'
+                                                    linkSrc={`/practitioner/appointment?appointmentId=${appointmentId}`}
+                                                />
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 );
