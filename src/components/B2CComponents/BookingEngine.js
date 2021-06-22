@@ -246,7 +246,7 @@ const BookingEngine = () => {
 											travelDate,
 											travelTime,
 											passengers,
-											timezone,
+											timezone: timezoneValue,
 											testType: { id, type, title },
 											transportNumber,
 											transportType,
@@ -260,6 +260,7 @@ const BookingEngine = () => {
 											tocAccept,
 										} = values;
 										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
+										const isPCR = type === 'PCR' && title.includes('Fit to Travel');
 										const booking_users = Array.from(Array(numberOfPeople).keys()).map((item) => {
 											const {
 												firstName,
@@ -273,7 +274,7 @@ const BookingEngine = () => {
 											return ({
 												first_name: firstName,
 												last_name: lastName,
-												tz_location: timezone || defaultTimeZone.timezone,
+												tz_location: (isAdditionalProduct || isPCR) ? defaultTimeZone.timezone : timezoneValue,
 												date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
 												street_address: address_1,
 												language: 'EN',
@@ -307,7 +308,7 @@ const BookingEngine = () => {
 											type: 'video_gp_dochq',
 											booking_users,
 											flight_details: {
-												transport_arrival_country: isAdditionalProduct ? 'GB' : timezone,
+												transport_arrival_country: isAdditionalProduct ? 'GB' : timezoneValue,
 												transport_arrival_date_time: moment(
 													new Date(
 														landingDate.getFullYear(),

@@ -1,13 +1,16 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
+import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
 const icon = require('../../assets/images/icons/circled-tick.svg');
 
 const Step5 = ({ isBookingSkip, defaultTimezone }) => {
-    const { values: { appointmentDate, selectedSlot, passengers, timezone: timezoneValue, testType } } = useFormikContext();
-    const timezone = timezoneValue || defaultTimezone.timezone;
+    const { values: { appointmentDate, selectedSlot, passengers, timezone: timezoneValue, testType: { title, type } } } = useFormikContext();
+    const isPCR = type === 'PCR' && title.includes('Fit to Travel');
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
+	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
 
     return (
         typeof isError === 'undefined' ? (
@@ -23,7 +26,7 @@ const Step5 = ({ isBookingSkip, defaultTimezone }) => {
                         <div className='row no-margin'>
                             <p>
                                 <strong>Selected Product:&nbsp;</strong>
-                                {testType.title}
+                                {title}
                             </p>
                         </div>
                         {!isBookingSkip && (

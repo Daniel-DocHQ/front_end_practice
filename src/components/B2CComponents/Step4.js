@@ -10,6 +10,7 @@ import {
 	FormGroup,
 } from '@material-ui/core';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
+import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
 import bookingFormModel from './bookingFormModel';
 
 const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
@@ -18,8 +19,10 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
             tocAccept,
         }
     } = bookingFormModel;
-    const { values: { appointmentDate, selectedSlot, passengers, timezone: timezoneValue } } = useFormikContext();
-	const timezone = timezoneValue || defaultTimezone.timezone;
+    const { values: { appointmentDate, selectedSlot, passengers, testType: { title, type }, timezone: timezoneValue } } = useFormikContext();
+	const isPCR = type === 'PCR' && title.includes('Fit to Travel');
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
+	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
 
 	return (
 		<React.Fragment>
@@ -37,6 +40,12 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 							{formatTimeSlotWithTimeZone(selectedSlot.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlot.end_time, timezone)} ({timezone})
 						</p>
 					</div>
+					<div className='row no-margin'>
+                            <p>
+                                <strong>Selected Product:&nbsp;</strong>
+                                {title}
+                            </p>
+                        </div>
 					<Divider style={{ width: '45%' }} />
 				</>
 			)}

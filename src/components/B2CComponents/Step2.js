@@ -12,6 +12,7 @@ import Slot from './Slot';
 import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
 import DocButton from '../DocButton/DocButton';
 import './BookingEngine.scss';
+import ADDITIONAL_PRODUCT_TEXT from './additionalProductText';
 
 const datePickerTheme = () => createMuiTheme({
 	overrides: {
@@ -232,7 +233,7 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 		<React.Fragment>
 			<div className='no-margin col'>
 				<div className='appointment-calendar-container'>
-					<p>Please make sure that you book an appointment in the time window required by the destination country or airline for any PCR test or Antigen test requirement.</p>
+					<p>{ADDITIONAL_PRODUCT_TEXT[title]}</p>
 					<ThemeProvider theme={pickerTheme}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
 							<Field name={appointmentDate.name}>
@@ -329,7 +330,7 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 			{selectedSlotValue && (
 					<div className='row no-margin'>
 						<p style={{ marginTop: 0 }}>
-							<strong>Selected appointment Time:&nbsp;</strong>
+							<strong>Selected appointment Time ({timezone}):&nbsp;</strong>
 							{formatTimeSlotWithTimeZone(selectedSlotValue.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlotValue.end_time, timezone)}
 						</p>
 					</div>

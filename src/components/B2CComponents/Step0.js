@@ -9,17 +9,8 @@ import {
 } from '@material-ui/core';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
+import ADDITIONAL_PRODUCT_TEXT from './additionalProductText';
 import './BookingEngine.scss';
-
-const ADDITIONAL_PRODUCT_TEXT = {
-    'Fit to Travel [Antigen]': 'book an appointment within 24 hours of your travel',
-    'Fit to Travel [PCR]': 'appointment available between 72 hours and 57 hours prior to your flight',
-    'Day 2 PCR Test': 'book an appointment within 2 days of your arrival in the UK',
-    'Day 8 PCR Test': 'book an appointment on the 8th day after your arrival in the UK',
-    'Pre Departure Antigen Test [to England]': 'book an appointment with 48 hours of your travel',
-    'Amber Short Stay': 'book an appointment within 2 days of your arrival in the UK',
-    'Test to Release': 'book an appointment on the 5th day after your arrival in the UK',
-};
 
 const Step0 = ({
     isEdit,
