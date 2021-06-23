@@ -86,7 +86,7 @@ const CertificatesAaron = ({
 
 	useEffect(() => {
 		if (status && status.severity === 'success') {
-			const timer = setTimeout(() => submitCallback(), 5000);
+			const timer = setTimeout(() => isVideoAppointment ? setStatus() : submitCallback(), 5000);
 			return () => clearTimeout(timer);
 		}
 	}, [status]);

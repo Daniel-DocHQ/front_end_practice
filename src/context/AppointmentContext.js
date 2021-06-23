@@ -50,7 +50,7 @@ export default class AppointmentContextProvider extends Component {
 					if (result.success && result.appointment) {
 						const isCaptureDisabled =
 							result && result.appointment && result.appointment.type === 'video_gp';
-						const { booking_users, testing_kit_id, type, appointmentId: id, status_changes, booking_user: { metadata: { test_type }} } = result.appointment;
+						const { booking_users, testing_kit_id, type, status_changes, booking_user: { metadata: { test_type }} } = result.appointment;
 						this.setState({
 							isCaptureDisabled,
 							booking_users,
