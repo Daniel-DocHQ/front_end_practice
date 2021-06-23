@@ -15,8 +15,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-const processor = process.env.REACT_APP_PROCESSOR_URL || "https://processor-service-staging.dochq.co.uk";
-const processor_new = process.env.REACT_APP_JSON_API_URL || "https://api-staging.dochq.co.uk/v1";
+const processor = process.env.REACT_APP_PROCESSOR_URL;
+const processor_new = process.env.REACT_APP_JSON_API_URL;
 
 const LogView = ({task}) => {
     const [logs, setLogs] = useState();
