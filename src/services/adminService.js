@@ -341,7 +341,8 @@ const adminService = {
 					.then(response => {
 						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
 							resolve({
-								success: true,
+                                success: true,
+                                data: response.data,
 							});
 						} else {
 							resolve({

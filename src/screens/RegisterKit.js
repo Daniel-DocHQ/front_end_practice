@@ -75,7 +75,7 @@ const RegisterKit = ({ token }) => {
     const pickerTheme = datePickerTheme();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, error] useState(false);
+    const [error, setError] = useState(false);
     const [booking, setBooking] = useState({});
     const [status, setStatus] = useState(); // { severity, message }
     const dateOfBirth = get(booking, 'booking_user.date_of_birth', '') || get(booking, 'booking_user.metadata.date_of_birth', '');

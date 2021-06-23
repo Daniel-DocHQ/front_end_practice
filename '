@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { format, differenceInHours } from 'date-fns';
 import { get } from 'lodash';
@@ -11,11 +11,6 @@ import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../../DocButton/LinkButton';
 import '../../Tables/Tables.scss';
 import svc from  '../../../services/adminService';
-import {AuthContext} from '../../../context/AuthContext';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Button from '@material-ui/core/Button';
 
 const styles = {
 	tableText: {
@@ -33,10 +28,7 @@ const styles = {
 		display: 'flex',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-    },
-    snackbar: {
-        color: '#FFF',
-    }
+	},
 };
 
 const RESULT_STATUS = {
@@ -47,34 +39,17 @@ const RESULT_STATUS = {
 
 const PcrTestsTable = ({ results = [] }) => {
     const today = new Date();
-    const auth = useContext(AuthContext);
     const [retriggerMsg, setRetriggerMsg] = useState(null);
-    const [retriggerMsgOpen, setRetriggerMsgOpen] = useState(false);
 
-    const retriggerImport = (id) => {
-        svc.resendMessages({
-            event:"synlab.result.created",
-            organisation_id: "0",
-            context: {
-                result_id: id
+    const retriggerImport = () => {
+        axios({
+
+        }).then(res => {
+            if (res.status !== 200) {
+
             }
-        }, auth.token).then(res => {
-            console.log(res)
-            setRetriggerMsg(res.data.response)
-            setRetriggerMsgOpen(true)
-        }).catch(res => {
-            console.log(res)
-            setRetriggerMsg(res.data.response)
-            setRetriggerMsgOpen(true)
         })
     }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setRetriggerMsgOpen(false);
-    };
 
     return (
         <div className='doc-container' style={{ justifyContent: 'unset' }}>
@@ -134,7 +109,7 @@ const PcrTestsTable = ({ results = [] }) => {
                                         <TableCell align='center' style={{ ...styles.tableText }}>
                                             {date_of_receipt ? format(date_of_receipt, 'dd/MM/yyyy p'): ''}
                                         </TableCell>
-                                        <TableCell align='center' className={(result.result === 'Positive' && 'red-bold-text')} style={{ ...styles.tableText }}>
+                                        <TableCell align='center' className={result.result === 'Positive' && 'red-bold-text'} style={{ ...styles.tableText }}>
                                             {RESULT_STATUS[result.result]}
                                         </TableCell>
                                         <TableCell align='right' style={{ ...styles.tableText }}>
@@ -146,10 +121,9 @@ const PcrTestsTable = ({ results = [] }) => {
                                                 />
                                             )}
                                             <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={() => {retriggerImport(result.id.toString())}}
-                                        >Reimport</Button>
+                                                text='View'
+                                                color='green'
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -170,27 +144,6 @@ const PcrTestsTable = ({ results = [] }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Snackbar
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-            }}
-            open={retriggerMsgOpen}
-            className={styles.snackbar}
-            autoHideDuration={6000}
-            onClose={handleClose}
-            message={retriggerMsg}
-            action={
-                <React.Fragment>
-                    <Button color="secondary" size="small" onClick={handleClose}>
-                        UNDO
-                    </Button>
-                    <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-                        <CloseIcon fontSize="small" />
-                    </IconButton>
-                </React.Fragment>
-            }
-            />
         </div>
     );
 };
