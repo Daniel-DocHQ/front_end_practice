@@ -42,6 +42,7 @@ import LiveDoctorsManagement from '../screens/super-admin-portal/LiveDoctorsMana
 import CertificatesList from '../screens/super-admin-portal/CertificatesList';
 import ProcessorManagement from '../screens/super-admin-portal/ProcessorManagement';
 import ProcessorTaskEdit from '../screens/super-admin-portal/ProcessorTaskEdit';
+import PcrManagementTable from '../screens/super-admin-portal/PcrManagementTable';
 import CSOrderList from '../screens/cs-portal/CSOrderList';
 import SAOrderList from '../screens/super-admin-portal/SAOrderList';
 import CSDashboard from '../screens/cs-portal/CSDashboard';
@@ -258,6 +259,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/doctors-management' requiredRole='super_admin'>
 				<Layout title='Doctors Management'>
 					<DoctorsManagement />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/pcr-management' requiredRole='super_admin'>
+				<Layout title='PCR Tests Management'>
+					<PcrManagementTable />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/live-doctors-management' requiredRole='super_admin'>

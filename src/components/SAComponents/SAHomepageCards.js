@@ -77,9 +77,26 @@ const SAHomepageCards = () => {
 				/>
 			),
 		},
+		{
+			display: true,
+			title: 'PCR Tests Management',
+			icon: <img src={BookAppointmentIcon} alt='Order Management' />,
+			content: (
+				<React.Fragment>
+					<p>PCR Tests Management</p>
+				</React.Fragment>
+			),
+			actions: (
+				<LinkButton
+					color='green'
+					text='View'
+					linkSrc='/super_admin/pcr-management'
+				/>
+			),
+		},
     ]);
     useEffect(() => {
-        // Check if the logged in user has access to the processor system 
+        // Check if the logged in user has access to the processor system
         axios({
             url: `${apiUrl}/v1/processor`,
             method: "GET",
