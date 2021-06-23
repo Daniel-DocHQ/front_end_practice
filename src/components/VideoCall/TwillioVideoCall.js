@@ -9,6 +9,7 @@ import Video from 'twilio-video';
 import { Redirect } from 'react-router-dom';
 import bookingService from '../../services/bookingService';
 import { AppointmentContext, useBookingUsers } from '../../context/AppointmentContext';
+import nurseSvc from '../../services/nurseService';
 import './VideoCallAppointment.scss';
 
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
@@ -30,6 +31,7 @@ function TwillioVideoCall({
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
+	const [isAppointmentUnfinished, setIsAppointmentUnfinished] = useState(false);
 	const [takePhoto, setTakePhoto] = useState(false);
 	const currentBookingUserName = `${get(bookingUsers, '[0].first_name', '')} ${get(bookingUsers, '[0].last_name', '')}`;
 	const [message, setMessage] = useState(
@@ -118,8 +120,23 @@ function TwillioVideoCall({
 		}
 	}, [counter]);
 
-	const handleDisconnect = () => {
+	const handleDisconnect = async () => {
 		if (isNurse) {
+			await nurseSvc
+				.getAppointmentDetails(appointmentId, token)
+				.then(result => {
+					if (result.success && result.appointment) {
+						const { booking_users } = result.appointment;
+						if ([...booking_users].filter((patient) => (!get(patient, 'metadata.result') && !get(patient, 'metadata.sample_taken'))).length) {
+							setIsAppointmentUnfinished(true);
+						} else {
+							setIsAppointmentUnfinished(false);
+						}
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				});
 			setIsCloseCallVisible(true);
 		} else if (!!room ) {
 			room.disconnect();
@@ -161,6 +178,12 @@ function TwillioVideoCall({
 							alignItems: 'center',
 						}}
 					>
+						{isAppointmentUnfinished && (
+							<>
+								<p>Warning!</p>
+								<p>You have not submitted results for all patients.</p>
+							</>
+						)}
 						<p>Are you sure you want to end this call?</p>
 						<div className="row space-between">
 							<DocButton
