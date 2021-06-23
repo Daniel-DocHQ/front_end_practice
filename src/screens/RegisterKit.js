@@ -75,6 +75,7 @@ const RegisterKit = ({ token }) => {
     const pickerTheme = datePickerTheme();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, error] useState(false);
     const [booking, setBooking] = useState({});
     const [status, setStatus] = useState(); // { severity, message }
     const dateOfBirth = get(booking, 'booking_user.date_of_birth', '') || get(booking, 'booking_user.metadata.date_of_birth', '');
@@ -116,6 +117,8 @@ const RegisterKit = ({ token }) => {
                     .then(data => {
                         if (data.success) {
                             setItems(data.order);
+                        } else {
+                            setError(true)
                         }
                     })
                     .catch(err => console.log(err));
@@ -128,10 +131,22 @@ const RegisterKit = ({ token }) => {
         getData();
     }, []);
 
-    return loading ? (
+    if (loading) {
+        return (
+            <Contain>
+                <Grid item xs={12}>
+                    <CircularProgress color="secondary" />
+                </Grid>
+            </Contain>
+        )
+    }
+
+    return error ? (
         <Contain>
             <Grid item xs={12}>
-                <CircularProgress color="secondary" />
+                <Typography className={classes.text}>
+                    There was an error loading your kit registration, please close the page and try again.
+                </Typography>
             </Grid>
         </Contain>
     ): (
