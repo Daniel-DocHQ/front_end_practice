@@ -28,67 +28,63 @@ const Step0 = ({
 
 	return (
 		<React.Fragment>
-            {!isEdit && (
-                <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                    <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                        <Field
-                            name={productField.name}
-                        >
-                            {({ field, form, meta }) => (
-                                <FormControl component='fieldset' style={{ width: '100%' }}>
-                                    <FormLabel required={productField.required} component='legend'>
-                                        {productField.label}
-                                    </FormLabel>
-                                    <RadioGroup
-                                        error={!!meta.error}
-                                        touched={meta.touched}
-                                        helperText={(meta.error && meta.touched) && meta.error}
-                                        aria-label={productField.name}
-                                        name={productField.name}
-                                        value={field.value}
-                                        {...productField}
-                                        {...field}
-                                        onChange={(({ target: { value } }) => {
-                                            const intValue = parseInt(value);
-                                            const productObj = filteredItems.find(({ id }) => id === intValue);
-                                            form.setFieldValue(field.name, intValue);
-                                            form.setFieldValue('testType', productObj);
-                                            form.setFieldValue(numberOfPeople.name, productObj.quantity);
-                                        })}
-                                    >
-                                        {filteredItems.map(({ id, title, quantity }) => (
-                                            <FormControlLabel
-                                                value={id}
-                                                key={id + title}
-                                                control={<Radio />}
-                                                disabled={quantity < 1}
-                                                style={{ width: 'max-content', paddingTop: 10 }}
-                                                label={
-                                                    <>
-                                                        {title}<br/>
-                                                        <span className="additional-option-text">
-                                                            {quantity < 1
-                                                                ? 'you have booked all appointment for this product'
-                                                                : !!ADDITIONAL_PRODUCT_TEXT[title]
-                                                                    ? ADDITIONAL_PRODUCT_TEXT[title]
-                                                                    : ''}
-                                                        </span>
-                                                    </>
-                                                }
-                                            />
-                                        ))}
-                                    </RadioGroup>
-                                </FormControl>
-                            )}
-                        </Field>
-                    </div>
+            <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                    <Field
+                        name={productField.name}
+                    >
+                        {({ field, form, meta }) => (
+                            <FormControl component='fieldset' style={{ width: '100%' }}>
+                                <FormLabel required={productField.required} component='legend'>
+                                    {productField.label}
+                                </FormLabel>
+                                <RadioGroup
+                                    error={!!meta.error}
+                                    touched={meta.touched}
+                                    helperText={(meta.error && meta.touched) && meta.error}
+                                    aria-label={productField.name}
+                                    name={productField.name}
+                                    value={field.value}
+                                    {...productField}
+                                    {...field}
+                                    onChange={(({ target: { value } }) => {
+                                        const intValue = parseInt(value);
+                                        const productObj = filteredItems.find(({ id }) => id === intValue);
+                                        form.setFieldValue(field.name, intValue);
+                                        form.setFieldValue('testType', productObj);
+                                        form.setFieldValue(numberOfPeople.name, productObj.quantity);
+                                    })}
+                                >
+                                    {filteredItems.map(({ id, title, quantity }) => (
+                                        <FormControlLabel
+                                            value={id}
+                                            key={id + title}
+                                            control={<Radio />}
+                                            disabled={quantity < 1 || isEdit}
+                                            style={{ width: 'max-content', paddingTop: 10 }}
+                                            label={
+                                                <>
+                                                    {title}<br/>
+                                                    <span className="additional-option-text">
+                                                        {quantity < 1
+                                                            ? 'you have booked all appointment for this product'
+                                                            : !!ADDITIONAL_PRODUCT_TEXT[title]
+                                                                ? ADDITIONAL_PRODUCT_TEXT[title]
+                                                                : ''}
+                                                    </span>
+                                                </>
+                                            }
+                                        />
+                                    ))}
+                                </RadioGroup>
+                            </FormControl>
+                        )}
+                    </Field>
                 </div>
-            )}
-            {!isEdit && (
-                <h4 style={{ margin: 0, paddingTop: 20 }}>
-                    How many people will take the test?
-                </h4>
-            )}
+            </div>
+            <h4 style={{ margin: 0, paddingTop: 20 }}>
+                How many people will take the test?
+            </h4>
             <div className='row space-between' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                     <Field

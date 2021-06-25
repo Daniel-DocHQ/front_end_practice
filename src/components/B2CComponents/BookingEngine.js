@@ -38,8 +38,9 @@ const BookingEngine = () => {
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = useValidationSchema(activeStep, isBookingSkip);
-	const defaultTestType = items.find(({ quantity }) => quantity > 0) || null;
-	const totalAvailableQuantity = items.reduce((sum, { quantity }) => quantity + sum, 0);
+	const itemsWithoutVirtual = [...items].filter(({ type }) => type !== 'Virtual');
+	const defaultTestType = itemsWithoutVirtual.find(({ quantity }) => quantity > 0) || null;
+	const totalAvailableQuantity = itemsWithoutVirtual.filter(({ type }) => type !== 'Virtual').reduce((sum, { quantity }) => quantity + sum, 0);
 	const steps = [
 		'Select Test',
 		'Travel Details',

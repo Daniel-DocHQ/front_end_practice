@@ -328,12 +328,12 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 				</p>
 			</div>
 			{selectedSlotValue && (
-					<div className='row no-margin'>
-						<p style={{ marginTop: 0 }}>
-							<strong>Selected appointment Time:&nbsp;</strong>
-							{formatTimeSlotWithTimeZone(selectedSlotValue.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlotValue.end_time, timezone)} ({timezone})
-						</p>
-					</div>
+				<div className='row no-margin'>
+					<p style={{ marginTop: 0 }}>
+						<strong>Selected appointment Time:&nbsp;</strong>
+						{formatTimeSlotWithTimeZone(selectedSlotValue.start_time, timezone)} - {formatTimeSlotWithTimeZone(selectedSlotValue.end_time, timezone)} ({timezone})
+					</p>
+				</div>
 			)}
 			<ErrorMessage component="p" className="error" name={selectedSlot.name} />
 		</React.Fragment>

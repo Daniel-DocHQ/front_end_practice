@@ -136,6 +136,7 @@ const BookingEngine = () => {
 								title: bookingUsersProduct.title,
 								type: bookingUsersProduct.type,
 							},
+							product: bookingUsersProduct.id,
 							city: usersTimeZoneObj,
 							timezone: usersTimeZoneObj.timezone,
 							numberOfPeople: bookingUsersQuantity,
@@ -303,6 +304,7 @@ const BookingEngine = () => {
 						<BookingEngineForm
 							isEdit
 							status={status}
+							items={items}
 							defaultCountryCode={defaultCountryCode}
 							activePassenger={activePassenger}
 							activeStep={activeStep}

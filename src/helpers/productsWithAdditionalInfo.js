@@ -10,6 +10,7 @@ const PRODUCTS_WITH_ADDITIONAL_INFO = [
 	'Green Bundle UEFA',
 	'Amber Bundle UEFA',
 	'Amber Short Stay EUFA',
+    'Test to Release PCR Sports',
 	// 'SPORT-UK-PCR-SNS-002', // Day 2 PCR Test Sports
 	// 'SPORT-UK-PCR-SNS-001', // Day 8 PCR Test Sports
 	// 'SYN-UK-PCR-SNS-004', // Test to Release [England]

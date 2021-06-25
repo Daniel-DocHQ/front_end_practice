@@ -9,6 +9,7 @@ const ADDITIONAL_PRODUCT_TEXT = {
     'Day 8 PCR Test Sports': 'Book an appointment on the 8th day after your arrival in the UK.',
 	'Day 2 PCR Test Sports': 'Book an appointment within 2 days of your arrival in the UK.',
 	'Amber Short Stay EUFA': 'Book an appointment within 2 days of your arrival in the UK.',
+    'Test to Release PCR Sports': 'Book an appointment on the 5th day after your arrival in the UK.',
 };
 
 export default ADDITIONAL_PRODUCT_TEXT;
