@@ -247,7 +247,12 @@ const RegisterKit = ({ token }) => {
                                     });
 								}}
 								validationSchema={Yup.object().shape({
-                                    kitId: Yup.string().required('Input Kit ID').matches(/[0-9]{2}[A-Za-z]{1}[0-9]{5}/, 'Invalid Kit ID'),
+                                    kitId: Yup.string().required('Input Kit ID')
+                                    .test('validate', 'Invalid Kit ID',
+                                        function checkStructure(value) {
+                                            return !!value ? value.match(/[0-9]{2}[A-Za-z]{1}[0-9]{5}/) || value.match(/[A-Za-z]{1}[0-9]{8}/) : true;
+                                        }
+                                    ),
                                     confirmKitId: Yup.string()
                                         .oneOf([Yup.ref('kitId'), null], 'Kit IDs should match')
                                         .required('Repeat your Kit ID'),
