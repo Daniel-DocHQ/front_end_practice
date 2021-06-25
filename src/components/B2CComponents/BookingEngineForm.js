@@ -89,7 +89,7 @@ const BookingEngineForm = ({
                                         {(totalAvailableQuantity > numberOfPeople && !isEdit) && (
                                             <DocButton
                                                 style={{ marginLeft: 10 }}
-                                                text='Book one more Appointment'
+                                                text='Book next appointment'
                                                 color='green'
                                                 onClick={() => {
                                                     if (typeof window !== 'undefined') window.location.reload();

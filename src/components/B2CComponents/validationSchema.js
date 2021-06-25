@@ -18,7 +18,7 @@ const useValidationSchema = (activeStep, isBookingSkip = false) => (
     Yup.object().shape({
       [product.name]: Yup.number().required('Select test kit to book appointment'),
       [numberOfPeople.name]: Yup.number().required('Input number of people').min(1, 'Minimum 1 person for appointment').max(4, 'Maximum 4 people per appointment')
-      .test('maximum', 'You can\'t have more people that quantity of test that you bought',
+      .test('maximum', 'You can\'t book more people than the quantity of test that you have bought',
         function checkNumberOfPeople(value) {
           const { testType } = this.parent;
           return value <= testType.quantity;
