@@ -431,6 +431,7 @@ const SubmitPatientResult = ({
 	const currentPatientName = `${forename} ${surname}`;
 	const [reasonForRejected, setReasonForRejected] = useState('');
 	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
+	const [kidIdError, setKidIdError] = useState('');
 	const [kitIdModifyMode, setKitIdModifyMode] = useState(false);
 	const [kitIdSubmitted, setKitIdSubmitted] = useState(false);
 	const [sampleTakenStatus, setSampleTakenStatus] = useState();
@@ -516,6 +517,14 @@ const SubmitPatientResult = ({
 	}
 
 	useEffect(() => {
+		if (!!kitId && !kitId.match(/[0-9]{2}[A-Za-z]{1}[0-9]{5}/)) {
+			setKidIdError('Invalid Kit ID');
+		} else if (!!kitId) {
+			setKidIdError('');
+		}
+	}, [kitId]);
+
+	useEffect(() => {
 		setReasonForRejected('');
 		setNotes('');
 	}, [sampleTaken]);
@@ -560,6 +569,8 @@ const SubmitPatientResult = ({
 									value={kitId}
 									placeholder='Eg: 20P456632'
 									onChange={setKitId}
+									error={!!kidIdError}
+									helperText={kidIdError}
 									disabled={kitIdModifyMode}
 									required
 								/>
@@ -567,8 +578,8 @@ const SubmitPatientResult = ({
 							<div className='row flex-end'>
 								<DocButton
 									text={kitIdModifyMode ? 'Modify' : 'Submit'}
-									color={kitId ? 'green' : 'disabled'}
-									disabled={!kitId}
+									color={(kitId && !kidIdError) ? 'green' : 'disabled'}
+									disabled={!kitId || !!kidIdError}
 									onClick={() => {
 										if (kitIdModifyMode) {
 											setKitIdModifyMode(false);
@@ -974,6 +985,7 @@ const PatientIdVerification = ({
     const { token } = useContext(AuthContext);
 	const [patientsToVerify, setPatientsToVerify] = useState([...patients]);
     const [security_checked, setSecurity_checked] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
 	const [security_document, setSecurity_document] = useState('');
 	const [notesStatus, setNotesStatus] = useState();
@@ -999,11 +1011,12 @@ const PatientIdVerification = ({
 		setSecurity_document('');
 	};
 
-    function proceed() {
+    const proceed = async () => {
 		if (customerNotThere) {
 			nextStep();
 		} else if (isValid) {
-			bookingService
+			setLoading(true);
+			await bookingService
 				.sendResult(token, appointmentId, isTuiType ? {
 					result: '',
 					forename,
@@ -1027,6 +1040,7 @@ const PatientIdVerification = ({
 				.catch(() => {
 					ToastsStore.error('Failed');
 				});
+			setLoading(false);
 		}
 	}
 
@@ -1137,12 +1151,16 @@ const PatientIdVerification = ({
 					</Grid>
 					<Grid item>
 						<div className='row flex-end'>
-							<DocButton
-								text='Submit'
-								onClick={proceed}
-								disabled={!isValid}
-								color={isValid ? 'green' : 'disabled'}
-							/>
+							{loading ? (
+								<LoadingSpinner />
+							) : (
+								<DocButton
+									text='Submit'
+									onClick={proceed}
+									disabled={!isValid}
+									color={isValid ? 'green' : 'disabled'}
+								/>
+							)}
 						</div>
 					</Grid>
 					<Grid item>
