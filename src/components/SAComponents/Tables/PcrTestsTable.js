@@ -111,6 +111,7 @@ const PcrTestsTable = ({ results = [] }) => {
                                 const sinceDateSampled = !!dateSampled ? differenceInHours(today, dateSampled) : 0;
                                 const kitIdStatus = (sinceDateSampled >= 48 && !isTestInLab) ? 'red-bold-text' : (sinceDateSampled >= 24 && !isTestInLab) ? 'orange-bold-text' : '';
                                 const appointmentId = get(result, 'metadata.appointment_id', '');
+                                const resultResult = get(result, 'metadata.result', '')
                                 return (
                                     <TableRow key={result.id}>
                                         <TableCell
@@ -134,7 +135,7 @@ const PcrTestsTable = ({ results = [] }) => {
                                         <TableCell align='center' style={{ ...styles.tableText }}>
                                             {date_of_receipt ? format(date_of_receipt, 'dd/MM/yyyy p'): ''}
                                         </TableCell>
-                                        <TableCell align='center' className={(result.result === 'Positive' && 'red-bold-text')} style={{ ...styles.tableText }}>
+                                        <TableCell align='center' className={(resultResult === 'Positive' && 'red-bold-text')} style={{ ...styles.tableText }}>
                                             {RESULT_STATUS[result.result]}
                                         </TableCell>
                                         <TableCell align='right' style={{ ...styles.tableText }}>

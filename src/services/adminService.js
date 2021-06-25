@@ -42,7 +42,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${baseUrl}/v1/result?inc_booking=true`,
+					url: `${bookingUrl}/getresults`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
