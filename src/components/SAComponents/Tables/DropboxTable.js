@@ -1,0 +1,105 @@
+import React  from 'react';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import LinkButton from '../../DocButton/LinkButton';
+import DocButton from '../../DocButton/DocButton';
+import '../../Tables/Tables.scss';
+
+const styles = {
+	tableText: {
+		fontSize: 16,
+	},
+	bntStyles: {
+		marginLeft: '10px',
+		marginTop: '0px',
+		marginRight: '10px',
+		boxSizing: 'border-box',
+		maxWidth: '40%',
+	},
+	mainContainer: {
+		width: '100%',
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+    },
+    snackbar: {
+        color: '#FFF',
+    }
+};
+
+const DropboxTable = ({ dropboxes = [] }) => (
+    <div className='doc-container' style={{ justifyContent: 'unset' }}>
+        <div style={styles.mainContainer}>
+            <h2>Dropbox Table</h2>
+            <LinkButton
+                text='Create Dropbox'
+                color='pink'
+                linkSrc={`/super_admin/dropbox/create`}
+            />
+        </div>
+        <TableContainer
+            style={{
+                marginBottom: '40px',
+            }}
+        >
+            <Table stickyHeader>
+                <TableHead>
+                    <TableRow>
+                        <TableCell align='left' style={styles.tableText}>Dropbox name</TableCell>
+                        <TableCell align='center' style={styles.tableText}>City</TableCell>
+                        <TableCell align='right' style={styles.tableText}>Actions</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {typeof dropboxes !== 'undefined' &&
+                        typeof dropboxes === 'object' &&
+                        dropboxes.length > 0 &&
+                        dropboxes.map(dropbox => (
+                            <TableRow key={dropbox.id}>
+                                <TableCell
+                                    align='left'
+                                    style={{ ...styles.tableText }}
+                                >
+                                    {dropbox.facility.name}
+                                </TableCell>
+                                <TableCell
+                                    align='center'
+                                    style={{ ...styles.tableText }}
+                                >
+                                    {dropbox.facility.city}
+                                </TableCell>
+                                <TableCell align='right' style={{ ...styles.tableText }}>
+                                    <LinkButton
+                                        text='View'
+                                        color='green'
+                                        linkSrc={`/super_admin/dropbox/${dropbox.id}`}
+                                    />
+                                    <DocButton
+                                        text='Download QR'
+                                        color='pink'
+                                        style={{ marginLeft: 10 }}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    {typeof dropboxes !== 'object' || dropboxes.length === 0 ? (
+                        <TableRow>
+                            <TableCell style={styles.tableText}>
+                                <p>No dropboxes to display</p>
+                            </TableCell>
+                            <TableCell />
+                            <TableCell />
+                        </TableRow>
+                    ) : null}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    </div>
+);
+
+
+export default DropboxTable;

@@ -94,6 +94,23 @@ const SAHomepageCards = () => {
 				/>
 			),
 		},
+		{
+			display: true,
+			title: 'Dropbox management',
+			icon: <img src={BookAppointmentIcon} alt='Dropbox management' />,
+			content: (
+				<React.Fragment>
+					<p>Dropbox management</p>
+				</React.Fragment>
+			),
+			actions: (
+				<LinkButton
+					color='green'
+					text='View'
+					linkSrc='/super_admin/dropbox-list'
+				/>
+			),
+		},
     ]);
     useEffect(() => {
         // Check if the logged in user has access to the processor system
@@ -104,7 +121,7 @@ const SAHomepageCards = () => {
                 'Authorization': localStorage.getItem("auth_token")
             }
         }).then((response) => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setCards([...cards, {
                     display: true,
                     title: 'Processor',

@@ -37,6 +37,105 @@ const adminService = {
 			}
 		});
 	},
+	getDropbox(id, token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined' || !id) {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/dropbox/${id}`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								dropbox: response.data,
+							});
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+							resolve({
+								success: true,
+								dropbox: null,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to retrieve dropbox.',
+							});
+						}
+					})
+					.catch(err => console.error(err));
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	getDropboxes(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/dropbox`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data && response.data.dropboxes) {
+							resolve({
+								success: true,
+								dropboxes: response.data.dropboxes,
+							});
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+							resolve({
+								success: true,
+								dropboxes: [],
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to retrieve drop boxes.',
+							});
+						}
+					})
+					.catch(err => console.error(err));
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	createDropbox(token, data) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.post(`${baseUrl}/v1/dropbox`, data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Something went wrong',
+							});
+						}
+					})
+					.catch(err => {
+						reject({
+							success: false,
+							error: 'Something went wrong',
+						});
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getPrcTests(token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {

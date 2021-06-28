@@ -69,7 +69,7 @@ const Contain = ({ children }) => {
     )
 }
 
-const RegisterKit = ({ token }) => {
+const RegisterKit = () => {
     const classes = useStyles();
     const { id } = useParams();
     const pickerTheme = datePickerTheme();

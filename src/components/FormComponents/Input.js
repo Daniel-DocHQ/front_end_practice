@@ -4,6 +4,7 @@ import './TextInput.scss';
 
 const Input = ({
 	style,
+	variant = 'filled',
 	...rest
 }) => {
 	let allStyles = {};
@@ -15,7 +16,7 @@ const Input = ({
 
 	return (
 		<TextField
-			variant='filled'
+			variant={variant}
 			style={allStyles}
 			{...rest}
 		/>
