@@ -517,10 +517,10 @@ const SubmitPatientResult = ({
 	}
 
 	useEffect(() => {
-		if (!!kitId && (!kitId.match(/[0-9]{2}[A-Za-z]{1}[0-9]{5}/) || !kitId.match(/[A-Za-z]{1}[0-9]{8}/))) {
-			setKidIdError('Invalid Kit ID');
-		} else if (!!kitId) {
+		if (!!kitId && (kitId.match(/[0-9]{2}[A-Za-z]{1}[0-9]{5}/) || kitId.match(/[A-Za-z]{1}[0-9]{8}/))) {
 			setKidIdError('');
+		} else if (!!kitId) {
+			setKidIdError('Invalid Kit ID');
 		}
 	}, [kitId]);
 
