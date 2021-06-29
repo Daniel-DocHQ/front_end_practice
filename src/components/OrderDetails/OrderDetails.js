@@ -360,6 +360,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                 <AppointmentDetails
                                     key={row.id}
                                     token={token}
+                                    orderItems={orderItems}
                                     shortToken={order.id}
                                     appointment={row}
                                     refetchData={refetchData}
@@ -536,6 +537,7 @@ const AppointmentDetails = ({
     appointmentIndx,
     refetchData,
     token,
+    orderItems = [],
     shortToken,
 }) => {
     const linkRef = useRef(null);
@@ -563,6 +565,11 @@ const AppointmentDetails = ({
                 <ListItem>
                     <ListItemText>
                         <b>Test Type</b>: {appointment.booking_user.metadata.test_type}
+                    </ListItemText>
+                </ListItem>
+                <ListItem>
+                    <ListItemText>
+                        <b>Selected Product</b>: {orderItems.find(({ product_id }) => product_id === appointment.booking_user.metadata.product_id).product.title}
                     </ListItemText>
                 </ListItem>
                 {!!appointment.start_time && (

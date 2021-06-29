@@ -430,6 +430,7 @@ const SubmitPatientResult = ({
 	const surname = get(currentPatient, 'last_name', '');
 	const currentPatientName = `${forename} ${surname}`;
 	const [reasonForRejected, setReasonForRejected] = useState('');
+	const [loading, setLoading] = useState(false);
 	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
 	const [kidIdError, setKidIdError] = useState('');
 	const [kitIdModifyMode, setKitIdModifyMode] = useState(false);
@@ -462,9 +463,10 @@ const SubmitPatientResult = ({
 		}
 	}
 
-	function sendSampleTaken() {
+	const sendSampleTaken = async () => {
 		if (sampleTaken) {
-			sendResult({
+			setLoading(true);
+			await sendResult({
 				...((isSampleTakenInvalid) && {
 					invalid_notes: resultNotes,
 				}),
@@ -476,6 +478,7 @@ const SubmitPatientResult = ({
 				surname,
 				sample_taken: sampleTaken,
 			}, true);
+			setLoading(false);
 		}
 	}
 
@@ -617,12 +620,16 @@ const SubmitPatientResult = ({
 							</div>
 							{isSampleTakenValid && (
 								<div className='row flex-end'>
-									<DocButton
-										text='Submit'
-										disabled={!sampleTaken}
-										onClick={sendSampleTaken}
-										color={!!sampleTaken ? 'green' : 'disabled'}
-									/>
+									{loading ? (
+										<LoadingSpinner />
+									) : (
+										<DocButton
+											text='Submit'
+											disabled={!sampleTaken}
+											onClick={sendSampleTaken}
+											color={!!sampleTaken ? 'green' : 'disabled'}
+										/>
+									)}
 								</div>
 							)}
 							{isSampleTakenNotValid && (
@@ -677,12 +684,16 @@ const SubmitPatientResult = ({
 										</>
 									)}
 									<div className='row flex-end'>
-										<DocButton
-											text='Submit'
-											disabled={isSampleTakenNotValid ? !resultNotes : false}
-											color={(isSampleTakenNotValid && !resultNotes) ? 'disabled' : 'green'}
-											onClick={sendSampleTaken}
-										/>
+										{loading ? (
+											<LoadingSpinner />
+										) : (
+											<DocButton
+												text='Submit'
+												disabled={isSampleTakenNotValid ? !resultNotes : false}
+												color={(isSampleTakenNotValid && !resultNotes) ? 'disabled' : 'green'}
+												onClick={sendSampleTaken}
+											/>
+										)}
 									</div>
 								</>
 							)}

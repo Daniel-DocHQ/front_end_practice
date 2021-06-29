@@ -60,52 +60,54 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 				countryCode,
 				passportNumber,
 			}, i) => (
-				<div key={i}>
-					<div className='row no-margin'>
-						<p>
-							<strong>Passenger Name {i + 1}:&nbsp;</strong>
-							{firstName} {lastName}
-						</p>
+				<>
+					<div key={i}>
+						<div className='row no-margin'>
+							<p>
+								<strong>Passenger Name {i + 1}:&nbsp;</strong>
+								{firstName} {lastName}
+							</p>
+						</div>
+						<div className='row no-margin'>
+							<p>
+								<strong>Email:&nbsp;</strong>
+								{email}
+							</p>
+						</div>
+						<div className='row no-margin'>
+							<p>
+								<strong>Phone:&nbsp;</strong>
+								{countryCode.label}{phone.trim()}
+							</p>
+						</div>
+						<div className='row no-margin'>
+							<p>
+								<strong>Date Of Birth:&nbsp;</strong>
+								{format(dateOfBirth, 'dd/MM/yyyy')}
+							</p>
+						</div>
+						<div className='row no-margin'>
+							<p>
+								<strong>Ethnicity:&nbsp;</strong>
+								{ethnicity}
+							</p>
+						</div>
+						<div className='row no-margin'>
+							<p>
+								<strong>Sex:&nbsp;</strong>
+								{sex}
+							</p>
+						</div>
+						<div className='row no-margin'>
+							<p>
+								<strong>Passport number:&nbsp;</strong>
+								{passportNumber}
+							</p>
+						</div>
 					</div>
-					<div className='row no-margin'>
-						<p>
-							<strong>Email:&nbsp;</strong>
-							{email}
-						</p>
-					</div>
-					<div className='row no-margin'>
-						<p>
-							<strong>Phone:&nbsp;</strong>
-							{countryCode.label}{phone.trim()}
-						</p>
-					</div>
-					<div className='row no-margin'>
-						<p>
-							<strong>Date Of Birth:&nbsp;</strong>
-							{format(dateOfBirth, 'dd/MM/yyyy')}
-						</p>
-					</div>
-					<div className='row no-margin'>
-						<p>
-							<strong>Ethnicity:&nbsp;</strong>
-							{ethnicity}
-						</p>
-					</div>
-					<div className='row no-margin'>
-						<p>
-							<strong>Sex:&nbsp;</strong>
-							{sex}
-						</p>
-					</div>
-					<div className='row no-margin'>
-						<p>
-							<strong>Passport number:&nbsp;</strong>
-							{passportNumber}
-						</p>
-					</div>
-				</div>
+					<Divider style={{ width: '45%' }} />
+				</>
 			))}
-			<Divider style={{ width: '45%' }} />
 			<div className='row'>
 				<Field name={tocAccept.name}>
 					{({ field, form, meta }) => (
