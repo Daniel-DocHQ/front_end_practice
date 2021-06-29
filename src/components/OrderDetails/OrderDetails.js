@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { get, startCase } from 'lodash';
 import { format } from 'date-fns-tz';
+import { get, startCase } from 'lodash';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     AppBar,
     Box,
@@ -32,17 +32,19 @@ import {
     DialogTitle,
     makeStyles,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { ToastsStore } from 'react-toasts';
 import CloseIcon from '@material-ui/icons/Close';
 
+import DocModal from '../DocModal/DocModal';
 import DocButton from '../DocButton/DocButton';
 import LinkButton from '../DocButton/LinkButton';
+import adminService from '../../services/adminService';
 import bookingService from '../../services/bookingService';
 import copyToClipboard from '../../helpers/copyToClipboard';
-import DocModal from '../DocModal/DocModal';
-import { ToastsStore } from 'react-toasts';
 import CertificatesAaron from '../Certificates/CertificatesAaron';
 import AppointmentNotes from '../AppointmentView/AppointmentNotes';
-import adminService from '../../services/adminService';
+import TextInputElement from '../../components/FormComponents/TextInputElement';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -64,16 +66,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const OrderDetails = ({ token, order, closeHandler}) => {
+const OrderDetails = ({ token, order, closeHandler }) => {
     const classes = useStyles();
     const [orderDetail, setOrderDetail] = useState({});
     const [discountValue, setDiscountValue] = useState();
     const [appointments, setAppointments] = useState([]);
     const [reloadInfo, setReloadInfo] = useState(false);
+    const [addingNote, setAddingNote] = useState(false);
+    const [notesStatus, setNotesStatus] = useState();
+	const [notes, setNotes] = useState();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(<></>);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const refetchData = () => setReloadInfo((value) => !value);
+    const swabbingMethod = get(orderDetail, 'items', []).find(({ product: { type }}) => type === 'Virtual');
     const orderItems = get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual');
 
     const fetchData = async () => {
@@ -110,6 +116,21 @@ const OrderDetails = ({ token, order, closeHandler}) => {
         fetchData();
     }, [reloadInfo]);
 
+    const updateNotes = () => {
+        return;
+    };
+
+    useEffect(() => {
+		if (notesStatus && notesStatus.severity === 'success') {
+			const timer = setTimeout(() => {
+                setNotesStatus();
+                refetchData();
+                setAddingNote(false);
+            }, 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [notesStatus]);
+
     const handleCancelDialogToggle = () => {
         setCancelDialogOpen(!cancelDialogOpen);
     }
@@ -137,42 +158,90 @@ const OrderDetails = ({ token, order, closeHandler}) => {
             </AppBar>
             <Container className={classes.container}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Typography variant="h6" className={classes.title}>
-                            Purchase Details
-                        </Typography>
-                        <List>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Customer name</b>: {orderDetail.billing_detail.first_name} {orderDetail.billing_detail.last_name}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Email</b>: {orderDetail.billing_detail.email}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Phone</b>: {orderDetail.billing_address.telephone}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Purchase Date</b>: {format(new Date(orderDetail.created_at * 1000), 'dd/MM/yyyy p')}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Order number</b>: {orderDetail.short_token}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Payment status</b>: {orderDetail.payment_flag}
-                                </ListItemText>
-                            </ListItem>
-                        </List>
+                    <Grid item container xs={12}>
+                        <Grid item xs={6}>
+                            <Typography variant="h6" className={classes.title}>
+                                Purchase Details
+                            </Typography>
+                            <List>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Customer name</b>: {orderDetail.billing_detail.first_name} {orderDetail.billing_detail.last_name}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Email</b>: {orderDetail.billing_detail.email}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Phone</b>: {orderDetail.billing_address.telephone}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Purchase Date</b>: {format(new Date(orderDetail.created_at * 1000), 'dd/MM/yyyy p')}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Order number</b>: {orderDetail.short_token}
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText>
+                                        <b>Payment status</b>: {orderDetail.payment_flag}
+                                    </ListItemText>
+                                </ListItem>
+                            </List>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <div className="row">
+                                <Typography variant="h6" className={classes.title}>
+                                    Order Notes
+                                </Typography>
+                                <DocButton
+                                    color="green"
+                                    color={addingNote ? "pink" : "green"}
+                                    onClick={() => setAddingNote(!addingNote)}
+                                    text={addingNote ? "Cancel" : "Add note"}
+                                />
+                            </div>
+                            {addingNote ? (
+                                <>
+									<TextInputElement
+										rows={4}
+										multiline
+										id='notes'
+										value={notes}
+										onChange={setNotes}
+									/>
+									<div className='row flex-end'>
+										<DocButton
+											color='green'
+											text='Submit'
+											onClick={() => {
+												updateNotes(notes);
+												setNotesStatus({ severity: 'success', message: 'Notes updated successfully' });
+											}}
+										/>
+									</div>
+                                    {!!notesStatus && !!notesStatus.severity && !!notesStatus.message && (
+                                        <div className='row center'>
+                                            <Alert
+                                                variant="outlined"
+                                                severity={notesStatus.severity}
+                                            >
+                                                {notesStatus.message}
+                                            </Alert>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <> </>
+                            )}
+                        </Grid>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="h6" className={classes.title}>
@@ -209,7 +278,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                                         {discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        £{discountValue.type === 'percentage' ? (row.product.price * (discountValue.value / 100)) : '-'}
+                                                        £{discountValue.type === 'percentage' ? (row.product.price - (row.product.price * (discountValue.value / 100))) : '-'}
                                                     </TableCell>
                                                 </>
                                             )}
@@ -220,14 +289,14 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                         <TableCell align="right"></TableCell>
                                         <TableCell align="right"></TableCell>
                                         <TableCell align="right">{orderItems.reduce((sum, { quantity }) => (sum + quantity), 0)}</TableCell>
-                                        <TableCell align="right">£{orderItems.reduce((sum, { quantity, product: { price } }) => (sum + price * quantity), 0)}</TableCell>
+                                        <TableCell align="right">£{discountValue ? orderItems.reduce((sum, { quantity, product: { price } }) => (sum + price * quantity), 0) : orderDetail.price.toFixed(2)}</TableCell>
                                         {discountValue && (
                                             <>
                                                 <TableCell align="right">
                                                     {discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
                                                 </TableCell>
                                                 <TableCell align="right">
-                                                    £{orderItems.reduce((sum, { product: { price }, quantity }) => (sum + ((price - (discountValue.type === 'percentage' ? (price * (discountValue.value / 100)) : discountValue.value)) * parseFloat(quantity || 0))), 0)}
+                                                    £{orderDetail.price.toFixed(2)}
                                                 </TableCell>
                                             </>
                                         )}
@@ -364,6 +433,7 @@ const OrderDetails = ({ token, order, closeHandler}) => {
                                     shortToken={order.id}
                                     appointment={row}
                                     refetchData={refetchData}
+                                    swabbingMethod={swabbingMethod}
                                     appointmentIndx={appointmentIndx}
                                 />
                             ))}
@@ -537,6 +607,7 @@ const AppointmentDetails = ({
     appointmentIndx,
     refetchData,
     token,
+    swabbingMethod,
     orderItems = [],
     shortToken,
 }) => {
@@ -572,13 +643,19 @@ const AppointmentDetails = ({
                         <b>Selected Product</b>: {orderItems.find(({ product_id }) => product_id === appointment.booking_user.metadata.product_id).product.title}
                     </ListItemText>
                 </ListItem>
-                {!!appointment.start_time && (
                 <ListItem>
                     <ListItemText>
-                        <b>Appointment Date</b>: {format(new Date(appointment.start_time), 'dd/MM/yyyy p')}  ({timezone})
+                    {!!appointment.start_time ? (
+                        <>
+                            <b>Appointment Date</b>: {format(new Date(appointment.start_time), 'dd/MM/yyyy p')}  ({timezone})
+                        </>
+                    )  : (
+                        <>
+                            <b>Swabbing Method</b>: {swabbingMethod.product.title}
+                        </>
+                    )}
                     </ListItemText>
                 </ListItem>
-                )}
                 <ListItem>
                     <ListItemText>
                         <Tooltip title="Click to copy">

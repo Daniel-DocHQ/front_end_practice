@@ -432,7 +432,6 @@ const SubmitPatientResult = ({
 	const [reasonForRejected, setReasonForRejected] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [showAppointmentNotes, setShowAppointmentNotes] = useState(false);
-	const [kidIdError, setKidIdError] = useState('');
 	const [kitIdModifyMode, setKitIdModifyMode] = useState(false);
 	const [kitIdSubmitted, setKitIdSubmitted] = useState(false);
 	const [sampleTakenStatus, setSampleTakenStatus] = useState();
@@ -465,8 +464,7 @@ const SubmitPatientResult = ({
 
 	const sendSampleTaken = async () => {
 		if (sampleTaken) {
-			setLoading(true);
-			await sendResult({
+			sendResult({
 				...((isSampleTakenInvalid) && {
 					invalid_notes: resultNotes,
 				}),
@@ -478,14 +476,14 @@ const SubmitPatientResult = ({
 				surname,
 				sample_taken: sampleTaken,
 			}, true);
-			setLoading(false);
 		}
 	}
 
-    function sendResult(formData, isSampleTaken) {
+    const sendResult = async (formData, isSampleTaken) => {
+		if (isSampleTaken) setLoading(true);
 		const body = formData;
 		body.date_sampled =  moment().format();
-		bookingService.sendResult(token, appointmentId, body, currentPatient.id)
+		await bookingService.sendResult(token, appointmentId, body, currentPatient.id)
 			.then(result => {
 				if (isSampleTaken) {
 					if (result.success) {
@@ -517,15 +515,8 @@ const SubmitPatientResult = ({
 			.catch(() => {
 				console.log('error')
 			});
+		setLoading(false);
 	}
-
-	useEffect(() => {
-		if (!!kitId && (kitId.match(/[0-9]{2}[A-Za-z]{1}[0-9]{5}/) || kitId.match(/[A-Za-z]{1}[0-9]{8}/))) {
-			setKidIdError('');
-		} else if (!!kitId) {
-			setKidIdError('Invalid Kit ID');
-		}
-	}, [kitId]);
 
 	useEffect(() => {
 		setReasonForRejected('');
@@ -572,8 +563,7 @@ const SubmitPatientResult = ({
 									value={kitId}
 									placeholder='Eg: 20P456632'
 									onChange={setKitId}
-									error={!!kidIdError}
-									helperText={kidIdError}
+									helperText={(!!kitId && kitId.replace(/[0-9]/g,"").length > 1) && 'Kit ID usually contains only one letter. Please double check your kit ID if you have entered "O" letter instead of zero.'}
 									disabled={kitIdModifyMode}
 									required
 								/>
@@ -581,8 +571,8 @@ const SubmitPatientResult = ({
 							<div className='row flex-end'>
 								<DocButton
 									text={kitIdModifyMode ? 'Modify' : 'Submit'}
-									color={(kitId && !kidIdError) ? 'green' : 'disabled'}
-									disabled={!kitId || !!kidIdError}
+									color={kitId ? 'green' : 'disabled'}
+									disabled={!kitId}
 									onClick={() => {
 										if (kitIdModifyMode) {
 											setKitIdModifyMode(false);

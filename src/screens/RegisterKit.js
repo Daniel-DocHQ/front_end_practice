@@ -247,12 +247,7 @@ const RegisterKit = () => {
                                     });
 								}}
 								validationSchema={Yup.object().shape({
-                                    kitId: Yup.string().required('Input Kit ID')
-                                    .test('validate', 'Invalid Kit ID',
-                                        function checkStructure(value) {
-                                            return !!value ? value.match(/[0-9]{2}[A-Za-z]{1}[0-9]{5}/) || value.match(/[A-Za-z]{1}[0-9]{8}/) : true;
-                                        }
-                                    ),
+                                    kitId: Yup.string().required('Input Kit ID'),
                                     confirmKitId: Yup.string()
                                         .oneOf([Yup.ref('kitId'), null], 'Kit IDs should match')
                                         .required('Repeat your Kit ID'),
@@ -331,7 +326,7 @@ const RegisterKit = () => {
                                                     onPaste={preventCopyPaste}
                                                     error={!!meta.error}
                                                     touched={meta.touched}
-                                                    helperText={(meta.error && meta.touched) && meta.error}
+                                                    helperText={((meta.error && meta.touched) && meta.error) || ((!!field.value && field.value.replace(/[0-9]/g,"").length > 1) && 'Kit ID usually contains only one letter. Please double check your kit ID if you have entered "O" letter instead of zero.')}
                                                     {...field}
                                                 />
                                             )}
