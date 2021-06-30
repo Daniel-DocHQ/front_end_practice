@@ -1,4 +1,5 @@
 import React  from 'react';
+import { get } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -64,13 +65,13 @@ const DropboxTable = ({ dropboxes = [] }) => (
                                     align='left'
                                     style={{ ...styles.tableText }}
                                 >
-                                    {dropbox.facility.name}
+                                    {get(dropbox, 'facility.name', '')}
                                 </TableCell>
                                 <TableCell
                                     align='center'
                                     style={{ ...styles.tableText }}
                                 >
-                                    {dropbox.facility.city}
+                                    {get(dropbox, 'facility.city', '')}
                                 </TableCell>
                                 <TableCell align='right' style={{ ...styles.tableText }}>
                                     <LinkButton

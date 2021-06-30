@@ -5,6 +5,7 @@ import { get } from 'lodash';
 import * as Yup from 'yup';
 import moment from 'moment';
 import { Field, Form, Formik } from 'formik';
+import clsx from 'clsx';
 import Alert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -43,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: '100%',
   },
+  largeCard: {
+    maxWidth: 700,
+  },
   bullet: {
     display: 'inline-block',
     margin: '0 2px',
@@ -77,13 +81,16 @@ const RegisterKit = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [booking, setBooking] = useState({});
+    const [order, setOrder] = useState({});
     const [status, setStatus] = useState(); // { severity, message }
     const dateOfBirth = get(booking, 'booking_user.date_of_birth', '') || get(booking, 'booking_user.metadata.date_of_birth', '');
     const passportNumber = get(booking, 'booking_user.metadata.passport_number', '') || get(booking, 'booking_user.metadata.passportId', '');
     const email = get(booking, 'booking_user.email', '');
     const productId = get(booking, 'booking_user.metadata.product_id', '');
     const kitType = get(items.find(({ id }) => id === productId), 'title', '');
-    const swabMethod = get(items.find(({ type }) => type === 'Virtual'), 'title', '');
+    const virtualProduct = items.find(({ type }) => type === 'Virtual')
+    const swabMethod = get(virtualProduct, 'title', '');
+    const isHotelSwabMethod =  get(virtualProduct, 'sku', '') === 'FACE-2-FACE-HOTEL';
 
     const handleSubmit = ({
         kitId,
@@ -118,7 +125,16 @@ const RegisterKit = () => {
                         if (data.success) {
                             setItems(data.order);
                         } else {
-                            setError(true)
+                            setError(true);
+                        }
+                    })
+                    .catch(err => console.log(err));
+                adminService.getOrderInfo(short_token)
+                    .then(data => {
+                        if (data.success) {
+                            setOrder(data.order);
+                        } else {
+                            setError(true);
                         }
                     })
                     .catch(err => console.log(err));
@@ -149,7 +165,24 @@ const RegisterKit = () => {
                 </Typography>
             </Grid>
         </Contain>
-    ): (
+    ) : (!!status && status.severity === 'success' ? (
+        <Grid container alignContent="center" direction="column">
+            <Grid item xs={12}>
+                <Card className={clsx(classes.card, classes.largeCard)} variant="outlined">
+                    <CardContent>
+                        <h3 className='no-margin'>
+                            Thank you for submission<br /><br />
+                        </h3>
+                        <Typography className={classes.text}>
+                            Your kit is now on the way to our laboratory.<br />
+                            Your certificate will be emailed to you once the sample has been analysed by the laboratory and the results supervised by a GMC registered doctor.<br /><br />
+                            If you have any questions, please contact us at <span className={classes.redText}>covidtesthelp@dochq.co.uk</span> 9-5 pm 7 days per week.
+                        </Typography>
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Grid>
+    ) : (
         <Contain>
             <Grid container alignContent="center" direction="column">
                 <Grid item>
@@ -200,6 +233,13 @@ const RegisterKit = () => {
                                         <b>Swab method</b>: {swabMethod}
                                     </ListItemText>
                                 </ListItem>
+                                {isHotelSwabMethod && (
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>Hotel</b>: {get(order, 'shipping_address.address_1', '')}
+                                        </ListItemText>
+                                    </ListItem>
+                                )}
                             </List>
                         </CardContent>
                     </Card>
@@ -406,7 +446,7 @@ const RegisterKit = () => {
                 </Grid>
             </Grid>
         </Contain>
-    )
+    ))
 }
 
 
