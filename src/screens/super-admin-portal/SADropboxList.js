@@ -34,9 +34,7 @@ const SADropboxList = ({ token, role, isAuthenticated }) => {
 	}
 
     useEffect(() => {
-		if (!dropboxes) {
-			getDropboxes();
-		}
+        getDropboxes();
 	}, []);
 
 	return (
