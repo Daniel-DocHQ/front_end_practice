@@ -9,7 +9,7 @@ import bookingService from '../../services/bookingService';
 import bookingFormModel from './bookingFormModel';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
 import Slot from './Slot';
-import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
+import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import DocButton from '../DocButton/DocButton';
 import './BookingEngine.scss';
 import ADDITIONAL_PRODUCT_TEXT from './additionalProductText';
@@ -119,16 +119,16 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 			timezone: timezoneValue,
 			landingDate,
 			testType: {
-				type,
+				id,
 				title,
 			}
 		},
 		setFieldValue,
 	} = useFormikContext();
 
-	const isPCR = type === 'PCR' && title.includes('Fit to Travel');
+	const isPCR = id === FIT_TO_FLY_PCR;
 	const isSelectedSlotToday = !!selectedSlotValue && new Date(selectedSlotValue.start_time).setHours(0, 0, 0, 0) === new Date(selectedDate).setHours(0, 0, 0, 0);
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
 	const filteredAppointments = (isSelectedSlotToday && !!timer)
 		? [...appointments, selectedSlotValue].sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime())
 		: [...appointments];
@@ -233,7 +233,7 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 		<React.Fragment>
 			<div className='no-margin col'>
 				<div className='appointment-calendar-container'>
-					<p>{ADDITIONAL_PRODUCT_TEXT[title]}</p>
+					<p>{ADDITIONAL_PRODUCT_TEXT[id]}</p>
 					<ThemeProvider theme={pickerTheme}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
 							<Field name={appointmentDate.name}>

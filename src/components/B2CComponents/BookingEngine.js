@@ -16,7 +16,7 @@ import LinkButton from '../DocButton/LinkButton';
 import adminService from '../../services/adminService';
 import COUNTRIES from '../../helpers/countries';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
+import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import CountdownTimer from '../CountdownTimer';
 
 const BookingEngine = () => {
@@ -248,7 +248,7 @@ const BookingEngine = () => {
 											travelTime,
 											passengers,
 											timezone: timezoneValue,
-											testType: { id, type, title },
+											testType: { id, type },
 											transportNumber,
 											transportType,
 											landingDate,
@@ -260,8 +260,8 @@ const BookingEngine = () => {
 											city,
 											tocAccept,
 										} = values;
-										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
-										const isPCR = type === 'PCR' && title.includes('Fit to Travel');
+										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
+										const isPCR = id === FIT_TO_FLY_PCR;
 										const booking_users = Array.from(Array(numberOfPeople).keys()).map((item) => {
 											const {
 												firstName,

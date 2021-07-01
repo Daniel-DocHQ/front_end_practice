@@ -68,8 +68,8 @@ const Step0 = ({
                                                     <span className="additional-option-text">
                                                         {quantity < 1
                                                             ? 'you have booked all appointment for this product'
-                                                            : !!ADDITIONAL_PRODUCT_TEXT[title]
-                                                                ? ADDITIONAL_PRODUCT_TEXT[title]
+                                                            : !!ADDITIONAL_PRODUCT_TEXT[id]
+                                                                ? ADDITIONAL_PRODUCT_TEXT[id]
                                                                 : ''}
                                                     </span>
                                                 </>

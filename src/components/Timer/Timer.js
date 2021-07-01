@@ -12,15 +12,17 @@ const msToHMS = (ms) => {
 const timeToString = (minutes, seconds) =>
     (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
 
-const Timer = ({ statusLastUpdated, currentTime, paused = false }) => {
+const Timer = ({ statusLastUpdated, paused = false }) => {
+    let currentTime = new Date();
     const [counter, setCounter] = useState(0);
-    const [timeDifference, setTimeDifference] = useState((currentTime - statusLastUpdated));
+    const [timeDifference, setTimeDifference] = useState((currentTime.getTime() - statusLastUpdated));
     const { minutes, seconds } = msToHMS(timeDifference);
     const resultString = timeToString(minutes, seconds);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setTimeDifference(timeDifference + 1000);
+            currentTime = new Date();
+			setTimeDifference((currentTime.getTime() - statusLastUpdated) + 1000);
             setCounter((prev) => prev + 1);
 		}, 1000);
 		return () => clearInterval(interval);

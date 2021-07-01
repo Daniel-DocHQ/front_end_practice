@@ -10,7 +10,7 @@ import {
 	FormGroup,
 } from '@material-ui/core';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
-import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
+import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import bookingFormModel from './bookingFormModel';
 
 const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
@@ -19,9 +19,9 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
             tocAccept,
         }
     } = bookingFormModel;
-    const { values: { appointmentDate, selectedSlot, passengers, testType: { title, type }, timezone: timezoneValue } } = useFormikContext();
-	const isPCR = type === 'PCR' && title.includes('Fit to Travel');
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
+    const { values: { appointmentDate, selectedSlot, passengers, testType: { id, title }, timezone: timezoneValue } } = useFormikContext();
+	const isPCR = id === FIT_TO_FLY_PCR;
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
 
 	return (

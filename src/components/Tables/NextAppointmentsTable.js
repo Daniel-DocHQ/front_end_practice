@@ -45,7 +45,6 @@ const NextAppointmentsTable = ({
     nextAppointments = [],
     holdAppointments = [],
 }) => {
-    const currentTime = new Date().getTime();
     const { filteredAppointments: appointmentToFilter } = useDateFilter(nextAppointments);
     const filteredAppointments = appointmentToFilter.filter(({ id }) => id !== appointmentId);
     const filteredHoldAppointments = holdAppointments.filter(({ id }) => id !== appointmentId).sort(({ status_last_updated: aStartTime }, { status_last_updated: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime());
@@ -85,7 +84,7 @@ const NextAppointmentsTable = ({
                                                     {get(appointment, 'booking_user.metadata.test_type', '')}
                                                 </TableCell>
                                                 <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                                    {!!statusLastUpdated && <Timer statusLastUpdated={new Date(statusLastUpdated).getTime()} currentTime={currentTime} paused />}
+                                                    {!!statusLastUpdated && <Timer statusLastUpdated={new Date(statusLastUpdated).getTime()} paused />}
                                                 </TableCell>
                                                 <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
                                                     <DocButton

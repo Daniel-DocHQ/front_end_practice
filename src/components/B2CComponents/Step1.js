@@ -19,7 +19,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import bookingFormModel from './bookingFormModel';
 import Input from '../FormComponents/Input';
 import datePickerTheme from '../../helpers/datePickerTheme';
-import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
+import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 // import CitiesAutocomplete from '../FormComponents/CitiesAutocomplete';
 // import googleService from '../../services/googleService';
 import './BookingEngine.scss';
@@ -43,8 +43,7 @@ const Step1 = () => {
 	const {
 		values: {
 			testType: {
-				type,
-				title,
+				id,
 			},
 			vaccineStatus: vaccineStatusValue,
 			vaccineType: vaccineTypeValue,
@@ -53,8 +52,8 @@ const Step1 = () => {
 		touched,
 	} = useFormikContext();
 	const pickerTheme = datePickerTheme();
-	const isPCR = type === 'PCR' && title.includes('Fit to Travel');
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
+	const isPCR = id === FIT_TO_FLY_PCR;
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
 	const transportNumberLabel = `${transportTypeValue === 'Other' ? 'Transport' : transportTypeValue} Number`;
 
 	return (

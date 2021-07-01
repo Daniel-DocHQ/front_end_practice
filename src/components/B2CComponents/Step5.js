@@ -1,15 +1,15 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
-import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
+import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
 const icon = require('../../assets/images/icons/circled-tick.svg');
 
 const Step5 = ({ isBookingSkip, defaultTimezone }) => {
-    const { values: { appointmentDate, selectedSlot, passengers, timezone: timezoneValue, testType: { title, type } } } = useFormikContext();
-    const isPCR = type === 'PCR' && title.includes('Fit to Travel');
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(title);
+    const { values: { appointmentDate, selectedSlot, passengers, timezone: timezoneValue, testType: { id, title } } } = useFormikContext();
+    const isPCR = id === FIT_TO_FLY_PCR;
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
 
     return (

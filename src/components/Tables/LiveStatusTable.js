@@ -116,7 +116,6 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
                                             <Timer
-                                                currentTime={currentTime}
                                                 statusLastUpdated={statusLastUpdated ? new Date(statusLastUpdated).getTime() : appointmentStartTime.getTime()}
                                             />
                                         </TableCell>
