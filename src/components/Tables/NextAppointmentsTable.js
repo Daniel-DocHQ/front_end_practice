@@ -48,7 +48,7 @@ const NextAppointmentsTable = ({
     const currentTime = new Date().getTime();
     const { filteredAppointments: appointmentToFilter } = useDateFilter(nextAppointments);
     const filteredAppointments = appointmentToFilter.filter(({ id }) => id !== appointmentId);
-    const filteredHoldAppointments = holdAppointments.filter(({ id }) => id !== appointmentId);
+    const filteredHoldAppointments = holdAppointments.filter(({ id }) => id !== appointmentId).sort(({ status_last_updated: aStartTime }, { status_last_updated: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime());
 
     return (
         <div className='doc-container' style={{ justifyContent: 'unset' }}>

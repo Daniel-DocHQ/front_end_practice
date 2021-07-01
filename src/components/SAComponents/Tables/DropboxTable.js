@@ -74,16 +74,21 @@ const DropboxTable = ({ dropboxes = [] }) => (
                                     {get(dropbox, 'facility.city', '')}
                                 </TableCell>
                                 <TableCell align='right' style={{ ...styles.tableText }}>
-                                    <LinkButton
-                                        text='View'
-                                        color='green'
-                                        linkSrc={`/super_admin/dropbox/${dropbox.id}`}
-                                    />
-                                    <DocButton
-                                        text='Download QR'
-                                        color='pink'
-                                        style={{ marginLeft: 10 }}
-                                    />
+                                    <div style={{ display: 'inline-flex' }}>
+                                        <LinkButton
+                                            text='View'
+                                            color='green'
+                                            linkSrc={`/super_admin/dropbox/${dropbox.id}`}
+                                        />
+                                        <div style={{ marginLeft: 10 }}>
+                                            <LinkButton
+                                                text='Download QR'
+                                                color='pink'
+                                                newTab
+                                                linkSrc={`${process.env.REACT_APP_API_URL}/v1/dropbox/${dropbox.id}/render`}
+                                            />
+                                        </div>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}

@@ -78,8 +78,7 @@ function TwillioVideoCall({
 			name: appointmentId,
 			audio: true,
 			video: {
-				width: { ideal: 1280 },
-				height: { ideal: 720 },
+				video: { width: 720 },
 			}
 		}).then(room => {
 			setRoom(room);

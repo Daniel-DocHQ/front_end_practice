@@ -271,14 +271,14 @@ const OrderDetails = ({ token, order, closeHandler }) => {
                                             <TableCell align="right">{row.product.description}</TableCell>
                                             <TableCell align="right">{row.product.type}</TableCell>
                                             <TableCell align="right">{row.quantity}</TableCell>
-                                            <TableCell align="right">£{row.product.price}</TableCell>
+                                            <TableCell align="right">£{row.product.price.toFixed(2)}</TableCell>
                                             {discountValue && (
                                                 <>
                                                     <TableCell align="right">
                                                         {discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                        £{discountValue.type === 'percentage' ? (row.product.price - (row.product.price * (discountValue.value / 100))) : '-'}
+                                                        £{discountValue.type === 'percentage' ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : '-'}
                                                     </TableCell>
                                                 </>
                                             )}
@@ -289,7 +289,7 @@ const OrderDetails = ({ token, order, closeHandler }) => {
                                         <TableCell align="right"></TableCell>
                                         <TableCell align="right"></TableCell>
                                         <TableCell align="right">{orderItems.reduce((sum, { quantity }) => (sum + quantity), 0)}</TableCell>
-                                        <TableCell align="right">£{discountValue ? orderItems.reduce((sum, { quantity, product: { price } }) => (sum + price * quantity), 0) : orderDetail.price.toFixed(2)}</TableCell>
+                                        <TableCell align="right">£{discountValue ? orderItems.reduce((sum, { quantity, product: { price } }) => (sum + price * quantity), 0).toFixed(2) : orderDetail.price.toFixed(2)}</TableCell>
                                         {discountValue && (
                                             <>
                                                 <TableCell align="right">

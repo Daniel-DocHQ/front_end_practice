@@ -20,6 +20,8 @@ import bookingFormModel from './bookingFormModel';
 import Input from '../FormComponents/Input';
 import datePickerTheme from '../../helpers/datePickerTheme';
 import PRODUCTS_WITH_ADDITIONAL_INFO from '../../helpers/productsWithAdditionalInfo';
+// import CitiesAutocomplete from '../FormComponents/CitiesAutocomplete';
+// import googleService from '../../services/googleService';
 import './BookingEngine.scss';
 
 const Step1 = () => {
@@ -57,6 +59,35 @@ const Step1 = () => {
 
 	return (
 		<React.Fragment>
+			{/* {!isPCR && (
+				<>
+					<div className='row'>
+						<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
+							<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+								Where are you travelling from?
+							</h4>
+							<Field name={city.name}>
+								{({ field, meta, form }) => (
+									<CitiesAutocomplete
+										{...city}
+										{...field}
+										style={{ width: 300 }}
+										onPlaceSelected={async (place) => {
+											console.log(place);
+											form.setFieldValue(field.name, place.formatted_address);
+											form.setFieldValue('timezone', place.utc_offset_minutes);
+											await googleService()
+										}}
+										error={!!meta.error}
+										touched={meta.touched}
+										helperText={(meta.error && meta.touched) && meta.error}
+									/>
+								)}
+							</Field>
+						</div>
+					</div>
+				</>
+			)} */}
 			{!isPCR && (
 				<>
 					<div className='row'>
