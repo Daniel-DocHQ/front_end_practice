@@ -494,6 +494,27 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ]
     })
     .addNodeType({
+        type: "createDropboxReceipt",
+        label: "Create Dropbox Receipt",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.boolean({
+                name:"createReceipt",
+                label: "Create Receipt",
+            }),
+            ports.data({
+                name: "receipt",
+                label: "Receipt Data",
+            })
+        ],
+        outputs: ports => [
+            ports.data({
+                name: "data",
+                label: "Receipt Data"
+            })
+        ]
+    })
+    .addNodeType({
         type: "getRenderCertificate",
         label: "Get Certificate Bytes",
         initalWidth: 160,
