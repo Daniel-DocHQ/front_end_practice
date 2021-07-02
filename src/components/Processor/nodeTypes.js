@@ -452,6 +452,23 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ]
     })
     .addNodeType({
+        type: "getOrderByShortToken",
+        label: "Get Order via short token (order reference)",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.string({
+                name: "order",
+                label: "Short Token",
+            })
+        ],
+        outputs: ports => [
+            ports.data({
+                name: "data",
+                label: "Order Data"
+            })
+        ]
+    })
+    .addNodeType({
         type: "issueCertificate",
         label: "Create Certificate",
         initalWidth: 160,
@@ -473,6 +490,27 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             ports.data({
                 name: "data",
                 label: "Certificate Data"
+            })
+        ]
+    })
+    .addNodeType({
+        type: "createDropboxReceipt",
+        label: "Create Dropbox Receipt",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.boolean({
+                name:"createReceipt",
+                label: "Create Receipt",
+            }),
+            ports.data({
+                name: "receipt",
+                label: "Receipt Data",
+            })
+        ],
+        outputs: ports => [
+            ports.data({
+                name: "data",
+                label: "Receipt Data"
             })
         ]
     })
