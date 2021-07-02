@@ -48,6 +48,10 @@ const SACreateDropbox = ({ token }) => {
 						postcode,
 						type,
 						opening_times,
+						first_name,
+						last_name,
+						phone,
+						email,
 					} = values;
 					await adminService.createDropbox(token, {
 						facility: {
@@ -59,6 +63,10 @@ const SACreateDropbox = ({ token }) => {
 							name,
 							postcode,
 							type,
+							first_name,
+							last_name,
+							phone,
+							email,
 						},
 						opening_times: opening_times
 							.filter(({ active }) => active)
