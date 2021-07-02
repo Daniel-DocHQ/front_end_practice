@@ -463,6 +463,7 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
     const rejectedNotes = get(patient, 'metadata.reject_notes', '');
     const invalidNotes = get(patient, 'metadata.invalid_notes', '');
     const sampleTaken = get(patient, 'metadata.sample_taken', '');
+    const kitId = get(patient, 'metadata.kit_id', '');
     const kitProvider = get(patient, 'metadata.kitProvider', '');
     const samplingDate = get(patient, 'metadata.date_sampled', '');
     const reportedDate = get(patient, 'metadata.date_reported', '');
@@ -536,6 +537,14 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
                             <ListItemText>
                                 <b>Sample: </b>
                                 <span className={sampleTaken.toLowerCase()}>{sampleTaken}</span>
+                            </ListItemText>
+                        </ListItem>
+                    )}
+                    {!!kitId && (
+                        <ListItem>
+                            <ListItemText>
+                                <b>Kit ID: </b>
+                                <span>{kitId}</span>
                             </ListItemText>
                         </ListItem>
                     )}
