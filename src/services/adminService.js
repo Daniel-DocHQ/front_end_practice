@@ -84,7 +84,7 @@ const adminService = {
 								success: true,
 								dropboxes: response.data.dropboxes,
 							});
-						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+						} else if (response.status === 200 && !response.data.dropboxes) {
 							resolve({
 								success: true,
 								dropboxes: [],

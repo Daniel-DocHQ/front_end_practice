@@ -17,8 +17,6 @@ const SADropboxList = ({ token, role, isAuthenticated }) => {
 			.then(data => {
 				if (data.success) {
 					setDropboxes(data.dropboxes);
-				} else if (!data.authenticated) {
-					logoutUser();
 				} else {
 					ToastsStore.error('Error fetching Drop Boxes');
 				}
