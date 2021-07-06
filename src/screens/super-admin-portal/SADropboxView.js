@@ -22,6 +22,7 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
     const { id } = useParams();
 	const { logout } = useContext(AuthContext);
 	const [dropbox, setDropbox] = useState();
+	const [isEdit, setIsEdit] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const facility = get(dropbox, 'facility', {});
     const opening_times = get(dropbox, 'opening_times', []);
@@ -108,8 +109,12 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 						postcode,
 						type,
 						opening_times,
+						first_name,
+						last_name,
+						phone,
+						email,
 					} = values;
-					await adminService.createDropbox(token, {
+					await adminService.editDropbox(id, token, {
 						facility: {
 							address_1,
 							address_2,
@@ -119,6 +124,10 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 							name,
 							postcode,
 							type,
+							first_name,
+							last_name,
+							phone,
+							email,
 						},
 						opening_times: opening_times
 							.filter(({ active }) => active)
@@ -129,7 +138,7 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 							})),
 					}).then((response) => {
 						if (response.success && response.data) {
-							history.push(`/super_admin/dropbox/${response.data.id}`);
+							history.push(`/super_admin/dropbox/${id}`);
 						} else {
 							ToastsStore.error('Something went wrong');
 						}
@@ -137,7 +146,7 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 					.catch(() => ToastsStore.error('Something went wrong'));
 				}}
 			>
-				<DropboxForm isView />
+				<DropboxForm isView isEdit={isEdit} setIsEdit={setIsEdit} />
 			</Formik>
 		</BigWhiteContainer>
 	);

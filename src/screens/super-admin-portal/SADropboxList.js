@@ -38,7 +38,7 @@ const SADropboxList = ({ token, role, isAuthenticated }) => {
 	return (
 		<Grid container justify="space-between">
 			<Grid item xs={12}>
-				<DropboxTable dropboxes={dropboxes} />
+				<DropboxTable token={token} reload={getDropboxes} dropboxes={dropboxes} />
 			</Grid>
 		</Grid>
 	);

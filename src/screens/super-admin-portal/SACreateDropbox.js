@@ -85,7 +85,7 @@ const SACreateDropbox = ({ token }) => {
 					.catch(() => ToastsStore.error('Something went wrong'));
 				}}
 			>
-				<DropboxForm />
+				<DropboxForm isEdit />
 			</Formik>
 		</BigWhiteContainer>
 	);

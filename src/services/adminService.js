@@ -103,6 +103,72 @@ const adminService = {
 			}
 		});
 	},
+	switchDropboxStatus(token, id) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.patch(`${baseUrl}/v1/dropbox/${id}/switch`, {}, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Something went wrong',
+							});
+						}
+					})
+					.catch(err => {
+						reject({
+							success: false,
+							error: 'Something went wrong',
+						});
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	editDropbox(id, token, data) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.put(`${baseUrl}/v1/dropbox/${id}`, data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Something went wrong',
+							});
+						}
+					})
+					.catch(err => {
+						reject({
+							success: false,
+							error: 'Something went wrong',
+						});
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	createDropbox(token, data) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {

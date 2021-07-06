@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../../DocButton/LinkButton';
 import DocButton from '../../DocButton/DocButton';
 import '../../Tables/Tables.scss';
+import adminService from '../../../services/adminService';
 
 const styles = {
 	tableText: {
@@ -32,7 +33,7 @@ const styles = {
     }
 };
 
-const DropboxTable = ({ dropboxes = [] }) => (
+const DropboxTable = ({ reload, token, dropboxes = [] }) => (
     <div className='doc-container' style={{ justifyContent: 'unset' }}>
         <div style={styles.mainContainer}>
             <h2>Dropbox Table</h2>
@@ -80,14 +81,22 @@ const DropboxTable = ({ dropboxes = [] }) => (
                                             color='green'
                                             linkSrc={`/super_admin/dropbox/${dropbox.id}`}
                                         />
-                                        <div style={{ marginLeft: 10 }}>
-                                            <LinkButton
-                                                text='Download QR'
-                                                color='pink'
-                                                newTab
-                                                linkSrc={`${process.env.REACT_APP_API_URL}/v1/dropbox/${dropbox.id}/render`}
+                                        <div style={{ margin: '0 10px' }}>
+                                            <DocButton
+                                                text={dropbox.active ? 'Deactivate' : 'Activate'}
+                                                color={dropbox.active ? 'pink' : 'green'}
+                                                onClick={async () => {
+                                                    await adminService.switchDropboxStatus(token, dropbox.id);
+                                                    reload();
+                                                }}
                                             />
                                         </div>
+                                        <LinkButton
+                                            text='Download QR'
+                                            color='pink'
+                                            newTab
+                                            linkSrc={`${process.env.REACT_APP_API_URL}/v1/dropbox/${dropbox.id}/render`}
+                                        />
                                     </div>
                                 </TableCell>
                             </TableRow>
