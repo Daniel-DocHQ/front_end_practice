@@ -185,15 +185,16 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
-								error: 'Something went wrong',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
 					.catch(err => {
-						reject({
-							success: false,
-							error: 'Something went wrong',
-						});
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
 					});
 			} else {
 				// return unauthorized
@@ -218,15 +219,16 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
-								error: 'Something went wrong',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
 					.catch(err => {
-						reject({
-							success: false,
-							error: 'Something went wrong',
-						});
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
 					});
 			} else {
 				// return unauthorized
@@ -257,11 +259,11 @@ const adminService = {
 						}
 					})
 					.catch(err => {
-						resolve({
-							success: false,
-							error: err,
-						});
-						console.error(err);
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
 					});
 			} else {
 				// return unauthorized

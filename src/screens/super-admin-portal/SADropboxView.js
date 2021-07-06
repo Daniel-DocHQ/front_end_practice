@@ -141,10 +141,10 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 							setIsEdit(false);
 							history.push(`/super_admin/dropbox/${id}`);
 						} else {
-							ToastsStore.error('Something went wrong');
+							ToastsStore.error(response.error);
 						}
 					})
-					.catch(() => ToastsStore.error('Something went wrong'));
+					.catch((err) => ToastsStore.error(err.error));
 				}}
 			>
 				<DropboxForm isView isEdit={isEdit} setIsEdit={setIsEdit} />

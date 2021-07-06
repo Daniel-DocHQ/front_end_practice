@@ -79,10 +79,10 @@ const SACreateDropbox = ({ token }) => {
 						if (response.success && response.data) {
 							history.push(`/super_admin/dropbox/${response.data.id}`);
 						} else {
-							ToastsStore.error('Something went wrong');
+							ToastsStore.error(response.error);
 						}
 					})
-					.catch(() => ToastsStore.error('Something went wrong'));
+					.catch((err) => ToastsStore.error(err.error));
 				}}
 			>
 				<DropboxForm isEdit />
