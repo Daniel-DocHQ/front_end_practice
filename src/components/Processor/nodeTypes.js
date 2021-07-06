@@ -507,12 +507,6 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
                 label: "Receipt Data",
             })
         ],
-        outputs: ports => [
-            ports.data({
-                name: "data",
-                label: "Receipt Data"
-            })
-        ]
     })
     .addNodeType({
         type: "getRenderCertificate",
