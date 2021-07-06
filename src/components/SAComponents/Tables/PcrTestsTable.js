@@ -45,12 +45,13 @@ const PcrTestsTable = ({ results = [] }) => {
     const [retriggerMsg, setRetriggerMsg] = useState(null);
     const [retriggerMsgOpen, setRetriggerMsgOpen] = useState(false);
     const sortedResults = results.sort(({ sample_date: aSampleDate }, { sample_date: bSampleDate }) => new Date(aSampleDate).getTime() - new Date(bSampleDate).getTime())
-    const retriggerImport = (id) => {
+    const retriggerImport = (id, bid) => {
         svc.resendMessages({
-            event:"synlab.result.created",
+            event:"booking_user.metadata.updated",
             organisation_id: "0",
             context: {
-                result_id: id
+                appointment_id: id,
+                booking_user_id: bid,
             }
         }, auth.token).then(res => {
             console.log(res)
@@ -105,6 +106,7 @@ const PcrTestsTable = ({ results = [] }) => {
                                 const sinceDateSampled = !!dateSampled ? differenceInHours(today, dateSampled) : 0;
                                 const kitIdStatus = (sinceDateSampled >= 48 && !isTestInLab) ? 'red-bold-text' : (sinceDateSampled >= 24 && !isTestInLab) ? 'orange-bold-text' : '';
                                 const appointmentId = get(result, 'booking_id', '');
+                                const bookingUserId = get(result, 'booking_user_id');
                                 const resultResult = get(result, 'test_result', '');
 
                                 return (
@@ -145,7 +147,7 @@ const PcrTestsTable = ({ results = [] }) => {
                                                 color='pink'
                                                 text="Reimport"
                                                 style={{ marginLeft: 10 }}
-                                                onClick={() => {retriggerImport(result.booking_id.toString())}}
+                                                onClick={() => {retriggerImport(appointmentId,bookingUserId)}}
                                             />
                                         </TableCell>
                                     </TableRow>
