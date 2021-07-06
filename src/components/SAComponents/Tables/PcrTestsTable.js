@@ -39,18 +39,12 @@ const styles = {
     }
 };
 
-const RESULT_STATUS = {
-    ND: 'Non Detected',
-    DE: 'Detected',
-    IDT: 'Indetermined',
-};
-
 const PcrTestsTable = ({ results = [] }) => {
     const today = new Date();
     const auth = useContext(AuthContext);
     const [retriggerMsg, setRetriggerMsg] = useState(null);
     const [retriggerMsgOpen, setRetriggerMsgOpen] = useState(false);
-
+    const sortedResults = results.sort(({ sample_date: aSampleDate }, { sample_date: bSampleDate }) => new Date(aSampleDate).getTime() - new Date(bSampleDate).getTime())
     const retriggerImport = (id) => {
         svc.resendMessages({
             event:"synlab.result.created",
@@ -90,28 +84,29 @@ const PcrTestsTable = ({ results = [] }) => {
                     <TableHead>
                         <TableRow>
                             <TableCell align='left' style={styles.tableText}>First Name</TableCell>
-                            <TableCell align='center' style={styles.tableText}>Last Name</TableCell>
-                            <TableCell align='center' style={styles.tableText}>Sampling date</TableCell>
-                            <TableCell align='center' style={styles.tableText}>Kit ID</TableCell>
-                            <TableCell align='center' style={styles.tableText}>In lab</TableCell>
-                            <TableCell align='center' style={styles.tableText}>Test Result</TableCell>
+                            <TableCell align='left' style={styles.tableText}>Last Name</TableCell>
+                            <TableCell align='left' style={styles.tableText}>Sampling date</TableCell>
+                            <TableCell align='left' style={styles.tableText}>Kit ID</TableCell>
+                            <TableCell align='left' style={styles.tableText}>In lab</TableCell>
+                            <TableCell align='left' style={styles.tableText}>Test Result</TableCell>
                             <TableCell align='right' style={styles.tableText}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {typeof results !== 'undefined' &&
-                            typeof results === 'object' &&
-                            results.length > 0 &&
-                            results.map(result => {
+                        {typeof sortedResults !== 'undefined' &&
+                            typeof sortedResults === 'object' &&
+                            sortedResults.length > 0 &&
+                            sortedResults.map(result => {
                                 let dateSampled = get(result, 'sample_date');
                                 dateSampled = !!dateSampled ? new Date(dateSampled) : '';
-                                let date_of_receipt = get(result, 'date_of_receipt');
+                                let date_of_receipt = get(result, 'receipt_date');
                                 date_of_receipt = !!date_of_receipt ? new Date(date_of_receipt) : '';
-                                const isTestInLab = !!get(result, 'receipt_id') && date_of_receipt;
+                                const isTestInLab = !!date_of_receipt;
                                 const sinceDateSampled = !!dateSampled ? differenceInHours(today, dateSampled) : 0;
                                 const kitIdStatus = (sinceDateSampled >= 48 && !isTestInLab) ? 'red-bold-text' : (sinceDateSampled >= 24 && !isTestInLab) ? 'orange-bold-text' : '';
                                 const appointmentId = get(result, 'booking_id', '');
-                                const resultResult = get(result, 'result', '')
+                                const resultResult = get(result, 'test_result', '');
+
                                 return (
                                     <TableRow key={result.booking_id}>
                                         <TableCell
@@ -121,22 +116,22 @@ const PcrTestsTable = ({ results = [] }) => {
                                             {result.first_name}
                                         </TableCell>
                                         <TableCell
-                                            align='center'
+                                            align='left'
                                             style={{ ...styles.tableText }}
                                         >
                                             {result.last_name}
                                         </TableCell>
-                                        <TableCell align='center' style={{ ...styles.tableText }}>
+                                        <TableCell align='left' style={{ ...styles.tableText }}>
                                             {dateSampled ? format(dateSampled, 'dd/MM/yyyy p'): ''}
                                         </TableCell>
-                                        <TableCell align='center' className={kitIdStatus} style={{ ...styles.tableText }}>
+                                        <TableCell align='left' className={kitIdStatus} style={{ ...styles.tableText }}>
                                             {result.kit_id}
                                         </TableCell>
-                                        <TableCell align='center' style={{ ...styles.tableText }}>
+                                        <TableCell align='left' style={{ ...styles.tableText }}>
                                             {date_of_receipt ? format(date_of_receipt, 'dd/MM/yyyy p'): ''}
                                         </TableCell>
-                                        <TableCell align='center' className={(resultResult === 'Positive' && 'red-bold-text')} style={{ ...styles.tableText }}>
-                                            {RESULT_STATUS[result.result]}
+                                        <TableCell align='left' className={(resultResult.toLowerCase() === 'detected' && 'red-bold-text')} style={{ ...styles.tableText }}>
+                                            {resultResult}
                                         </TableCell>
                                         <TableCell align='right' style={{ ...styles.tableText }}>
                                             {appointmentId && (
@@ -156,7 +151,7 @@ const PcrTestsTable = ({ results = [] }) => {
                                     </TableRow>
                                 );
                             })}
-                        {typeof results !== 'object' || results.length === 0 ? (
+                        {typeof sortedResults !== 'object' || sortedResults.length === 0 ? (
                             <TableRow>
                                 <TableCell style={styles.tableText}>
                                     <p>No results to display</p>
