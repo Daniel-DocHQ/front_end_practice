@@ -137,7 +137,8 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 								end_hour: moment(end_hour).format('HH:mm'),
 							})),
 					}).then((response) => {
-						if (response.success && response.data) {
+						if (response.success) {
+							setIsEdit(false);
 							history.push(`/super_admin/dropbox/${id}`);
 						} else {
 							ToastsStore.error('Something went wrong');

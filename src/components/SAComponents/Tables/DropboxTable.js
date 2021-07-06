@@ -34,7 +34,11 @@ const styles = {
 };
 
 const DropboxTable = ({ reload, token, dropboxes = [] }) => {
-    const sortedDropboxes = dropboxes.sort(({ active: aActive }, { active: bActive }) => (bActive - aActive));
+    const sortedDropboxes = dropboxes
+        .filter((item) => !!item.facility && !!item.facility.city)
+        .sort(({ facility: { city: cityA } }, { facility: { city: cityB } }) => (
+            cityA < cityB ? -1 : cityA > cityB ? 1 : 0
+        ));
 
     return (
         <div className='doc-container' style={{ justifyContent: 'unset' }}>
