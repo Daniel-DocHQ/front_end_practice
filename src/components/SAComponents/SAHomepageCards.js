@@ -107,7 +107,7 @@ const SAHomepageCards = () => {
 				<LinkButton
 					color='green'
 					text='View'
-					linkSrc='/super_admin/dropbox-list'
+					linkSrc='/super_admin/pickups-list'
 				/>
 			),
 		},

@@ -70,6 +70,39 @@ const adminService = {
 			}
 		});
 	},
+	getPickups(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/dropbox/pickups`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								dropboxes: response.data,
+							});
+						} else if (response.status === 200 && !response.data) {
+							resolve({
+								success: true,
+								dropboxes: [],
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to retrieve drop boxes.',
+							});
+						}
+					})
+					.catch(err => console.error(err));
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getDropboxes(token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {

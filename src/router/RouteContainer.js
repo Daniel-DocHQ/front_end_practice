@@ -48,6 +48,7 @@ import SAOrderList from '../screens/super-admin-portal/SAOrderList';
 import SADropboxList from '../screens/super-admin-portal/SADropboxList';
 import SADropboxView from '../screens/super-admin-portal/SADropboxView';
 import SACreateDropbox from '../screens/super-admin-portal/SACreateDropbox';
+import PickupsManagement from '../screens/super-admin-portal/PickupsManagement';
 import CSDashboard from '../screens/cs-portal/CSDashboard';
 import RegisterKit from '../screens/RegisterKit';
 
@@ -252,6 +253,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/dashboard' requiredRole='super_admin'>
 				<Layout title='Dashboard'>
 					<SADashboard />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/pickups-list' requiredRole='super_admin'>
+				<Layout title='Pickups List'>
+					<PickupsManagement />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/dropbox-list' requiredRole='super_admin'>

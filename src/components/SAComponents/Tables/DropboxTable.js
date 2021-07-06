@@ -45,10 +45,15 @@ const DropboxTable = ({ reload, token, dropboxes = [] }) => {
             <div style={styles.mainContainer}>
                 <h2>Dropbox Table</h2>
                 <div>
+                    <LinkButton
+                        color='pink'
+                        text='Pickups List'
+                        linkSrc="/super_admin/pickups-list"
+                    />
                     <DocButton
                         color='pink'
                         text='Deactivate all'
-                        style={{ marginRight: 10 }}
+                        style={{ margin: '0 10px' }}
                         onClick={async () => {
                             await adminService.deactivateAllDropboxes(token);
                             reload();
@@ -57,7 +62,7 @@ const DropboxTable = ({ reload, token, dropboxes = [] }) => {
                     <LinkButton
                         text='Create Dropbox'
                         color='pink'
-                        linkSrc={`/super_admin/dropbox/create`}
+                        linkSrc="/super_admin/dropbox/create"
                     />
                 </div>
             </div>
