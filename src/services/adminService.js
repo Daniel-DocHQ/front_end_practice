@@ -106,7 +106,7 @@ const adminService = {
 	switchDropboxStatus(token, id) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
-				axios.patch(`${baseUrl}/v1/dropbox/${id}/switch`, {}, {
+				axios.put(`${baseUrl}/v1/dropbox/${id}/switch`, {}, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -116,6 +116,38 @@ const adminService = {
 							resolve({
 								success: true,
 								data: response.data,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Something went wrong',
+							});
+						}
+					})
+					.catch(err => {
+						reject({
+							success: false,
+							error: 'Something went wrong',
+						});
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	deactivateAllDropboxes(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.put(`${baseUrl}/v1/dropbox/switch`, {}, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if (response.status === 200) {
+							resolve({
+								success: true,
 							});
 						} else {
 							resolve({
@@ -202,12 +234,12 @@ const adminService = {
 			}
 		});
 	},
-	getPrcTests(token) {
+	getPrcTests(token, time_from, time_to) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/getresults`,
+					url: `${bookingUrl}/getresults?time_from=${time_from}&time_to=${time_to}`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
@@ -219,11 +251,18 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
+								results: [],
 								error: 'Unable to fetch results',
 							});
 						}
 					})
-					.catch(err => console.error(err));
+					.catch(err => {
+						resolve({
+							success: false,
+							error: err,
+						});
+						console.error(err);
+					});
 			} else {
 				// return unauthorized
 				resolve({ success: false, authenticated: false });

@@ -33,88 +33,103 @@ const styles = {
     }
 };
 
-const DropboxTable = ({ reload, token, dropboxes = [] }) => (
-    <div className='doc-container' style={{ justifyContent: 'unset' }}>
-        <div style={styles.mainContainer}>
-            <h2>Dropbox Table</h2>
-            <LinkButton
-                text='Create Dropbox'
-                color='pink'
-                linkSrc={`/super_admin/dropbox/create`}
-            />
-        </div>
-        <TableContainer
-            style={{
-                marginBottom: '40px',
-            }}
-        >
-            <Table stickyHeader>
-                <TableHead>
-                    <TableRow>
-                        <TableCell align='left' style={styles.tableText}>Dropbox name</TableCell>
-                        <TableCell align='center' style={styles.tableText}>City</TableCell>
-                        <TableCell align='right' style={styles.tableText}>Actions</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {typeof dropboxes !== 'undefined' &&
-                        typeof dropboxes === 'object' &&
-                        dropboxes.length > 0 &&
-                        dropboxes.map(dropbox => (
-                            <TableRow key={dropbox.id}>
-                                <TableCell
-                                    align='left'
-                                    style={{ ...styles.tableText }}
-                                >
-                                    {get(dropbox, 'facility.name', '')}
-                                </TableCell>
-                                <TableCell
-                                    align='center'
-                                    style={{ ...styles.tableText }}
-                                >
-                                    {get(dropbox, 'facility.city', '')}
-                                </TableCell>
-                                <TableCell align='right' style={{ ...styles.tableText }}>
-                                    <div style={{ display: 'inline-flex' }}>
-                                        <LinkButton
-                                            text='View'
-                                            color='green'
-                                            linkSrc={`/super_admin/dropbox/${dropbox.id}`}
-                                        />
-                                        <div style={{ margin: '0 10px' }}>
-                                            <DocButton
-                                                text={dropbox.active ? 'Deactivate' : 'Activate'}
-                                                color={dropbox.active ? 'pink' : 'green'}
-                                                onClick={async () => {
-                                                    await adminService.switchDropboxStatus(token, dropbox.id);
-                                                    reload();
-                                                }}
+const DropboxTable = ({ reload, token, dropboxes = [] }) => {
+    const sortedDropboxes = dropboxes.sort(({ active: aActive }, { active: bActive }) => (bActive - aActive));
+
+    return (
+        <div className='doc-container' style={{ justifyContent: 'unset' }}>
+            <div style={styles.mainContainer}>
+                <h2>Dropbox Table</h2>
+                <div>
+                    <DocButton
+                        color='pink'
+                        text='Deactivate all'
+                        style={{ marginRight: 10 }}
+                        onClick={async () => {
+                            await adminService.deactivateAllDropboxes(token);
+                            reload();
+                        }}
+                    />
+                    <LinkButton
+                        text='Create Dropbox'
+                        color='pink'
+                        linkSrc={`/super_admin/dropbox/create`}
+                    />
+                </div>
+            </div>
+            <TableContainer
+                style={{
+                    marginBottom: '40px',
+                }}
+            >
+                <Table stickyHeader>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align='left' style={styles.tableText}>Dropbox name</TableCell>
+                            <TableCell align='center' style={styles.tableText}>City</TableCell>
+                            <TableCell align='right' style={styles.tableText}>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {typeof sortedDropboxes !== 'undefined' &&
+                            typeof sortedDropboxes === 'object' &&
+                            sortedDropboxes.length > 0 &&
+                            sortedDropboxes.map(dropbox => (
+                                <TableRow key={dropbox.id}>
+                                    <TableCell
+                                        align='left'
+                                        style={{ ...styles.tableText }}
+                                    >
+                                        {get(dropbox, 'facility.name', '')}
+                                    </TableCell>
+                                    <TableCell
+                                        align='center'
+                                        style={{ ...styles.tableText }}
+                                    >
+                                        {get(dropbox, 'facility.city', '')}
+                                    </TableCell>
+                                    <TableCell align='right' style={{ ...styles.tableText }}>
+                                        <div style={{ display: 'inline-flex' }}>
+                                            <LinkButton
+                                                text='View'
+                                                color='green'
+                                                linkSrc={`/super_admin/dropbox/${dropbox.id}`}
+                                            />
+                                            <div style={{ margin: '0 10px' }}>
+                                                <DocButton
+                                                    text={!!dropbox.active ? 'Deactivate' : 'Activate'}
+                                                    color={!!dropbox.active ? 'pink' : 'green'}
+                                                    onClick={async () => {
+                                                        await adminService.switchDropboxStatus(token, dropbox.id);
+                                                        reload();
+                                                    }}
+                                                />
+                                            </div>
+                                            <LinkButton
+                                                text='Download QR'
+                                                color='pink'
+                                                newTab
+                                                linkSrc={`${process.env.REACT_APP_API_URL}/v1/dropbox/${dropbox.id}/render`}
                                             />
                                         </div>
-                                        <LinkButton
-                                            text='Download QR'
-                                            color='pink'
-                                            newTab
-                                            linkSrc={`${process.env.REACT_APP_API_URL}/v1/dropbox/${dropbox.id}/render`}
-                                        />
-                                    </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        {typeof sortedDropboxes !== 'object' || sortedDropboxes.length === 0 ? (
+                            <TableRow>
+                                <TableCell style={styles.tableText}>
+                                    <p>No dropboxes to display</p>
                                 </TableCell>
+                                <TableCell />
+                                <TableCell />
                             </TableRow>
-                        ))}
-                    {typeof dropboxes !== 'object' || dropboxes.length === 0 ? (
-                        <TableRow>
-                            <TableCell style={styles.tableText}>
-                                <p>No dropboxes to display</p>
-                            </TableCell>
-                            <TableCell />
-                            <TableCell />
-                        </TableRow>
-                    ) : null}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    </div>
-);
+                        ) : null}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
+    );
+};
 
 
 export default DropboxTable;

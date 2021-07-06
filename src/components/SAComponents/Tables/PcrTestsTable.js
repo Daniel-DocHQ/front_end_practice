@@ -1,5 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
-import axios from 'axios';
+import React, {useState, useContext} from 'react';
 import { format, differenceInHours } from 'date-fns';
 import { get } from 'lodash';
 import Table from '@material-ui/core/Table';
@@ -9,13 +8,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../../DocButton/LinkButton';
-import '../../Tables/Tables.scss';
 import svc from  '../../../services/adminService';
 import {AuthContext} from '../../../context/AuthContext';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
+import DocButton from '../../DocButton/DocButton';
+import '../../Tables/Tables.scss';
 
 const styles = {
 	tableText: {
@@ -103,17 +103,17 @@ const PcrTestsTable = ({ results = [] }) => {
                             typeof results === 'object' &&
                             results.length > 0 &&
                             results.map(result => {
-                                let dateSampled = get(result, 'metadata.date_sampled');
+                                let dateSampled = get(result, 'sample_date');
                                 dateSampled = !!dateSampled ? new Date(dateSampled) : '';
-                                let date_of_receipt = get(result, 'metadata.date_of_receipt');
+                                let date_of_receipt = get(result, 'date_of_receipt');
                                 date_of_receipt = !!date_of_receipt ? new Date(date_of_receipt) : '';
-                                const isTestInLab = !!get(result, 'metadata.receipt_id') && date_of_receipt;
+                                const isTestInLab = !!get(result, 'receipt_id') && date_of_receipt;
                                 const sinceDateSampled = !!dateSampled ? differenceInHours(today, dateSampled) : 0;
                                 const kitIdStatus = (sinceDateSampled >= 48 && !isTestInLab) ? 'red-bold-text' : (sinceDateSampled >= 24 && !isTestInLab) ? 'orange-bold-text' : '';
-                                const appointmentId = get(result, 'metadata.appointment_id', '');
-                                const resultResult = get(result, 'metadata.result', '')
+                                const appointmentId = get(result, 'booking_id', '');
+                                const resultResult = get(result, 'result', '')
                                 return (
-                                    <TableRow key={result.id}>
+                                    <TableRow key={result.booking_id}>
                                         <TableCell
                                             align='left'
                                             style={{ ...styles.tableText }}
@@ -146,11 +146,12 @@ const PcrTestsTable = ({ results = [] }) => {
                                                     linkSrc={`/practitioner/appointment?appointmentId=${appointmentId}`}
                                                 />
                                             )}
-                                            <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={() => {retriggerImport(result.id.toString())}}
-                                        >Reimport</Button>
+                                            <DocButton
+                                                color='pink'
+                                                text="Reimport"
+                                                style={{ marginLeft: 10 }}
+                                                onClick={() => {retriggerImport(result.booking_id.toString())}}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 );

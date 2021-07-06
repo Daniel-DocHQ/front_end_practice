@@ -5,11 +5,13 @@ import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import PcrTestsTable from '../../components/SAComponents/Tables/PcrTestsTable';
+import moment from 'moment';
 
 const PcrManagementTable = props => {
 	const { logout } = useContext(AuthContext);
 	const [results, setResults] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const day30inPast = new Date(new Date().setDate(new Date().getDate() - 30));
 	let history = useHistory();
 
 	const logoutUser = () => {
@@ -24,12 +26,12 @@ const PcrManagementTable = props => {
         (async () => {
 			setIsLoading(true);
 			await adminService
-				.getPrcTests(props.token)
+				.getPrcTests(props.token, moment(day30inPast).format().replace('+', '%2B'), moment().format().replace('+', '%2B'))
 				.then(data => {
 					if (data.success && data.results) {
-						setResults(data.results.results);
-					} else if (!data.authenticated) {
-						logoutUser();
+						setResults(data.results);
+					} else {
+						console.log('error');
 					}
 				})
 				.catch(err => {
