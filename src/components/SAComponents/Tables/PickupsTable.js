@@ -1,6 +1,12 @@
 import React  from 'react';
 import { get } from 'lodash';
 import { format } from 'date-fns';
+import {
+	MuiPickersUtilsProvider,
+	KeyboardDatePicker,
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import { ThemeProvider } from '@material-ui/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,6 +15,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../../DocButton/LinkButton';
 import DocButton from '../../DocButton/DocButton';
+import datePickerTheme from '../../../helpers/datePickerTheme';
 import '../../Tables/Tables.scss';
 
 const styles = {
@@ -33,22 +40,36 @@ const styles = {
     }
 };
 
-const PickupsTable = ({ dropboxes = [] }) => {
-    const sortedDropboxes = dropboxes
-        .filter((item) => !!item.facility && !!item.facility.city)
-        .sort(({ facility: { city: cityA } }, { facility: { city: cityB } }) => (
-            cityA < cityB ? -1 : cityA > cityB ? 1 : 0
-        ));
+const PickupsTable = ({ date, setDate, dropboxes = [] }) => {
+    const pickerTheme = datePickerTheme();
 
     return (
         <div className='doc-container' style={{ justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
                 <h2>Pickups Table</h2>
-                <LinkButton
-                    text='Dropbox List'
-                    color='pink'
-                    linkSrc={`/super_admin/dropbox-list`}
-                />
+                <div>
+                    <ThemeProvider theme={pickerTheme}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <div className='row'>
+                                <div className='appointment-calendar-container' style={{ alignItems: 'flex-end' }}>
+                                    <KeyboardDatePicker
+                                        label="Select Date"
+                                        placeholder="DD/MM/YYYY"
+                                        inputVariant='filled'
+                                        format="dd/MM/yyyy"
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                        value={date}
+                                        onChange={(value) => {
+                                            setDate(value);
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </MuiPickersUtilsProvider>
+                    </ThemeProvider>
+                </div>
             </div>
             <TableContainer
                 style={{
@@ -68,12 +89,14 @@ const PickupsTable = ({ dropboxes = [] }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {typeof sortedDropboxes !== 'undefined' &&
-                            typeof sortedDropboxes === 'object' &&
-                            sortedDropboxes.length > 0 &&
-                            sortedDropboxes.map(dropbox => {
-                                let collectionDate = get(dropbox, 'collection_time', '');
-                                collectionDate = !!collectionDate ? new Date(collectionDate) : '';
+                        {typeof dropboxes !== 'undefined' &&
+                            typeof dropboxes === 'object' &&
+                            dropboxes.length > 0 &&
+                            dropboxes.map(dropbox => {
+                                let collectionTime = get(dropbox, 'collection_time', '');
+                                let expectedDropoffDate = get(dropbox, 'expected_dropoff_date', '');
+                                collectionTime = !!collectionTime ? new Date(collectionTime) : '';
+                                expectedDropoffDate = !!expectedDropoffDate ? new Date(expectedDropoffDate) : '';
                                 const expectedCount =  get(dropbox, 'expected_count', 0);
                                 const foundCount =  get(dropbox, 'found_count', 0);
 
@@ -95,7 +118,7 @@ const PickupsTable = ({ dropboxes = [] }) => {
                                             align='center'
                                             style={{ ...styles.tableText }}
                                         >
-                                            {!!collectionDate ? format(collectionDate, 'dd/MM/yyyy') : collectionDate}
+                                            {!!expectedDropoffDate ? format(expectedDropoffDate, 'dd/MM/yyyy') : expectedDropoffDate}
                                         </TableCell>
                                         <TableCell
                                             align='center'
@@ -114,7 +137,7 @@ const PickupsTable = ({ dropboxes = [] }) => {
                                             align='center'
                                             style={{ ...styles.tableText }}
                                         >
-                                            {!!collectionDate ? format(collectionDate, 'p') : collectionDate}
+                                            {!!collectionTime ? format(collectionTime, 'p') : collectionTime}
                                         </TableCell>
                                         <TableCell align='right' style={{ ...styles.tableText }}>
                                             <LinkButton
@@ -126,11 +149,15 @@ const PickupsTable = ({ dropboxes = [] }) => {
                                     </TableRow>
                                 );
                             })}
-                        {typeof sortedDropboxes !== 'object' || sortedDropboxes.length === 0 ? (
+                        {typeof dropboxes !== 'object' || dropboxes.length === 0 ? (
                             <TableRow>
                                 <TableCell style={styles.tableText}>
                                     <p>No dropboxes to display</p>
                                 </TableCell>
+                                <TableCell />
+                                <TableCell />
+                                <TableCell />
+                                <TableCell />
                                 <TableCell />
                                 <TableCell />
                             </TableRow>

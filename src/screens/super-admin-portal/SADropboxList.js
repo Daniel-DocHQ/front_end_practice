@@ -5,6 +5,7 @@ import { ToastsStore } from 'react-toasts';
 import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import DropboxTable from '../../components/SAComponents/Tables/DropboxTable';
+import DropboxAppBar from '../../components/SAComponents/DropboxAppBar';
 
 const SADropboxList = ({ token, role, isAuthenticated }) => {
 	const { logout } = useContext(AuthContext);
@@ -36,11 +37,13 @@ const SADropboxList = ({ token, role, isAuthenticated }) => {
 	}, []);
 
 	return (
-		<Grid container justify="space-between">
-			<Grid item xs={12}>
-				<DropboxTable token={token} reload={getDropboxes} dropboxes={dropboxes} />
+		<DropboxAppBar value={1}>
+			<Grid container justify="space-between">
+				<Grid item xs={12}>
+					<DropboxTable token={token} reload={getDropboxes} dropboxes={dropboxes} />
+				</Grid>
 			</Grid>
-		</Grid>
+		</DropboxAppBar>
 	);
 };
 

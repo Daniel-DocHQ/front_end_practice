@@ -70,12 +70,12 @@ const adminService = {
 			}
 		});
 	},
-	getPickups(token) {
+	getPickups(token, date) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${baseUrl}/v1/dropbox/pickups`,
+					url: `${baseUrl}/v1/dropbox/pickups?date=${date}`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {

@@ -45,11 +45,6 @@ const DropboxTable = ({ reload, token, dropboxes = [] }) => {
             <div style={styles.mainContainer}>
                 <h2>Dropbox Table</h2>
                 <div>
-                    <LinkButton
-                        color='pink'
-                        text='Pickups List'
-                        linkSrc="/super_admin/pickups-list"
-                    />
                     <DocButton
                         color='pink'
                         text='Deactivate all'
