@@ -47,6 +47,7 @@ const ReceiptsTable = ({ date, setDate, receipts = [], dropboxName }) => (
                 <TableHead>
                     <TableRow>
                         <TableCell align='left' style={styles.tableText}>Order Reference No.</TableCell>
+                        <TableCell align='center' style={styles.tableText}>Kit ID</TableCell>
                         <TableCell align='center' style={styles.tableText}>Collection Time</TableCell>
                     </TableRow>
                 </TableHead>
@@ -70,6 +71,12 @@ const ReceiptsTable = ({ date, setDate, receipts = [], dropboxName }) => (
                                         align='center'
                                         style={{ ...styles.tableText }}
                                     >
+                                        {get(receipt, 'kit_id', '')}
+                                    </TableCell>
+                                    <TableCell
+                                        align='center'
+                                        style={{ ...styles.tableText }}
+                                    >
                                         {!!expectedDropoffTime ? format(expectedDropoffTime, 'p') : expectedDropoffTime}
                                     </TableCell>
                                 </TableRow>
@@ -80,6 +87,7 @@ const ReceiptsTable = ({ date, setDate, receipts = [], dropboxName }) => (
                             <TableCell style={styles.tableText}>
                                 <p>No receipts to display</p>
                             </TableCell>
+                            <TableCell />
                             <TableCell />
                         </TableRow>
                     ) : null}
