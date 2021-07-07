@@ -49,6 +49,7 @@ import SADropboxList from '../screens/super-admin-portal/SADropboxList';
 import SADropboxView from '../screens/super-admin-portal/SADropboxView';
 import SACreateDropbox from '../screens/super-admin-portal/SACreateDropbox';
 import PickupsManagement from '../screens/super-admin-portal/PickupsManagement';
+import DropboxReceipts from '../screens/super-admin-portal/DropboxReceipts';
 import CSDashboard from '../screens/cs-portal/CSDashboard';
 import RegisterKit from '../screens/RegisterKit';
 
@@ -268,6 +269,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/dropbox/create' requiredRole='super_admin'>
 				<Layout title='Create Dropbox'>
 					<SACreateDropbox />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/dropbox-receipts/:id' requiredRole='super_admin'>
+				<Layout title='Dropbox Receipts'>
+					<DropboxReceipts />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/dropbox/:id' requiredRole='super_admin'>
