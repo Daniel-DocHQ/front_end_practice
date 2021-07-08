@@ -79,12 +79,13 @@ const adminService = {
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
+						console.log(response);
 						if ((response.status === 200 || response.data.status === 'ok') && response.data && response.data.receipts) {
 							resolve({
 								success: true,
 								receipts: response.data.receipts,
 							});
-						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+						} else if ((response.status === 200 || response.status === 404)) {
 							resolve({
 								success: true,
 								receipts: null,

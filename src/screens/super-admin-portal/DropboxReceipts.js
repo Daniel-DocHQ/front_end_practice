@@ -35,18 +35,7 @@ const DropboxReceipts = ({ token, isAuthenticated, role }) => {
 				}
 			})
 			.catch(err => ToastsStore.error('Error fetching Drop Boxes'));
-        await adminService
-			.getDropboxReceipts(id, moment.utc(date).startOf('day').format(), token)
-			.then(data => {
-				if (data.success) {
-					setReceipts(data.receipts);
-				} else if (!data.authenticated) {
-					logoutUser();
-				} else {
-					ToastsStore.error('Error fetching Drop Boxes');
-				}
-			})
-			.catch(err => ToastsStore.error('Error fetching Drop Boxes'));
+		await getReceipts();
         setIsLoading(false);
     };
 
@@ -56,9 +45,7 @@ const DropboxReceipts = ({ token, isAuthenticated, role }) => {
 			.getDropboxReceipts(id, moment.utc(date).startOf('day').format(), token)
 			.then(data => {
 				if (data.success) {
-					setReceipts(data.receipts);
-				} else if (!data.authenticated) {
-					logoutUser();
+					setReceipts(data.receipts || []);
 				} else {
 					ToastsStore.error('Error fetching receipts');
 				}
@@ -83,6 +70,7 @@ const DropboxReceipts = ({ token, isAuthenticated, role }) => {
 	}, []);
 
     useEffect(() => {
+		setReceipts([]);
 		getReceipts();
 	}, [date]);
 

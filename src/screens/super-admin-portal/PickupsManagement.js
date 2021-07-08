@@ -19,7 +19,7 @@ const PickupsManagement = ({ token, role, isAuthenticated }) => {
 			.getPickups(token, moment.utc(date).startOf('day').format())
 			.then(data => {
 				if (data.success) {
-					setDropboxes(data.dropboxes);
+					setDropboxes(data.dropboxes || []);
 				} else {
 					ToastsStore.error('Error fetching Drop Boxes');
 				}
@@ -35,6 +35,7 @@ const PickupsManagement = ({ token, role, isAuthenticated }) => {
 	}
 
     useEffect(() => {
+		setDropboxes([]);
         getDropboxes();
 	}, [date]);
 
