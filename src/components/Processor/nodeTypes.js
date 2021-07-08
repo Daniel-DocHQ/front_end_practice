@@ -484,6 +484,26 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             ports.data({
                 name: "data",
                 label: "Booking User data",
+            }),
+            ports.string({
+                name: "provider",
+                label: "Provider",
+            }),
+            ports.string({
+                name: "provider_id",
+                label: "Provider ID",
+            }),
+            ports.string({
+                name: "recipient_id",
+                label: "Recipient ID",
+            }),
+            ports.string({
+                name: "reference",
+                label: "Reference",
+            }),
+            ports.string({
+                name: "email",
+                label: "Email",
             })
         ],
         outputs: ports => [
