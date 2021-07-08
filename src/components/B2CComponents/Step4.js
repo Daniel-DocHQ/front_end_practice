@@ -19,7 +19,20 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
             tocAccept,
         }
     } = bookingFormModel;
-    const { values: { appointmentDate, selectedSlot, passengers, testType: { id, title }, timezone: timezoneValue } } = useFormikContext();
+    const {
+		values: {
+			appointmentDate,
+			selectedSlot,
+			passengers,
+			testType: {
+				id,
+				title,
+			},
+			travelDate,
+            travelTime,
+			timezone: timezoneValue,
+		},
+	} = useFormikContext();
 	const isPCR = id === FIT_TO_FLY_PCR;
 	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
@@ -32,6 +45,20 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 						<p>
 							<strong>Selected Product:&nbsp;</strong>
 							{title}
+						</p>
+					</div>
+					{!isPCR && (
+						<div className='row no-margin'>
+							<p>
+								<strong>Traveling from:&nbsp;</strong>
+								{timezone}
+							</p>
+						</div>
+					)}
+					<div className='row no-margin'>
+						<p>
+							<strong>Travel Date and Time:&nbsp;</strong>
+							{ddMMyyyy(travelDate)} {formatTimeSlotWithTimeZone(travelTime, timezone)}
 						</p>
 					</div>
 					<div className='row no-margin'>

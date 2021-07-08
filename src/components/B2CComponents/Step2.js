@@ -120,8 +120,7 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 			landingDate,
 			testType: {
 				id,
-				title,
-			}
+			},
 		},
 		setFieldValue,
 	} = useFormikContext();

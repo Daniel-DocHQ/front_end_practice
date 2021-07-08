@@ -7,7 +7,18 @@ import './BookingEngine.scss';
 const icon = require('../../assets/images/icons/circled-tick.svg');
 
 const Step5 = ({ isBookingSkip, defaultTimezone }) => {
-    const { values: { appointmentDate, selectedSlot, passengers, timezone: timezoneValue, testType: { id, title } } } = useFormikContext();
+    const {
+        values: {
+            appointmentDate,
+            selectedSlot,
+            passengers,
+            timezone: timezoneValue,
+            testType: {
+                id,
+                title,
+            },
+        },
+    } = useFormikContext();
     const isPCR = id === FIT_TO_FLY_PCR;
 	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
