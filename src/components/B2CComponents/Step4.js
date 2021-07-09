@@ -25,7 +25,7 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 			selectedSlot,
 			passengers,
 			testType: {
-				id,
+				sku,
 				title,
 			},
 			travelDate,
@@ -33,8 +33,8 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 			timezone: timezoneValue,
 		},
 	} = useFormikContext();
-	const isPCR = id === FIT_TO_FLY_PCR;
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
+	const isPCR = sku === FIT_TO_FLY_PCR;
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
 
 	return (

@@ -55,7 +55,7 @@ const Step0 = ({
                                         form.setFieldValue(numberOfPeople.name, productObj.quantity);
                                     })}
                                 >
-                                    {filteredItems.map(({ id, title, quantity }) => (
+                                    {filteredItems.map(({ id, sku, title, quantity }) => (
                                         <FormControlLabel
                                             value={id}
                                             key={id + title}
@@ -68,8 +68,8 @@ const Step0 = ({
                                                     <span className="additional-option-text">
                                                         {quantity < 1
                                                             ? 'you have booked all appointment for this product'
-                                                            : !!ADDITIONAL_PRODUCT_TEXT[id]
-                                                                ? ADDITIONAL_PRODUCT_TEXT[id]
+                                                            : !!ADDITIONAL_PRODUCT_TEXT[sku]
+                                                                ? ADDITIONAL_PRODUCT_TEXT[sku]
                                                                 : ''}
                                                     </span>
                                                 </>

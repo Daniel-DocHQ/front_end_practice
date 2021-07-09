@@ -14,13 +14,13 @@ const Step5 = ({ isBookingSkip, defaultTimezone }) => {
             passengers,
             timezone: timezoneValue,
             testType: {
-                id,
+                sku,
                 title,
             },
         },
     } = useFormikContext();
-    const isPCR = id === FIT_TO_FLY_PCR;
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
+    const isPCR = sku === FIT_TO_FLY_PCR;
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
 
     return (

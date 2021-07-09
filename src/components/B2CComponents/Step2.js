@@ -119,15 +119,15 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 			timezone: timezoneValue,
 			landingDate,
 			testType: {
-				id,
+				sku,
 			},
 		},
 		setFieldValue,
 	} = useFormikContext();
 
-	const isPCR = id === FIT_TO_FLY_PCR;
+	const isPCR = sku === FIT_TO_FLY_PCR;
 	const isSelectedSlotToday = !!selectedSlotValue && new Date(selectedSlotValue.start_time).setHours(0, 0, 0, 0) === new Date(selectedDate).setHours(0, 0, 0, 0);
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 	const filteredAppointments = (isSelectedSlotToday && !!timer)
 		? [...appointments, selectedSlotValue].sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime())
 		: [...appointments];
@@ -232,7 +232,7 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 		<React.Fragment>
 			<div className='no-margin col'>
 				<div className='appointment-calendar-container'>
-					<p>{ADDITIONAL_PRODUCT_TEXT[id]}</p>
+					<p>{ADDITIONAL_PRODUCT_TEXT[sku]}</p>
 					<ThemeProvider theme={pickerTheme}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
 							<Field name={appointmentDate.name}>

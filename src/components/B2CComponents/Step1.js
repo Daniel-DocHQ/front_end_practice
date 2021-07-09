@@ -43,7 +43,7 @@ const Step1 = () => {
 	const {
 		values: {
 			testType: {
-				id,
+				sku,
 			},
 			vaccineStatus: vaccineStatusValue,
 			vaccineType: vaccineTypeValue,
@@ -52,8 +52,8 @@ const Step1 = () => {
 		touched,
 	} = useFormikContext();
 	const pickerTheme = datePickerTheme();
-	const isPCR = id === FIT_TO_FLY_PCR;
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
+	const isPCR = sku === FIT_TO_FLY_PCR;
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 	const transportNumberLabel = `${transportTypeValue === 'Other' ? 'Transport' : transportTypeValue} Number`;
 
 	return (

@@ -1,16 +1,12 @@
 export const PRODUCTS_WITH_ADDITIONAL_INFO = [
-	26, // Test to Release
-	18, // Green Bundle
-	14, // Day 8 PCR Test
-	13, // Day 2 PCR Test
-	25, // Amber Short Stay
-	15, // Amber Bundle
-	31, // Day 8 PCR Test Sports
-	30, // Day 2 PCR Test Sports
-	24, // Green Bundle UEFA
-	23, // Amber Bundle UEFA
-	27, // Amber Short Stay EUFA
-    33, //Test to Release PCR Sports
+	'SYN-UK-PCR-SNS-004', // Test to Release
+	'SYN-UK-PCR-SNS-003', // Day 8 PCR Test
+	'SYN-UK-PCR-SNS-002', // Day 2 PCR Test
+	'SYN-UK-PCR-SNS-002,SYN-UK-PCR-SNS-003', // Amber Bundle
+	'SPORT-UK-PCR-SNS-001', // Day 8 PCR Test Sports
+	'SPORT-UK-PCR-SNS-002', // Day 2 PCR Test Sports
+	'YN-UK-PCR-SNS-002', // Amber Bundle UEFA
+    'SPORT-UK-PCR-SNS-003', //Test to Release PCR Sports
 ];
 
-export const FIT_TO_FLY_PCR = 12;
+export const FIT_TO_FLY_PCR = 'SYN-UK-PCR-SNS-001';

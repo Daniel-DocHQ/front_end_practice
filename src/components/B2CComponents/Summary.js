@@ -8,7 +8,7 @@ const Summary = ({ defaultTimezone, activeStep }) => {
     const {
         values: {
             testType: {
-                id,
+                sku,
                 title,
             },
             appointmentDate,
@@ -18,8 +18,8 @@ const Summary = ({ defaultTimezone, activeStep }) => {
             passengers,
         },
     } = useFormikContext();
-    const isPCR = id === FIT_TO_FLY_PCR;
-	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
+    const isPCR = sku === FIT_TO_FLY_PCR;
+	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
 
 	return (

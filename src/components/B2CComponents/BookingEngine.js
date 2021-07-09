@@ -232,7 +232,7 @@ const BookingEngine = () => {
 											travelTime,
 											passengers,
 											timezone: timezoneValue,
-											testType: { id, type },
+											testType: { id, sku, type },
 											transportNumber,
 											transportType,
 											landingDate,
@@ -244,8 +244,8 @@ const BookingEngine = () => {
 											city,
 											tocAccept,
 										} = values;
-										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(id);
-										const isPCR = id === FIT_TO_FLY_PCR;
+										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
+										const isPCR = sku === FIT_TO_FLY_PCR;
 										const booking_users = Array.from(Array(numberOfPeople).keys()).map((item) => {
 											const {
 												firstName,
