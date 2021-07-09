@@ -111,7 +111,7 @@ const PickupsTable = ({ date, setDate, dropboxes = [] }) => (
                                         <LinkButton
                                             text='View'
                                             color='green'
-                                            linkSrc={`/super_admin/dropbox-receipts/${dropbox.dropbox_id}`}
+                                            linkSrc={`/super_admin/dropbox-receipts/${dropbox.dropbox_id}?date=${format(date, 'yyyy-MM-dd')}`}
                                         />
                                     </TableCell>
                                 </TableRow>

@@ -129,6 +129,8 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 							phone,
 							email,
 						},
+						facility_id: facility.id,
+						id,
 						opening_times: opening_times
 							.filter(({ active }) => active)
 							.map(({ start_hour, end_hour, ...rest }) => ({

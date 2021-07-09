@@ -7,15 +7,18 @@ import { ToastsStore } from 'react-toasts';
 import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
+import getURLParams from '../../helpers/getURLParams';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import ReceiptsTable from '../../components/SAComponents/Tables/ReceiptsTable';
 
 const DropboxReceipts = ({ token, isAuthenticated, role }) => {
     const { id } = useParams();
+	const params = getURLParams(window.location.href);
+	const defaultDate = params['date'];
 	const { logout } = useContext(AuthContext);
 	const [dropbox, setDropbox] = useState();
     const [receipts, setReceipts] = useState();
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(!!defaultDate ? new Date(defaultDate) : new Date());
     const dropboxName = `${get(dropbox, 'facility.name', '')} - ${get(dropbox, 'facility.city', '')}`;
     const [isLoading, setIsLoading] = useState(false);
 	let history = useHistory();
