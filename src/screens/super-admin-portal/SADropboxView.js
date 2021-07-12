@@ -129,6 +129,7 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 							phone,
 							email,
 						},
+						active: dropbox.active,
 						facility_id: facility.id,
 						id,
 						opening_times: opening_times

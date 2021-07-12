@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
+import { Divider } from '@material-ui/core';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
 import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
@@ -24,6 +25,10 @@ const Summary = ({ defaultTimezone, activeStep }) => {
 
 	return (
         <div className="summary-box">
+            <h2 className="green-text title-text" style={{ margin: 0 }}>
+                <i class="far fa-check-circle " style={{ marginRight: 7 }} />Your Booking
+            </h2>
+            <Divider className="divider" style={{ marginTop: 16, width: '65%' }} />
             {(!!title && activeStep > 0) && (
                 <div className='row no-margin'>
                     <p>

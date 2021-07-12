@@ -361,7 +361,7 @@ const Step2 = ({
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <Field
                     name={`passengers[${activePassenger}].sex`}
-                    validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Select sex' : undefined}
+                    validate={(value) => (!value && get(touched, `passengers[${activePassenger}].sex`, false)) ? 'Select sex' : undefined}
                 >
 					{({ field, form, meta }) => (
 						<FormControl
@@ -397,7 +397,10 @@ const Step2 = ({
             </h4>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
-                    <Field name={`passengers[${activePassenger}].passportNumber`} validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Input ID Document number' : undefined}>
+                    <Field
+                        name={`passengers[${activePassenger}].passportNumber`}
+                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].passportNumber`, false) ? 'Input ID Document number' : undefined)}
+                    >
                         {({ field, meta }) => (
                             <Input
                                 onCopy={preventCopyPaste}
@@ -425,7 +428,7 @@ const Step2 = ({
                                 name={`passengers[${activePassenger}].passportNumberConfirmation`}
                                 validate={(value) => {
                                     let error;
-                                    if (!value && !!touched && !!touched.passengers) {
+                                    if (!value && get(touched, `passengers[${activePassenger}].passportNumberConfirmation`, false)) {
                                         error = 'Input ID Document number confirmation';
                                     } else if (value !== passengers[activePassenger].passportNumber) {
                                         error = 'ID Document Numbers should match';
