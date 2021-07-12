@@ -77,7 +77,7 @@ const ReceiptsTable = ({ date, setDate, receipts = [], dropboxName }) => (
                                         align='center'
                                         style={{ ...styles.tableText }}
                                     >
-                                        {!!expectedDropoffTime ? format(expectedDropoffTime, 'p') : expectedDropoffTime}
+                                        {/* {!!expectedDropoffTime ? format(expectedDropoffTime, 'p') : expectedDropoffTime} */}
                                     </TableCell>
                                 </TableRow>
                             );

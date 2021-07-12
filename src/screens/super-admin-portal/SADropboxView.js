@@ -113,6 +113,7 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 						last_name,
 						phone,
 						email,
+						...rest
 					} = values;
 					await adminService.editDropbox(id, token, {
 						facility: {
@@ -128,6 +129,7 @@ const SADropboxView = ({ token, isAuthenticated, role }) => {
 							last_name,
 							phone,
 							email,
+							...rest
 						},
 						active: dropbox.active,
 						facility_id: facility.id,
