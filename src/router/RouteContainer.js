@@ -28,6 +28,7 @@ import NurseMeeting2 from '../screens/nurse-portal/NurseMeeting2';
 import Purchase from '../screens/b2c-portal/Purchase';
 import B2CDashboard from '../screens/b2c-portal/B2CDashboard';
 import B2CBookAppointment from '../screens/b2c-portal/B2CBookAppointment';
+import PharmacyActivateTestKit from '../screens/b2c-portal/PharmacyActivateTestKit';
 import EditBookedAppointment from '../screens/cs-portal/EditBookedAppointment';
 import LiveDashboard from '../screens/nurse-portal/LiveDashboard';
 import RotaManagement from '../screens/nurse-portal/RotaManagement';
@@ -237,6 +238,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/b2c/dashboard' requiredRole='b2c'>
 				<Layout title='Dashboard'>
 					<B2CDashboard />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/activate-kit' requiredRole='b2c'>
+				<Layout title='Activate Kit'>
+					<PharmacyActivateTestKit />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/b2c/order-test-kit' requiredRole='b2c'>

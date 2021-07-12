@@ -36,12 +36,20 @@ const bookingFormModel = {
         vaccineNumber: 'One dose of vaccine',
         vaccineTypeName: '',
         vaccineType: 'Pfizer',
+        purchaseCode: '',
     },
     formField: {
         fillWithBookingUser: {
             name: 'fillWithBookingUser',
             label: 'Fill with passenger details',
             id: 'fill-with-booking-user',
+            type: 'text',
+        },
+        purchaseCode: {
+            name: 'purchaseCode',
+            label: 'Purchase Code',
+            id: 'purchase-code',
+            required: true,
             type: 'text',
         },
         numberOfPeople: {

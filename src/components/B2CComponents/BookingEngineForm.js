@@ -24,6 +24,7 @@ const BookingEngineForm = ({
     status,
     dropTimer,
     timer,
+    isPharmacy = false,
     isBookingSkip = false,
     totalAvailableQuantity = 0,
     ...restProps
@@ -35,6 +36,7 @@ const BookingEngineForm = ({
         <Step0
             items={items}
             isEdit={isEdit}
+            isPharmacy={isPharmacy}
             bookingUsersQuantity={bookingUsersQuantity}
         />,
         <Step1 />,

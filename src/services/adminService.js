@@ -104,6 +104,34 @@ const adminService = {
 			}
 		});
 	},
+	checkPurchaseCodeInfo(purchaseCode) {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: 'get',
+				url: `${baseUrl}/v1/purchase/code?purchase_code=${purchaseCode}`,
+			})
+				.then(response => {
+					if (response.status === 200 && response.data) {
+						resolve({
+							success: true,
+							data: response.data,
+						});
+					} else {
+						resolve({
+							success: false,
+							error: response.data.message || 'Something went wrong',
+						});
+					}
+				})
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.'});
+					}
+				});
+		});
+	},
 	getPickups(token, date) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {

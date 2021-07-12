@@ -10,19 +10,24 @@ const {
     selectedSlot,
     city,
     tocAccept,
+    purchaseCode,
   }
 } = bookingFormModel;
 
-const useValidationSchema = (activeStep, isBookingSkip = false) => (
+const useValidationSchema = (activeStep, isBookingSkip = false, isPharmacy = false) => (
   [
     Yup.object().shape({
-      [product.name]: Yup.number().required('Select test kit to book appointment'),
-      [numberOfPeople.name]: Yup.number().required('Input number of people').min(1, 'Minimum 1 person for appointment').max(4, 'Maximum 4 people per appointment')
-      .test('maximum', 'You can\'t book more people than the quantity of test that you have bought',
-        function checkNumberOfPeople(value) {
-          const { testType } = this.parent;
-          return value <= testType.quantity;
-        }),
+      ...(isPharmacy ? {
+        [purchaseCode.name]: Yup.string().required('Input your code'),
+      } : {
+        [product.name]: Yup.number().required('Select test kit to book appointment'),
+        [numberOfPeople.name]: Yup.number().required('Input number of people').min(1, 'Minimum 1 person for appointment').max(4, 'Maximum 4 people per appointment')
+        .test('maximum', 'You can\'t book more people than the quantity of test that you have bought',
+          function checkNumberOfPeople(value) {
+            const { testType } = this.parent;
+            return value <= testType.quantity;
+          }),
+      }),
     }),
     Yup.object().shape({
       [city.name]: Yup.object().shape({
