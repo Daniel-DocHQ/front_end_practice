@@ -44,7 +44,7 @@ const PcrTestsTable = ({ results = [] }) => {
     const auth = useContext(AuthContext);
     const [retriggerMsg, setRetriggerMsg] = useState(null);
     const [retriggerMsgOpen, setRetriggerMsgOpen] = useState(false);
-    const sortedResults = results.sort(({ sample_date: aSampleDate }, { sample_date: bSampleDate }) => new Date(bSampleDate).getTime() - new Date(aSampleDate).getTime())
+    const sortedResults = results//.sort(({ sample_date: aSampleDate }, { sample_date: bSampleDate }) => new Date(bSampleDate).getTime() - new Date(aSampleDate).getTime())
     const retriggerImport = (id, bid) => {
         svc.resendMessages({
             event:"booking_user.metadata.updated",
@@ -103,7 +103,7 @@ const PcrTestsTable = ({ results = [] }) => {
                                 const isTestInLab = !!date_of_receipt;
                                 const resultResult = get(result, 'test_result', '');
                                 const sinceDateSampled = !!dateSampled ? differenceInHours(today, dateSampled) : 0;
-                                const kitIdStatus = !resultResult ? ((sinceDateSampled >= 48 && !isTestInLab) ? 'red-bold-text' : (sinceDateSampled >= 24 && !isTestInLab) ? 'orange-bold-text' : '') : '';
+                                const kitIdStatus = !!resultResult ? '' : ((sinceDateSampled >= 48 ) ? 'red-bold-text' : (sinceDateSampled >= 24) ? 'orange-bold-text' : '');
                                 const appointmentId = get(result, 'booking_id', '');
                                 const bookingUserId = get(result, 'booking_user_id');
 

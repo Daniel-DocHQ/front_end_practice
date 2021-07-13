@@ -165,7 +165,7 @@ const NurseDashboard = props => {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			getAllInfo();
-		}, 15000);
+		}, 20000);
 		return () => clearInterval(interval);
 	}, []);
 

@@ -85,7 +85,7 @@ const OrderList = props => {
         setDataTableLoading(false);
     }, [page, search]);
 
-    useDebounce(async () => {
+    useDebounce(() => {
         setPage(0);
         setSearch(!search);
 	}, 300, [searchEmail]);

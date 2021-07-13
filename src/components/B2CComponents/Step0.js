@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useDebounce } from 'react-use';
 import { Field, useFormikContext } from 'formik';
 import {
     Radio,
@@ -12,6 +13,7 @@ import bookingFormModel from './bookingFormModel';
 import ADDITIONAL_PRODUCT_TEXT from './additionalProductText';
 import './BookingEngine.scss';
 import { Alert } from '@material-ui/lab';
+import adminService from '../../services/adminService';
 
 const Step0 = ({
     isEdit,
@@ -36,11 +38,28 @@ const Step0 = ({
 
     const filteredItems = items.filter(({ type }) => type !== 'Virtual');
 
-    useEffect(() => {
-        if (!!purchaseCodeValue) {
+    const checkPurchaseCodeInfo = async () => {
+        await adminService.checkPurchaseCodeInfo(purchaseCodeValue)
+            .then(result => {
+                if (result.success && result.data && result.data.value) {
+                    if (!!result.data.uses) {
+                        setFieldValue('purchaseCodeError', { severity: 'success', message: 'Valid purchase code' })
+                    } else {
+                        setFieldValue('purchaseCodeError', { severity: 'error', message: 'Your code is expired' });
+                    }
+                } else {
+                   setFieldValue('purchaseCodeError', { severity: 'error', message: 'Your code is invalid' });
+                }
+            }).catch((error) => setFieldValue('purchaseCodeError', { severity: 'error', message: 'Your code is invalid' }));
+    }
+
+    useDebounce(async () => {
+        if (!!purchaseCodeValue && purchaseCodeValue.match(new RegExp(/^(ANT|PFF|ATE)-[0-9]*/))) {
+            checkPurchaseCodeInfo();
+        } else {
             setFieldValue('purchaseCodeError', '');
         }
-    }, [purchaseCodeValue]);
+    }, 300, [purchaseCodeValue]);
 
 	return (isPharmacy ? (
         <>
@@ -67,8 +86,8 @@ const Step0 = ({
             {!!purchaseCodeError && (
                 <div className='row space-between' style={{ flexWrap: 'wrap', width: '60%' }}>
                     <div style={{ minWidth: '320px' }}>
-                        <Alert severity="error" variant='outlined'>
-                            {purchaseCodeError}
+                        <Alert severity={purchaseCodeError.severity} variant='outlined'>
+                            {purchaseCodeError.message}
                         </Alert>
                     </div>
                 </div>
