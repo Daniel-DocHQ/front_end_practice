@@ -12,6 +12,7 @@ import './box-test.scss';
 const Box = ({
 	token,
 	isNurse,
+	appointmentInfo = {},
 	isEnglish = true,
 	updateImageData,
 	captureDisabled,
@@ -51,6 +52,7 @@ const Box = ({
 				isNurse={isNurse}
 				token={videoCallToken}
 				authToken={token}
+				appointmentInfo={appointmentInfo}
 				appointmentId={appointmentId}
 				updateImageData={updateImageData}
 				captureDisabled={captureDisabled}

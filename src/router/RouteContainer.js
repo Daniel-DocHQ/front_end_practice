@@ -241,7 +241,7 @@ const RouteHandler = () => {
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/activate-kit' requiredRole='b2c'>
-				<Layout title='Activate Kit'>
+				<Layout title="Book an appointment">
 					<PharmacyActivateTestKit />
 				</Layout>
 			</PrivateRoute>

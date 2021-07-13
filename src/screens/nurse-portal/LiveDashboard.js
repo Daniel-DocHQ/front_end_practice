@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { useHistory } from 'react-router-dom';
-import AppointmentLiveStatus from '../../components/LiveDashboardComponents/AppointmentLiveStatus';
-import LiveAppBar from '../../components/LiveDashboardComponents/LiveAppBar';
+import MyRoomsContainer from '../../components/LiveDashboardComponents/MyRoomsContainer';
 
 const LiveDashboard = (props) => {
     let history = useHistory();
@@ -11,9 +10,7 @@ const LiveDashboard = (props) => {
     }
 
 	return (
-        <LiveAppBar value={0}>
-            <AppointmentLiveStatus />
-        </LiveAppBar>
+        <MyRoomsContainer />
 	);
 };
 

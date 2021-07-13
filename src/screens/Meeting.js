@@ -38,7 +38,8 @@ const Meeting = () => {
 	const videoType = get(appointmentInfo, 'type', '');
 	const skiptime = params['skiptime'];
 
-	useEffect(async () => {
+	const getAppointmentInfo = async () => {
+		setIsLoading(true);
 		await bookingService.getAppointmentInfo(appointmentId)
 			.then(result => {
 				if (result.success && result.appointments) {
@@ -51,12 +52,14 @@ const Meeting = () => {
 					setIsVista(isVistaType);
 					setIsEnglish(isVistaType ? true : language === 'EN');
 					setIsLoading(false);
-				} else {
-					// handle
-					setIsLoading(false);
 				}
 			})
 			.catch(err => console.log(err));
+		setIsLoading(false);
+	}
+
+	useEffect(() => {
+		getAppointmentInfo();
 	}, []);
 
 	useEffect(() => {
@@ -150,6 +153,7 @@ const Meeting = () => {
 				<Box
 					token="token"
 					isNurse={false}
+					appointmentInfo={appointmentInfo}
 					isEnglish={isEnglish}
 					videoCallToken={videoCallToken}
 					setVideoCallToken={setVideoCallToken}
@@ -167,9 +171,9 @@ const AppointmentSummary = ({ date, isVista, isEnglish }) => (
 		<p><b>{isEnglish ? 'Selected date' : 'Ausgewähltes Datum'}: </b>{ddMMyyyy(date)}</p>
 		<p><b>{isEnglish ? 'Selected date' : 'Ausgewählte Zeit'}: </b>{format(new Date(date || ''), 'p')} ({get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time')})</p>
 		{isEnglish ? (
-			<p>Please, make sure you click on this link at least <b>15 minutes before</b> your actual appointment.</p>
+			<p>Please, make sure you click on this link at least <b>5 minutes before</b> your actual appointment.</p>
 		) : (
-			<p>	Bitte stellen Sie sicher, dass Sie mindestens <b>15 Minuten vor</b> Ihrem eigentlichen Termin auf diesen Link klicken.</p>
+			<p>	Bitte stellen Sie sicher, dass Sie mindestens <b>5 Minuten vor</b> Ihrem eigentlichen Termin auf diesen Link klicken.</p>
 		)}
 		{isVista && (
 			<>

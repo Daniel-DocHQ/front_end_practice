@@ -1,5 +1,6 @@
 import React, { useEffect, useState, memo, useContext } from 'react';
 import { get } from 'lodash';
+import { format } from 'date-fns';
 import Controls from '../Controls/Controls';
 import InVid from '../IncomingVideo/InVid';
 import OutVid from '../OutgoingVideo/OutVid';
@@ -11,7 +12,6 @@ import bookingService from '../../services/bookingService';
 import { AppointmentContext, useBookingUsers } from '../../context/AppointmentContext';
 import nurseSvc from '../../services/nurseService';
 import './VideoCallAppointment.scss';
-import { format } from 'libphonenumber-js';
 
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
@@ -24,9 +24,16 @@ function TwillioVideoCall({
 	appointmentId,
 	captureDisabled,
 	authToken,
+	appointmentInfo,
 	hideVideoAppointment,
 }) {
-	const { storeImage, displayCertificates, status_changes } = useContext(AppointmentContext);
+	const {
+		storeImage,
+		displayCertificates,
+		status_changes,
+	} = useContext(AppointmentContext);
+	const [timeBeforeStart, setTimeBeforeStart] = useState(isNurse ? 0 : new Date(appointmentInfo.start_time).getTime() - new Date().getTime());
+	const isEarly = timeBeforeStart > 0;
 	const patients = useBookingUsers();
 	const [counter, setCounter] = useState(0);
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
@@ -35,11 +42,11 @@ function TwillioVideoCall({
 	const [isAppointmentUnfinished, setIsAppointmentUnfinished] = useState(false);
 	const [takePhoto, setTakePhoto] = useState(false);
 	const statusChanges = status_changes || [];
-	const lastStatus = (get(statusChanges, `${[statusChanges.length - 1]}.changed_to`, ''));
+	const lastStatus = (get(statusChanges, `${[statusChanges.length - 1]}`, ''));
 	const currentBookingUserName = `${get(bookingUsers, '[0].first_name', '')} ${get(bookingUsers, '[0].last_name', '')}`;
 	const [message, setMessage] = useState(
 		isNurse
-			? !!lastStatus && lastStatus.changed_to === 'PATIENT_ATTENDED' ? `Patient joined at ${format(new Date(lastStatus.created_at), 'dd/MM/yyyy pp')}` : 'Your patient will be with you shortly'
+			? (!!lastStatus && lastStatus.changed_to === 'PATIENT_ATTENDED') ? `Patient joined at ${format(new Date(lastStatus.created_at), 'dd/MM/yyyy pp')}` : 'Your patient will be with you shortly'
 			: 'Your medical practitioner will be with you shortly'
 	);
 	function capturePhoto() {
@@ -105,14 +112,30 @@ function TwillioVideoCall({
 		};
 	}, [token]);
 
+	useEffect(() => {
+		if (!isNurse && timeBeforeStart > 0) { // 3 min until show message
+			const interval = setInterval(() => {
+				const timeDifference = new Date(appointmentInfo.start_time).getTime() - new Date().getTime();
+				setTimeBeforeStart(timeDifference);
+				setMessage(
+					<p>
+						Your appointment starts in {format(new Date(timeDifference), 'mm:ss')}<br />
+						Please wait for your practitioner to join the call.<br />
+						Thank you.
+					</p>
+				);
+			}, 1000);
+			return () => clearInterval(interval);
+		}
+	}, [timeBeforeStart, isEarly]);
 
 	useEffect(() => {
-		if (counter < 180 && !isNurse) { // 3 min until show message
+		if (counter < 180 && !isNurse && !isEarly) { // 3 min until show message
 			const interval = setInterval(() => {
 				setCounter((prev) => prev + 1);
 			}, 1000);
 			return () => clearInterval(interval);
-		} else if (!isNurse) {
+		} else if (!isNurse && counter > 180 && !isEarly) {
 			setMessage(
 				<p>
 					Apologies for the delay. Your practitioner is running late on the previous appointment but will be with you as soon as possible. Thank you very much for your understanding.<br/><br/>
@@ -120,7 +143,7 @@ function TwillioVideoCall({
 				</p>
 			);
 		}
-	}, [counter]);
+	}, [counter, isEarly]);
 
 	const handleDisconnect = async () => {
 		if (isNurse) {
@@ -139,10 +162,8 @@ function TwillioVideoCall({
 				.catch(err => {
 					console.log(err)
 				});
-			setIsCloseCallVisible(true);
-		} else if (!!room ) {
-			room.disconnect();
 		}
+		setIsCloseCallVisible(true);
 	};
 
 	const handlePause = async () => {
@@ -180,7 +201,7 @@ function TwillioVideoCall({
 							alignItems: 'center',
 						}}
 					>
-						{isAppointmentUnfinished && (
+						{(isAppointmentUnfinished && isNurse) && (
 							<>
 								<p>Warning!</p>
 								<p>You have not submitted results for all patients.</p>
@@ -198,15 +219,22 @@ function TwillioVideoCall({
 								color='pink'
 								text='Yes'
 								onClick={async () => {
-									setIsCloseCallVisible(false);
-									if(!!room) {
-										await updateAppointmentStatus('COMPLETED');
-										if (!!hideVideoAppointment) {
-											hideVideoAppointment();
+									if (isNurse) {
+										if (!!room) {
+											await updateAppointmentStatus('COMPLETED');
+											if (!!hideVideoAppointment) {
+												hideVideoAppointment();
+											}
+											room.disconnect();
 										}
+										setIsVideoClosed(true);
+									}
+									else if (!!room) {
 										room.disconnect();
 									}
-									setIsVideoClosed(true);
+									setIsCloseCallVisible(false);
+									setMessage('Call has been closed');
+									setTimeBeforeStart(0);
 								}}
 							/>
 						</div>
