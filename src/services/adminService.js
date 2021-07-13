@@ -37,6 +37,25 @@ const adminService = {
 			}
 		});
 	},
+	getProducts() {
+		return new Promise((resolve, reject) => {
+			axios({
+				url: `${baseUrl}/v1/product`,
+				method: 'GET',
+			})
+				.then(response => {
+					if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+						resolve({ success: true, products: response.data.products });
+					} else {
+						reject({
+							success: false,
+							error: 'Unable to find products',
+						});
+					}
+				})
+				.catch(() => reject({ success: false, error: 'Server Error Occurred' }));
+		});
+	},
 	getDropbox(id, token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined' || !id) {
@@ -108,7 +127,7 @@ const adminService = {
 		return new Promise((resolve, reject) => {
 			axios({
 				method: 'get',
-				url: `${baseUrl}/v1/purchase/code?purchase_code=${purchaseCode}`,
+				url: `${baseUrl}/v1/discount/${purchaseCode}`,
 			})
 				.then(response => {
 					if (response.status === 200 && response.data) {

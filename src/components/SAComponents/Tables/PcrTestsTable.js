@@ -44,7 +44,7 @@ const PcrTestsTable = ({ results = [] }) => {
     const auth = useContext(AuthContext);
     const [retriggerMsg, setRetriggerMsg] = useState(null);
     const [retriggerMsgOpen, setRetriggerMsgOpen] = useState(false);
-    const sortedResults = results.sort(({ sample_date: aSampleDate }, { sample_date: bSampleDate }) => new Date(aSampleDate).getTime() - new Date(bSampleDate).getTime())
+    const sortedResults = results.sort(({ sample_date: aSampleDate }, { sample_date: bSampleDate }) => new Date(bSampleDate).getTime() - new Date(aSampleDate).getTime())
     const retriggerImport = (id, bid) => {
         svc.resendMessages({
             event:"booking_user.metadata.updated",
@@ -54,11 +54,9 @@ const PcrTestsTable = ({ results = [] }) => {
                 booking_user_id: bid,
             }
         }, auth.token).then(res => {
-            console.log(res)
             setRetriggerMsg(res.data.response)
             setRetriggerMsgOpen(true)
         }).catch(res => {
-            console.log(res)
             setRetriggerMsg(res.data.response)
             setRetriggerMsgOpen(true)
         })
@@ -103,11 +101,11 @@ const PcrTestsTable = ({ results = [] }) => {
                                 let date_of_receipt = get(result, 'receipt_date');
                                 date_of_receipt = !!date_of_receipt ? new Date(date_of_receipt) : '';
                                 const isTestInLab = !!date_of_receipt;
+                                const resultResult = get(result, 'test_result', '');
                                 const sinceDateSampled = !!dateSampled ? differenceInHours(today, dateSampled) : 0;
-                                const kitIdStatus = (sinceDateSampled >= 48 && !isTestInLab) ? 'red-bold-text' : (sinceDateSampled >= 24 && !isTestInLab) ? 'orange-bold-text' : '';
+                                const kitIdStatus = !resultResult ? ((sinceDateSampled >= 48 && !isTestInLab) ? 'red-bold-text' : (sinceDateSampled >= 24 && !isTestInLab) ? 'orange-bold-text' : '') : '';
                                 const appointmentId = get(result, 'booking_id', '');
                                 const bookingUserId = get(result, 'booking_user_id');
-                                const resultResult = get(result, 'test_result', '');
 
                                 return (
                                     <TableRow key={result.booking_id}>
@@ -143,12 +141,14 @@ const PcrTestsTable = ({ results = [] }) => {
                                                     linkSrc={`/practitioner/appointment?appointmentId=${appointmentId}`}
                                                 />
                                             )}
-                                            <DocButton
-                                                color='pink'
-                                                text="Reimport"
-                                                style={{ marginLeft: 10 }}
-                                                onClick={() => {retriggerImport(appointmentId,bookingUserId)}}
-                                            />
+                                            {!!resultResult && (
+                                                <DocButton
+                                                    color='pink'
+                                                    text="Send Certificate"
+                                                    style={{ marginLeft: 10 }}
+                                                    onClick={() => {retriggerImport(appointmentId,bookingUserId)}}
+                                                />
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 );

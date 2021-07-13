@@ -99,7 +99,7 @@ const datePickerTheme = () => createMuiTheme({
 	},
 });
 
-const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
+const Step3 = ({ defaultTimezone, dropTimer, isPharmacy, timer }) => {
 	const [showMore, setShowMore] = useState(false);
 	const [appointments, setAppointments] = useState([]);
 	const today = new Date().setHours(0, 0, 0, 0);
@@ -181,6 +181,7 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 					date_time: moment(new Date(new Date(startDate).setHours(startDateTime.getHours())).setMinutes(startDateTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
 					date_time_to: moment(new Date(new Date(maxDate).setHours(maxDate.getHours())).setMinutes(maxDate.getMinutes())).tz(timezone).format().replace('+', '%2B'),
 					language: 'EN',
+					isPharmacy,
 				})
 				.then(result => {
 					if (result.success && result.appointments) {
@@ -201,7 +202,7 @@ const Step3 = ({ defaultTimezone, dropTimer, timer }) => {
 				});
 		} else {
 			await bookingService
-				.getSlots(selectedDate)
+				.getSlots(selectedDate, isPharmacy)
 				.then(result => {
 					if (result.success && result.appointments) {
 						const newAppointments = result.appointments;

@@ -22,7 +22,7 @@ const bookingService = {
 };
 
 // Booking engine
-function getSlots(selectedDate) {
+function getSlots(selectedDate, isPharmacy = false) {
 	const params = getURLParams();
 	const date = ddMMyyyy(selectedDate);
 	function additionalParams() {
@@ -36,7 +36,7 @@ function getSlots(selectedDate) {
 		if (date) {
 			axios({
 				url: `${baseURL}?&service=${
-					typeof params['service'] === 'undefined' ? SERVICE_TYPE : params['service']
+					typeof params['service'] === 'undefined' ? (isPharmacy ? 'video_gp_dochq' : SERVICE_TYPE) : params['service']
 				}&date=${date}${additionalParams()}`,
 				method: 'get',
 				headers: { 'Content-type': 'application,json' },
@@ -92,7 +92,7 @@ function getAppointmentsByShortToken(shortToken, token) {
 			.catch(err => reject(err));
 	});
 }
-function getSlotsByTime({ date_time, date_time_to, language }) {
+function getSlotsByTime({ date_time, date_time_to, language, isPharmacy = false }) {
 	const params = getURLParams();
 	function additionalParams() {
 		// used to book group face to face appointments
@@ -105,7 +105,7 @@ function getSlotsByTime({ date_time, date_time_to, language }) {
 		if (!!date_time || !!date_time_to) {
 			axios({
 				url: `${baseURL}?&service=${
-					typeof params['service'] === 'undefined' ? SERVICE_TYPE : params['service']
+					typeof params['service'] === 'undefined' ? (isPharmacy ? 'video_gp_dochq' : SERVICE_TYPE) : params['service']
 				}&date_time=${date_time}&date_time_to=${date_time_to || ''}&language=${language}${additionalParams()}`,
 				method: 'get',
 				headers: { 'Content-type': 'application,json' },

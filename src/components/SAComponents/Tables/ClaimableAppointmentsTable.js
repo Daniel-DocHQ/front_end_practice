@@ -120,6 +120,7 @@ const ClaimableAppointmentsTable = ({ appointments = [] }) => {
 						{(!!filteredAppointments && filteredAppointments.length > 0) && filteredAppointments.map(appointment => {
 							const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
 							const type = get(appointment, 'type', '');
+							const source = get(appointment, 'booking_user.metadata.source', '');
 
 							return (
 								<TableRow key={appointment.id}>
@@ -133,7 +134,7 @@ const ClaimableAppointmentsTable = ({ appointments = [] }) => {
 										{format(appointmentStartTime, 'p')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.tableText }}>
-										{type && (type === 'video_gp_dochq' ? 'DocHQ' : 'TUI')}
+										{!!source ? source : type && (type === 'video_gp_dochq' ? 'DocHQ' : 'TUI')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_users.length', '')}

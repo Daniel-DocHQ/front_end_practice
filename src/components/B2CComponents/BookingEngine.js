@@ -217,6 +217,7 @@ const BookingEngine = () => {
 										}
 									} else if (steps[activeStep] === 'Summary') {
 										const {
+											source,
 											shipping_address: {
 												address_1,
 												address_2,
@@ -271,6 +272,7 @@ const BookingEngine = () => {
 												toc_accept: tocAccept,
 												locality: town,
 												metadata: {
+													source,
 													product_id: parseInt(id),
 													short_token,
 													order_id: orderId.toString(),

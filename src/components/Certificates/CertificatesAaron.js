@@ -121,7 +121,6 @@ const CertificatesAaron = ({
 		const dob = get(patient_data, 'metadata.date_of_birth', '') || patient_data.date_of_birth;
 		const securityChecked = get(patient_data, 'metadata.security_checked', false);
 		const passportNumber = get(patient_data, 'metadata.passport_number', '') || get(patient_data, 'metadata.passportId', '');
-		console.log(result, patient_data);
 		if (patient_data.id) {
 			setPatientId(patient_data.id)
 		}

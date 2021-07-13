@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { get } from 'lodash';
 import moment from 'moment';
@@ -17,8 +17,11 @@ import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/pro
 import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
 
+const AmberDay2 = 'SYN-UK-PCR-SNS-002';
+const AntigenFitToFly = 'FLX-UK-ANT-SNS-001';
+
 const PharmacyBookingEngine = () => {
-	const [orderInfo, setOrderInfo] = useState();
+	const [products, setProducts] = useState([]);
 	const [timerStart, setTimerStart] = useState();
 	const [status, setStatus] = useState(); // { severity, message }
 	const [isLoading, setLoading] = useState(false);
@@ -26,7 +29,6 @@ const PharmacyBookingEngine = () => {
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
-	const orderId = get(orderInfo, 'id', 0);
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = useValidationSchema(activeStep, false, true);
 	const steps = [
@@ -63,21 +65,19 @@ const PharmacyBookingEngine = () => {
 
 	const getData = async () => {
 		setLoading(true);
-        await adminService.getOrderProducts('')
-            .then(data => {
-                if (data.success) {
-                    // setItems(data.order);
+        await adminService.getProducts()
+            .then(result => {
+                if (result.success && result.products) {
+                    setProducts(result.products);
                 }
             })
-            .catch(err => ToastsStore.error('Error fetching order information'))
-        await bookingService.getAppointmentsByShortToken('')
-            .then(result => {
-                if (result.success && result.appointments) {
-                    // setAppointments(result.appointments);
-                }
-            });
+            .catch(err => ToastsStore.error('Error fetching products'))
 		setLoading(false);
 	};
+
+    useEffect(() => {
+        getData();
+    }, [])
 
 	if (isLoading) {
 		return (
@@ -124,18 +124,31 @@ const PharmacyBookingEngine = () => {
                     } else if (steps[activeStep] === 'Purchase Code') {
                         const { purchaseCode } = values;
                         await adminService.checkPurchaseCodeInfo(purchaseCode)
-                            .then((response) => {
-                                if (response.success) {
-                                    actions.setFieldValue('testType', response.data);
-                                    actions.setTouched({});
-                                    actions.setSubmitting(false);
-                                    actions.setErrors({});
-                                    handleNext();
+                            .then(result => {
+                                if (result.success && result.data && result.data.value) {
+                                    if (!!result.data.uses) {
+                                        switch (purchaseCode.slice(0, 3)) {
+                                            case 'ANT':
+                                                actions.setFieldValue('testType', products.find(({ sku }) => sku === AntigenFitToFly));
+                                                break;
+                                            case 'PFF':
+                                                actions.setFieldValue('testType', products.find(({ sku }) => sku === FIT_TO_FLY_PCR));
+                                                break;
+                                            case 'ATE':
+                                                actions.setFieldValue('testType', products.find(({ sku }) => sku === AmberDay2));
+                                                break;
+                                        }
+                                        actions.setSubmitting(false);
+                                        actions.setTouched({});
+                                        actions.setErrors({});
+                                        handleNext();
+                                    } else {
+                                        actions.setFieldValue('Your code is expired', result.error);
+                                    }
                                 } else {
-                                    actions.setFieldValue('purchaseCodeError', response.error);
+                                    actions.setFieldValue('purchaseCodeError', result.error);
                                 }
                             }).catch((error) => actions.setFieldValue('purchaseCodeError', error.error));
-
                     } else if (steps[activeStep] === 'Passenger Details') {
                         const {
                             numberOfPeople,
@@ -161,15 +174,6 @@ const PharmacyBookingEngine = () => {
                             actions.setErrors({});
                         }
                     } else if (steps[activeStep] === 'Summary') {
-                        const {
-                            shipping_address: {
-                                address_1,
-                                address_2,
-                                town,
-                                postcode,
-                                county,
-                            },
-                        } = orderInfo;
                         const {
                             numberOfPeople,
                             selectedSlot,
@@ -206,18 +210,12 @@ const PharmacyBookingEngine = () => {
                                 last_name: lastName,
                                 tz_location: (isAdditionalProduct || isPCR) ? defaultTimeZone.timezone : timezoneValue,
                                 date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
-                                street_address: address_1,
                                 language: 'EN',
-                                extended_address: address_2,
-                                postal_code: postcode,
                                 phone: `${countryCode.label}${phone.trim()}`,
-                                region: county,
                                 country: 'GB',
                                 toc_accept: tocAccept,
-                                locality: town,
                                 metadata: {
                                     product_id: parseInt(id),
-                                    order_id: orderId.toString(),
                                     passport_number: passportNumber,
                                     travel_date: moment(
                                         new Date(

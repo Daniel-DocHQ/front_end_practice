@@ -11,6 +11,7 @@ import bookingService from '../../services/bookingService';
 import { AppointmentContext, useBookingUsers } from '../../context/AppointmentContext';
 import nurseSvc from '../../services/nurseService';
 import './VideoCallAppointment.scss';
+import { format } from 'libphonenumber-js';
 
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
@@ -25,7 +26,7 @@ function TwillioVideoCall({
 	authToken,
 	hideVideoAppointment,
 }) {
-	const { storeImage, displayCertificates } = useContext(AppointmentContext);
+	const { storeImage, displayCertificates, status_changes } = useContext(AppointmentContext);
 	const patients = useBookingUsers();
 	const [counter, setCounter] = useState(0);
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
@@ -33,10 +34,12 @@ function TwillioVideoCall({
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
 	const [isAppointmentUnfinished, setIsAppointmentUnfinished] = useState(false);
 	const [takePhoto, setTakePhoto] = useState(false);
+	const statusChanges = status_changes || [];
+	const lastStatus = (get(statusChanges, `${[statusChanges.length - 1]}.changed_to`, ''));
 	const currentBookingUserName = `${get(bookingUsers, '[0].first_name', '')} ${get(bookingUsers, '[0].last_name', '')}`;
 	const [message, setMessage] = useState(
 		isNurse
-			? 'Your patient will be with you shortly'
+			? !!lastStatus && lastStatus.changed_to === 'PATIENT_ATTENDED' ? `Patient joined at ${format(new Date(lastStatus.created_at), 'dd/MM/yyyy pp')}` : 'Your patient will be with you shortly'
 			: 'Your medical practitioner will be with you shortly'
 	);
 	function capturePhoto() {
