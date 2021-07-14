@@ -44,7 +44,7 @@ const PcrTestsTable = ({ results = [] }) => {
     const auth = useContext(AuthContext);
     const [retriggerMsg, setRetriggerMsg] = useState(null);
     const [retriggerMsgOpen, setRetriggerMsgOpen] = useState(false);
-    const sortedResults = results//.sort(({ sample_date: aSampleDate }, { sample_date: bSampleDate }) => new Date(bSampleDate).getTime() - new Date(aSampleDate).getTime())
+    const sortedResults = results.sort(({ sample_date: aSampleDate }, { sample_date: bSampleDate }) => new Date(bSampleDate).getTime() - new Date(aSampleDate).getTime())
     const retriggerImport = (id, bid) => {
         svc.resendMessages({
             event:"booking_user.metadata.updated",
