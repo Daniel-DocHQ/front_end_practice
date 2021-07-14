@@ -243,6 +243,29 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ]
     })
     .addNodeType({
+        type: "checkProductHasTag",
+        label: "Check product for given tag",
+        description: "Check a product for a tag",
+        initialWidth: 220,
+        actionNode: true,
+        inputs: ports => [
+            ports.productsList({
+                name: "product",
+                label: "Product ID"
+            }),
+            ports.string({
+                name: "tag",
+                label: "Tag"
+            }),
+        ],
+        outputs: ports => [
+            ports.boolean({
+                name: "tagPresent",
+                label: "Tag present in product",
+            })
+        ]
+    })
+    .addNodeType({
         type: "stringToData",
         name: "stringToData",
         label: "String to data",
