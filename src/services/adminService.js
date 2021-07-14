@@ -37,6 +37,38 @@ const adminService = {
 			}
 		});
 	},
+	createOrder(body) {
+		return new Promise((resolve, reject) => {
+			if (body) {
+				axios({
+					url: `${baseUrl}/v1/order`,
+					method: 'POST',
+					data: body,
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							// price, delivery_date, appointment_date
+							resolve({ success: true, order_details: response.data });
+						} else {
+							// TODO needs better error handling
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				reject({ success: false, error: 'Missing details' });
+			}
+		});
+	},
 	getProducts() {
 		return new Promise((resolve, reject) => {
 			axios({
@@ -146,7 +178,7 @@ const adminService = {
 					if (err && err.response && err.response.data && err.response.data.message) {
 						reject({ success: false, error: err.response.data.message, });
 					} else {
-						reject({ success: false, error: 'Something went wrong, please try again.'});
+						reject({ success: false, error: 'Something went wrong, please try again.' });
 					}
 				});
 		});
@@ -307,7 +339,7 @@ const adminService = {
 						if (err && err.response && err.response.data && err.response.data.message) {
 							reject({ success: false, error: err.response.data.message, });
 						} else {
-							reject({ success: false, error: 'Something went wrong, please try again.'});
+							reject({ success: false, error: 'Something went wrong, please try again.' });
 						}
 					});
 			} else {
@@ -341,7 +373,7 @@ const adminService = {
 						if (err && err.response && err.response.data && err.response.data.message) {
 							reject({ success: false, error: err.response.data.message, });
 						} else {
-							reject({ success: false, error: 'Something went wrong, please try again.'});
+							reject({ success: false, error: 'Something went wrong, please try again.' });
 						}
 					});
 			} else {
@@ -376,7 +408,7 @@ const adminService = {
 						if (err && err.response && err.response.data && err.response.data.message) {
 							reject({ success: false, error: err.response.data.message, });
 						} else {
-							reject({ success: false, error: 'Something went wrong, please try again.'});
+							reject({ success: false, error: 'Something went wrong, please try again.' });
 						}
 					});
 			} else {
@@ -390,7 +422,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${baseUrl}/v1/order?page=${page}${!!email ? `&email=${email}`: ''}`,
+					url: `${baseUrl}/v1/order?page=${page}${!!email ? `&email=${email}` : ''}`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
@@ -661,8 +693,8 @@ const adminService = {
 					.then(response => {
 						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
 							resolve({
-                                success: true,
-                                data: response.data,
+								success: true,
+								data: response.data,
 							});
 						} else {
 							resolve({

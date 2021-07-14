@@ -56,8 +56,6 @@ const Step0 = ({
     useDebounce(async () => {
         if (!!purchaseCodeValue && purchaseCodeValue.match(new RegExp(/^(ANT|PFF|ATE)-[0-9]*/))) {
             checkPurchaseCodeInfo();
-        } else {
-            setFieldValue('purchaseCodeError', '');
         }
     }, 300, [purchaseCodeValue]);
 

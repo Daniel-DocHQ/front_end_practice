@@ -308,70 +308,74 @@ const OrderDetails = ({ token, order, closeHandler }) => {
                             </Table>
                         </TableContainer>
                     </Grid>
-                    <Grid item xs={6}>
-                        <Typography variant="h6" className={classes.title}>
-                            Billing Details
-                        </Typography>
-                        <List>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Address Line 1</b>: {orderDetail.billing_address.address_1}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Address Line 2</b>: {!!orderDetail.billing_address.address_2 ? orderDetail.billing_address.address_2 : '-'}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Post Code</b>: {orderDetail.billing_address.postcode}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>County</b>: {orderDetail.billing_address.county}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Town</b>: {orderDetail.billing_address.town}
-                                </ListItemText>
-                            </ListItem>
-                        </List>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography variant="h6" className={classes.title}>
-                            Shipping Address
-                        </Typography>
-                        <List>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Address Line 1</b>: {orderDetail.shipping_address.address_1}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Address Line 2</b>: {!!orderDetail.shipping_address.address_2 ? orderDetail.shipping_address.address_2 : '-'}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Post Code</b>: {orderDetail.shipping_address.postcode}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>County</b>: {orderDetail.shipping_address.county}
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText>
-                                    <b>Town</b>: {orderDetail.shipping_address.town}
-                                </ListItemText>
-                            </ListItem>
-                        </List>
-                    </Grid>
+                    {orderDetail.source !== 'Pharmacy' && (
+                        <>
+                            <Grid item xs={6}>
+                                <Typography variant="h6" className={classes.title}>
+                                    Billing Details
+                                </Typography>
+                                <List>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>Address Line 1</b>: {orderDetail.billing_address.address_1}
+                                        </ListItemText>
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>Address Line 2</b>: {!!orderDetail.billing_address.address_2 ? orderDetail.billing_address.address_2 : '-'}
+                                        </ListItemText>
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>Post Code</b>: {orderDetail.billing_address.postcode}
+                                        </ListItemText>
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>County</b>: {orderDetail.billing_address.county}
+                                        </ListItemText>
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>Town</b>: {orderDetail.billing_address.town}
+                                        </ListItemText>
+                                    </ListItem>
+                                </List>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography variant="h6" className={classes.title}>
+                                    Shipping Address
+                                </Typography>
+                                <List>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>Address Line 1</b>: {orderDetail.shipping_address.address_1}
+                                        </ListItemText>
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>Address Line 2</b>: {!!orderDetail.shipping_address.address_2 ? orderDetail.shipping_address.address_2 : '-'}
+                                        </ListItemText>
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>Post Code</b>: {orderDetail.shipping_address.postcode}
+                                        </ListItemText>
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>County</b>: {orderDetail.shipping_address.county}
+                                        </ListItemText>
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <b>Town</b>: {orderDetail.shipping_address.town}
+                                        </ListItemText>
+                                    </ListItem>
+                                </List>
+                            </Grid>
+                        </>
+                    )}
                     <Grid item xs={12}>
                         <Grid container justify="space-between" alignItems="center">
                             <Grid item xs={7}>

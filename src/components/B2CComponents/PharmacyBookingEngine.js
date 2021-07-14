@@ -21,6 +21,7 @@ const AmberDay2 = 'SYN-UK-PCR-SNS-002';
 const AntigenFitToFly = 'FLX-UK-ANT-SNS-001';
 
 const PharmacyBookingEngine = () => {
+    const [shortToken, setShortToken] = useState();
 	const [products, setProducts] = useState([]);
 	const [timerStart, setTimerStart] = useState();
 	const [status, setStatus] = useState(); // { severity, message }
@@ -89,7 +90,7 @@ const PharmacyBookingEngine = () => {
 		);
 	}
 
-	return (
+    return (
 		<BigWhiteContainer>
             <Formik
                 initialValues={{
@@ -181,7 +182,7 @@ const PharmacyBookingEngine = () => {
                             travelTime,
                             passengers,
                             timezone: timezoneValue,
-                            testType: { id, sku, type },
+                            testType: { title, id, sku, type, price },
                             transportNumber,
                             transportType,
                             landingDate,
@@ -191,10 +192,75 @@ const PharmacyBookingEngine = () => {
                             vaccineType,
                             vaccineTypeName,
                             city,
+                            purchaseCode,
                             tocAccept,
                         } = values;
                         const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
                         const isPCR = sku === FIT_TO_FLY_PCR;
+                        let shortTokenValue = shortToken;
+                        if (!shortToken) {
+                            const passengersPhone = `${passengers[0].countryCode.label}${passengers[0].phone.trim()}`
+                            await adminService
+                                .createOrder({
+                                    billing_detail: {
+                                        name_on_card: `${passengers[0].firstName} ${passengers[0].lastName}`,
+                                        card_number: '4111111111111111',
+                                        expiry: `12/${moment().add(2, 'y').year().toString().slice(2)}`,
+                                        cvv: '123',
+                                        first_name: passengers[0].firstName,
+                                        last_name: passengers[0].lastName,
+                                        email: passengers[0].email,
+                                        date_of_birth: passengers[0].dateOfBirth,
+                                    },
+                                    billing_address: {
+                                        country: 'GB',
+                                        postcode: '',
+                                        address_1: '',
+                                        town: '',
+                                        telephone: passengersPhone,
+                                        county: '',
+                                    },
+                                    shipping_address: {
+                                        postcode: '',
+                                        country: 'GB',
+                                        address_1: '',
+                                        town: '',
+                                        telephone: passengersPhone,
+                                        county: '',
+                                    },
+                                    source: 'Pharmacy',
+                                    items: [
+                                        {
+                                            product_id: id,
+                                            title,
+                                            sku,
+                                            quantity: 1,
+                                            price,
+                                        },
+                                    ],
+                                    discount: purchaseCode,
+                                }).then(result => {
+                                    if (
+                                        result.success && result.order_details
+                                    ) {
+                                        shortTokenValue = result.order_details.short_token;
+                                        setShortToken(shortTokenValue);
+                                    } else {
+                                        setStatus({
+                                            severity: 'error',
+                                            message: result.message,
+                                        });
+                                        return;
+                                    }
+                                })
+                                .catch(({ error }) => {
+                                    setStatus({
+                                        severity: 'error',
+                                        message: error,
+                                    });
+                                    return;
+                                });
+                        }
                         const booking_users = Array.from(Array(numberOfPeople).keys()).map((item) => {
                             const {
                                 firstName,
@@ -215,6 +281,8 @@ const PharmacyBookingEngine = () => {
                                 country: 'GB',
                                 toc_accept: tocAccept,
                                 metadata: {
+                                    source: 'Pharmacy',
+                                    short_token: shortTokenValue,
                                     product_id: parseInt(id),
                                     passport_number: passportNumber,
                                     travel_date: moment(
