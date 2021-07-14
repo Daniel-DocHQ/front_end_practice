@@ -51,6 +51,7 @@ const BookingEngineForm = ({
         <Step3
             activePassenger={activePassenger}
             defaultCountryCode={defaultCountryCode}
+            isPharmacy={isPharmacy}
             isEdit={isEdit}
         />,
         <Step4

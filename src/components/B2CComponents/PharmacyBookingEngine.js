@@ -42,17 +42,22 @@ const PharmacyBookingEngine = () => {
 	];
 
 	const passengerInitialValues = {
-		fillWithBookingUser: '',
-		firstName: '',
-		lastName: '',
-		email: '',
-		countryCode: defaultCountryCode,
-		phone: '',
-		dateOfBirth: null,
-		ethnicity: '',
-		sex: '',
-		passportNumber: '',
-		passportNumberConfirmation: '',
+        fillWithBookingUser: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        countryCode: defaultCountryCode,
+        phone: '',
+        dateOfBirth: null,
+        ethnicity: '',
+        sex: '',
+        postal_code: '',
+        street_address: '',
+        extended_address: '',
+        locality: '',
+        region: '',
+        passportNumber: '',
+        passportNumberConfirmation: '',
 	};
 
 	function handleBack() {
@@ -221,12 +226,12 @@ const PharmacyBookingEngine = () => {
                                         county: '',
                                     },
                                     shipping_address: {
-                                        postcode: '',
+                                        postcode: passengers[0].postal_code,
                                         country: 'GB',
-                                        address_1: '',
-                                        town: '',
+                                        address_1: passengers[0].street_address,
+                                        town: passengers[0].locality,
                                         telephone: passengersPhone,
-                                        county: '',
+                                        county: passengers[0].region,
                                     },
                                     source: 'Pharmacy',
                                     items: [

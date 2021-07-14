@@ -145,7 +145,7 @@ const PatientInfo = ({ patient }) => {
     const sampleTaken = get(patient, 'metadata.sample_taken', '');
     const kitProvider = get(patient, 'metadata.kitProvider', '');
     const kitId = get(patient, 'metadata.kit_id', '');
-    const samplingDate = get(patient, 'metadata.date_sampled', '');
+    const samplingDate = get(patient, 'metadata.date_sampled', '') || get(patient, 'metadata.sample_date', '');
     const reportedDate = get(patient, 'metadata.date_reported', '');
 
     return (

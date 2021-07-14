@@ -482,7 +482,7 @@ const SubmitPatientResult = ({
     const sendResult = async (formData, isSampleTaken) => {
 		if (isSampleTaken) setLoading(true);
 		const body = formData;
-		body.date_sampled =  moment().format();
+		body.date_sampled = moment().format();
 		await bookingService.sendResult(token, appointmentId, body, currentPatient.id)
 			.then(result => {
 				if (isSampleTaken) {
