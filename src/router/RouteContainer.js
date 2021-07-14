@@ -240,11 +240,11 @@ const RouteHandler = () => {
 					<B2CDashboard />
 				</Layout>
 			</PrivateRoute>
-			<PrivateRoute path='/activate-kit' requiredRole='b2c'>
+			<Route path='/activate-kit' requiredRole='b2c'>
 				<Layout title="Book an appointment">
 					<PharmacyActivateTestKit />
 				</Layout>
-			</PrivateRoute>
+			</Route>
 			<PrivateRoute path='/b2c/order-test-kit' requiredRole='b2c'>
 				<Layout title='Purchase'>
 					<Purchase />
