@@ -546,7 +546,7 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
                 label: "Create Receipt",
             }),
             ports.data({
-                name: "receipt",
+                name: "data",
                 label: "Receipt Data",
             })
         ],
@@ -561,7 +561,7 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
                 label: "Update Receipt",
             }),
             ports.data({
-                name: "receipt",
+                name: "data",
                 label: "Receipt Data",
             })
         ],
