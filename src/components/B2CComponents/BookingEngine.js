@@ -275,7 +275,7 @@ const BookingEngine = () => {
 													source,
 													product_id: parseInt(id),
 													short_token,
-													order_id: orderId.toString(),
+													order_id: parseInt(orderId),
 													passport_number: passportNumber,
 													travel_date: moment(
 														new Date(

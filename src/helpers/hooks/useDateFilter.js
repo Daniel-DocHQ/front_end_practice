@@ -6,8 +6,8 @@ const useDateFilter = (appointments) => {
 	const today = new Date();
 	const todayTime = new Date(today.getTime()).setHours(0,0,0,0);
 	const todayDay = new Date().getDate();
-	const nextMonth = new Date (new Date ().setDate(todayDay + 31)).setHours(0,0,0,0);
-	const lastMonth = new Date (new Date ().setDate(todayDay - 31)).setHours(0,0,0,0);
+	// const nextMonth = new Date (new Date ().setDate(todayDay + 31)).setHours(0,0,0,0);
+	// const lastMonth = new Date (new Date ().setDate(todayDay - 31)).setHours(0,0,0,0);
 	const tomorrow = new Date(new Date ().setDate(todayDay + 1)).setHours(0,0,0,0)
 	const yesterdayTime = new Date(new Date ().setDate(todayDay - 1)).setHours(0,0,0,0);
 	const firstDayOfWeek = new Date(new Date ().setDate(todayDay - 7)).setHours(0,0,0,0);
@@ -20,7 +20,7 @@ const useDateFilter = (appointments) => {
 				case 'last month':
 					newAppointments = [...appointments].filter((appointment) => {
 						const appointmentDate = new Date(appointment.start_time).setHours(0,0,0,0);
-						return appointmentDate >= lastMonth && appointmentDate <= todayTime;
+						return appointmentDate <= todayTime;
 					});
 					break;
 				case 'last week':
@@ -51,7 +51,7 @@ const useDateFilter = (appointments) => {
 				case 'month':
 					newAppointments = [...appointments].filter((appointment) => {
 						const appointmentDate = new Date(appointment.start_time).setHours(0,0,0,0);
-						return appointmentDate >= todayTime && appointmentDate <= nextMonth;
+						return appointmentDate >= todayTime;
 					});
 					break;
 				default:

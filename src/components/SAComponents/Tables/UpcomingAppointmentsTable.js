@@ -133,7 +133,7 @@ const UpcomingAppointmentsTable = ({ appointments = [] }) => {
 										{format(appointmentStartTime, 'p')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.tableText }}>
-										{!!source ? source : type && (type === 'video_gp_dochq' ? 'DocHQ' : 'TUI')}
+										{!!source ? source : type && (type === 'video_gp_dochq' ? 'DocHQ' : type)}
 									</TableCell>
                                     <TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_users.length', '')}

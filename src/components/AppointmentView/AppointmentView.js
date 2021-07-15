@@ -1,8 +1,15 @@
 import React, { memo, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Box, Grid, Typography } from '@material-ui/core';
+import {
+    Box,
+    Grid,
+    List,
+    ListItem,
+    ListItemText,
+    Typography,
+} from '@material-ui/core';
 import { ToastsStore } from 'react-toasts';
-import { get } from 'lodash';
+import { get, startCase } from 'lodash';
 import { format } from 'date-fns';
 import DocButton from '../DocButton/DocButton';
 import getURLParams from '../../helpers/getURLParams';
@@ -13,18 +20,23 @@ import AppointmentNotes from './AppointmentNotes';
 import './AppointmentView.scss';
 
 const AppointmentView = (props) => {
+    const timezone = get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time');
     const [appointment, setAppointment] = useState();
+    const [loading, setLoading] = useState(false);
     const params = getURLParams(window.location.href);
 	const appointmentId = params['appointmentId'];
     const patients = get(appointment, 'booking_users', []);
     const notes = get(appointment, 'notes', []);
+    const statusChanges = get(appointment, 'status_changes', []) || [];
+    console.log(statusChanges);
     let history = useHistory();
 
     if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		history.push('/login');
 	}
-    const getAppointmentDetails = (appointmentId, token) => (
-        nurseSvc
+    const getAppointmentDetails = async (appointmentId, token) => {
+        setLoading(true);
+        await nurseSvc
             .getAppointmentDetails(appointmentId, token)
             .then(result => {
                 if (result.success && result.appointment) {
@@ -34,59 +46,75 @@ const AppointmentView = (props) => {
                 }
             })
             .catch(() => ToastsStore.error(`Cannot find appointment details`))
-    );
+        setLoading(false);
+    };
 
     useEffect(() => {
         if (appointmentId) {
             getAppointmentDetails(appointmentId, props.token)
         }
-    }, [appointmentId]);
+    }, []);
+
+    if (loading && !appointment) {
+		return (
+			<BigWhiteContainer>
+				<div className='row center'>
+					<LoadingSpinner />
+				</div>
+			</BigWhiteContainer>
+		);
+	}
 
 	return (
         <BigWhiteContainer>
-            {appointment ? (
-                    <Box px={8} py={4}>
-                        <Grid container direction="column" justify="space-between">
-                            <Grid item>
-                                <Grid container justify="space-between">
-                                    <Grid item xs={3}>
-                                        <AppointmentInfo appointment={appointment} />
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <AddressInfo appointment={appointment} />
-                                    </Grid>
+            {appointment && (
+                <Box px={8} py={4}>
+                    <Grid container direction="column" justify="space-between">
+                        <Grid item>
+                            <Grid container justify="space-between">
+                                <Grid item xs={3}>
+                                    <AppointmentInfo appointment={appointment} />
                                 </Grid>
-                            </Grid>
-                            <Grid item>
-                                <Grid container spacing={8}>
-                                    {patients.map((patient) => (
-                                        <Grid item xs={3}>
-                                            <PatientInfo patient={patient} />
-                                        </Grid>
-                                    ))}
+                                <Grid item xs={3}>
+                                    <AddressInfo appointment={appointment} />
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <AppointmentNotes notes={notes} />
-                        <Box display="flex" justifyContent="flex-end">
-                            <DocButton
-                                text='Send as email'
-                                color='pink'
-                            />
-                            <DocButton
-                                text='Download PDF'
-                                color='pink'
-                                style={{ marginLeft: 20 }}
-                            />
+                        <Grid item>
+                            <Grid container spacing={8}>
+                                {patients.map((patient) => (
+                                    <Grid item xs={3}>
+                                        <PatientInfo patient={patient} />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <AppointmentNotes notes={notes} />
+                    {!!statusChanges.length && (
+                        <Box>
+                            <Typography className="row-text"><b>Appointment Status Changes:</b></Typography>
+                            {statusChanges.map(({ changed_to, created_at }, indx) => (
+                                <Typography key={indx}>
+                                    <b>{startCase(changed_to.replace('_', ' ').toLowerCase())}</b> - {format(new Date(), 'dd/MM/yyyy pp')} ({timezone})
+                                </Typography>
+                            ))}
                         </Box>
+                    )}
+                    <Box display="flex" justifyContent="flex-end">
+                        <DocButton
+                            text='Send as email'
+                            color='pink'
+                        />
+                        <DocButton
+                            text='Download PDF'
+                            color='pink'
+                            style={{ marginLeft: 20 }}
+                        />
                     </Box>
-            ) : (
-                <div className='row center' style={{ height: '100vh', alignContent: 'center' }}>
-                    <LoadingSpinner />
-                </div>
+                </Box>
             )}
         </BigWhiteContainer>
-
 	);
 };
 
