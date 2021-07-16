@@ -594,7 +594,7 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             })
         ],
         outputs: ports => [
-            ports.bytes({
+            ports.data({
                 name: "data",
                 label: "Discount Data"
             })
