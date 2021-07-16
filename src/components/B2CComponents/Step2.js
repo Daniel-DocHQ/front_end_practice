@@ -99,7 +99,7 @@ const datePickerTheme = () => createMuiTheme({
 	},
 });
 
-const Step3 = ({ defaultTimezone, dropTimer, isPharmacy, timer }) => {
+const Step3 = ({ defaultTimezone, dropTimer, isPharmacy, timer, isEdit }) => {
 	const [showMore, setShowMore] = useState(false);
 	const [appointments, setAppointments] = useState([]);
 	const today = new Date().setHours(0, 0, 0, 0);
@@ -188,7 +188,7 @@ const Step3 = ({ defaultTimezone, dropTimer, isPharmacy, timer }) => {
 						const newAppointments = [...result.appointments].filter(({ start_time }) => new Date(start_time).setHours(0,0,0,0) === selectedDateTime);
 						if (new Date(selectedDate).setHours(0,0,0,0) === today) {
 							const in30min = new Date(new Date().getTime() + 30 * 60000).getTime();
-							setAppointments(newAppointments.filter(({ start_time }) => new Date(start_time).getTime() > in30min));
+							setAppointments(isEdit ? newAppointments : newAppointments.filter(({ start_time }) => new Date(start_time).getTime() > in30min));
 						} else {
 							setAppointments(newAppointments);
 						}
@@ -208,7 +208,7 @@ const Step3 = ({ defaultTimezone, dropTimer, isPharmacy, timer }) => {
 						const newAppointments = result.appointments;
 						if (new Date(selectedDate).setHours(0,0,0,0) === today) {
 							const in30min = new Date(new Date().getTime() + 30 * 60000).getTime();
-							setAppointments(newAppointments.filter(({ start_time }) => new Date(start_time).getTime() > in30min));
+							setAppointments(isEdit ? newAppointments : newAppointments.filter(({ start_time }) => new Date(start_time).getTime() > in30min));
 						} else {
 							setAppointments(newAppointments);
 						}

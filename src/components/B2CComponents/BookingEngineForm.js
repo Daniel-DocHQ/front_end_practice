@@ -42,6 +42,7 @@ const BookingEngineForm = ({
         <Step1 />,
         ...(isBookingSkip ? [] : [
             <Step2
+                isEdit={isEdit}
                 defaultTimezone={defaultTimezone}
                 isPharmacy={isPharmacy}
                 dropTimer={dropTimer}
