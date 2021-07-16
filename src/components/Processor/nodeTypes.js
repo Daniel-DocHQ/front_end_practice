@@ -584,6 +584,23 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ]
     })
     .addNodeType({
+        type: "getDiscountViaCode",
+        label: "Get Discount information by code",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.string({
+                name: "discountCode",
+                label: "Discount Code"
+            })
+        ],
+        outputs: ports => [
+            ports.bytes({
+                name: "data",
+                label: "Discount Data"
+            })
+        ]
+    })
+    .addNodeType({
         type: "logicBoolString",
         label: "Boolean string output",
         initalWidth: 160,
