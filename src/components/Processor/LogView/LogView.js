@@ -16,7 +16,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
 const processor = process.env.REACT_APP_PROCESSOR_URL;
-const processor_new = process.env.REACT_APP_JSON_API_URL;
+const processor_new = process.env.REACT_APP_API_URL;
 
 const LogView = ({task}) => {
     const [logs, setLogs] = useState();
@@ -91,7 +91,7 @@ const LogView = ({task}) => {
             }, {});
             console.log(data)
             axios({
-                url: `${processor_new}/processor/event/run`,
+                url: `${processor_new}/v1/processor/event/run`,
                 method: "POST",
                 data: {
                     organisation_id: data.organisation_id,
