@@ -368,7 +368,7 @@ const Step2 = ({
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <Field
                     name={`passengers[${activePassenger}].sex`}
-                    validate={(value) => (!value && get(touched, `passengers[${activePassenger}].sex`, false)) ? 'Select sex' : undefined}
+                    validate={(value) => (!value && !!touched && !!touched.passengers) ? 'Select sex' : undefined}
                 >
 					{({ field, form, meta }) => (
 						<FormControl
