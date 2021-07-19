@@ -1,13 +1,16 @@
+import 'date-fns';
 import React, { useEffect, useState, memo, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
+import DateFnsUtils from '@date-io/date-fns';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import PastAppointmentsTable from '../../components/SAComponents/Tables/PastAppointmentsTable';
 import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
 import ClaimableAppointmentsTable from '../../components/SAComponents/Tables/ClaimableAppointmentsTable';
 import AvailableAppointmentsTable from '../../components/SAComponents/Tables/AvailableAppointmentsTable';
+import DateRangeFilter from '../../components/DateRangeFilter/DateRangeFilter';
 
 const DoctorsManagement = props => {
 	const { logout } = useContext(AuthContext);
@@ -15,8 +18,8 @@ const DoctorsManagement = props => {
 	const [isLoading, setIsLoading] = useState(true);
 	const today = new Date();
 	today.setHours(0,0,0,0);
-	const start_time = new Date(new Date().setDate(today.getDate() - 50));
-	const end_time = new Date(today.setDate(today.getDate() + 50));
+	const [start_time, setStartTime] = useState(new Date(new Date().setDate(today.getDate() - 30)));
+	const [end_time, setEndTime] = useState(new Date(today.setDate(today.getDate() + 30)));
 	let history = useHistory();
 
 	const logoutUser = () => {
@@ -47,14 +50,22 @@ const DoctorsManagement = props => {
 				});
 			setIsLoading(false);
 		})();
-	}, []);
+	}, [start_time, end_time]);
 
 	return isLoading ? (
 		 <div className='row center' style={{ height: '100vh', alignContent: 'center' }}>
 			<LoadingSpinner />
 		</div>
 	) :(
-		<Grid container justify="space-between">
+        <Grid container justify="space-between">
+            <Grid item xs={12}>
+                <DateRangeFilter
+                    startTime={start_time}
+                setStartTime={setStartTime}
+                endTime={end_time}
+                setEndTime={setEndTime}
+            />
+            </Grid>
 			<Grid item xs={12}>
 				<UpcomingAppointmentsTable
 					appointments={appointments.filter(({ status, user }) => {
