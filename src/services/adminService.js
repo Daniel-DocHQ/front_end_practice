@@ -195,7 +195,7 @@ const adminService = {
 						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
 							resolve({
 								success: true,
-								dropboxes: response.data,
+								dropboxes: response.data.pickup_groups,
 							});
 						} else if (response.status === 200 && !response.data) {
 							resolve({
