@@ -862,6 +862,23 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ]
     })
     .addNodeType({
+        type: "getDropbox",
+        label: "Get Dropbox",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.string({
+                name: "dropbox",
+                label: "Dropbox ID",
+            })
+        ],
+        outputs: ports => [
+            ports.data({
+                name: "data",
+                label: "Dropbox Data",
+            })
+        ]
+    })
+    .addNodeType({
         type: "getBookingUserDataByKey",
         label: "Get Booking User Data by Key",
         initalWidth: 160,
