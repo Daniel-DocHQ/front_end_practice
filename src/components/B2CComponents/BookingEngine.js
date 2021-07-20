@@ -271,6 +271,7 @@ const BookingEngine = () => {
 												country: 'GB',
 												toc_accept: tocAccept,
 												locality: town,
+												product_id: parseInt(id),
 												metadata: {
 													source,
 													product_id: parseInt(id),

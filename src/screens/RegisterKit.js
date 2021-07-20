@@ -86,7 +86,7 @@ const RegisterKit = () => {
     const dateOfBirth = get(booking, 'booking_user.date_of_birth', '') || get(booking, 'booking_user.metadata.date_of_birth', '');
     const passportNumber = get(booking, 'booking_user.metadata.passport_number', '') || get(booking, 'booking_user.metadata.passportId', '');
     const email = get(booking, 'booking_user.email', '');
-    const productId = get(booking, 'booking_user.metadata.product_id', '');
+    const productId = get(booking, 'booking_user.product_id', '');
     const kitType = get(items.find(({ id }) => id === productId), 'title', '');
     const virtualProduct = items.find(({ type }) => type === 'Virtual')
     const swabMethod = get(virtualProduct, 'title', '');
