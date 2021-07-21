@@ -586,105 +586,105 @@ const SubmitPatientResult = ({
 					)}
 					{(kitIdSubmitted || customerNotThere) && (
 						<Grid item>
-							<div className='row space-between'>
-								<h3 className='no-margin'>{currentPatientName} - Sample Taken</h3>
-							</div>
-							<div style={{ paddingLeft: 10 }}>
-								<FormControl component='fieldset'>
-									<RadioGroup
-										aria-label='sample-taken'
-										name='sample-taken'
-										value={sampleTaken}
-										style={{ display: 'inline' }}
-										onChange={e => setSampleTaken(e.target.value)}
-									>
-										{!customerNotThere && (
-											<>
-												<FormControlLabel value='valid' control={<Radio />} label='Valid' />
-												<FormControlLabel value='invalid' control={<Radio />} label='Invalid' />
-											</>
-										)}
-										<FormControlLabel value='rejected' control={<Radio />} label='Rejected' />
-									</RadioGroup>
-								</FormControl>
-							</div>
-							{isSampleTakenValid && (
-								<div className='row flex-end'>
-									{loading ? (
-										<LoadingSpinner />
-									) : (
-										<DocButton
-											text='Submit'
-											disabled={!sampleTaken}
-											onClick={sendSampleTaken}
-											color={!!sampleTaken ? 'green' : 'disabled'}
-										/>
-									)}
+							{loading ? (
+								<div className='row center'>
+									<LoadingSpinner />
 								</div>
-							)}
-							{isSampleTakenNotValid && (
+							) : (
 								<>
-									<div className='row'>
-										<FormControl variant='filled' style={{ width: '100%' }}>
-											<InputLabel id='test-result-label'>Reason for {isSampleTakenRejected ? 'Rejected' : 'Invalid'}</InputLabel>
-											{isSampleTakenRejected ? (
-												<Select
-													labelId='test-result-label'
-													id='test-result'
-													label="Reason for Rejected"
-													onChange={e => setReasonForRejected(e.target.value)}
-													value={reasonForRejected}
-													required
-												>
-													<MenuItem value='Client not there'>Client not there</MenuItem>
-													<MenuItem value='Test not performed as instructed'>Test not performed as instructed</MenuItem>
-													<MenuItem value='Other'>Other</MenuItem>
-												</Select>
-											) : (
-												<Select
-													labelId='test-result-label'
-													id='test-result'
-													label="Reason for Invalid"
-													onChange={e => setReasonForRejected(e.target.value)}
-													value={reasonForRejected}
-													required
-												>
-													<MenuItem value='Test kit is damaged'>Test kit is damaged</MenuItem>
-													<MenuItem value='Other'>Other</MenuItem>
-												</Select>
-											)}
+									<div className='row space-between'>
+										<h3 className='no-margin'>{currentPatientName} - Sample Taken</h3>
+									</div>
+									<div style={{ paddingLeft: 10 }}>
+										<FormControl component='fieldset'>
+											<RadioGroup
+												aria-label='sample-taken'
+												name='sample-taken'
+												value={sampleTaken}
+												style={{ display: 'inline' }}
+												onChange={e => setSampleTaken(e.target.value)}
+											>
+												{!customerNotThere && (
+													<>
+														<FormControlLabel value='valid' control={<Radio />} label='Valid' />
+														<FormControlLabel value='invalid' control={<Radio />} label='Invalid' />
+													</>
+												)}
+												<FormControlLabel value='rejected' control={<Radio />} label='Rejected' />
+											</RadioGroup>
 										</FormControl>
 									</div>
-									{isOtherOption && (
-										<>
-											<div className='row space-between'>
-												<h3 className='no-margin'>
-													{isSampleTakenRejected ? 'Rejection Notes' : 'Invalidation Notes'}
-												</h3>
-											</div>
-											<TextInputElement
-												rows={4}
-												multiline
-												id='notes'
-												value={notes}
-												onChange={setNotes}
-												required={isSampleTakenNotValid}
-												placeholder={`Add Reason for ${isSampleTakenRejected ? 'Rejection' : 'Invalidation'}\nThis notes will be sent to the client`}
-											/>
-										</>
-									)}
-									<div className='row flex-end'>
-										{loading ? (
-											<LoadingSpinner />
-										) : (
+									{isSampleTakenValid && (
+										<div className='row flex-end'>
 											<DocButton
 												text='Submit'
-												disabled={isSampleTakenNotValid ? !resultNotes : false}
-												color={(isSampleTakenNotValid && !resultNotes) ? 'disabled' : 'green'}
+												disabled={!sampleTaken}
 												onClick={sendSampleTaken}
+												color={!!sampleTaken ? 'green' : 'disabled'}
 											/>
-										)}
-									</div>
+										</div>
+									)}
+									{(isSampleTakenNotValid) && (
+										<>
+											<div className='row'>
+												<FormControl variant='filled' style={{ width: '100%' }}>
+													<InputLabel id='test-result-label'>Reason for {isSampleTakenRejected ? 'Rejected' : 'Invalid'}</InputLabel>
+													{isSampleTakenRejected ? (
+														<Select
+															labelId='test-result-label'
+															id='test-result'
+															label="Reason for Rejected"
+															onChange={e => setReasonForRejected(e.target.value)}
+															value={reasonForRejected}
+															required
+														>
+															<MenuItem value='Client not there'>Client not there</MenuItem>
+															<MenuItem value='Test not performed as instructed'>Test not performed as instructed</MenuItem>
+															<MenuItem value='Other'>Other</MenuItem>
+														</Select>
+													) : (
+														<Select
+															labelId='test-result-label'
+															id='test-result'
+															label="Reason for Invalid"
+															onChange={e => setReasonForRejected(e.target.value)}
+															value={reasonForRejected}
+															required
+														>
+															<MenuItem value='Test kit is damaged'>Test kit is damaged</MenuItem>
+															<MenuItem value='Other'>Other</MenuItem>
+														</Select>
+													)}
+												</FormControl>
+											</div>
+											{isOtherOption && (
+												<>
+													<div className='row space-between'>
+														<h3 className='no-margin'>
+															{isSampleTakenRejected ? 'Rejection Notes' : 'Invalidation Notes'}
+														</h3>
+													</div>
+													<TextInputElement
+														rows={4}
+														multiline
+														id='notes'
+														value={notes}
+														onChange={setNotes}
+														required={isSampleTakenNotValid}
+														placeholder={`Add Reason for ${isSampleTakenRejected ? 'Rejection' : 'Invalidation'}\nThis notes will be sent to the client`}
+													/>
+												</>
+											)}
+											<div className='row flex-end'>
+												<DocButton
+													text='Submit'
+													disabled={isSampleTakenNotValid ? !resultNotes : false}
+													color={(isSampleTakenNotValid && !resultNotes) ? 'disabled' : 'green'}
+													onClick={sendSampleTaken}
+												/>
+											</div>
+										</>
+									)}
 								</>
 							)}
 							{!!sampleTakenStatus && !!sampleTakenStatus.severity && !!sampleTakenStatus.message && (
