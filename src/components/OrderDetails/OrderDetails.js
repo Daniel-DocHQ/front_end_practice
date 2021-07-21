@@ -632,7 +632,8 @@ const AppointmentDetails = ({
 	const appointmentStatus = appointment.status;
 	const statusChanges = get(appointment, 'status_changes', []) || [];
 	const isCompleted = appointmentStatus === 'COMPLETED';
-	const flightDate = get(appointment, 'booking_user.metadata.travel_date');
+    const flightDate = get(appointment, 'booking_user.metadata.travel_date');
+    const product_id = get(appointment, 'product_id');
 
 	return (
 		<>
