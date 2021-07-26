@@ -904,6 +904,10 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         label: "Create Eurofins order",
         initalWidth: 150,
         inputs: ports => [
+            ports.boolean({
+                name: "createEurofinsOrder",
+                label: "Create Order",
+            }),
             ports.data({
                 name: "data",
                 label: "Order data",
@@ -915,6 +919,11 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         label: "Create Eurofins transaction",
         initalWidth: 150,
         inputs: ports => [
+            ports.boolean({
+                name: "createEurofinsTransaction",
+                label: "Create Transaction",
+            }),
+            ports.string({
             ports.data({
                 name: "data",
                 label: "Transaction data",
