@@ -66,6 +66,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+const READABLE_STATUSES = {
+    ND: 'Not Detected',
+    DT: 'Detected',
+    IDT: 'Indetermined',
+};
+
 const OrderDetails = ({ token, order, closeHandler }) => {
 	const classes = useStyles();
 	const [orderDetail, setOrderDetail] = useState({});
@@ -563,7 +569,7 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
 								<Grid item>
 									<ListItemText>
 										<b>Test Result: </b>
-										<span className={result.toLowerCase()}>{result}</span>
+										<span className={result.toLowerCase()}>{!!READABLE_STATUSES[result] ? READABLE_STATUSES[result] : result}</span>
 									</ListItemText>
 								</Grid>
 								{(testType === 'Antigen' && isCompleted && !isEditShow) && (

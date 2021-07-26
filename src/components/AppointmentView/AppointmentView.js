@@ -96,7 +96,7 @@ const AppointmentView = (props) => {
                             <Typography className="row-text"><b>Appointment Status Changes:</b></Typography>
                             {statusChanges.map(({ changed_to, created_at }, indx) => (
                                 <Typography key={indx}>
-                                    <b>{startCase(changed_to.replace('_', ' ').toLowerCase())}</b> - {format(new Date(), 'dd/MM/yyyy pp')} ({timezone})
+                                    <b>{startCase(changed_to.replace('_', ' ').toLowerCase())}</b> - {format(new Date(created_at), 'dd/MM/yyyy pp')} ({timezone})
                                 </Typography>
                             ))}
                         </Box>
