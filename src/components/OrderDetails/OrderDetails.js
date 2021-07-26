@@ -87,6 +87,7 @@ const OrderDetails = ({ token, order, closeHandler }) => {
 	const refetchData = () => setReloadInfo((value) => !value);
 	const swabbingMethod = get(orderDetail, 'items', []).find(({ product: { type }}) => type === 'Virtual');
 	const orderItems = get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual');
+	const paymentStatus = get(orderDetail, 'payment_flag');
 
 	const fetchData = async () => {
 		if (!!order && !!order.id) {
@@ -406,11 +407,13 @@ const OrderDetails = ({ token, order, closeHandler }) => {
 										}
 									}).catch(() => ToastsStore.error('Something went wrong!'))}
 								/>
-								<LinkButton
-									color="green"
-									linkSrc={`/b2c/book-appointment?short_token=${order.id}&service=video_gp_dochq`}
-									text="Book an Appointment"
-								/>
+								{paymentStatus === "Complete" && (
+									<LinkButton
+										color="green"
+										linkSrc={`/b2c/book-appointment?short_token=${order.id}&service=video_gp_dochq`}
+										text="Book an Appointment"
+									/>
+								)}
 								<DocButton
 									color="pink"
 									style={{ marginLeft: 10 }}
