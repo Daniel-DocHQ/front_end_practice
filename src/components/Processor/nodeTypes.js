@@ -923,7 +923,6 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
                 name: "createEurofinsTransaction",
                 label: "Create Transaction",
             }),
-            ports.string({
             ports.data({
                 name: "data",
                 label: "Transaction data",
