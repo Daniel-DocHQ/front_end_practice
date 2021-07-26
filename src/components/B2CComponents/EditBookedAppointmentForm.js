@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Formik } from 'formik';
 import { get } from 'lodash';
 import moment from 'moment';
-import { format } from 'date-fns';
+import { differenceInHours, format } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
 import cityTimezones from 'city-timezones';
 import parsePhoneNumber from 'libphonenumber-js'
@@ -19,11 +19,14 @@ import COUNTRIES from '../../helpers/countries';
 import adminService from '../../services/adminService';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import CountdownTimer from '../CountdownTimer';
+import DocModal from '../DocModal/DocModal';
+import DocButton from '../DocButton/DocButton';
 
 const BookingEngine = () => {
 	const { token } = useContext(AuthContext);
 	const [items, setItems] = useState([]);
 	const [timerStart, setTimerStart] = useState();
+	const [isVisible, setIsVisible] = useState(false);
 	const [isLoading, setLoading] = useState(false);
 	const [appointment, setAppointment] = useState();
 	const params = getURLParams(window.location.href);
@@ -85,7 +88,10 @@ const BookingEngine = () => {
 				.getAppointmentDetails(appointmentId, token)
 				.then(result => {
 					if (result.success && result.appointment) {
-						setAppointment(result.appointment);
+						const { appointment } = result;
+						setAppointment(appointment);
+						if (differenceInHours(new Date(appointment.start_time), new Date()) <= 24)
+							setIsVisible(true);
 					} else {
 						ToastsStore.error(`Cannot find appointment details`);
 					}
@@ -121,6 +127,37 @@ const BookingEngine = () => {
 		<BigWhiteContainer>
 			{!!appointment && !!bookingUsersQuantity ? (
 				<>
+					<DocModal
+						isVisible={isVisible}
+						onClose={() => setIsVisible(false)}
+						content={
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'center',
+								}}
+							>
+								<p>
+									This appointment is due to start in less than 24h from now.<br />
+									Are you sure you want to edit/delete this appointment?
+								</p>
+								<div className="row space-between">
+									<LinkButton
+										color='green'
+										text='No'
+										linkSrc='/customer_services/order-list'
+										style={{ marginRight: '5px' }}
+									/>
+									<DocButton
+										color='pink'
+										text='Yes'
+										onClick={() => setIsVisible(false)}
+									/>
+								</div>
+							</div>
+						}
+					/>
 					<Formik
 						initialValues={{
 							...formInitialValues,
