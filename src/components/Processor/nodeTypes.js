@@ -899,6 +899,28 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             })
         ]
     })
+    .addNodeType({
+        type: "createEurofinsOrder",
+        label: "Create Eurofins order",
+        initalWidth: 150,
+        inputs: ports => [
+            ports.data({
+                name: "data",
+                label: "Order data",
+            })
+        ],
+    })
+    .addNodeType({
+        type: "createEurofinsTransaction",
+        label: "Create Eurofins transaction",
+        initalWidth: 150,
+        inputs: ports => [
+            ports.data({
+                name: "data",
+                label: "Transaction data",
+            })
+        ],
+    })
 }
 
 const PrettyPrint = ({data}) => {
