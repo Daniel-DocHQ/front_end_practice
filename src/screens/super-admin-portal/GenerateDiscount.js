@@ -6,7 +6,6 @@ import { ToastsStore } from 'react-toasts';
 import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
-import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import DiscountForm from '../../components/SAComponents/DiscountForm';
 
 const GenerateDiscount = ({ token, isAuthenticated, role }) => {
@@ -24,23 +23,24 @@ const GenerateDiscount = ({ token, isAuthenticated, role }) => {
 		<BigWhiteContainer>
 			<Formik
 				initialValues={{
-					discount: '',
-                    discountType: '',
+					code: '',
+                    type: '',
                     value: '',
-                    from: new Date(),
-                    to: new Date(),
+                    active_from: new Date(),
+                    active_to: new Date(),
                     uses: '',
 				}}
 				validationSchema={Yup.object().shape({
-					discount: Yup.string().required('Input discount unique code'),
-					discountType: Yup.string().required('Select discount type'),
+					code: Yup.string().required('Input discount unique code'),
+					type: Yup.string().required('Select discount type'),
 					value: Yup.number().required('Input value'),
-					from: Yup.date().required('Input start date'),
-					to: Yup.date().required('Select end date'),
+					active_from: Yup.date().required('Input start date'),
+					active_to: Yup.date().required('Select end date'),
                     uses: Yup.number().required('Input uses quantity'),
 				})}
-				onSubmit={async (values) => {
+				onSubmit={async (values, action) => {
 					await adminService.generateDiscount(token, {
+                        active: true,
                         ...values,
                     }).then((response) => {
 						if (response.success) {
@@ -50,6 +50,7 @@ const GenerateDiscount = ({ token, isAuthenticated, role }) => {
 						}
 					})
 					.catch((err) => ToastsStore.error(err.error));
+                    action.resetForm();
 				}}
 			>
 				<DiscountForm />

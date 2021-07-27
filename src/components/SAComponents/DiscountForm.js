@@ -31,7 +31,7 @@ const DiscountForm = ({
                 <Grid container justify="space-between" alignItems="flex-end" spacing={10}>
                     <Grid item xs={6}>
                         <div className="row">
-                            <Field name="discount" >
+                            <Field name="code" >
                                 {({ field, meta }) => (
                                     <Input
                                         error={!!meta.error && meta.touched}
@@ -48,7 +48,7 @@ const DiscountForm = ({
                             </Field>
                         </div>
                         <div className='row'>
-                            <Field name="discountType">
+                            <Field name="type">
                                 {({ field, form, meta }) => (
                                     <FormControl
                                         {...field}
@@ -68,8 +68,8 @@ const DiscountForm = ({
                                             style={{ display: 'inline' }}
                                             onChange={(({ target: { value } }) => form.setFieldValue(field.name, value))}
                                         >
-                                            <FormControlLabel value='Percentage' control={<Radio />} label='Percentage' />
-                                            <FormControlLabel value='Value' control={<Radio />} label='Value' />
+                                            <FormControlLabel value='percentage' control={<Radio />} label='Percentage' />
+                                            <FormControlLabel value='value' control={<Radio />} label='Value' />
                                         </RadioGroup>
                                         <FormHelperText>{(meta.error && meta.touched) && meta.error}</FormHelperText>
                                     </FormControl>
@@ -100,7 +100,7 @@ const DiscountForm = ({
                                         <h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
                                            Active from
                                         </h4>
-                                        <Field name="from">
+                                        <Field name="active_from">
                                             {({ field, form }) => (
                                                 <KeyboardDatePicker
                                                     {...field}
@@ -123,7 +123,7 @@ const DiscountForm = ({
                                         <h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
                                             to
                                         </h4>
-                                        <Field name="to">
+                                        <Field name="active_to">
                                             {({ field, form }) => (
                                                 <KeyboardDatePicker
                                                     {...field}
