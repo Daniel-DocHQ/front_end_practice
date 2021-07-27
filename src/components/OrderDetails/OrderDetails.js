@@ -739,9 +739,9 @@ const AppointmentDetails = ({
 					</ListItem>
 				)}
 			</List>
-			{!isCompleted && (
-				<Grid container justify="space-between">
-					<Grid item xs={9}>
+			<Grid container justify="space-between">
+				<Grid item xs={9}>
+					{!isCompleted && (
 						<DocButton
 							color="green"
 							style={{ marginLeft: 10 }}
@@ -750,7 +750,7 @@ const AppointmentDetails = ({
 								organisation_id: "1",
 								event: "appointment.booked",
 								context: {
-									"appointment_id": appointment.id
+									"appointment_id": appointment.id,
 								},
 							}, token).then(result => {
 								if (result.success) {
@@ -760,7 +760,27 @@ const AppointmentDetails = ({
 								}
 							}).catch(() => ToastsStore.error('Something went wrong!'))}
 						/>
-					</Grid>
+					)}
+					<DocButton
+						color="pink"
+						style={{ marginLeft: 10 }}
+						text="Rebook Appointment"
+						onClick={() => adminService.resendMessages({
+							organisation_id: "1",
+							event: "order.rebook",
+							context: {
+								"appointment_id": appointment.id,
+							},
+						}, token).then(result => {
+							if (result.success) {
+								ToastsStore.success('Message has been resent successfully!');
+							} else {
+								ToastsStore.error('Something went wrong!');
+							}
+						}).catch(() => ToastsStore.error('Something went wrong!'))}
+					/>
+				</Grid>
+				{!isCompleted && (
 					<Grid item xs={2}>
 						<LinkButton
 							color="green"
@@ -774,8 +794,8 @@ const AppointmentDetails = ({
 							onClick={() => setIsVisible(true)}
 						/>
 					</Grid>
-				</Grid>
-			)}
+				)}
+			</Grid>
 			<DocModal
 				isVisible={isVisible}
 				onClose={() => setIsVisible(false)}
