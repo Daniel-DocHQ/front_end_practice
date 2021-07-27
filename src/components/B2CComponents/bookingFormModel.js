@@ -243,14 +243,14 @@ const bookingFormModel = {
         },
         passportNumber: {
             name: 'passportNumber',
-            label: 'ID Document Number',
+            label: 'Passport/Travel ID document',
             id: 'passport-number',
             type: 'text',
             required: true,
         },
         passportNumberConfirmation: {
             name: 'passportNumberConfirmation',
-            label: 'ID Document Number Confirmation',
+            label: 'Passport/Travel ID document Confirmation',
             id: 'passport-number-confirmation',
             type: 'text',
             required: true,

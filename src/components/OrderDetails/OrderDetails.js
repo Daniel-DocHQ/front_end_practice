@@ -516,7 +516,7 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
 				</ListItem>
 				<ListItem>
 					<ListItemText>
-						<b>Passport Number</b>: {passportNumber}
+						<b>Passport/Travel ID document</b>: {passportNumber}
 					</ListItemText>
 				</ListItem>
 				{!!samplingDate && (

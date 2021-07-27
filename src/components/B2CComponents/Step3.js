@@ -406,7 +406,7 @@ const Step2 = ({
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                     <Field
                         name={`passengers[${activePassenger}].passportNumber`}
-                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].passportNumber`, false) ? 'Input ID Document number' : undefined)}
+                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].passportNumber`, false) ? 'Input Passport/Travel ID document' : undefined)}
                     >
                         {({ field, meta }) => (
                             <Input
@@ -436,9 +436,9 @@ const Step2 = ({
                                 validate={(value) => {
                                     let error;
                                     if (!value && get(touched, `passengers[${activePassenger}].passportNumberConfirmation`, false)) {
-                                        error = 'Input ID Document number confirmation';
+                                        error = 'Input Passport/Travel ID document confirmation';
                                     } else if (value !== passengers[activePassenger].passportNumber) {
-                                        error = 'ID Document Numbers should match';
+                                        error = 'Passport/Travel ID documents should match';
                                     }
                                     return error;
                                 }}
@@ -462,7 +462,7 @@ const Step2 = ({
                     <p style={{ maxWidth: '50%', fontWeight: 'bold' }} className="pink-text">
                         This document number will be shown on your test result certificate.<br />
                         Please enter the number of the document you will be using for travelling.<br />
-                        Please make sure you have entered the correct ID document number.<br />
+                        Please make sure you have entered the correct Passport/Travel ID document.<br />
                         After you submit this number, you will not be able to change it at any point.
                     </p>
                 </>
