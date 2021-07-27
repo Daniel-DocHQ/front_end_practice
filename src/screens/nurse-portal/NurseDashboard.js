@@ -1,5 +1,7 @@
 import React, { useEffect, useState, memo, useContext } from 'react';
+import { get } from 'lodash';
 import AppointmentTable from '../../components/Tables/AppointmentTable';
+import AvailableAppointments from '../../components/Tables/AvailableAppointments';
 import PastAppointmentsTable from '../../components/Tables/PastAppointmentsTable';
 import nurseService from '../../services/nurseService';
 import { useHistory } from 'react-router-dom';
@@ -19,6 +21,7 @@ const NurseDashboard = props => {
 	const [pastAppointments, setPastAppointments] = useState();
 	const [ongoingAppointmentId, setOngoingAppointmentId] = useState();
 	const [appointments, setAppointments] = useState();
+	const [availableAppointments, setAvailableAppointments] = useState();
 	const [claimableAppointments, setClaimableAppointments] = useState();
 	const [todayDoctors, setTodayDoctors] = useState();
 	const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +34,7 @@ const NurseDashboard = props => {
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		logoutUser();
 	}
+	console.log(props);
 
 	const getFutureAppointments = async () => {
 		await nurseService
@@ -39,6 +43,20 @@ const NurseDashboard = props => {
 				if (data.success) {
 					setGotAppointments(true);
 					setAppointments(data.appointments);
+				} else if (!data.authenticated) {
+					logoutUser();
+				} else {
+					ToastsStore.error('Error fetching appointments');
+				}
+			})
+			.catch(err => ToastsStore.error('Error fetching appointments'));
+	}
+	const getAvailableAppointments = async () => {
+		await nurseService
+			.getAvailableAppointments(get(props, 'role.id'), props.token)
+			.then(data => {
+				if (data.success) {
+					setAvailableAppointments(data.appointments);
 				} else if (!data.authenticated) {
 					logoutUser();
 				} else {
@@ -144,6 +162,7 @@ const NurseDashboard = props => {
 	const getAllInfo = async () => {
 		await setIsLoading(true);
 		await getFutureAppointments();
+		await getAvailableAppointments()
 		await getPastAppointments();
 		await getTodayDoctors();
 		await getClaimableAppointments();
@@ -186,6 +205,11 @@ const NurseDashboard = props => {
 					ongoingAppointmentId={ongoingAppointmentId}
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}
+				/>
+			</Grid>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<AvailableAppointments
+					appointments={availableAppointments}
 				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>

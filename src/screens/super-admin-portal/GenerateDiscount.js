@@ -10,6 +10,7 @@ import DiscountForm from '../../components/SAComponents/DiscountForm';
 
 const GenerateDiscount = ({ token, isAuthenticated, role }) => {
 	const { logout } = useContext(AuthContext);
+	const today = new Date();
 	let history = useHistory();
 	const logoutUser = () => {
 		logout();
@@ -26,8 +27,8 @@ const GenerateDiscount = ({ token, isAuthenticated, role }) => {
 					code: '',
                     type: '',
                     value: '',
-                    active_from: new Date(),
-                    active_to: new Date(),
+                    active_from: today,
+                    active_to: new Date().setFullYear(today.getFullYear() + 1),
                     uses: '',
 				}}
 				validationSchema={Yup.object().shape({
@@ -45,12 +46,12 @@ const GenerateDiscount = ({ token, isAuthenticated, role }) => {
                     }).then((response) => {
 						if (response.success) {
 							ToastsStore.success('Success');
+							action.resetForm();
 						} else {
 							ToastsStore.error(response.error);
 						}
 					})
 					.catch((err) => ToastsStore.error(err.error));
-                    action.resetForm();
 				}}
 			>
 				<DiscountForm />

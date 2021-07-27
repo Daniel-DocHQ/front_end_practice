@@ -16,7 +16,10 @@ import LinkButton from '../DocButton/LinkButton';
 import adminService from '../../services/adminService';
 import COUNTRIES from '../../helpers/countries';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
+import {
+	PRODUCTS_WITH_ADDITIONAL_INFO,
+	FIT_TO_FLY_PCR,
+} from '../../helpers/productsWithAdditionalInfo';
 import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
 

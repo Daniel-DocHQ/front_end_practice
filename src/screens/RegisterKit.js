@@ -53,7 +53,7 @@ const RegisterKit = () => {
     const kitType = get(items.find(({ id }) => id === productId), 'title', '');
     const virtualProduct = items.find(({ type }) => type === 'Virtual')
     const isHotelSwabMethod = get(virtualProduct, 'sku', '') === 'FACE-2-FACE-HOTEL';
-    const allSubmitted = !!(booking.booking_users || []).find((usr) => !!get(usr, 'metadata.date_sampled'));
+    const allSubmitted = !!((booking.booking_users || []).filter((usr) => !!get(usr, 'metadata.activated_by_user')).length);
 
     const handleSubmit = async ({
         kitId,
@@ -70,6 +70,7 @@ const RegisterKit = () => {
                 date_sampled: dateSampled,
                 first_name,
                 last_name,
+                activated_by_user: true,
             }
         }).then(res => {
             setStatus({
@@ -187,6 +188,7 @@ const RegisterKit = () => {
                             0,
                         )).format(),
                 });
+                await getData();
             }}
             validationSchema={Yup.object().shape({
                 userId: Yup.string().required('Select user'),

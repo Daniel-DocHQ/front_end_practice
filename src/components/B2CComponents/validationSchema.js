@@ -1,5 +1,8 @@
 import * as Yup from 'yup';
 import bookingFormModel from './bookingFormModel';
+import {
+	VIDEO_CONSULTATION_PRODUCTS
+} from '../../helpers/productsWithAdditionalInfo';
 
 const {
   formField: {
@@ -25,7 +28,7 @@ const useValidationSchema = (activeStep, isBookingSkip = false, isPharmacy = fal
         .test('maximum', 'You can\'t book more people than the quantity of test that you have bought',
           function checkNumberOfPeople(value) {
             const { testType } = this.parent;
-            return value <= testType.quantity;
+            return VIDEO_CONSULTATION_PRODUCTS.includes(testType.sku) ? true : value <= testType.quantity;
           }),
       }),
     }),

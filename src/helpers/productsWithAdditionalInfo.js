@@ -9,4 +9,9 @@ export const PRODUCTS_WITH_ADDITIONAL_INFO = [
     'SPORT-UK-PCR-SNS-003', //Test to Release PCR Sports
 ];
 
+export const VIDEO_CONSULTATION_PRODUCTS = [
+	'RECONSULT-ANT', // Antigen
+    'RECONSULT-PCR', // PCR
+];
+
 export const FIT_TO_FLY_PCR = 'SYN-UK-PCR-SNS-001';

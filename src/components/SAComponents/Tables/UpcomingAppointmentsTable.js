@@ -171,6 +171,12 @@ const UpcomingAppointmentsTable = ({ token }) => {
 								endTime={new Date(end_time)}
 								setEndTime={(date) => setEndTime(moment(date))}
 							/>
+							{appointments.length >= 1000 && (
+								<p className="no-margin red-bold-text">
+									Too many appointments available.<br />
+									Please reduce the selected time frame.
+								</p>
+							)}
 						</div>
 					)}
 				</div>

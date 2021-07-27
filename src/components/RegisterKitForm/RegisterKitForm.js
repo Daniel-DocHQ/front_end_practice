@@ -149,7 +149,7 @@ const RegisterKitForm = ({
                                                                 value={bookingUser.id}
                                                                 key={bookingUser.id}
                                                                 control={<Radio />}
-                                                                disabled={!!get(bookingUser, 'metadata.date_sampled')}
+                                                                disabled={!!get(bookingUser, 'metadata.activated_by_user')}
                                                                 style={{ width: 'max-content', paddingTop: 10 }}
                                                                 label={`${bookingUser.first_name} ${bookingUser.last_name}`}
                                                             />

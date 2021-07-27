@@ -168,7 +168,7 @@ const Step0 = ({
                         )}
                     </Field>
                     <h4 style={{ margin: '0px', marginTop: '15px', textAlign: 'left', fontWeight: 'normal' }}>
-                        Remember  that children under 18 years can only attend the online video appointment with an adult (18+) present from the same appointment booking.
+                        Remember that children under 16 years can only attend the online video appointment with a legal guardian (18+) present during the video consultation.
                     </h4>
                 </div>
             </div>
