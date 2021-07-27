@@ -45,6 +45,7 @@ import copyToClipboard from '../../helpers/copyToClipboard';
 import CertificatesAaron from '../Certificates/CertificatesAaron';
 import AppointmentNotes from '../AppointmentView/AppointmentNotes';
 import TextInputElement from '../../components/FormComponents/TextInputElement';
+import { differenceInHours } from 'date-fns/esm';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -786,6 +787,9 @@ const AppointmentDetails = ({
 							alignItems: 'center',
 						}}
 					>
+						{differenceInHours(new Date(appointment.start_time), new Date()) <= 24 && (
+							<p className="no-margin">This appointment is due to start in less than 24h from now.</p>
+						)}
 						<p>Are you sure you want to delete this appointment?</p>
 						<div className="row space-between">
 							<DocButton

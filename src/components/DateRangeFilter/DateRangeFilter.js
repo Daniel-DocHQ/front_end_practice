@@ -22,57 +22,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DateRangeFilter = ({startTime, setStartTime, endTime, setEndTime}) => {
+const DateRangeFilter = ({ startTime, setStartTime, endTime, setEndTime }) => {
       const classes = useStyles();
 
     return (
-    <div className={classes.root}>
+        <div className={classes.root}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Paper className={classes.paper}>
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="center"
-                    spacing ={2}
-                >
-                    <Grid item >
-                        <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
-                            format="dd/MM/yyyy"
-                            margin="normal"
-                            id="date-picker-inline"
-                            label="From"
-                            value={startTime}
-                            onChange={(date)=> {setStartTime(date)}}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
+                <Paper className={classes.paper}>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="center"
+                        spacing ={2}
+                    >
+                        <Grid item >
+                            <KeyboardDatePicker
+                                disableToolbar
+                                variant="inline"
+                                format="dd/MM/yyyy"
+                                margin="normal"
+                                id="date-picker-inline"
+                                label="From"
+                                value={startTime}
+                                onChange={(date)=> {setStartTime(date)}}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <KeyboardDatePicker
+                                disableToolbar
+                                variant="inline"
+                                format="dd/MM/yyyy"
+                                margin="normal"
+                                id="date-picker-inline"
+                                label="To"
+                                value={endTime}
+                                onChange={(date)=> {setEndTime(date)}}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <Typography variant="h5" gutterBottom>To</Typography>
-                    </Grid>
-                    <Grid item>
-                        <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
-                            format="dd/MM/yyyy"
-                            margin="normal"
-                            id="date-picker-inline"
-                            label="From"
-                            value={endTime}
-                            onChange={(date)=> {setEndTime(date)}}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
-                    </Grid>
-                </Grid>
-        </Paper>
+                </Paper>
             </MuiPickersUtilsProvider>
-    </div>
-    )
-}
+        </div>
+    );
+};
 
 export default DateRangeFilter;

@@ -60,11 +60,11 @@ const DoctorsManagement = props => {
         <Grid container justify="space-between">
             <Grid item xs={12}>
                 <DateRangeFilter
-                    startTime={start_time}
-                setStartTime={setStartTime}
-                endTime={end_time}
-                setEndTime={setEndTime}
-            />
+					startTime={start_time}
+					setStartTime={setStartTime}
+					endTime={end_time}
+					setEndTime={setEndTime}
+            	/>
             </Grid>
 			<Grid item xs={12}>
 				<UpcomingAppointmentsTable

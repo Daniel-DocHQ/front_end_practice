@@ -111,6 +111,23 @@ const SAHomepageCards = () => {
 				/>
 			),
 		},
+		{
+			display: true,
+			title: 'Generate Discount',
+			icon: <img src={BookAppointmentIcon} alt='Generate Discount' />,
+			content: (
+				<React.Fragment>
+					<p>Generate Discount</p>
+				</React.Fragment>
+			),
+			actions: (
+				<LinkButton
+					color='green'
+					text='View'
+					linkSrc='/super_admin/generate-discount'
+				/>
+			),
+		},
     ]);
     useEffect(() => {
         // Check if the logged in user has access to the processor system

@@ -37,6 +37,40 @@ const adminService = {
 			}
 		});
 	},
+	generateDiscount(token, data) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.post(`${baseUrl}/v1/discount`, data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: response.data.message || 'Something went wrong',
+							});
+						}
+					})
+					.catch(err => {
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	createOrder(body) {
 		return new Promise((resolve, reject) => {
 			if (body) {

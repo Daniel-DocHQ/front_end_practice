@@ -394,13 +394,19 @@ function sendResult(auth_token, appointment_id, body, patientId) {
 					if (response.status === 200 || response.data.status === 'ok') {
 						resolve({ success: true });
 					} else {
-						reject({
+						resolve({
 							success: false,
-							error: response.data.error,
+							error: response.data.message || 'Something went wrong',
 						});
 					}
 				})
-				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
 		} else if (typeof auth_token === 'undefined') {
 			reject({ success: false, error: 'Unable to authenticate user.', authenticated: false });
 		} else {

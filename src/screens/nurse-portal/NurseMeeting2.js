@@ -506,14 +506,17 @@ const SubmitPatientResult = ({
 					} else {
 						setSampleTakenStatus({
 							severity: 'error',
-							message: 'Failed to generate certificate, please try again.',
+							message: result.error,
 						});
 						ToastsStore.error('Failed');
 					}
 				}
 			})
-			.catch(() => {
-				console.log('error')
+			.catch((err) => {
+				setSampleTakenStatus({
+					severity: 'error',
+					message: err.error,
+				});
 			});
 		setLoading(false);
 	}
