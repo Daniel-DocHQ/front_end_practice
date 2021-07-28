@@ -8,6 +8,7 @@ import {
 	RadioGroup,
 	FormControlLabel,
 	FormControl,
+	FormHelperText,
 } from '@material-ui/core';
 import {
 	MuiPickersUtilsProvider,
@@ -281,16 +282,20 @@ const Step1 = () => {
 						<div style={{ maxWidth: '40%', minWidth: '320px' }}>
 							<Field
 								name={vaccineStatus.name}
+								validate={(value) => (!value) ? `Select ${vaccineStatus.label}` : undefined}
 							>
 								{({ field, form, meta }) => (
-									<FormControl component='fieldset' style={{ width: '100%' }}>
+									<FormControl
+										error={!!meta.error}
+										touched={meta.touched}
+										helperText={(meta.error && meta.touched) && meta.error}
+										component='fieldset'
+										style={{ width: '100%' }}
+									>
 										<FormLabel required={vaccineStatus.required} component='legend'>
 											{vaccineStatus.label}
 										</FormLabel>
 										<RadioGroup
-											error={!!meta.error}
-											touched={meta.touched}
-											helperText={(meta.error && meta.touched) && meta.error}
 											aria-label={vaccineStatus.name}
 											name={vaccineStatus.name}
 											value={field.value}
@@ -304,6 +309,7 @@ const Step1 = () => {
 											<FormControlLabel value='yes' control={<Radio />} label="Yes" />
 											<FormControlLabel value='no' control={<Radio />} label="No" />
 										</RadioGroup>
+										<FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
 									</FormControl>
 								)}
 							</Field>
@@ -315,16 +321,20 @@ const Step1 = () => {
 								<div style={{ maxWidth: '40%', minWidth: '320px' }}>
 									<Field
 										name={vaccineType.name}
+										validate={(value) => (!value) ? `Select ${vaccineType.label}` : undefined}
 									>
 										{({ field, form, meta }) => (
-											<FormControl component='fieldset' style={{ width: '100%' }}>
+											<FormControl
+												component='fieldset'
+												style={{ width: '100%' }}
+												error={!!meta.error && meta.touched}
+												touched={meta.touched}
+												helperText={(meta.error && meta.touched) && meta.error}
+											>
 												<FormLabel required={vaccineType.required} component='legend'>
 													{vaccineType.label}
 												</FormLabel>
 												<RadioGroup
-													error={!!meta.error}
-													touched={meta.touched}
-													helperText={(meta.error && meta.touched) && meta.error}
 													aria-label={vaccineType.name}
 													name={vaccineType.name}
 													value={field.value}
@@ -341,6 +351,7 @@ const Step1 = () => {
 													<FormControlLabel value="Sputnik" control={<Radio />} label="Sputnik V" />
 													<FormControlLabel value="Other" control={<Radio />} label="Other" />
 												</RadioGroup>
+												<FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
 											</FormControl>
 										)}
 									</Field>
@@ -370,16 +381,20 @@ const Step1 = () => {
 								<div style={{ maxWidth: '40%', minWidth: '320px' }}>
 									<Field
 										name={vaccineNumber.name}
+										validate={(value) => (!value) ? `Select ${vaccineNumber.label}` : undefined}
 									>
 										{({ field, form, meta }) => (
-											<FormControl component='fieldset' style={{ width: '100%' }}>
+											<FormControl
+												error={!!meta.error && meta.touched}
+												touched={meta.touched}
+												helperText={(meta.error && meta.touched) && meta.error}
+												component='fieldset'
+												style={{ width: '100%' }}
+											>
 												<FormLabel required={vaccineNumber.required} component='legend'>
 													{vaccineNumber.label}
 												</FormLabel>
 												<RadioGroup
-													error={!!meta.error}
-													touched={meta.touched}
-													helperText={(meta.error && meta.touched) && meta.error}
 													aria-label={vaccineNumber.name}
 													name={vaccineNumber.name}
 													value={field.value}
@@ -392,6 +407,7 @@ const Step1 = () => {
 													<FormControlLabel value="One dose of vaccine" control={<Radio />} label="One dose of vaccine" />
 													<FormControlLabel value="Two doses of vaccine" control={<Radio />} label="Two doses of vaccine" />
 												</RadioGroup>
+												<FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
 											</FormControl>
 										)}
 									</Field>

@@ -32,10 +32,10 @@ const bookingFormModel = {
         landingTime: new Date(),
         transportNumber: '',
         transportType: 'Flight',
-        vaccineStatus: 'no',
-        vaccineNumber: 'One dose of vaccine',
+        vaccineStatus: '',
+        vaccineNumber: '',
         vaccineTypeName: '',
-        vaccineType: 'Pfizer',
+        vaccineType: '',
         purchaseCode: '',
     },
     formField: {

@@ -282,14 +282,11 @@ const Step2 = ({
                                 name={`passengers[${activePassenger}].dateOfBirth`}
                                 validate={(value) => {
                                     let error;
-                                    const tchd = get(touched, `passengers[${activePassenger}].dateOfBirth`, false);
-                                    if (tchd) {
-                                        const date = moment(value);
-                                        if (!value && tchd) {
-                                            error = 'Input date of birth';
-                                        } else if (!date.isValid()) {
-                                            error = 'Invalid Date';
-                                        }
+                                    const date = moment(value);
+                                    if (!value) {
+                                        error = 'Input date of birth';
+                                    } else if (!date.isValid()) {
+                                        error = 'Invalid Date';
                                     }
                                     return error;
                                 }}

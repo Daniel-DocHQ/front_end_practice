@@ -110,7 +110,7 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 						<div className='row no-margin'>
 							<p>
 								<strong>Date Of Birth:&nbsp;</strong>
-								{format(new Date(dateOfBirth), 'dd/MM/yyyy')}
+								{format(dateOfBirth, 'dd/MM/yyyy')}
 							</p>
 						</div>
 						<div className='row no-margin'>
