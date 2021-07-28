@@ -28,7 +28,7 @@ const GenerateDiscount = ({ token, isAuthenticated, role }) => {
                     type: '',
                     value: '',
                     active_from: today,
-                    active_to: new Date().setFullYear(today.getFullYear() + 1),
+                    active_to: new Date(new Date().setFullYear(today.getFullYear() + 1)),
                     uses: '',
 				}}
 				validationSchema={Yup.object().shape({
