@@ -33,6 +33,7 @@ const BookingEngine = () => {
 	const [status, setStatus] = useState(); // { severity, message }
 	const [isLoading, setLoading] = useState(false);
 	const [activeStep, setActiveStep] = useState(0);
+	const [createdAppointmentId, setCreatedAppointmentId] = useState();
 	const [activePassenger, setActivePassenger] = useState(0);
 	const { formInitialValues } = bookingFormModel;
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
@@ -332,6 +333,7 @@ const BookingEngine = () => {
 												if (result.success && result.confirmation) {
 													handleNext();
 													setTimerStart();
+													setCreatedAppointmentId(result.confirmation.id);
 												} else {
 													setStatus({
 														severity: 'error',
@@ -388,6 +390,7 @@ const BookingEngine = () => {
 									steps={steps}
 									items={items}
 									timer={timerStart}
+									createdAppointmentId={createdAppointmentId}
 									isBookingSkip={isBookingSkip}
 									totalAvailableQuantity={totalAvailableQuantity}
 									defaultCountryCode={defaultCountryCode}

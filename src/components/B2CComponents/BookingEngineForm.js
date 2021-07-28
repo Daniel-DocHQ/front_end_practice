@@ -24,6 +24,7 @@ const BookingEngineForm = ({
     status,
     dropTimer,
     timer,
+    createdAppointmentId,
     isPharmacy = false,
     isBookingSkip = false,
     totalAvailableQuantity = 0,
@@ -87,9 +88,9 @@ const BookingEngineForm = ({
                                 {isLastStep ? (
                                     <>
                                         <LinkButton
-                                            text='Back to Home'
+                                            text={isBookingSkip ? 'Register your kit' : 'Back to Home'}
                                             color='green'
-                                            linkSrc={isEdit ? '/customer_services/dashboard' : process.env.REACT_APP_WEBSITE_LINK}
+                                            linkSrc={isBookingSkip ? `/register-kit/${createdAppointmentId}` : isEdit ? '/customer_services/dashboard' : process.env.REACT_APP_WEBSITE_LINK}
                                         />
                                         {(totalAvailableQuantity > numberOfPeople && !isEdit) && (
                                             <DocButton
