@@ -554,7 +554,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/search?q=status:${status} AND start_time:[${start_time} TO ${end_time}]`,
+					url: `${bookingUrl}/search?q=status:${status} AND start_time:[${start_time} TO ${end_time}]&inc_practitioner_name=1`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {

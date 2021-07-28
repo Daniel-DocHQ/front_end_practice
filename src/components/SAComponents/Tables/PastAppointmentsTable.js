@@ -70,13 +70,13 @@ const PastAppointmentsTable = ({ token }) => {
         (async () => {
 			setIsLoading(true);
 			await adminService
-				.getAllAppointments({
+				.getAppointmentsSearch({
 					start_time: start_time.utc(0).startOf('day').format(),
 					end_time: end_time.utc(0).endOf('day').format(),
-				}, token)
+				},'COMPLETED', token)
 				.then(data => {
 					if (data.success) {
-						setAppointments(data.appointments.filter(({ status }) => status.toLowerCase() === 'completed'));
+						setAppointments(data.appointments);
 					} else setAppointments([]);
 				})
 				.catch(err => {
