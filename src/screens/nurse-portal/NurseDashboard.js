@@ -23,11 +23,11 @@ const NurseDashboard = props => {
 	const [gotClaimable, setGotClaimable] = useState(false);
 	const [pastAppointments, setPastAppointments] = useState();
 	const [ongoingAppointmentId, setOngoingAppointmentId] = useState();
-	const [appointments, setAppointments] = useState();
-	const [availableAppointments, setAvailableAppointments] = useState();
-	const [claimableAppointments, setClaimableAppointments] = useState();
+	const [appointments, setAppointments] = useState([]);
+	const [availableAppointments, setAvailableAppointments] = useState([]);
+	const [claimableAppointments, setClaimableAppointments] = useState([]);
 	const [todayDoctors, setTodayDoctors] = useState();
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 	let history = useHistory();
 
 	const logoutUser = () => {
@@ -169,14 +169,12 @@ const NurseDashboard = props => {
 	}
 
 	const getAllInfo = async () => {
-		await setIsLoading(true);
 		await getFutureAppointments();
 		await getAvailableAppointments()
 		await getPastAppointments();
 		await getTodayDoctors();
 		await getClaimableAppointments();
 		await getPractitionerInfo();
-		await setIsLoading(false);
 	};
 
 	useEffect(() => {
@@ -216,13 +214,11 @@ const NurseDashboard = props => {
 					appointments={appointments}
 				/>
                 </Grid>
-            {(availableAppointments.length != 0 && 
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<AvailableAppointments
 					appointments={availableAppointments}
 				/>
             </Grid>
-            )}
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<PastAppointmentsTable appointments={pastAppointments} />
 			</Grid>
