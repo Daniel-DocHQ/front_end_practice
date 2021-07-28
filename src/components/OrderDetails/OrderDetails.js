@@ -767,7 +767,7 @@ const AppointmentDetails = ({
 						text="Rebook Appointment"
 						onClick={() => adminService.resendMessages({
 							organisation_id: "1",
-							event: "order.rebook",
+							event: "appointment.rebook",
 							context: {
 								"appointment_id": appointment.id,
 							},
