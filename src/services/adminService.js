@@ -548,6 +548,45 @@ const adminService = {
 			}
 		});
 	},
+	getAppointmentsSearch(dateRange, status, token) {
+		const { start_time, end_time } = dateRange;
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${bookingUrl}/search?q=status:${status} AND start_time:[${start_time} TO ${end_time}]`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								appointments: response.data,
+							});
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+							resolve({
+								success: true,
+								appointments: [],
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to retrieve appointments.',
+							});
+						}
+					})
+					.catch(err => {
+						console.log(err);
+						reject({
+							success: false,
+						});
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getAllAppointments(dateRange, token) {
 		const { start_time, end_time } = dateRange;
 		return new Promise((resolve, reject) => {

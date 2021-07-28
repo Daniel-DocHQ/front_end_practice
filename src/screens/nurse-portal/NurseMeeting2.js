@@ -19,6 +19,7 @@ import {
 	Tooltip,
 	Divider,
 } from '@material-ui/core';
+import { differenceInYears } from 'date-fns/esm';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Alert } from '@material-ui/lab';
@@ -232,7 +233,6 @@ const PatientDetails = ({
 	isSpaceBetweenPhoneBox,
 }) => {
 	const linkRef = useRef(null);
-	const alternativeLinkRef = useRef(null);
 	const isManyPatients = patients.length > 1 || isAntigenType;
 	const [checked, setChecked] = useState(!isJoined);
 
@@ -302,9 +302,12 @@ const PatientDetails = ({
 					{isManyPatients ? (
 						patients.map((item, indx) => (
 							!!item.last_name && !!item.first_name && (
-								<div key={indx} className='row space-between no-margin'>
+								<div key={indx} className='row space-between no-margin align-items'>
 									<p className='tab-row-text title-info'>Full Name Client {indx + 1}:</p>
-									<p className='tab-row-text'>{item.first_name} {item.last_name}</p>
+									<div>
+										<p className='tab-row-text'>{item.first_name} {item.last_name}</p>
+										{differenceInYears(new Date(), new Date(item.date_of_birth)) < 16 && (<span className="pink-text"> (minor)</span>)}
+									</div>
 								</div>
 							)
 						))
@@ -312,7 +315,10 @@ const PatientDetails = ({
 						!!patient.first_name && !!patient.last_name && (
 							<div className='row space-between no-margin'>
 								<p className='tab-row-text title-info'>Full Name:</p>
-								<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
+								<div>
+									<p className='tab-row-text'>{patient.first_name} {patient.last_name}</p>
+									{differenceInYears(new Date(), new Date(patient.date_of_birth)) < 16 && (<span className="pink-text"> (minor)</span>)}
+								</div>
 							</div>
 						)
 					)}

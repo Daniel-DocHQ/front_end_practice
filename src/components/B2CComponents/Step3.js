@@ -88,7 +88,7 @@ const Step2 = ({
 		<React.Fragment>
             {(!!bookingUsers.length && !isEdit) && (
                 <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                    <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                    <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                         <Field
                             name={`passengers[${activePassenger}].fillWithBookingUser`}
                         >
@@ -136,7 +136,7 @@ const Step2 = ({
                 </div>
             )}
             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                     <Field name={`passengers[${activePassenger}].firstName`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].firstName`, false)) ? 'Input first name' : undefined}>
                         {({ field, meta }) => (
                             <Input
@@ -151,7 +151,7 @@ const Step2 = ({
                 </div>
 			</div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-				<div style={{ maxWidth: '40%', minWidth: '320px' }}>
+				<div style={{ maxWidth: '40%', minWidth: '340px' }}>
                     <Field name={`passengers[${activePassenger}].lastName`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].lastName`, false)) ? 'Input last name' : undefined}>
                         {({ field, meta }) => (
                             <Input
@@ -166,7 +166,7 @@ const Step2 = ({
                 </div>
 			</div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-				<div style={{ maxWidth: '40%', minWidth: '320px' }}>
+				<div style={{ maxWidth: '40%', minWidth: '340px' }}>
                     <Field
                         name={`passengers[${activePassenger}].email`}
                         validate={(value) => {
@@ -193,7 +193,7 @@ const Step2 = ({
                     </Field>
                 </div>
 			</div>
-			<div className='row' style={{ flexWrap: 'wrap', width: '60%', alignItems: 'self-start' }}>
+			<div className='row' style={{ flexWrap: 'wrap', alignItems: 'self-start' }}>
 				<div style={{ maxWidth: '50%', marginRight: 30 }}>
                     <Field
                         name={`passengers[${activePassenger}].countryCode`}
@@ -275,7 +275,7 @@ const Step2 = ({
                 </div>
 		    </div>
             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                     <ThemeProvider theme={pickerTheme}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <Field
@@ -319,7 +319,7 @@ const Step2 = ({
                 </div>
             </div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                     <Field name={`passengers[${activePassenger}].ethnicity`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].ethnicity`, false)) ? 'Input ethnicity' : undefined}>
                         {({ field, meta }) => (
                             <FormControl variant='filled' style={{ width: '100%' }}>
@@ -403,7 +403,7 @@ const Step2 = ({
                 {passportNumber.label}
             </h4>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                     <Field
                         name={`passengers[${activePassenger}].passportNumber`}
                         validate={(value) => (!value && get(touched, `passengers[${activePassenger}].passportNumber`, false) ? 'Input Passport/Travel ID document' : undefined)}
@@ -430,7 +430,7 @@ const Step2 = ({
 						{passportNumberConfirmation.label}
 					</h4>
                     <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                             <Field
                                 name={`passengers[${activePassenger}].passportNumberConfirmation`}
                                 validate={(value) => {
@@ -473,7 +473,7 @@ const Step2 = ({
 						Address Information
 					</h4>
                     <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                             <Field name={`passengers[${activePassenger}].postal_code`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].postal_code`, false)) ? 'Input postcode' : undefined}>
                                 {({ field, meta }) => (
                                     <Input
@@ -488,7 +488,7 @@ const Step2 = ({
                         </div>
                     </div>
                     <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                             <Field name={`passengers[${activePassenger}].street_address`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].street_address`, false)) ? 'Input address' : undefined}>
                                 {({ field, meta }) => (
                                     <Input
@@ -503,7 +503,7 @@ const Step2 = ({
                         </div>
                     </div>
                     <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                             <Field name={`passengers[${activePassenger}].extended_address`}>
                                 {({ field, meta }) => (
                                     <Input
@@ -518,7 +518,7 @@ const Step2 = ({
                         </div>
                     </div>
                     <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                             <Field name={`passengers[${activePassenger}].locality`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].locality`, false)) ? 'Input city' : undefined}>
                                 {({ field, meta }) => (
                                     <Input
@@ -533,7 +533,7 @@ const Step2 = ({
                         </div>
                     </div>
                     <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                             <Field name={`passengers[${activePassenger}].region`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].region`, false)) ? 'Input county' : undefined}>
                                 {({ field, meta }) => (
                                     <Input

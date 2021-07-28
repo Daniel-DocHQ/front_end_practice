@@ -243,10 +243,10 @@ const PastAppointmentsTable = ({ token }) => {
                                     <TableCell style={styles.tableText}>
                                         <p>No appointments to display</p>
                                     </TableCell>
-                                    <TableCell/>
-                                    <TableCell/>
-                                    <TableCell/>
-                                    <TableCell/>
+                                    <TableCell />
+                                    <TableCell />
+                                    <TableCell />
+                                    <TableCell />
                                     <TableCell />
                                     <TableCell />
                                     <TableCell />

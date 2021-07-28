@@ -69,27 +69,25 @@ const AppointmentView = (props) => {
         <BigWhiteContainer>
             {appointment && (
                 <Box px={8} py={4}>
-                    <Grid container direction="column" justify="space-between">
-                        <Grid item>
-                            <Grid container justify="space-between">
-                                <Grid item xs={3}>
-                                    <AppointmentInfo appointment={appointment} />
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <AddressInfo appointment={appointment} />
-                                </Grid>
+                    <Box pb={6}>
+                        <Grid container justify="space-between">
+                            <Grid item xs={3}>
+                                <AppointmentInfo appointment={appointment} />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <AddressInfo appointment={appointment} />
                             </Grid>
                         </Grid>
-                        <Grid item>
-                            <Grid container spacing={8}>
-                                {patients.map((patient) => (
-                                    <Grid item xs={3}>
-                                        <PatientInfo patient={patient} />
-                                    </Grid>
-                                ))}
-                            </Grid>
+                    </Box>
+                    <Box pb={6}>
+                        <Grid container spacing={8}>
+                            {patients.map((patient) => (
+                                <Grid item xs={3}>
+                                    <PatientInfo patient={patient} />
+                                </Grid>
+                            ))}
                         </Grid>
-                    </Grid>
+                    </Box>
                     <AppointmentNotes notes={notes} />
                     {!!statusChanges.length && (
                         <Box>
