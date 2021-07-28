@@ -1,5 +1,6 @@
 import React, { useEffect, useState, memo, useContext } from 'react';
 import { get } from 'lodash';
+import moment from 'moment';
 import AppointmentTable from '../../components/Tables/AppointmentTable';
 import AvailableAppointments from '../../components/Tables/AvailableAppointments';
 import PastAppointmentsTable from '../../components/Tables/PastAppointmentsTable';
@@ -14,6 +15,8 @@ import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 const NurseDashboard = props => {
+	const today = moment();
+	const month = moment().add(30, 'day');
 	const { logout } = useContext(AuthContext);
 	const [gotAppointments, setGotAppointments] = useState(false);
 	const [gotPastAppointments, setGotPastAppointments] = useState(false);
@@ -34,7 +37,6 @@ const NurseDashboard = props => {
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		logoutUser();
 	}
-	console.log(props);
 
 	const getFutureAppointments = async () => {
 		await nurseService
@@ -53,7 +55,14 @@ const NurseDashboard = props => {
 	}
 	const getAvailableAppointments = async () => {
 		await nurseService
-			.getAvailableAppointments(get(props, 'role.id'), props.token)
+			.getAvailableAppointments(
+				{
+					start_time: today.utc(0).startOf('day').format(),
+					end_time: month.utc(0).endOf('day').format(),
+				},
+				get(props, 'role.id'),
+				props.token,
+			)
 			.then(data => {
 				if (data.success) {
 					setAvailableAppointments(data.appointments);

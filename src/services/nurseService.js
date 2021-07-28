@@ -37,12 +37,13 @@ const nurseSvc = {
 			}
 		});
 	},
-	getAvailableAppointments(userId, token) {
+	getAvailableAppointments(dateRange, userId, token) {
+		const { start_time, end_time } = dateRange;
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${baseUrl}/search?q=user:${userId} AND status:AVAILABLE`,
+					url: `${baseUrl}/search?q=user:${userId} AND status:AVAILABLE AND start_time:[${start_time} TO ${end_time}]`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
