@@ -107,14 +107,12 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 								{countryCode.label}{phone.trim()}
 							</p>
 						</div>
-						{dateOfBirth && (
-							<div className='row no-margin'>
-								<p>
-									<strong>Date Of Birth:&nbsp;</strong>
-									{format(dateOfBirth, 'dd/MM/yyyy')}
-								</p>
-							</div>
-						)}
+						<div className='row no-margin'>
+							<p>
+								<strong>Date Of Birth:&nbsp;</strong>
+								{format(new Date(dateOfBirth), 'dd/MM/yyyy')}
+							</p>
+						</div>
 						<div className='row no-margin'>
 							<p>
 								<strong>Ethnicity:&nbsp;</strong>
