@@ -53,7 +53,7 @@ const RegisterKit = () => {
     const kitType = get(items.find(({ id }) => id === productId), 'title', '');
     const virtualProduct = items.find(({ type }) => type === 'Virtual')
     const isHotelSwabMethod = get(virtualProduct, 'sku', '') === 'FACE-2-FACE-HOTEL';
-    const allSubmitted = !!((booking.booking_users || []).filter((usr) => !!get(usr, 'metadata.activated_by_user')).length);
+    const allSubmitted = (booking.booking_users || []).filter((usr) => !get(usr, 'metadata.activated_by_user', false)).length === 0;
 
     const handleSubmit = async ({
         kitId,
