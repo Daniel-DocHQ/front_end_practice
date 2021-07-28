@@ -215,12 +215,14 @@ const NurseDashboard = props => {
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}
 				/>
-			</Grid>
+                </Grid>
+            {(availableAppointments.length != 0 && 
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<AvailableAppointments
 					appointments={availableAppointments}
 				/>
-			</Grid>
+            </Grid>
+            )}
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<PastAppointmentsTable appointments={pastAppointments} />
 			</Grid>
