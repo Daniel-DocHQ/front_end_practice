@@ -173,7 +173,7 @@ const CertificatesAaron = ({
 			setAttemptedSubmit(true);
 		}
 	}
-	const updatePatientInfo = (body) => bookingService.sendResult(token, appointmentId, body, patientId);
+	const updatePatientInfo = (body) => bookingService.sendResult(token, appointmentId, body, patientId).catch(err => console.log(err));
 
 	function sendResult(formData) {
 		const body = formData;
