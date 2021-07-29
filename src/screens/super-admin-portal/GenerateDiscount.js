@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { Alert } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
 import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
@@ -11,6 +12,7 @@ import DiscountForm from '../../components/SAComponents/DiscountForm';
 const GenerateDiscount = ({ token, isAuthenticated, role }) => {
 	const { logout } = useContext(AuthContext);
 	const today = new Date();
+	const [status, setStatus] = useState(); // { severity, message }
 	let history = useHistory();
 	const logoutUser = () => {
 		logout();
@@ -39,23 +41,30 @@ const GenerateDiscount = ({ token, isAuthenticated, role }) => {
 					active_to: Yup.date().required('Select end date'),
                     uses: Yup.number().required('Input uses quantity'),
 				})}
-				onSubmit={async (values, action) => {
+				onSubmit={async (values) => {
 					await adminService.generateDiscount(token, {
                         active: true,
                         ...values,
                     }).then((response) => {
 						if (response.success) {
-							ToastsStore.success('Success');
-							action.resetForm();
+							setStatus({ severity: 'success', message: 'Discount successfully generated.' });
 						} else {
 							ToastsStore.error(response.error);
+							setStatus({ severity: 'error', message: response.error });
 						}
 					})
-					.catch((err) => ToastsStore.error(err.error));
+					.catch((err) => setStatus({ severity: 'error', message: err.error }));
 				}}
 			>
 				<DiscountForm />
 			</Formik>
+			{typeof status !== 'undefined' && (
+				<div className='row center'>
+					<Alert severity={status.severity} variant='outlined'>
+						{status.message}
+					</Alert>
+				</div>
+			)}
 		</BigWhiteContainer>
 	);
 };

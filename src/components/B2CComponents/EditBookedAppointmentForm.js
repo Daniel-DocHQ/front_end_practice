@@ -260,6 +260,7 @@ const BookingEngine = () => {
 									landingDate,
 									landingTime,
 									transportNumber,
+									timezone
 								} = values;
 								const booking_users = passengers.map(({
 									firstName,
@@ -274,6 +275,7 @@ const BookingEngine = () => {
 									...rest
 								}) => ({
 									...rest,
+									tz_location: timezone,
 									first_name: firstName,
 									last_name: lastName,
 									date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),

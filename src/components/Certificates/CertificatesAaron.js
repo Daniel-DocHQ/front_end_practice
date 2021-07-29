@@ -175,7 +175,7 @@ const CertificatesAaron = ({
 	}
 	const updatePatientInfo = (body) => bookingService.sendResult(token, appointmentId, body, patientId).catch(err => console.log(err));
 
-	function sendResult(formData) {
+	const sendResult = async (formData) => {
 		const body = formData;
 		if (isVideoAppointment) {
 			body.medicalprofessional = (!!user && !!user.first_name && !!user.last_name) ? `${user.first_name} ${user.last_name}` : '';
@@ -193,7 +193,7 @@ const CertificatesAaron = ({
 				body.sensitivity = '97.1%';
 			}
 			setIsLoading(true);
-			bookingService
+			await bookingService
 				.sendResult(token, appointmentId, body, patientId)
 				.then(result => {
 					if (result.success) {
@@ -206,7 +206,6 @@ const CertificatesAaron = ({
 							severity: 'error',
 							message: 'Failed to generate certificate, please try again.',
 						});
-						setIsLoading(false);
 					}
 				})
 				.catch(() => {
@@ -215,8 +214,8 @@ const CertificatesAaron = ({
 						severity: 'error',
 						message: 'Failed to generate certificate, please try again.',
 					});
-					setIsLoading(false);
 				});
+			setIsLoading(false);
 		}
 	}
 
