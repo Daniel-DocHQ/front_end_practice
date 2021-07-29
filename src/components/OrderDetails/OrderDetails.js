@@ -125,7 +125,10 @@ const OrderDetails = ({ token, order, closeHandler }) => {
 	}, [reloadInfo]);
 
 	const updateNotes = (notes) => {
-		adminService.updateOrderNotes(notes, order.id, token)
+		adminService.updateOrderNotes({
+			order_notes: notes,
+			...orderDetail
+		}, order.id, token)
 		return;
 	};
 
@@ -248,7 +251,9 @@ const OrderDetails = ({ token, order, closeHandler }) => {
 									)}
 								</>
 							) : (
-								<> </>
+								<Typography>
+									{!!orderDetail.order_notes && orderDetail.order_notes}
+								</Typography>
 							)}
 						</Grid>
 					</Grid>

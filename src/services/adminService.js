@@ -737,7 +737,7 @@ const adminService = {
 	updateOrderNotes(data, id, token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
-				axios.put(`${baseUrl}/v1/order${id}`, data, {
+				axios.put(`${baseUrl}/v1/order/${id}`, data, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},

@@ -22,6 +22,7 @@ import {
 } from '../../helpers/productsWithAdditionalInfo';
 import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
+import useChat from '../../helpers/hooks/useChat';
 
 const BookingEngine = () => {
 	const params = getURLParams(window.location.href);
@@ -106,6 +107,7 @@ const BookingEngine = () => {
 		setLoading(false);
 	};
 
+	useChat();
 	useEffect(() => {
 		getData();
 	}, []);
