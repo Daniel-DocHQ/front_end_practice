@@ -21,7 +21,7 @@ const useValidationSchema = (activeStep, isBookingSkip = false, isPharmacy = fal
   [
     Yup.object().shape({
       ...(isPharmacy ? {
-        [purchaseCode.name]: Yup.string().required('Input your code').matches(new RegExp(/^(ANT|PFF|ATE)[0-9]*/), 'Invalid code'),
+        [purchaseCode.name]: Yup.string().required('Input your code').matches(new RegExp(/^(ANT|PFF|ATE)*/), 'Invalid code'),
       } : {
         [product.name]: Yup.number().required('Select test kit to book appointment'),
         [numberOfPeople.name]: Yup.number().required('Input number of people').min(1, 'Minimum 1 person for appointment').max(4, 'Maximum 4 people per appointment')

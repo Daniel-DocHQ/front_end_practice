@@ -124,7 +124,8 @@ const OrderDetails = ({ token, order, closeHandler }) => {
 		fetchData();
 	}, [reloadInfo]);
 
-	const updateNotes = () => {
+	const updateNotes = (notes) => {
+		adminService.updateOrderNotes(notes, order.id, token)
 		return;
 	};
 
@@ -352,7 +353,7 @@ const OrderDetails = ({ token, order, closeHandler }) => {
 					)}
 					<Grid item xs={6}>
 						<Typography variant="h6" className={classes.title}>
-							{orderDetail.source === 'Pharmacy' ? 'Customer Address' : 'Shipping Address'} 
+							{orderDetail.source === 'Pharmacy' ? 'Customer Address' : 'Shipping Address'}
 						</Typography>
 						<List>
 							<ListItem>

@@ -468,11 +468,17 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
-								error: 'Unable to fetch orders',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
-					.catch(err => console.error(err));
+					.catch(err => {
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
+					});
 			} else {
 				// return unauthorized
 				resolve({ success: false, authenticated: false });
@@ -501,15 +507,16 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
-								error: 'Unable to fetch order details.',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
 					.catch(err => {
-						console.log(err);
-						reject({
-							success: false,
-						});
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
 					});
 			} else {
 				// return unauthorized
@@ -529,16 +536,15 @@ const adminService = {
 							// postUrl, reference
 							resolve({ success: true, data: response.data });
 						} else {
-							// TODO needs better error handling
-							reject({
+							resolve({
 								success: false,
-								error: 'Something went wrong, please try again.',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
-					.catch(errResp => {
-						if (errResp && errResp.response && errResp.response.message) {
-							reject({ success: false, error: errResp.response.message });
+					.catch(err => {
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
 						} else {
 							reject({ success: false, error: 'Something went wrong, please try again.' });
 						}
@@ -571,15 +577,16 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
-								error: 'Unable to retrieve appointments.',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
 					.catch(err => {
-						console.log(err);
-						reject({
-							success: false,
-						});
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
 					});
 			} else {
 				// return unauthorized
@@ -610,15 +617,16 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
-								error: 'Unable to retrieve appointments.',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
 					.catch(err => {
-						console.log(err);
-						reject({
-							success: false,
-						});
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
 					});
 			} else {
 				// return unauthorized
@@ -646,15 +654,16 @@ const adminService = {
 					} else {
 						resolve({
 							success: false,
-							error: 'Unable to get order information',
+							error: response.data.message || 'Something went wrong',
 						});
 					}
 				})
 				.catch(err => {
-					console.log(err);
-					reject({
-						success: false,
-					});
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
 				});
 		});
 	},
@@ -678,15 +687,16 @@ const adminService = {
 					} else {
 						resolve({
 							success: false,
-							error: 'Unable to get order information',
+							error: response.data.message || 'Something went wrong',
 						});
 					}
 				})
 				.catch(err => {
-					console.log(err);
-					reject({
-						success: false,
-					});
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
 				});
 		});
 	},
@@ -707,15 +717,49 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
-								error: 'Unable to upload file',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
 					.catch(err => {
-						reject({
-							success: false,
-							error: 'Unable to upload file',
-						});
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	updateOrderNotes(data, id, token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.put(`${baseUrl}/v1/order${id}`, data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: response.data.message || 'Something went wrong',
+							});
+						}
+					})
+					.catch(err => {
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
 					});
 			} else {
 				// return unauthorized
@@ -739,15 +783,16 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
-								error: 'Unable to send email',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
 					.catch(err => {
-						reject({
-							success: false,
-							error: 'Unable to send email',
-						});
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
 					});
 			} else {
 				// return unauthorized
@@ -772,15 +817,16 @@ const adminService = {
 						} else {
 							resolve({
 								success: false,
-								error: 'Unable to run this process',
+								error: response.data.message || 'Something went wrong',
 							});
 						}
 					})
 					.catch(err => {
-						reject({
-							success: false,
-							error: 'Unable to run this process',
-						});
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
 					});
 			} else {
 				// return unauthorized
