@@ -71,12 +71,12 @@ const PastAppointmentsTable = ({ token }) => {
 			setIsLoading(true);
 			await adminService
 				.getAppointmentsSearch({
-					start_time: start_time.utc(0).startOf('day').format(),
+					start_time: start_time.utc(0).format(),
 					end_time: end_time.utc(0).endOf('day').format(),
-				},'COMPLETED', token)
+				},'COMPLETED', token, true)
 				.then(data => {
 					if (data.success) {
-						setAppointments(data.appointments);
+						setAppointments(data.appointments.sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime()));
 					} else setAppointments([]);
 				})
 				.catch(err => {
@@ -126,7 +126,7 @@ const PastAppointmentsTable = ({ token }) => {
                             )}
                             onClick={() => {
                                 setFilter('yesterday');
-                                setStartTime(yesterday);
+                                setStartTime(yesterday.startOf('day'));
                                 setEndTime(yesterday);
                             }}
                         >
@@ -163,7 +163,7 @@ const PastAppointmentsTable = ({ token }) => {
                         <div style={{ marginLeft: 20 }}>
                             <DateRangeFilter
                                 startTime={new Date(start_time)}
-                                setStartTime={(date) => setStartTime(moment(date))}
+                                setStartTime={(date) => setStartTime(moment(date).startOf('day'))}
                                 endTime={new Date(end_time)}
                                 setEndTime={(date) => setEndTime(moment(date))}
                             />

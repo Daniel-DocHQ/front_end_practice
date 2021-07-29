@@ -146,7 +146,7 @@ const RegisterKit = () => {
                             Thank you for submission<br /><br />
                         </h3>
                         <Typography className={classes.text}>
-                            Your kits is now on the way to our laboratory.<br />
+                            Please ensure the kit is returned as soon as possible.<br />
                             Your certificate will be emailed to you once the sample has been analysed by the laboratory and the results supervised by a GMC registered doctor.<br /><br />
                             If you have any questions, please contact us at <span className={classes.redText}>covidtesthelp@dochq.co.uk</span> 9-5 pm 7 days per week.
                         </Typography>

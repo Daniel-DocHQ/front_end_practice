@@ -188,15 +188,6 @@ const RegisterKitForm = ({
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item style={{ paddingTop: 20 }}>
-                        <Card className={classes.card} variant="outlined">
-                            <CardContent>
-                                <Typography className={classes.text}>
-                                    Please ensure the kit is registered as soon as possible <span className={classes.redText}>AFTER</span> the sample has been taken. Delaying registering your kit may lead to delays and possible disruptions to your journey.
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
                     {!!user && (
                         <Grid item>
                             <Card className={classes.card} variant="outlined">

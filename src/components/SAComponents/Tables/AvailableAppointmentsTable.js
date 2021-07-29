@@ -74,13 +74,13 @@ const AvailableAppointmentsTable = ({ token }) => {
         (async () => {
 			setIsLoading(true);
 			await adminService
-				.getAllAppointments({
-					start_time: start_time.utc(0).startOf('day').format(),
+				.getAppointmentsSearch({
+					start_time: start_time.utc(0).format(),
 					end_time: end_time.utc(0).endOf('day').format(),
-				}, token)
+				},'AVAILABLE', token, true)
 				.then(data => {
 					if (data.success) {
-						setAppointments(data.appointments.filter(({ status }) =>  status.toLowerCase() === 'available'));
+						setAppointments(data.appointments.sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime()));
 					} else setAppointments([]);
 				})
 				.catch(err => {
@@ -117,7 +117,7 @@ const AvailableAppointmentsTable = ({ token }) => {
 							)}
 							onClick={() => {
 								setFilter('tomorrow');
-								setStartTime(tomorrow);
+								setStartTime(tomorrow.startOf('day'));
 								setEndTime(tomorrow);
 							}}
 						>
@@ -167,7 +167,7 @@ const AvailableAppointmentsTable = ({ token }) => {
 						<div style={{ marginLeft: 20 }}>
 							<DateRangeFilter
 								startTime={new Date(start_time)}
-								setStartTime={(date) => setStartTime(moment(date))}
+								setStartTime={(date) => setStartTime(moment(date).startOf('day'))}
 								endTime={new Date(end_time)}
 								setEndTime={(date) => setEndTime(moment(date))}
 							/>

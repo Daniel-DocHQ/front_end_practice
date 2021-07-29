@@ -548,13 +548,13 @@ const adminService = {
 			}
 		});
 	},
-	getAppointmentsSearch(dateRange, status, token) {
+	getAppointmentsSearch(dateRange, status, token, practitionerName = false) {
 		const { start_time, end_time } = dateRange;
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/search?q=status:${status} AND start_time:[${start_time} TO ${end_time}]&inc_practitioner_name=1`,
+					url: `${bookingUrl}/search?q=status:${status} AND start_time:[${start_time} TO ${end_time}]${practitionerName && '&inc_practitioner_name=1'}`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
