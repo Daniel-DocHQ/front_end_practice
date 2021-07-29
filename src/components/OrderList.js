@@ -54,7 +54,7 @@ const columns = [
 
 const OrderList = props => {
     const classes = useStyles();
-    const { token } = useContext(AuthContext);
+    const { user, token } = useContext(AuthContext);
     const [rows, setRows] = useState([]);
     const [pageSize, setPageSize] = useState(0);
     const [page, setPage] = useState(0);
@@ -139,7 +139,7 @@ const OrderList = props => {
             </Grid>
 
             <Drawer anchor="right" open={detailsOpen} onClose={toggleDrawer}>
-                <OrderDetails token={token} order={orderDetail} closeHandler={toggleDrawer}/>
+                <OrderDetails user={user} token={token} order={orderDetail} closeHandler={toggleDrawer}/>
             </Drawer>
         </Container>
     )

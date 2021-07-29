@@ -16,9 +16,10 @@ const initFreshChat = () => (
 
 const initialize = (i, t) => {
   let e;
-  i.getElementById(t)
+  const initialize = i.getElementById(t)
     ? initFreshChat()
     : ((e = i.createElement('script')).id = t, e.async = !0, e.src = 'https://wchat.in.freshchat.com/js/widget.js', e.onload = initFreshChat, i.head.appendChild(e));
+  return initialize;
 };
 
 const initiateCall = () => {
@@ -26,7 +27,6 @@ const initiateCall = () => {
 };
 
 const useChat = () => {
-  console.log(FRESHCHAT_CONFIG);
   useEffect(() => {
     initiateCall();
   }, []);

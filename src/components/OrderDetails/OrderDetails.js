@@ -65,6 +65,10 @@ const useStyles = makeStyles((theme) => ({
 	container: {
 		marginTop: 10,
 	},
+	smallText: {
+		fontSize: 12,
+		color: 'grey',
+	},
 }));
 
 const READABLE_STATUSES = {
@@ -73,7 +77,7 @@ const READABLE_STATUSES = {
     IDT: 'Indetermined',
 };
 
-const OrderDetails = ({ token, order, closeHandler }) => {
+const OrderDetails = ({ user, token, order, closeHandler }) => {
 	const classes = useStyles();
 	const [orderDetail, setOrderDetail] = useState({});
 	const [discountValue, setDiscountValue] = useState();
@@ -126,10 +130,30 @@ const OrderDetails = ({ token, order, closeHandler }) => {
 
 	const updateNotes = (notes) => {
 		adminService.updateOrderNotes({
-			order_notes: notes,
-			...orderDetail
-		}, order.id, token)
-		return;
+			...orderDetail,
+			order_notes: [
+				{
+					created_by: `${user.first_name} ${user.last_name}`,
+					note: notes,
+				},
+				...(!!orderDetail.order_notes ? orderDetail.order_notes : [])
+			],
+		}, orderDetail.id, token).then(result => {
+			if (result.success) {
+				setNotesStatus({ severity: 'success', message: 'Note added successfully' });
+			} else {
+				setNotesStatus({
+					severity: 'error',
+					message: result.message,
+				});
+			}
+		})
+		.catch((err) => {
+			setNotesStatus({
+				severity: 'error',
+				message: err.error,
+			});
+		});
 	};
 
 	useEffect(() => {
@@ -235,7 +259,6 @@ const OrderDetails = ({ token, order, closeHandler }) => {
 											text='Submit'
 											onClick={() => {
 												updateNotes(notes);
-												setNotesStatus({ severity: 'success', message: 'Notes updated successfully' });
 											}}
 										/>
 									</div>
@@ -251,9 +274,23 @@ const OrderDetails = ({ token, order, closeHandler }) => {
 									)}
 								</>
 							) : (
-								<Typography>
-									{!!orderDetail.order_notes && orderDetail.order_notes}
-								</Typography>
+								<>
+									{!!orderDetail.order_notes && orderDetail.order_notes.map(({ note, id, created_by, created_at }) => (
+										<div key={id}>
+											<Typography>
+												{note}
+											</Typography>
+											<div className="row space-between">
+												<Typography className={classes.smallText}>
+													{created_by}
+												</Typography>
+												<Typography className={classes.smallText}>
+													{format(new Date(created_at * 1000), 'dd/MM/yyyy p')}
+												</Typography>
+											</div>
+										</div>
+									))}
+								</>
 							)}
 						</Grid>
 					</Grid>
