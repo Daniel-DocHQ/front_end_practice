@@ -90,7 +90,6 @@ const NextAppointmentsTable = ({
                                                     <DocButton
                                                         text='Join'
                                                         color='green'
-                                                        disabled={!!appointmentId}
                                                         onClick={() => join(appointment.id)}
                                                     />
                                                 </TableCell>
@@ -136,7 +135,6 @@ const NextAppointmentsTable = ({
                                         <DocButton
                                             text='Join'
                                             color='green'
-                                            disabled={!!appointmentId}
                                             onClick={() => join(appointment.id)}
                                         />
                                     </TableCell>

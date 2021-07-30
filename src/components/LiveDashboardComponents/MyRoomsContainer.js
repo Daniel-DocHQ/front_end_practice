@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext, memo } from 'react';
+import { get } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
 import { Grid } from '@material-ui/core';
@@ -8,6 +9,7 @@ import { AuthContext } from '../../context/AuthContext';
 import bookingService from '../../services/bookingService';
 import UrgentClaimable from '../Tables/UrgentClaimable';
 import NextAppointmentsTable from '../Tables/NextAppointmentsTable';
+import nurseSvc from '../../services/nurseService';
 
 const REQUEST_INTERVAL = 30 * 1000; // 30 seconds
 
@@ -19,7 +21,8 @@ const MyRoomsContainer = () => {
     const [holdAppointments, setHoldAppointments] = useState();
 	let history = useHistory();
 
-	const handleSetAppointmentId = (id) => {
+	const handleSetAppointmentId = async (id) => {
+		await nurseSvc.clearPractitionerInformation(token, get(user, 'roles[0].id', 0));
 		localStorage.setItem('appointmentId', id);
 		setAppointmentId(id);
 	};
@@ -54,7 +57,7 @@ const MyRoomsContainer = () => {
 			.getPractitionerInformation(token)
 			.then(data => {
 				if (data.success) {
-					handleSetAppointmentId(data.appointments.last_atteneded_appointment || localStorage.getItem('appointmentId') || '');
+					handleSetAppointmentId(localStorage.getItem('appointmentId') || data.appointments.last_atteneded_appointment || '');
 				} else if (!data.authenticated) {
 					logoutUser();
 				} else {

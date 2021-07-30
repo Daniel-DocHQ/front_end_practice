@@ -158,7 +158,7 @@ const NurseDashboard = props => {
 			.getPractitionerInformation(props.token)
 			.then(data => {
 				if (data.success) {
-					setOngoingAppointmentId(data.appointments.last_atteneded_appointment || localStorage.getItem('appointmentId') || '');
+					setOngoingAppointmentId(localStorage.getItem('appointmentId') || data.appointments.last_atteneded_appointment  || '');
 				} else if (!data.authenticated) {
 					logoutUser();
 				} else {
@@ -167,7 +167,6 @@ const NurseDashboard = props => {
 			})
 			.catch(err => ToastsStore.error('Error fetching practitioner information'))
 	}
-
 	const getAllInfo = async () => {
 		await getFutureAppointments();
 		await getAvailableAppointments()
@@ -212,6 +211,8 @@ const NurseDashboard = props => {
 					ongoingAppointmentId={ongoingAppointmentId}
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}
+					token={props.token}
+					roleId={get(props, 'role.id', 0)}
 				/>
                 </Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>

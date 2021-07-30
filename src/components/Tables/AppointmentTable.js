@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import LinkButton from '../DocButton/LinkButton';
 import useDateFilter from '../../helpers/hooks/useDateFilter';
 import './Tables.scss';
+import nurseSvc from '../../services/nurseService';
 
 const useStyles = makeStyles(() => ({
 	btn: {
@@ -56,6 +57,8 @@ const AppointmentTable = ({
 	ongoingAppointmentId,
 	releaseAppointment,
 	appointments = [],
+	token,
+	roleId,
 }) => {
 	const classes = useStyles();
 	const { filteredAppointments: appointmentToFilter, filter, setFilter } = useDateFilter(appointments);
@@ -149,7 +152,10 @@ const AppointmentTable = ({
 												linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
 											/>
 											<div style={{ marginLeft: 10 }}
-												onClick={() => localStorage.setItem('appointmentId', appointment.id)}
+												onClick={async () => {
+													localStorage.setItem('appointmentId', appointment.id);
+													await nurseSvc.clearPractitionerInformation(token, roleId);
+												}}
 											>
 												<LinkButton
 													text='Join'

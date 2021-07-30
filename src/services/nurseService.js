@@ -420,6 +420,37 @@ const nurseSvc = {
 			}
 		});
     },
+	clearPractitionerInformation(token, roleId) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'DELETE',
+					url: `${baseUrl}/practitioner/${roleId}/clear`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								appointments: response.data,
+							});
+						} else  {
+							resolve({
+								success: true,
+								appointments: [],
+							});
+						}
+					})
+					.catch(err => {
+						console.error(err)
+						resolve({success: true, appointment: []})
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+    },
     putBookingUserMetadata(appointmentId, userId, data) {
         return new Promise((resolve, reject) => {
             axios({
