@@ -113,6 +113,14 @@ function TwillioVideoCall({
 	}, [token]);
 
 	useEffect(() => {
+		return () => {
+			if (!!room) {
+				room.disconnect();
+			}
+		};
+	}, []);
+
+	useEffect(() => {
 		if (!isNurse && timeBeforeStart > 0) { // 3 min until show message
 			const interval = setInterval(() => {
 				const timeDifference = new Date(appointmentInfo.start_time).getTime() - new Date().getTime();

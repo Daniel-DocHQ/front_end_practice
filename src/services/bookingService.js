@@ -19,6 +19,7 @@ const bookingService = {
 	getSlotsByTime,
 	deleteBooking,
 	getAppointmentsByShortToken,
+	setVideoToken,
 };
 
 // Booking engine
@@ -327,7 +328,32 @@ function claimAppointment(auth_token, slot_id) {
 			resolve({ success: false, error: 'Missing Details' });
 		}
 	});
-}
+};
+function setVideoToken(slot_id, body, authToken) {
+	return new Promise((resolve, reject) => {
+		if (!!authToken && !!slot_id) {
+			axios({
+				url: `${baseURL}/${slot_id}/uservideotoken`,
+				method: 'POST',
+				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${authToken}`  },
+				data: body,
+			})
+				.then(response => {
+					if (response.status === 200 || response.data.status === 'ok') {
+						resolve({ success: true });
+					} else {
+						reject({
+							success: false,
+							error: response.data.error,
+						});
+					}
+				})
+				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+		} else {
+			resolve({ success: false, error: 'Missing Details' });
+		}
+	});
+};
 function updateAppointmentStatus(slot_id, body, authToken) {
 	return new Promise((resolve, reject) => {
 		if (!!authToken && !!slot_id) {

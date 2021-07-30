@@ -1363,7 +1363,7 @@ const AppointmentActions = ({
 };
 
 const CertificatesContainer = ({ kitProvider }) => {
-	const { displayCertificates, booking_users, img, appointmentId } = useContext(AppointmentContext);
+	const { displayCertificates, booking_users, img, appointmentId, uploadImage } = useContext(AppointmentContext);
 	return displayCertificates ? (
 		<div
 			style={{
@@ -1376,6 +1376,7 @@ const CertificatesContainer = ({ kitProvider }) => {
 			{!!booking_users &&
 				booking_users.map((user, i) => <CertificatesAaron
 					key={i}
+					uploadImage={uploadImage}
 					appointmentId={appointmentId}
 					img={get(img, `[${i}]`, '')}
 					patient_data={user}

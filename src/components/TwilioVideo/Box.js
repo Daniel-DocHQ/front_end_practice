@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import React, { useCallback, useContext } from 'react';
 import getURLParams from '../../helpers/getURLParams';
 import DocButton from '../DocButton/DocButton';
@@ -8,6 +9,7 @@ import {
 	AppointmentContext,
 } from '../../context/AppointmentContext';
 import './box-test.scss';
+import { ToastsStore } from 'react-toasts';
 
 const Box = ({
 	token,
@@ -22,28 +24,40 @@ const Box = ({
 }) => {
 	const params = getURLParams(window.location.href);
 	const {
+		appointmentDetails,
 		appointmentId: contextAppointmentId,
 	} = useContext(AppointmentContext);
 	const appointmentId = contextAppointmentId || params['appointmentId'];
+	const videoToken = get(appointmentDetails, 'user_video_token');
 	const handleSubmit = useCallback(
 		async event => {
 			event.preventDefault();
-			const data = await fetch('/video/token', {
-				method: 'POST',
-				body: JSON.stringify({
-					identity: isNurse ? 'nurse' : 'patient',
-					room: params['appointmentId'],
-				}),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}).then(res => res.json());
-			setVideoCallToken(data.token);
-			bookingService
+			if (videoToken && isNurse) {
+				setVideoCallToken(videoToken);
+			} else {
+				const data = await fetch('/video/token', {
+					method: 'POST',
+					body: JSON.stringify({
+						identity: isNurse ? 'nurse' : 'patient',
+						room: params['appointmentId'],
+					}),
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				}).then(res => res.json()).catch(ToastsStore.error);
+				setVideoCallToken(data.token);
+				if (isNurse) await bookingService.setVideoToken(
+					appointmentId,
+					{
+						user_video_token: data.token,
+					},
+					token,
+				).catch(ToastsStore.error);
+			}
+			await bookingService
 				.updateAppointmentStatus(appointmentId, {
 					status: isNurse ? 'PRACTITIONER_ATTENDED' : 'PATIENT_ATTENDED',
-				}, token)
-				.catch((err) => console.log(err));
+				}, token).catch(ToastsStore.error);
 		},
 		[params, isNurse]
 	);

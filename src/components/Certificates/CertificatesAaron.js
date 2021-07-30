@@ -26,6 +26,7 @@ import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const CertificatesAaron = ({
 	img,
+	uploadImage,
 	patient_data,
 	appointmentId,
 	cancelBtn = null,
@@ -86,7 +87,7 @@ const CertificatesAaron = ({
 
 	useEffect(() => {
 		if (status && status.severity === 'success') {
-			const timer = setTimeout(() => isVideoAppointment ? setStatus() : submitCallback(), 5000);
+			const timer = setTimeout(() => isVideoAppointment ? null : submitCallback(), 5000);
 			return () => clearTimeout(timer);
 		}
 	}, [status]);
@@ -200,19 +201,20 @@ const CertificatesAaron = ({
 						setStatus({ severity: 'success', message: 'Certificate successfully generated .' });
 						setIsLoading(false);
 						setCanCreateCertificate(false);
+						if (isVideoAppointment && !!img) {
+							uploadImage(appointmentId, token);
+						}
 					} else {
-						ToastsStore.error('Failed to generate certificate');
 						setStatus({
 							severity: 'error',
-							message: 'Failed to generate certificate, please try again.',
+							message: result.message,
 						});
 					}
 				})
-				.catch(() => {
-					ToastsStore.error('Failed to generate certificate');
+				.catch((err) => {
 					setStatus({
 						severity: 'error',
-						message: 'Failed to generate certificate, please try again.',
+						message: err.error,
 					});
 				});
 			setIsLoading(false);

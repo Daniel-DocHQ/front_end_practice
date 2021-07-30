@@ -53,7 +53,7 @@
     "simple-peer": "9.7.x",
     "socket.io": "2.3.x",
     "socket.io-client": "2.3.x",
-    "twilio-video": "2.6.x",
+    "twilio-video": "^2.15.3",
     "webrtc-adapter": "7.6.x",
     "yup": "^0.32.9"
   },
