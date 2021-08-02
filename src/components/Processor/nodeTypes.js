@@ -567,6 +567,21 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ],
     })
     .addNodeType({
+        type: "markDropboxReceiptMissed",
+        label: "Update Dropbox Receipt as appointment missed",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.boolean({
+                name:"updateReceipt",
+                label: "Update Receipt",
+            }),
+            ports.data({
+                name: "data",
+                label: "Receipt Data",
+            })
+        ],
+    })
+    .addNodeType({
         type: "getRenderCertificate",
         label: "Get Certificate Bytes",
         initalWidth: 160,
