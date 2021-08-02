@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { get } from 'lodash';
-import clsx from 'clsx';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,26 +7,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { makeStyles } from '@material-ui/core/styles';
 import LinkButton from '../DocButton/LinkButton';
-import useDateFilter from '../../helpers/hooks/useDateFilter';
-import './Tables.scss';
+import adminService from '../../services/adminService';
 import nurseSvc from '../../services/nurseService';
-
-const useStyles = makeStyles(() => ({
-	btn: {
-		fontSize: 14,
-		border: '1px solid #EFEFF0',
-		textTransform: 'none',
-	},
-	activeBtn: {
-		fontWeight: 500,
-		color: 'white',
-		background: '#00BDAF',
-	},
-}));
+import { useServerDateFilter, DateFilter } from '../../helpers/hooks/useServerDateFilter';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import './Tables.scss';
 
 const styles = {
 	smallCol: {
@@ -56,56 +41,40 @@ const styles = {
 const AppointmentTable = ({
 	ongoingAppointmentId,
 	releaseAppointment,
-	appointments = [],
 	token,
 	roleId,
 }) => {
-	const classes = useStyles();
-	const { filteredAppointments: appointmentToFilter, filter, setFilter } = useDateFilter(appointments);
-    const filteredAppointments = appointmentToFilter.filter(({ id }) => id !== ongoingAppointmentId);
+	const {
+		filter,
+		setFilter,
+        isLoading,
+        appointments,
+        setEndTime,
+        setStartTime,
+		start_time,
+		end_time,
+    } = useServerDateFilter({
+        token,
+        query: adminService.getAppointmentsSearch,
+        status: 'WAITING',
+		userId: roleId,
+		isLive: true,
+    });
+    const filteredAppointments = appointments.filter(({ id }) => id !== ongoingAppointmentId);
 
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
 				<h2>Upcoming Appointments</h2>
-				<ButtonGroup aria-label="outlined primary button group">
-					<Button
-						className={clsx(
-							classes.btn,
-							{[classes.activeBtn]: filter === 'today'},
-						)}
-						onClick={() => setFilter('today')}
-					>
-						Today
-					</Button>
-					<Button
-						className={clsx(
-							classes.btn,
-							{[classes.activeBtn]: filter === 'tomorrow'},
-						)}
-						onClick={() => setFilter('tomorrow')}
-					>
-						Tomorrow
-					</Button>
-					<Button
-						className={clsx(
-							classes.btn,
-							{[classes.activeBtn]: filter === 'week'},
-						)}
-						onClick={() => setFilter('week')}
-					>
-						Week
-					</Button>
-					<Button
-						className={clsx(
-							classes.btn,
-							{[classes.activeBtn]: filter === 'month'},
-						)}
-						onClick={() => setFilter('month')}
-					>
-						Month
-					</Button>
-				</ButtonGroup>
+				<DateFilter
+					filter={filter}
+					setFilter={setFilter}
+                    appointments={appointments}
+                    setEndTime={setEndTime}
+                    setStartTime={setStartTime}
+					start_time={start_time}
+					end_time={end_time}
+                />
 			</div>
 			<TableContainer
 				style={{
@@ -124,7 +93,11 @@ const AppointmentTable = ({
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{filteredAppointments.length > 0 && filteredAppointments.map(appointment => {
+						{isLoading ? (
+							<TableRow>
+								<LoadingSpinner />
+							</TableRow>
+						) : (filteredAppointments.length > 0 && filteredAppointments.map(appointment => {
 							const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
 
 							return (
@@ -173,7 +146,7 @@ const AppointmentTable = ({
 									</TableCell>
 								</TableRow>
 							);
-						})}
+						}))}
 						{filteredAppointments.length === 0 ? (
 							<TableRow>
 								<TableCell style={styles.tableText}>

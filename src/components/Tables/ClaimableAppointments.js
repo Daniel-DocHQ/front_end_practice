@@ -7,6 +7,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DocButton from '../DocButton/DocButton';
+import adminService from '../../services/adminService';
+import { useServerDateFilter, DateFilter } from '../../helpers/hooks/useServerDateFilter';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import './Tables.scss';
 
 const styles = {
@@ -34,11 +37,38 @@ const styles = {
 	},
 };
 
-const ClaimableAppointments = ({ claimAppointment, appointments }) => {
+const ClaimableAppointments = ({ token, userId, claimAppointment }) => {
+	const {
+		filter,
+		setFilter,
+        isLoading,
+        appointments,
+        setEndTime,
+        setStartTime,
+		start_time,
+		end_time,
+    } = useServerDateFilter({
+        token,
+        query: adminService.getAppointmentsSearch,
+        status: 'CLAIMABLE',
+		userId,
+		isLive: true,
+		practitionerName: true,
+    });
+
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
 				<h2>Claimable Appointments</h2>
+				<DateFilter
+					filter={filter}
+					setFilter={setFilter}
+                    appointments={appointments}
+                    setEndTime={setEndTime}
+                    setStartTime={setStartTime}
+					start_time={start_time}
+					end_time={end_time}
+                />
 			</div>
 			<TableContainer
 				style={{
@@ -57,7 +87,11 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{typeof appointments !== 'undefined' &&
+						{isLoading ? (
+							<TableRow>
+								<LoadingSpinner />
+							</TableRow>
+						) : (typeof appointments !== 'undefined' &&
 							typeof appointments === 'object' &&
 							appointments.length > 0 &&
 							appointments.map(appointment => (
@@ -82,7 +116,7 @@ const ClaimableAppointments = ({ claimAppointment, appointments }) => {
 										/>
 									</TableCell>
 								</TableRow>
-							))}
+							)))}
 						{typeof appointments !== 'object' || appointments.length === 0 ? (
 							<TableRow>
 								<TableCell style={styles.tableText}>

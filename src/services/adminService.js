@@ -554,14 +554,21 @@ const adminService = {
 			}
 		});
 	},
-	getAppointmentsSearch(dateRange, status, token, practitionerName = true) {
+	getAppointmentsSearch({
+		dateRange,
+		status,
+		token,
+		practitionerName = true,
+		userId,
+	}) {
 		const { start_time, end_time } = dateRange;
 		const statusQuery = status === 'CLAIMABLE' ? `claimable_slot:true` : `status:${status}`;
+		const userQuery = !!userId ? ` AND user:${userId}` : '';
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/search?q=${statusQuery} AND start_time:[${start_time} TO ${end_time}]${practitionerName ? '&inc_practitioner_name=1' : ''}`,
+					url: `${bookingUrl}/search?q=${statusQuery}${userQuery} AND start_time:[${start_time} TO ${end_time}]${practitionerName ? '&inc_practitioner_name=1' : ''}`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {

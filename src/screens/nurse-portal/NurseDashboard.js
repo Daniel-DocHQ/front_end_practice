@@ -1,6 +1,5 @@
 import React, { useEffect, useState, memo, useContext } from 'react';
 import { get } from 'lodash';
-import moment from 'moment';
 import AppointmentTable from '../../components/Tables/AppointmentTable';
 import AvailableAppointments from '../../components/Tables/AvailableAppointments';
 import PastAppointmentsTable from '../../components/Tables/PastAppointmentsTable';
@@ -15,17 +14,9 @@ import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 const NurseDashboard = props => {
-	const today = moment();
-	const month = moment().add(30, 'day');
+	const userId = get(props, 'role.id');
 	const { logout } = useContext(AuthContext);
-	const [gotAppointments, setGotAppointments] = useState(false);
-	const [gotPastAppointments, setGotPastAppointments] = useState(false);
-	const [gotClaimable, setGotClaimable] = useState(false);
-	const [pastAppointments, setPastAppointments] = useState();
 	const [ongoingAppointmentId, setOngoingAppointmentId] = useState();
-	const [appointments, setAppointments] = useState([]);
-	const [availableAppointments, setAvailableAppointments] = useState([]);
-	const [claimableAppointments, setClaimableAppointments] = useState([]);
 	const [todayDoctors, setTodayDoctors] = useState();
 	const [isLoading, setIsLoading] = useState(false);
 	let history = useHistory();
@@ -36,43 +27,6 @@ const NurseDashboard = props => {
 	};
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		logoutUser();
-	}
-
-	const getFutureAppointments = async () => {
-		await nurseService
-			.getAppointments(props.token)
-			.then(data => {
-				if (data.success) {
-					setGotAppointments(true);
-					setAppointments(data.appointments);
-				} else if (!data.authenticated) {
-					logoutUser();
-				} else {
-					ToastsStore.error('Error fetching appointments');
-				}
-			})
-			.catch(err => ToastsStore.error('Error fetching appointments'));
-	}
-	const getAvailableAppointments = async () => {
-		await nurseService
-			.getAvailableAppointments(
-				{
-					start_time: today.utc(0).startOf('day').format(),
-					end_time: month.utc(0).endOf('day').format(),
-				},
-				get(props, 'role.id'),
-				props.token,
-			)
-			.then(data => {
-				if (data.success) {
-					setAvailableAppointments(data.appointments);
-				} else if (!data.authenticated) {
-					logoutUser();
-				} else {
-					ToastsStore.error('Error fetching appointments');
-				}
-			})
-			.catch(err => ToastsStore.error('Error fetching appointments'));
 	}
 	const getTodayDoctors = async () => {
 		await nurseService
@@ -88,50 +42,14 @@ const NurseDashboard = props => {
 			})
 			.catch(err => ToastsStore.error('Error fetching doctors'));
 	}
-	const getPastAppointments = async () => {
-		await nurseService
-			.getPastAppointments(props.token)
-			.then(data => {
-				if (data.success && data.appointments) {
-					setPastAppointments(data.appointments);
-				} else if (!data.success && !data.authenticated) {
-					logoutUser();
-				} else {
-					ToastsStore.error('Error fetching appointments');
-				}
-				setGotPastAppointments(true);
-			})
-			.catch(err => ToastsStore.error('Error fetching appointments'));
-	}
-
-	const getClaimableAppointments = async () => {
-		await bookingService
-			.getClaimableAppointments(props.token)
-			.then(result => {
-				if (result.success && result.claimable_appointments) {
-					setGotClaimable(true);
-					setClaimableAppointments(result.claimable_appointments);
-				} else if (!result.success) {
-					ToastsStore.error('Unable to load claimable appointments');
-				}
-			})
-			.catch(({ status }) => {
-				if (status === 401) {
-					logoutUser();
-					ToastsStore.error('Token expired');
-				} else {
-					ToastsStore.error('Unable to load claimable appointments');
-				}
-			});
-	}
 	function claimAppointment(slot_id) {
 		bookingService
 			.claimAppointment(props.token, slot_id)
 			.then(result => {
 				if (result.success) {
 					ToastsStore.success('Appointment claimed');
-					getFutureAppointments();
-					getClaimableAppointments();
+					// getFutureAppointments();
+					// getClaimableAppointments();
 				} else {
 					ToastsStore.error('Error claiming appointment');
 				}
@@ -144,8 +62,8 @@ const NurseDashboard = props => {
 			.then(result => {
 				if (result.success) {
 					ToastsStore.success('Appointment released');
-					getFutureAppointments();
-					getClaimableAppointments();
+					// getFutureAppointments();
+					// getClaimableAppointments();
 				} else {
 					ToastsStore.error('Error releasing appointment');
 				}
@@ -168,23 +86,13 @@ const NurseDashboard = props => {
 			.catch(err => ToastsStore.error('Error fetching practitioner information'))
 	}
 	const getAllInfo = async () => {
-		await getFutureAppointments();
-		await getAvailableAppointments()
-		await getPastAppointments();
 		await getTodayDoctors();
-		await getClaimableAppointments();
 		await getPractitionerInfo();
 	};
 
 	useEffect(() => {
-		if (
-			typeof props.token !== 'undefined' &&
-			!gotAppointments &&
-			!gotPastAppointments &&
-			!gotClaimable
-		) {
+		if (typeof props.token !== 'undefined')
 			getAllInfo();
-		}
 	}, []);
 
 	useEffect(() => {
@@ -202,7 +110,8 @@ const NurseDashboard = props => {
 		<Grid container justify="space-between">
 			<Grid item xs={12}>
 				<ClaimableAppointments
-					appointments={claimableAppointments}
+					userId={userId}
+					token={props.token}
 					claimAppointment={claimAppointment}
 				/>
 			</Grid>
@@ -210,18 +119,21 @@ const NurseDashboard = props => {
 				<AppointmentTable
 					ongoingAppointmentId={ongoingAppointmentId}
 					releaseAppointment={releaseAppointment}
-					appointments={appointments}
 					token={props.token}
-					roleId={get(props, 'role.id', 0)}
+					roleId={userId}
 				/>
                 </Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<AvailableAppointments
-					appointments={availableAppointments}
+					token={props.token}
+					userId={userId}
 				/>
             </Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<PastAppointmentsTable appointments={pastAppointments} />
+				<PastAppointmentsTable
+					token={props.token}
+					userId={userId}
+				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<TodayDoctors doctors={todayDoctors} />

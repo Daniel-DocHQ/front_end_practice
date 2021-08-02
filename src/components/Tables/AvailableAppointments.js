@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { get } from 'lodash';
-import clsx from 'clsx';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,24 +7,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { makeStyles } from '@material-ui/core/styles';
-import useDateFilter from '../../helpers/hooks/useDateFilter';
+import adminService from '../../services/adminService';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { useServerDateFilter, DateFilter} from '../../helpers/hooks/useServerDateFilter';
 import './Tables.scss';
-
-const useStyles = makeStyles(() => ({
-	btn: {
-		fontSize: 14,
-		border: '1px solid #EFEFF0',
-		textTransform: 'none',
-	},
-	activeBtn: {
-		fontWeight: 500,
-		color: 'white',
-		background: '#00BDAF',
-	},
-}));
 
 const styles = {
 	smallCol: {
@@ -52,53 +37,39 @@ const styles = {
 };
 
 const AvailableAppointments = ({
-	appointments = [],
+	token,
+	userId,
 }) => {
-	const classes = useStyles();
-	const { filteredAppointments, filter, setFilter } = useDateFilter(appointments);
+	const {
+		filter,
+		setFilter,
+        isLoading,
+        appointments,
+        setEndTime,
+        setStartTime,
+		start_time,
+		end_time,
+    } = useServerDateFilter({
+        token,
+        query: adminService.getAppointmentsSearch,
+        status: 'AVAILABLE',
+		userId,
+		isLive: true,
+    });
 
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
 				<h2>Available Appointments</h2>
-				<ButtonGroup aria-label="outlined primary button group">
-					<Button
-						className={clsx(
-							classes.btn,
-							{[classes.activeBtn]: filter === 'today'},
-						)}
-						onClick={() => setFilter('today')}
-					>
-						Today
-					</Button>
-					<Button
-						className={clsx(
-							classes.btn,
-							{[classes.activeBtn]: filter === 'tomorrow'},
-						)}
-						onClick={() => setFilter('tomorrow')}
-					>
-						Tomorrow
-					</Button>
-					<Button
-						className={clsx(
-							classes.btn,
-							{[classes.activeBtn]: filter === 'week'},
-						)}
-						onClick={() => setFilter('week')}
-					>
-						Week
-					</Button>
-					<Button
-						className={clsx(
-							classes.btn,
-							{[classes.activeBtn]: filter === 'month'},
-						)}
-						onClick={() => setFilter('month')}
-					>
-						Month
-					</Button>
-				</ButtonGroup>
+				<DateFilter
+					filter={filter}
+					setFilter={setFilter}
+                    appointments={appointments}
+                    setEndTime={setEndTime}
+                    setStartTime={setStartTime}
+					start_time={start_time}
+					end_time={end_time}
+                />
 			</div>
 			<TableContainer
 				style={{
@@ -113,7 +84,11 @@ const AvailableAppointments = ({
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{filteredAppointments.length > 0 && filteredAppointments.map(appointment => {
+						{isLoading ? (
+							<TableRow>
+								<LoadingSpinner />
+							</TableRow>
+						) : (appointments.length > 0 && appointments.map(appointment => {
 							const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
 
 							return (
@@ -126,8 +101,8 @@ const AvailableAppointments = ({
 									</TableCell>
 								</TableRow>
 							);
-						})}
-						{filteredAppointments.length === 0 ? (
+						}))}
+						{appointments.length === 0 ? (
 							<TableRow>
 								<TableCell style={styles.tableText}>
 									<p>No appointments to display</p>
