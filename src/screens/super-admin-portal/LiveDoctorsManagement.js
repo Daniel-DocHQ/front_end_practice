@@ -8,6 +8,7 @@ import TodayDoctors from '../../components/Tables/TodayDoctors';
 import nurseSvc from '../../services/nurseService';
 import LiveStatusTable from '../../components/Tables/LiveStatusTable';
 import LiveDoctorsTable from '../../components/Tables/LiveDoctorsTable';
+import bookingService from '../../services/bookingService';
 
 const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 	const { logout } = useContext(AuthContext);
@@ -28,6 +29,20 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 				}
 			})
 			.catch(err => ToastsStore.error('Error fetching doctors'));
+	}
+
+	const releaseAppointment = (slot_id) => {
+		bookingService
+			.releaseAppointment(token, slot_id)
+			.then(result => {
+				if (result.success) {
+					ToastsStore.success('Appointment released');
+					getFutureAppointments()
+				} else {
+					ToastsStore.error('Error releasing appointment');
+				}
+			})
+			.catch(() => ToastsStore.error('Error releasing appointment'));
 	}
 
 	const getFutureAppointments = async () => (
@@ -72,7 +87,10 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 				<TodayDoctors doctors={doctors} />
 			</Grid>
             <Grid item xs={12} style={{ paddingTop: 20 }}>
-                <LiveStatusTable appointments={appointments} />
+                <LiveStatusTable
+					releaseAppointment={releaseAppointment}
+					appointments={appointments}
+				/>
             </Grid>
             <Grid item xs={12} style={{ paddingTop: 20 }}>
                 <LiveDoctorsTable doctors={doctors} />

@@ -68,7 +68,7 @@ export const useServerDateFilter = ({ token, userId, query, status, isLive = fal
         getData();
 	}, [start_time, end_time]);
 
-    useEffect(isLive ? liveFunc : null, []);
+    useEffect(isLive ? liveFunc : () => {}, []);
 
 	return ({
         start_time,

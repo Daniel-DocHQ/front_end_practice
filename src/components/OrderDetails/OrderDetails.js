@@ -807,7 +807,7 @@ const AppointmentDetails = ({
 					<DocButton
 						color="pink"
 						style={{ marginLeft: 10 }}
-						text="Rebook Appointment"
+						text="Buy Appointment"
 						onClick={() => adminService.resendMessages({
 							organisation_id: "1",
 							event: "appointment.rebook",

@@ -9,6 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Timer from '../Timer/Timer';
 import LinkButton from '../DocButton/LinkButton';
+import DocButton from '../DocButton/DocButton';
 import './Tables.scss';
 
 const styles = {
@@ -51,7 +52,7 @@ const HUMAN_STATUSES = {
     practitionerAttended: 'Doctor Waiting',
 };
 
-const LiveStatusTable = ({ appointments = [] }) => {
+const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
     const currentTime = new Date().getTime();
     const filteredAppointments = appointments.filter(({ status, start_time }) => {
         const appointmentStatus = camelCase(status);
@@ -126,11 +127,25 @@ const LiveStatusTable = ({ appointments = [] }) => {
                                             <div className={`circle status-${appointmentStatus}`}/>
                                         </TableCell>
                                         <TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
-                                            <LinkButton
-                                                text='View'
-                                                color='green'
-                                                linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
-                                            />
+                                            <div className="row flex-end">
+                                                <LinkButton
+                                                    text='View'
+                                                    color='green'
+                                                    linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
+                                                />
+                                                <div style={{ margin: '0 10px' }}>
+                                                    <LinkButton
+                                                        text='Join'
+                                                        color='pink'
+                                                        linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+                                                    />
+                                                </div>
+                                                <DocButton
+                                                    color="pink"
+                                                    text="Release"
+                                                    onClick={() => releaseAppointment(appointment.id)}
+                                                />
+                                            </div>
 									    </TableCell>
                                     </TableRow>
                                 );
