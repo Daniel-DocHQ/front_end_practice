@@ -60,7 +60,7 @@ export const useServerDateFilter = ({ token, userId, query, status, isLive = fal
         const interval = setInterval(() => {
 			getData();
             setFilter('today');
-		}, 20000);
+		}, 60000 * 5);
 		return () => clearInterval(interval);
     };
 
