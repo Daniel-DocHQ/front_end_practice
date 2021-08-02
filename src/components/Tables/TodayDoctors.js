@@ -1,4 +1,5 @@
 import React from 'react';
+import { get } from 'lodash';
 import { format, differenceInMilliseconds  } from 'date-fns';
 import { lowerCase } from 'lodash';
 import Table from '@material-ui/core/Table';
@@ -8,6 +9,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../DocButton/LinkButton';
+import VonageVoiceCall from '../VoiceCall/VonageVoiceCall';
 import './Tables.scss';
 
 const styles = {
@@ -122,25 +124,7 @@ const TodayDoctors = ({ doctors }) => (
                                     </TableCell>
                                     <TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
                                         {isDoctorOffline && (
-                                            <div style={{ ...styles.mainContainer }}>
-                                                {/* <LinkButton
-                                                    text='Release'
-                                                    color='pink'
-                                                    linkSrc='/'
-                                                /> */}
-                                                <div style={{ margin: '0 10px' }}>
-                                                    <LinkButton
-                                                        text='Text'
-                                                        color='green'
-                                                        linkSrc='/'
-                                                    />
-                                                </div>
-                                                <LinkButton
-                                                    text='Call'
-                                                    color='green'
-                                                    linkSrc='/'
-                                                />
-                                            </div>
+                                            <VonageVoiceCall isTable phoneNumber={get(doctor, 'telephone')} />
                                         )}
                                     </TableCell>
                                 </TableRow>

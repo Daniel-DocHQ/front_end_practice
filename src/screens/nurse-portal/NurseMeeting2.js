@@ -38,6 +38,7 @@ import { AuthContext } from '../../context/AuthContext';
 import '../../assets/css/NurseMeeting.scss';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import copyToClipboard from '../../helpers/copyToClipboard';
+import VonageVoiceCall from '../../components/VoiceCall/VonageVoiceCall';
 
 const TEST_TYPES = {
 	pcr: 'PCR',
@@ -332,18 +333,12 @@ const PatientDetails = ({
 						{isManyPatients ? (
 							patients.map((item, indx) => (
 								!!item.phone && (
-									<div key={indx} className='row space-between no-margin'>
-										<p className='tab-row-text title-info'>Phone No Client {indx + 1}:</p>
-										<p className='tab-row-text'>{item.phone}</p>
-									</div>
+									<VonageVoiceCall key={indx} phoneNumber={item.phone} />
 								)
 							))
 						) : (
 							!!patient.phone && (
-								<div className='row space-between no-margin'>
-									<p className='tab-row-text title-info'>Phone No:</p>
-									<p className='tab-row-text'>{patient.phone}</p>
-								</div>
+								<VonageVoiceCall phoneNumber={patient.phone} />
 							)
 						)}
 						<div style={{ padding: '20px 0' }}>

@@ -155,6 +155,38 @@ const adminService = {
 			}
 		});
 	},
+	getIvrToken(name) {
+		return new Promise((resolve, reject) => {
+			if (name) {
+				axios({
+					url: `${baseUrl}/v1/av-services/ivr-handshake`,
+					method: 'POST',
+					data: { name },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							// price, delivery_date, appointment_date
+							resolve({ success: true, token: response.data.token });
+						} else {
+							// TODO needs better error handling
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				reject({ success: false, error: 'Missing details' });
+			}
+		});
+	},
 	getDropboxReceipts(id, date, token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined' || !id) {
