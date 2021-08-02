@@ -9,7 +9,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${baseUrl}/admin/appointments`,
+					url: `${baseUrl}/admin/allappointments`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
