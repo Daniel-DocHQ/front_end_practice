@@ -330,7 +330,6 @@ const CertificatesAaron = ({
 						id='passport-number'
 						label='ID document number'
 						onChange={setPassportId}
-						disabled
 						inputProps={{ minLength: '5' }}
 						required
 						updateStatus={updateErrors}

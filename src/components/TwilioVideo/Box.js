@@ -10,6 +10,7 @@ import {
 } from '../../context/AppointmentContext';
 import './box-test.scss';
 import { ToastsStore } from 'react-toasts';
+import { jwtDecode } from '../../helpers/jwtDecode';
 
 const Box = ({
 	token,
@@ -29,10 +30,11 @@ const Box = ({
 	} = useContext(AppointmentContext);
 	const appointmentId = contextAppointmentId || params['appointmentId'];
 	const videoToken = get(appointmentDetails, 'user_video_token');
+	const decode = !!videoToken ? jwtDecode(videoToken) : '';
 	const handleSubmit = useCallback(
 		async event => {
 			event.preventDefault();
-			if (videoToken && isNurse) {
+			if (!!decode && new Date(decode.exp * 1000).getTime() > new Date().getTime() && isNurse) {
 				setVideoCallToken(videoToken);
 			} else {
 				const data = await fetch('/video/token', {

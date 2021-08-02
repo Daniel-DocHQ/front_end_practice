@@ -1137,7 +1137,6 @@ const PatientIdVerification = ({
 										id='passport-id'
 										value={passportId}
 										placeholder='ID Document Number'
-										disabled
 										onChange={setPassportId}
 										required
 									/>
