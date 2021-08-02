@@ -61,8 +61,7 @@ const styles = {
 const AvailableAppointmentsTable = ({ token }) => {
 	const today = moment();
 	const tomorrow = moment().add(1, 'day');
-	const week = moment().add(7, 'day');
-	const month = moment().add(30, 'day');
+	const week = moment().endOf('day').add(7, 'day');
 	const classes = useStyles();
 	const [isLoading, setIsLoading] = useState(true);
 	const [appointments, setAppointments] = useState([]);
@@ -75,8 +74,8 @@ const AvailableAppointmentsTable = ({ token }) => {
 			setIsLoading(true);
 			await adminService
 				.getAppointmentsSearch({
-					start_time: start_time.utc(0).format(),
-					end_time: end_time.utc(0).endOf('day').format(),
+					start_time: moment(start_time).utc(0).startOf('day').format(),
+					end_time: moment(end_time).utc(0).endOf('day').format(),
 				},'AVAILABLE', token, true)
 				.then(data => {
 					if (data.success) {
@@ -117,7 +116,7 @@ const AvailableAppointmentsTable = ({ token }) => {
 							)}
 							onClick={() => {
 								setFilter('tomorrow');
-								setStartTime(tomorrow.startOf('day'));
+								setStartTime(tomorrow);
 								setEndTime(tomorrow);
 							}}
 						>
@@ -139,25 +138,12 @@ const AvailableAppointmentsTable = ({ token }) => {
 						<Button
 							className={clsx(
 								classes.btn,
-								{[classes.activeBtn]: filter === 'month'},
-							)}
-							onClick={() => {
-								setFilter('month');
-								setStartTime(today);
-								setEndTime(month);
-							}}
-						>
-							Month
-						</Button>
-						<Button
-							className={clsx(
-								classes.btn,
 								{[classes.activeBtn]: filter === 'customize'},
 							)}
 							onClick={() => {
 								setFilter('customize');
-								setStartTime(today);
-								setEndTime(today);
+								setStartTime(moment(today).startOf('day'));
+								setEndTime(moment(today).endOf('day'));
 							}}
 						>
 							Customize
@@ -167,7 +153,7 @@ const AvailableAppointmentsTable = ({ token }) => {
 						<div style={{ marginLeft: 20 }}>
 							<DateRangeFilter
 								startTime={new Date(start_time)}
-								setStartTime={(date) => setStartTime(moment(date).startOf('day'))}
+								setStartTime={(date) => setStartTime(moment(date))}
 								endTime={new Date(end_time)}
 								setEndTime={(date) => setEndTime(moment(date))}
 							/>

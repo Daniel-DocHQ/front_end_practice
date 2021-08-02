@@ -74,9 +74,9 @@ export default class AppointmentContextProvider extends Component {
 		function storeImage(img) {
 			this.setState({ img: [...this.state.img, img] });
 		}
-		function uploadImage(appointmentId, token) {
-			if (!!this.state.img) {
-				const imageBlob = dataURItoBlob(this.state.img[0]);
+		function uploadImage(appointmentId, img, token) {
+			if (!!img) {
+				const imageBlob = dataURItoBlob(img);
 				imageBlob.name = `${this.state.appointmentId}.webp`;
 				const formData = new FormData();
 				formData.append('file', imageBlob);

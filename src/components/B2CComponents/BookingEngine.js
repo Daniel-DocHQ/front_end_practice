@@ -233,7 +233,6 @@ const BookingEngine = () => {
 											},
 										} = orderInfo;
 										const {
-											numberOfPeople,
 											selectedSlot,
 											travelDate,
 											travelTime,
@@ -253,7 +252,7 @@ const BookingEngine = () => {
 										} = values;
 										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 										const isPCR = sku === FIT_TO_FLY_PCR;
-										const booking_users = Array.from(Array(numberOfPeople).keys()).map((item) => {
+										const booking_users = Array.from(Array(passengers.length).keys()).map((item) => {
 											const {
 												firstName,
 												lastName,
