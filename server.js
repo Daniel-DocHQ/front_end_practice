@@ -48,7 +48,7 @@ app.get('/voice/answer', (req, res) => {
 	  },
 	  {
 		"action": "connect",
-		"from": '447418362000', //process.env.REACT_APP_VONAGE_NUMBER,
+		"from": process.env.REACT_APP_VONAGE_NUMBER,
 		"endpoint": [
 		{
 			"type": "phone",
@@ -70,7 +70,7 @@ app.post('/voice/answer', (req, res) => {
 	  },
 	  {
 		"action": "connect",
-		"from": '447418362000', //process.env.REACT_APP_VONAGE_NUMBER,
+		"from": process.env.REACT_APP_VONAGE_NUMBER,
 		"endpoint": [
 		{
 			"type": "phone",

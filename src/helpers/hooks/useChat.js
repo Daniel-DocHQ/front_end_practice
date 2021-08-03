@@ -11,7 +11,8 @@ const FRESHCHAT_CONFIG = {
 };
 
 const initFreshChat = () => (
-  window.fcWidget.init(FRESHCHAT_CONFIG)
+  !!window && !!window.fcWidget ?
+    window.fcWidget.init(FRESHCHAT_CONFIG) : null
 );
 
 const initialize = (i, t) => {

@@ -74,10 +74,10 @@ export default class AppointmentContextProvider extends Component {
 		function storeImage(img) {
 			this.setState({ img: [...this.state.img, img] });
 		}
-		function uploadImage(appointmentId, img, token) {
+		function uploadImage(appointmentId, img, name, token) {
 			if (!!img) {
 				const imageBlob = dataURItoBlob(img);
-				imageBlob.name = `${this.state.appointmentId}.webp`;
+				imageBlob.name = !!name ? name : `${this.state.appointmentId}.webp`;
 				const formData = new FormData();
 				formData.append('file', imageBlob);
 				nurseSvc

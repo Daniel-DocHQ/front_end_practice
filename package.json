@@ -41,7 +41,7 @@
     "moment": "2.29.1",
     "moment-timezone": "^0.5.33",
     "nexmo-client": "^8.0.4",
-    "node-sass": "4.14.x",
+    "node-sass": "^4.14.1",
     "react": "16.13.x",
     "react-dom": "16.13.x",
     "react-draft-wysiwyg": "1.14.5",

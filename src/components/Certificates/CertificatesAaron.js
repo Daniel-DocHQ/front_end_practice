@@ -202,7 +202,12 @@ const CertificatesAaron = ({
 						setIsLoading(false);
 						setCanCreateCertificate(false);
 						if (isVideoAppointment && !!img) {
-							uploadImage(appointmentId, img, token);
+							uploadImage(
+								appointmentId,
+								img,
+								`${appointmentId} - ${forename} ${surname} - ${moment().utc(0).format()}`,
+								token,
+							);
 						}
 					} else {
 						setStatus({

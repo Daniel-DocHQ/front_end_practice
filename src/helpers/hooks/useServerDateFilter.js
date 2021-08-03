@@ -79,6 +79,7 @@ export const useServerDateFilter = ({ token, userId, query, status, isLive = fal
         appointments,
         filter,
         setFilter,
+        getData,
     });
 };
 

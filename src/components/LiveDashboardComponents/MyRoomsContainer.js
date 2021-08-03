@@ -145,14 +145,6 @@ const MyRoomsContainer = () => {
 					</Grid>
 				)}
 			</Grid>
-			<Grid container>
-				<Grid item xs={6}>
-					<UrgentClaimable
-						claimAppointment={(slotId) => claimAppointment(slotId)}
-						appointments={claimableAppointments}
-					/>
-				</Grid>
-			</Grid>
 		</>
 	);
 };

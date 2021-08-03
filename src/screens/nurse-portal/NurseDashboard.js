@@ -17,6 +17,7 @@ const NurseDashboard = props => {
 	const userId = get(props, 'role.id');
 	const { logout } = useContext(AuthContext);
 	const [ongoingAppointmentId, setOngoingAppointmentId] = useState();
+	const [reload, setReload] = useState(false);
 	const [todayDoctors, setTodayDoctors] = useState();
 	const [isLoading, setIsLoading] = useState(false);
 	let history = useHistory();
@@ -48,6 +49,7 @@ const NurseDashboard = props => {
 			.then(result => {
 				if (result.success) {
 					ToastsStore.success('Appointment claimed');
+					setReload(!reload);
 					// getFutureAppointments();
 					// getClaimableAppointments();
 				} else {
@@ -62,6 +64,7 @@ const NurseDashboard = props => {
 			.then(result => {
 				if (result.success) {
 					ToastsStore.success('Appointment released');
+					setReload(!reload);
 					// getFutureAppointments();
 					// getClaimableAppointments();
 				} else {
@@ -110,8 +113,8 @@ const NurseDashboard = props => {
 		<Grid container justify="space-between">
 			<Grid item xs={12}>
 				<ClaimableAppointments
-					userId={userId}
 					token={props.token}
+					reload={reload}
 					claimAppointment={claimAppointment}
 				/>
 			</Grid>
@@ -119,6 +122,7 @@ const NurseDashboard = props => {
 				<AppointmentTable
 					ongoingAppointmentId={ongoingAppointmentId}
 					releaseAppointment={releaseAppointment}
+					reload={reload}
 					token={props.token}
 					roleId={userId}
 				/>

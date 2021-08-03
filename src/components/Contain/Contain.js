@@ -8,6 +8,7 @@ import {
 const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
+      minHeight: '100vh',
     }
 }));
 

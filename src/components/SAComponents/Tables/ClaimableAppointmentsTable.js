@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { get } from 'lodash';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
@@ -36,7 +36,7 @@ const styles = {
 	},
 };
 
-const ClaimableAppointmentsTable = ({ token }) => {
+const ClaimableAppointmentsTable = ({ token, reload }) => {
 	const {
 		filter,
 		setFilter,
@@ -46,11 +46,16 @@ const ClaimableAppointmentsTable = ({ token }) => {
         setStartTime,
 		start_time,
 		end_time,
+		getData,
     } = useServerDateFilter({
         token,
         query: adminService.getAppointmentsSearch,
         status: 'CLAIMABLE',
     });
+
+	useEffect(() => {
+		getData()
+	}, [reload]);
 
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>

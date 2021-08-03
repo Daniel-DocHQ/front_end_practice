@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { get } from 'lodash';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
@@ -42,6 +42,7 @@ const AppointmentTable = ({
 	ongoingAppointmentId,
 	releaseAppointment,
 	token,
+	reload,
 	roleId,
 }) => {
 	const {
@@ -53,6 +54,7 @@ const AppointmentTable = ({
         setStartTime,
 		start_time,
 		end_time,
+		getData,
     } = useServerDateFilter({
         token,
         query: adminService.getAppointmentsSearch,
@@ -61,6 +63,10 @@ const AppointmentTable = ({
 		isLive: true,
     });
     const filteredAppointments = appointments.filter(({ id }) => id !== ongoingAppointmentId);
+
+	useEffect(() => {
+		getData()
+	}, [reload]);
 
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>

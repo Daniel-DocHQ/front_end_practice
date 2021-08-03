@@ -1,14 +1,16 @@
-import 'date-fns';
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
+import { ToastsStore } from 'react-toasts';
 import { AuthContext } from '../../context/AuthContext';
 import PastAppointmentsTable from '../../components/SAComponents/Tables/PastAppointmentsTable';
 import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
 import ClaimableAppointmentsTable from '../../components/SAComponents/Tables/ClaimableAppointmentsTable';
 import AvailableAppointmentsTable from '../../components/SAComponents/Tables/AvailableAppointmentsTable';
+import bookingService from '../../services/bookingService';
 
 const DoctorsManagement = ({ token, role, isAuthenticated }) => {
+	const [reload, setReload] = useState(false);
 	const { logout } = useContext(AuthContext);
 	let history = useHistory();
 	const logoutUser = () => {
@@ -19,16 +21,34 @@ const DoctorsManagement = ({ token, role, isAuthenticated }) => {
 		logoutUser();
 	};
 
+	const releaseAppointment = (slot_id) => {
+		bookingService
+			.releaseAppointment(token, slot_id)
+			.then(result => {
+				if (result.success) {
+					ToastsStore.success('Appointment released');
+					setReload(!reload);
+				} else {
+					ToastsStore.error('Error releasing appointment');
+				}
+			})
+			.catch(() => ToastsStore.error('Error releasing appointment'));
+	}
+
 	return (
         <Grid container justify="space-between">
 			<Grid item xs={12}>
-				<UpcomingAppointmentsTable token={token} />
+				<UpcomingAppointmentsTable
+					releaseAppointment={releaseAppointment}
+					token={token}
+					reload={reload}
+				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<AvailableAppointmentsTable token={token} />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<ClaimableAppointmentsTable token={token} />
+				<ClaimableAppointmentsTable token={token} reload={reload} />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<PastAppointmentsTable token={token} />

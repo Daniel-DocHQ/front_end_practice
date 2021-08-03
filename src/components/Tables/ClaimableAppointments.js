@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { get } from 'lodash';
+import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -37,7 +38,7 @@ const styles = {
 	},
 };
 
-const ClaimableAppointments = ({ token, userId, claimAppointment }) => {
+const ClaimableAppointments = ({ token, reload, claimAppointment }) => {
 	const {
 		filter,
 		setFilter,
@@ -47,14 +48,18 @@ const ClaimableAppointments = ({ token, userId, claimAppointment }) => {
         setStartTime,
 		start_time,
 		end_time,
+		getData,
     } = useServerDateFilter({
         token,
         query: adminService.getAppointmentsSearch,
         status: 'CLAIMABLE',
-		userId,
 		isLive: true,
 		practitionerName: true,
     });
+
+	useEffect(() => {
+		getData()
+	}, [reload]);
 
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
@@ -100,7 +105,7 @@ const ClaimableAppointments = ({ token, userId, claimAppointment }) => {
 										{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
-										{new Date(get(appointment, 'start_time', '')).toLocaleTimeString()}
+										{format(new Date(get(appointment, 'start_time', '')), 'p')}
 									</TableCell>
 									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
 										{get(appointment, 'booking_users.length', '')}

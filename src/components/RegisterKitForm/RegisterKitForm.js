@@ -16,7 +16,6 @@ import {
     List,
     ListItem,
     makeStyles,
-    Typography,
     Radio,
     FormLabel,
     RadioGroup,
@@ -38,6 +37,7 @@ import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 const useStyles = makeStyles(() => ({
     card: {
       width: '100%',
+      minWidth: '58vw',
     },
     largeCard: {
       minWidth: 800,
@@ -189,7 +189,7 @@ const RegisterKitForm = ({
                         </Card>
                     </Grid>
                     {!!user && (
-                        <Grid item>
+                        <Grid item style={{ paddingTop: 20 }}>
                             <Card className={classes.card} variant="outlined">
                                 <CardContent>
                                     <h3 className='no-margin'>

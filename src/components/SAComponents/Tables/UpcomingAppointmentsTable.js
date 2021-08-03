@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { get } from 'lodash';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
@@ -12,6 +12,7 @@ import adminService from '../../../services/adminService';
 import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
 import { useServerDateFilter, DateFilter } from '../../../helpers/hooks/useServerDateFilter';
 import '../../Tables/Tables.scss';
+import DocButton from '../../DocButton/DocButton';
 
 const styles = {
 	tableText: {
@@ -32,7 +33,7 @@ const styles = {
 	},
 };
 
-const UpcomingAppointmentsTable = ({ token }) => {
+const UpcomingAppointmentsTable = ({ releaseAppointment, reload, token }) => {
 	const {
 		filter,
 		setFilter,
@@ -42,12 +43,17 @@ const UpcomingAppointmentsTable = ({ token }) => {
         setStartTime,
 		start_time,
 		end_time,
+		getData,
     } = useServerDateFilter({
         token,
         query: adminService.getAppointmentsSearch,
         status: 'WAITING',
 		practitionerName: true,
     });
+
+	useEffect(() => {
+		getData()
+	}, [reload]);
 
 	return (
 		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
@@ -122,7 +128,7 @@ const UpcomingAppointmentsTable = ({ token }) => {
                                                     color='green'
                                                     linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
                                                 />
-                                                <div style={{ marginLeft: 10 }}>
+                                                <div style={{ margin: '0 10px' }}>
                                                     <LinkButton
                                                         newTab
                                                         text='Join'
@@ -130,6 +136,11 @@ const UpcomingAppointmentsTable = ({ token }) => {
                                                         linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
                                                     />
                                                 </div>
+												<DocButton
+													color="pink"
+													text="Release"
+													onClick={() => releaseAppointment(appointment.id)}
+												/>
                                             </div>
 										</TableCell>
 									</TableRow>
