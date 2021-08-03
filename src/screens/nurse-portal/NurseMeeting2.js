@@ -35,10 +35,11 @@ import TextInputElement from '../../components/FormComponents/TextInputElement';
 import bookingService from '../../services/bookingService';
 import getValueFromObject from '../../helpers/getValueFromObject';
 import { AuthContext } from '../../context/AuthContext';
-import '../../assets/css/NurseMeeting.scss';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import copyToClipboard from '../../helpers/copyToClipboard';
 import VonageVoiceCall from '../../components/VoiceCall/VonageVoiceCall';
+import useVonageApp from '../../helpers/hooks/useVonageApp';
+import '../../assets/css/NurseMeeting.scss';
 
 const TEST_TYPES = {
 	pcr: 'PCR',
@@ -236,6 +237,11 @@ const PatientDetails = ({
 	const linkRef = useRef(null);
 	const isManyPatients = patients.length > 1 || isAntigenType;
 	const [checked, setChecked] = useState(!isJoined);
+	const {
+        app,
+        call,
+		setCall,
+    } = useVonageApp();
 
 	const handleChange = () => {
 		setChecked((prev) => !prev);
@@ -288,7 +294,7 @@ const PatientDetails = ({
 
 	useEffect(() => {
 		setChecked(!isJoined);
-	}, [isJoined])
+	}, [isJoined]);
 
 	return (
 		<React.Fragment>
@@ -333,12 +339,23 @@ const PatientDetails = ({
 						{isManyPatients ? (
 							patients.map((item, indx) => (
 								!!item.phone && (
-									<VonageVoiceCall key={indx} phoneNumber={item.phone} />
+									<VonageVoiceCall
+										app={app}
+										key={indx}
+										call={call}
+										setCall={setCall}
+										phoneNumber={item.phone}
+									/>
 								)
 							))
 						) : (
 							!!patient.phone && (
-								<VonageVoiceCall phoneNumber={patient.phone} />
+								<VonageVoiceCall
+									app={app}
+									call={call}
+									setCall={setCall}
+									phoneNumber={patient.phone}
+								/>
 							)
 						)}
 						<div style={{ padding: '20px 0' }}>

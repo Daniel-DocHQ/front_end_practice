@@ -1,4 +1,5 @@
 import { get } from 'lodash';
+import { useCookies } from 'react-cookie';
 import React, { useCallback, useContext } from 'react';
 import getURLParams from '../../helpers/getURLParams';
 import DocButton from '../DocButton/DocButton';
@@ -28,14 +29,19 @@ const Box = ({
 		appointmentDetails,
 		appointmentId: contextAppointmentId,
 	} = useContext(AppointmentContext);
+	const [cookies, setCookie] = useCookies();
 	const appointmentId = contextAppointmentId || params['appointmentId'];
-	const videoToken = get(appointmentDetails, 'user_video_token');
-	const decode = !!videoToken ? jwtDecode(videoToken) : '';
+	const patientVideoToken = get(cookies, 'video-token');
+	const practitionerVideoToken = get(appointmentDetails, 'user_video_token');
+	const practitionerDecode = !!practitionerVideoToken ? jwtDecode(practitionerVideoToken) : '';
+	const patientDecode = !!patientVideoToken ? jwtDecode(patientVideoToken) : '';
 	const handleSubmit = useCallback(
 		async event => {
 			event.preventDefault();
-			if (!!decode && new Date(decode.exp * 1000).getTime() > new Date().getTime() && isNurse) {
-				setVideoCallToken(videoToken);
+			if (!!practitionerDecode && new Date(practitionerDecode.exp * 1000).getTime() > new Date().getTime() && isNurse) {
+				setVideoCallToken(practitionerVideoToken);
+			} else if (!isNurse && !!patientDecode && new Date(patientDecode.exp * 1000).getTime() > new Date().getTime()) {
+				setVideoCallToken(patientVideoToken);
 			} else {
 				const data = await fetch('/video/token', {
 					method: 'POST',
@@ -48,13 +54,15 @@ const Box = ({
 					},
 				}).then(res => res.json()).catch(ToastsStore.error);
 				setVideoCallToken(data.token);
-				if (isNurse) await bookingService.setVideoToken(
-					appointmentId,
-					{
-						user_video_token: data.token,
-					},
-					token,
-				).catch(ToastsStore.error);
+				if (isNurse) {
+				 await bookingService.setVideoToken(
+						appointmentId,
+						{
+							user_video_token: data.token,
+						},
+						token,
+					).catch(ToastsStore.error)
+				} else setCookie('video-token', data.token);
 			}
 			await bookingService
 				.updateAppointmentStatus(appointmentId, {

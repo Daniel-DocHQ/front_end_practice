@@ -1,38 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { ToastsStore } from 'react-toasts';
-import nexmoClient from 'nexmo-client';
+import React from 'react';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { IconButton } from '@material-ui/core';
 import parsePhoneNumber from 'libphonenumber-js'
 import DocButton from '../DocButton/DocButton';
 import DocModal from '../DocModal/DocModal';
-import adminService from '../../services/adminService';
 
-const VonageVoiceCall = ({ isTable = false, phoneNumber }) => {
-  const [app, setApp] = useState(null);
-  const [call, setCall] = useState();
+const VonageVoiceCall = ({
+  app,
+  call,
+  setCall,
+  phoneNumber,
+  isTable = false,
+}) => {
   const parsedPhoneNumber = !!phoneNumber && parsePhoneNumber(phoneNumber);
   const formattedPhoneNumber = !!parsedPhoneNumber && `${parsedPhoneNumber.countryCallingCode}${parsedPhoneNumber.nationalNumber}`;
-
-  const getToken = async () => (
-    await adminService
-      .getIvrToken('Practitioner1')
-      .catch((err) => ToastsStore.error(err.error))
-  );
-
-  useEffect(() => {
-    (async () => {
-      const { token } = await getToken();
-      new nexmoClient({ debug: true })
-        .login(token)
-        .then(app => {
-          setApp(app);
-          app.on("call:status:changed",(call) => {
-            setCall(call);
-          });
-        }).catch((error) => console.log(error));
-    })();
-  }, []);
 
   return (
     <div className='row space-between no-margin'>
@@ -48,7 +29,11 @@ const VonageVoiceCall = ({ isTable = false, phoneNumber }) => {
               color="green"
               onClick={(event) => {
                 event.preventDefault();
-                app.callServer(formattedPhoneNumber).catch((error) => console.log(error));
+                try {
+                  app.callServer(formattedPhoneNumber);
+                } catch (error) {
+                  console.log(error)
+                }
               }}
             />
           )
@@ -60,7 +45,11 @@ const VonageVoiceCall = ({ isTable = false, phoneNumber }) => {
                   style={{ padding: 5 }}
                   onClick={(event) => {
                     event.preventDefault();
-                    app.callServer(formattedPhoneNumber);
+                    try {
+                      app.callServer(formattedPhoneNumber);
+                    } catch (error) {
+                      console.log(error)
+                    }
                   }}
                 >
                   <PhoneIcon fontSize="small" className="green-text" />
