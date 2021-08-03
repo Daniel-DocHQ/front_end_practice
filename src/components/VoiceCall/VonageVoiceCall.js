@@ -61,6 +61,10 @@ const VonageVoiceCall = ({
       {!!call && !!call.status && (
         <DocModal
           isVisible={true}
+          onClose={() => {
+            call.hangUp().catch((error) => console.log(error));
+            setCall();
+          }}
           title={`Calling to ${phoneNumber}`}
           content={
               <div className="row space-between" style={{ width: '100%' }}>
@@ -69,7 +73,14 @@ const VonageVoiceCall = ({
                 </div>
                 <DocButton
                     color='pink'
-                    text='Hang up'
+                    text={
+                      (
+                        call.status === 'completed'
+                        || call.status === 'rejected'
+                        || call.status === 'unanswered'
+                        || call.status === 'failed'
+                      ) ? 'Close' : 'Hang up'
+                    }
                     onClick={() => {
                         call.hangUp().catch((error) => console.log(error));
                         setCall();
