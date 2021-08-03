@@ -69,6 +69,10 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 12,
 		color: 'grey',
 	},
+	note: {
+		lineHeight: 0.8,
+		whiteSpace: 'break-spaces',
+	},
 }));
 
 const READABLE_STATUSES = {
@@ -141,6 +145,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 		}, orderDetail.id, token).then(result => {
 			if (result.success) {
 				setNotesStatus({ severity: 'success', message: 'Note added successfully' });
+				setNotes();
 			} else {
 				setNotesStatus({
 					severity: 'error',
@@ -277,7 +282,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 								<>
 									{!!orderDetail.order_notes && orderDetail.order_notes.map(({ note, id, created_by, created_at }) => (
 										<div key={id}>
-											<Typography>
+											<Typography className={classes.note}>
 												{note}
 											</Typography>
 											<div className="row space-between">
