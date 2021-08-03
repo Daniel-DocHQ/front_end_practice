@@ -84,6 +84,7 @@ const ClaimableAppointments = ({ token, reload, claimAppointment }) => {
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
+							<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
 							<TableCell align='center' style={styles.tableText}>People</TableCell>
@@ -101,19 +102,22 @@ const ClaimableAppointments = ({ token, reload, claimAppointment }) => {
 							appointments.length > 0 &&
 							appointments.map(appointment => (
 								<TableRow key={appointment.id}>
-									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='left' style={{ ...styles.tableText }}>
+										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
+									</TableCell>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{new Date(get(appointment, 'start_time', '')).toLocaleDateString()}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{format(new Date(get(appointment, 'start_time', '')), 'p')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_users.length', '')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
-									<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='right' style={{ ...styles.tableText }}>
 										<DocButton
 											text='Claim'
 											color='green'

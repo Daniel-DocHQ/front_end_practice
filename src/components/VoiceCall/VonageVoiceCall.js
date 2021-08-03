@@ -60,7 +60,7 @@ const VonageVoiceCall = ({
       </div>
       {!!call && !!call.status && (
         <DocModal
-          isVisible={true}
+          isVisible
           onClose={() => {
             call.hangUp().catch((error) => console.log(error));
             setCall();

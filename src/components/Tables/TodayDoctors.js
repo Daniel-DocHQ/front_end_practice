@@ -93,7 +93,7 @@ const TodayDoctors = ({ doctors }) => {
 
                                 {/* const { minutes, seconds } = doctor.start_in; */}
                                 {/* const formatted = `${minutes}:${seconds}` */}
-                                const isDoctorOffline = doctor.status === 'Offline';
+                                {/* const isDoctorOffline = doctor.status === 'Offline'; */}
                                 {/* const isAppointmentSoon = minutes <= 5 && isDoctorOffline; */}
                                 var isAppointmentSoon = false;
 
@@ -129,15 +129,13 @@ const TodayDoctors = ({ doctors }) => {
                                             {doctor.status}
                                         </TableCell>
                                         <TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
-                                            {isDoctorOffline && (
-                                                <VonageVoiceCall
-                                                    isTable
-                                                    app={app}
-                                                    call={call}
-                                                    setCall={setCall}
-                                                    phoneNumber={get(doctor, 'telephone')}
-                                                />
-                                            )}
+                                            <VonageVoiceCall
+                                                isTable
+                                                app={app}
+                                                call={call}
+                                                setCall={setCall}
+                                                phoneNumber={get(doctor, 'telephone')}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 );
