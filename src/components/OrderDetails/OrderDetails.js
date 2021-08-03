@@ -691,7 +691,7 @@ const AppointmentDetails = ({
 	const statusChanges = get(appointment, 'status_changes', []) || [];
 	const isCompleted = appointmentStatus === 'COMPLETED';
     const flightDate = get(appointment, 'booking_user.metadata.travel_date');
-    const product_id = get(appointment, 'product_id');
+    const product_id = get(appointment, 'booking_user.metadata.product_id');
 
 	return (
 		<>
@@ -706,18 +706,18 @@ const AppointmentDetails = ({
 						</ListItemText>
 					</ListItem>
 				)}
+				{!!product_id && (
+					<ListItem>
+						<ListItemText>
+							<b>Selected Product</b>: {orderItems.find(({ product_id }) => product_id === appointment.booking_user.product_id).product.title}
+						</ListItemText>
+					</ListItem>
+				)}
 				<ListItem>
 					<ListItemText>
 						<b>Test Type</b>: {appointment.booking_user.metadata.test_type}
 					</ListItemText>
 				</ListItem>
-				{!!product_id && (
-				<ListItem>
-					<ListItemText>
-						<b>Selected Product</b>: {orderItems.find(({ product_id }) => product_id === appointment.booking_user.product_id).product.title}
-					</ListItemText>
-					</ListItem>
-				)}
 				<ListItem>
 					<ListItemText>
 					{!!appointment.start_time ? (
