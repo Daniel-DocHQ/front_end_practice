@@ -54,10 +54,6 @@ const HUMAN_STATUSES = {
 
 const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
     const currentTime = new Date().getTime();
-    const filteredAppointments = appointments.filter(({ status, start_time }) => {
-        const appointmentStatus = camelCase(status);
-        return !!APPOINTMENT_STATUSES[appointmentStatus] || (currentTime >= new Date(start_time).getTime() && appointmentStatus === 'waiting');
-    });
 
     return (
         <div className='doc-container' style={{ justifyContent: 'unset' }}>
@@ -84,10 +80,10 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {typeof filteredAppointments !== 'undefined' &&
-                            typeof filteredAppointments === 'object' &&
-                            filteredAppointments.length > 0 &&
-                            filteredAppointments.map(appointment => {
+                        {typeof appointments !== 'undefined' &&
+                            typeof appointments === 'object' &&
+                            appointments.length > 0 &&
+                            appointments.map(appointment => {
                                 const appointmentStatus = camelCase(get(appointment, 'status', ''));
                                 const statusLastUpdated = get(appointment, 'status_last_updated', '');
                                 const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
@@ -150,7 +146,7 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                     </TableRow>
                                 );
                             })}
-                        {typeof filteredAppointments !== 'object' || filteredAppointments.length === 0 ? (
+                        {typeof appointments !== 'object' || appointments.length === 0 ? (
                             <TableRow>
                                 <TableCell style={styles.tableText}>
                                     <p>No appointments to display</p>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, memo, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import moment from 'moment';
 import { Grid } from '@material-ui/core';
 import { ToastsStore } from 'react-toasts';
 import adminService from '../../services/adminService';
@@ -12,6 +13,7 @@ import bookingService from '../../services/bookingService';
 
 const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 	const { logout } = useContext(AuthContext);
+	const today = moment();
 	const [appointments, setAppointments] = useState();
 	const [doctors, setDoctors] = useState();
 	let history = useHistory();
@@ -47,7 +49,13 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 
 	const getFutureAppointments = async () => (
 		adminService
-			.getAppointments(token)
+			.getLiveAppointments({
+				token,
+				dateRange: {
+					start_time: moment(today).utc(0).startOf('day').format(),
+					end_time: moment(today).utc(0).endOf('day').format(),
+				},
+			})
 			.then(data => {
 				if (data.success) {
 					setAppointments(data.appointments);

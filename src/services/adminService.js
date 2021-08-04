@@ -37,6 +37,40 @@ const adminService = {
 			}
 		});
 	},
+	getLiveAppointments({token, dateRange}) {
+		return new Promise((resolve, reject) => {
+			const { start_time, end_time } = dateRange;
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${bookingUrl}/search?q=start_time:[${start_time} TO ${end_time}] AND status:(WAITING OR PATIENT_ATTENDED OR PRACTITIONER_ATTENDED OR IN_PROGRESS OR ON_HOLD)&inc_practitioner_name=1`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								appointments: response.data,
+							});
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+							resolve({
+								success: true,
+								appointments: [],
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to retrieve appointments.',
+							});
+						}
+					})
+					.catch(err => console.error(err));
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	generateDiscount(token, data) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
