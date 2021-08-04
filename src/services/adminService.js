@@ -597,7 +597,7 @@ const adminService = {
 			? `claimable_slot:true`
 			: status === 'WAITING'
 				? `${!!userId
-					? `(status:${status} OR status:IN_PROGRESS OR status:PRACTITIONER_ATTENDED or status:PATIENT_ATTENDED)`
+					? `status(${status} OR IN_PROGRESS OR PRACTITIONER_ATTENDED or PATIENT_ATTENDED)`
 					: `status:${status}`} AND claimable_slot:false`
 				: `status:${status}`;
 		const userQuery = !!userId ? ` AND user:${userId}` : '';
@@ -605,7 +605,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/search?q=${statusQuery}${userQuery} AND start_time:[${start_time} TO ${end_time}]${practitionerName ? '&inc_practitioner_name=1' : ''}`,
+					url: `${bookingUrl}/search?q=${statusQuery}${userQuery} AND start_time:[${start_time} TO ${end_time}]${practitionerName ? '&inc_practitioner_name=1' : ''}&sort=start_time:desc`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
