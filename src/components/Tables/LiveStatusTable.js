@@ -131,6 +131,7 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                                 />
                                                 <div style={{ margin: '0 10px' }}>
                                                     <LinkButton
+                                                        newTab
                                                         text='Join'
                                                         color='pink'
                                                         linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
