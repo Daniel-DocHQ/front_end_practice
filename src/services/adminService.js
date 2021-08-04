@@ -593,7 +593,13 @@ const adminService = {
 		userId,
 	}) {
 		const { start_time, end_time } = dateRange;
-		const statusQuery = status === 'CLAIMABLE' ? `claimable_slot:true` : status === 'WAITING' ? `status:${status} AND claimable_slot:false` : `status:${status}`;
+		const statusQuery = status === 'CLAIMABLE'
+			? `claimable_slot:true`
+			: status === 'WAITING'
+				? `${!!userId
+					? `(status:${status} OR status:IN_PROGRESS OR status:PRACTITIONER_ATTENDED or status:PATIENT_ATTENDED)`
+					: `status:${status}`} AND claimable_slot:false`
+				: `status:${status}`;
 		const userQuery = !!userId ? ` AND user:${userId}` : '';
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
