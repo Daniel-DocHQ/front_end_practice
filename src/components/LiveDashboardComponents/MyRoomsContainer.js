@@ -16,7 +16,6 @@ const REQUEST_INTERVAL = 30 * 1000; // 30 seconds
 const MyRoomsContainer = () => {
     const { user, token, logout } = useContext(AuthContext);
 	const [appointments, setAppointments] = useState();
-	const [claimableAppointments, setClaimableAppointments] = useState();
     const [appointmentId, setAppointmentId] = useState();
     const [holdAppointments, setHoldAppointments] = useState();
 	let history = useHistory();
@@ -33,10 +32,6 @@ const MyRoomsContainer = () => {
 	};
 
 	useEffect(() => {
-		if (!claimableAppointments) {
-			getClaimableAppointments();
-		}
-
 		if (!appointmentId) {
 			getPractitionerInfo();
 		}
@@ -83,40 +78,6 @@ const MyRoomsContainer = () => {
 			})
 			.catch(err => ToastsStore.error('Error fetching appointments'))
     );
-
-	const getClaimableAppointments = async () => {
-		await bookingService
-			.getClaimableAppointments(token)
-			.then(result => {
-				if (result.success && result.claimable_appointments) {
-					setClaimableAppointments(result.claimable_appointments);
-				} else if (!result.success) {
-					ToastsStore.error('Unable to load claimable appointments');
-				}
-			})
-			.catch(({ status }) => {
-				if (status === 401) {
-					logoutUser();
-					ToastsStore.error('Token expired');
-				} else {
-					ToastsStore.error('Unable to load claimable appointments');
-				}
-			});
-	}
-
-	function claimAppointment(slotId) {
-		bookingService
-			.claimAppointment(token, slotId)
-			.then(result => {
-				if (result.success) {
-					ToastsStore.success('Appointment claimed');
-					getClaimableAppointments();
-				} else {
-					ToastsStore.error('Error claiming appointment');
-				}
-			})
-			.catch(() => ToastsStore.error('Error claiming appointment'));
-	}
 
 	return (
 		<>

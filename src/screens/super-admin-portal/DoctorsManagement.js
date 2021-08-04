@@ -38,6 +38,9 @@ const DoctorsManagement = ({ token, role, isAuthenticated }) => {
 	return (
         <Grid container justify="space-between">
 			<Grid item xs={12}>
+				<ClaimableAppointmentsTable token={token} reload={reload} />
+			</Grid>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<UpcomingAppointmentsTable
 					releaseAppointment={releaseAppointment}
 					token={token}
@@ -45,13 +48,10 @@ const DoctorsManagement = ({ token, role, isAuthenticated }) => {
 				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<AvailableAppointmentsTable token={token} />
-			</Grid>
-			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<ClaimableAppointmentsTable token={token} reload={reload} />
-			</Grid>
-			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<PastAppointmentsTable token={token} />
+			</Grid>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<AvailableAppointmentsTable token={token} />
 			</Grid>
 		</Grid>
 	);

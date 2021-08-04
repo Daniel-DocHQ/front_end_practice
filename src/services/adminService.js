@@ -196,7 +196,6 @@ const adminService = {
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
-						console.log(response);
 						if ((response.status === 200 || response.data.status === 'ok') && response.data && response.data.receipts) {
 							resolve({
 								success: true,

@@ -11,7 +11,6 @@ const googleService = {
                 url: `${baseUrl}/timezone/json?location=${location}&key=${apiKey}`,
             })
                 .then(response => {
-                    console.log(response)
                     if ((response.status === 200 || response.data.status === 'ok') && response.data) {
                         resolve({
                             success: true,

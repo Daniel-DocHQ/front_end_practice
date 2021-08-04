@@ -28,7 +28,6 @@ const AppointmentView = (props) => {
     const patients = get(appointment, 'booking_users', []);
     const notes = get(appointment, 'notes', []);
     const statusChanges = get(appointment, 'status_changes', []) || [];
-    console.log(statusChanges);
     let history = useHistory();
 
     if (props.isAuthenticated !== true && props.role !== 'practitioner') {

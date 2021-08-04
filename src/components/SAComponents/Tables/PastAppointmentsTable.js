@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { get } from 'lodash';
+import { get, startCase } from 'lodash';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -88,7 +88,7 @@ const PastAppointmentsTable = ({ token }) => {
                                 const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
                                 const type = get(appointment, 'type', '');
                                 const source = get(appointment, 'booking_user.metadata.source', '');
-
+                                const result = get(appointment, 'booking_user.metadata.result', '') || get(appointment, 'booking_user.metadata.sample_taken', '');
                                 return (
                                     <TableRow key={appointment.id}>
                                         <TableCell align='left' style={{ ...styles.tableText }}>
@@ -112,8 +112,12 @@ const PastAppointmentsTable = ({ token }) => {
                                         <TableCell align='center' style={{ ...styles.tableText }}>
                                             {get(appointment, 'booking_user.metadata.test_type', '')}
                                         </TableCell>
-                                        <TableCell align='center' style={{ ...styles.tableText }}>
-                                            {get(appointment, 'booking_user.metadata.result', '')}
+                                        <TableCell
+                                            align='center'
+                                            className={result.toLocaleLowerCase() === 'positive' ? 'red-bold-text' : ''}
+                                            style={{ ...styles.tableText }}
+                                        >
+                                            {startCase(result)}
                                         </TableCell>
                                         <TableCell align='right' style={{ ...styles.tableText }}>
                                             <div className="row flex-end">
