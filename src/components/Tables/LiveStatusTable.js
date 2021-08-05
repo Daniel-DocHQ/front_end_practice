@@ -50,6 +50,8 @@ const HUMAN_STATUSES = {
     waiting: 'Not Started',
     patientAttended: 'Patient Waiting',
     practitionerAttended: 'Doctor Waiting',
+    practitionerLeft: 'Doctor Left',
+    patientLeft: 'Patient Left',
 };
 
 const LiveStatusTable = ({ appointments = [], releaseAppointment }) => (

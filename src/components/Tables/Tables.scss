@@ -31,10 +31,10 @@ tr.MuiTableRow-root:nth-of-type(even) {
 .status-onHold {
 	background-color: var(--doc-yellow);
 }
-.status-patientAttended, .status-practitionerAttended, .status-waiting, .status-offline {
+.status-patientAttended, .status-practitionerAttended, .status-waiting, .status-offline, .status-patientLeft, .status-practitionerLeft {
 	background-color: var(--doc-pink);
 }
-.red-bold-text, .text-status-waiting, .text-status-practitionerAttended, .text-status-patientAttended {
+.red-bold-text, .text-status-waiting, .text-status-practitionerAttended, .text-status-patientAttended, .text-status-patientLeft, .text-status-practitionerLeft {
 	font-weight: 700 !important;
 	color: var(--doc-pink) !important;
 }
