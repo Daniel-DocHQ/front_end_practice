@@ -191,6 +191,41 @@ const authorisationSvc = {
 			}
 		});
 	},
+	updateUser(token, body) {
+		return new Promise((resolve, reject) => {
+			if (body && token) {
+				axios({
+					url: `${identitiesUrl}/users`,
+					method: 'PATCH',
+					headers: {
+						'Content-type': 'application,json',
+						Authorization: identitiesBearer,
+					},
+					data: body,
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data.id) {
+							resolve({ success: true, user: response.data, id: response.data.id });
+						} else if (response.status === 403) {
+							reject({
+								success: false,
+								error: 'Unable to update user.',
+								authenticated: false,
+							});
+						} else {
+							// TODO what other responses will they send?!
+							reject({
+								success: false,
+								error: 'An error occurred',
+							});
+						}
+					})
+					.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+			} else {
+				resolve({ success: false, error: 'Missing Details' });
+			}
+		});
+	},
 	createRole(body) {
 		function isValid(obj) {
 			return obj && obj.name && obj.user_id && obj.organisation_id;

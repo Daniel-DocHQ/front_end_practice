@@ -53,7 +53,7 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 				token,
 				dateRange: {
 					start_time: moment(today).utc(0).startOf('day').format(),
-					end_time: moment(today).utc(0).format(),
+					end_time: moment(today).add(15, 'minutes').utc(0).format(),
 				},
 			})
 			.then(data => {

@@ -110,7 +110,7 @@ const PersonalInformation = ({
 				})
 				.catch(err => console.log('error fetching user'));
 		}
-	}, []);
+	}, [isEditable]);
 	useEffect(() => {
 		if (!!user) {
 			if (!!user.first_name) setFirst_name(user.first_name);
@@ -136,46 +136,30 @@ const PersonalInformation = ({
 	}
 
 	function proceed() {
-		// const body = {
-		// 	shipping_details: { ...shipping_details, address_1, address_2, city, county, postcode },
-		// };
-		// if (
-		// 	!!user &&
-		// 	!!user.id &&
-		// 	!!user.roles &&
-		// 	!!user.roles[0] &&
-		// 	!!user.roles[0].id &&
-		// 	!!user.roles[0].organisation_id &&
-		// 	!!user.first_name &&
-		// 	!!user.last_name
-		// ) {
-		// 	body.role_id = user.roles[0].id;
-		// 	body.organisation_profile_id = user.roles[0].organisation_id;
-		// 	body.user_id = user.id;
-		// 	body.name = `${user.first_name} ${user.last_name}`;
-		// }
-		// if (errors.length === 0) {
-		// 	body.shipping_details.id = shipping_details.id;
-		// 	bookingUserDataService
-		// 		.updateProfileData(token, body)
-		// 		.then(result => {
-		// 			if (result.success && result.role_profile) {
-		// 				setRoleProfile(result.role_profile);
-		// 				setStatus({
-		// 					severity: 'success',
-		// 					message: 'Successfully saved shipping details',
-		// 				});
-		// 			}
-		// 		})
-		// 		.catch(() => {
-		// 			setStatus({
-		// 				severity: 'error',
-		// 				message: 'Error saving shipping details',
-		// 			});
-		// 		});
-		// } else {
-		// 	setAttemptedSubmit(true);
-		// }
+		const body = {
+			telephone,
+		};
+		if (errors.length === 0) {
+			authorisationSvc
+				.updateUser(token, body)
+				.then(result => {
+					if (result.success && result.role_profile) {
+						// setStatus({
+						// 	severity: 'success',
+						// 	message: 'Successfully saved shipping details',
+						// });
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+					// setStatus({
+					// 	severity: 'error',
+					// 	message: 'Error saving shipping details',
+					// });
+				});
+		} else {
+			setAttemptedSubmit(true);
+		}
 		setIsEditable(false);
 	};
 	return isEditable ? (
