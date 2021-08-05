@@ -37,6 +37,40 @@ const adminService = {
 			}
 		});
 	},
+	getNextAppointments({ token, dateRange, userId }) {
+		return new Promise((resolve, reject) => {
+			const { start_time, end_time } = dateRange;
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${bookingUrl}/search?q=user:${userId} AND start_time:[${start_time} TO ${end_time}] AND claimable_slot:false AND NOT status:(LOCKED OR PROVIDER_CANCELLED OR UNAVAILABLE OR USER_CANCELLED OR COMPLETED OR AVAILABLE)&sort=start_time:desc`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								appointments: response.data,
+							});
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+							resolve({
+								success: true,
+								appointments: [],
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to retrieve appointments.',
+							});
+						}
+					})
+					.catch(err => console.error(err));
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getLiveAppointments({token, dateRange}) {
 		return new Promise((resolve, reject) => {
 			const { start_time, end_time } = dateRange;
@@ -631,7 +665,7 @@ const adminService = {
 			? `claimable_slot:true`
 			: status === 'WAITING'
 				? `${!!userId
-					? `status(${status} OR IN_PROGRESS OR PRACTITIONER_ATTENDED or PATIENT_ATTENDED)`
+					? `status:(${status} OR IN_PROGRESS OR PRACTITIONER_ATTENDED OR PATIENT_ATTENDED OR PRACTITIONER_LEFT OR PATIENT_LEFT)`
 					: `status:${status}`} AND claimable_slot:false`
 				: `status:${status}`;
 		const userQuery = !!userId ? ` AND user:${userId}` : '';

@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useContext, memo } from 'react';
 import { get } from 'lodash';
+import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
 import { Grid } from '@material-ui/core';
 import NurseMeeting2 from '../../screens/nurse-portal/NurseMeeting2';
 import nurseService from '../../services/nurseService';
 import { AuthContext } from '../../context/AuthContext';
-import bookingService from '../../services/bookingService';
-import UrgentClaimable from '../Tables/UrgentClaimable';
 import NextAppointmentsTable from '../Tables/NextAppointmentsTable';
 import nurseSvc from '../../services/nurseService';
+import adminService from '../../services/adminService';
 
 const REQUEST_INTERVAL = 30 * 1000; // 30 seconds
 
@@ -18,10 +18,11 @@ const MyRoomsContainer = () => {
 	const [appointments, setAppointments] = useState();
     const [appointmentId, setAppointmentId] = useState();
     const [holdAppointments, setHoldAppointments] = useState();
+	const userId = get(user, 'roles[0].id', 0);
 	let history = useHistory();
 
 	const handleSetAppointmentId = async (id) => {
-		await nurseSvc.clearPractitionerInformation(token, get(user, 'roles[0].id', 0));
+		await nurseSvc.clearPractitionerInformation(token, userId);
 		localStorage.setItem('appointmentId', id);
 		setAppointmentId(id);
 	};
@@ -63,8 +64,15 @@ const MyRoomsContainer = () => {
 	}
 
 	const getFutureAppointments = () => (
-		nurseService
-			.getAppointments(token)
+		adminService
+			.getNextAppointments({
+				token,
+				dateRange: {
+					start_time: moment().subtract(1, 'hours').utc(0).format(),
+					end_time: moment().endOf('day').utc(0).format(),
+				},
+				userId,
+			})
 			.then(data => {
 				if (data.success) {
                     const results = data.appointments;

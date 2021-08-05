@@ -12,7 +12,7 @@ const MyRooms = (props) => {
 
 	return (
     <LiveAppBar value={1}>
-      <MyRoomsContainer />
+      <MyRoomsContainer {...props} />
     </LiveAppBar>
   );
 };

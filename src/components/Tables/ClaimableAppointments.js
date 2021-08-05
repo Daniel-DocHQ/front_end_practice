@@ -131,10 +131,11 @@ const ClaimableAppointments = ({ token, reload, claimAppointment }) => {
 								<TableCell style={styles.tableText}>
 									<p>No appointments to display</p>
 								</TableCell>
-								<TableCell/>
-								<TableCell/>
-								<TableCell/>
-								<TableCell/>
+								<TableCell />
+								<TableCell />
+								<TableCell />
+								<TableCell />
+								<TableCell />
 							</TableRow>
 						) : null}
 					</TableBody>
