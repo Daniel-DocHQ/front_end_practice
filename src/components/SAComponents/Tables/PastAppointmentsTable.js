@@ -89,6 +89,12 @@ const PastAppointmentsTable = ({ token }) => {
                                 const type = get(appointment, 'type', '');
                                 const source = get(appointment, 'booking_user.metadata.source', '');
                                 const result = get(appointment, 'booking_user.metadata.result', '') || get(appointment, 'booking_user.metadata.sample_taken', '');
+                                const test_type = get(appointment, 'booking_user.metadata.test_type', '');
+                                const sampleTakens = test_type === "PCR"
+                                    ? [...get(appointment, 'booking_users', [])].map((user) => get(user, 'metadata.sample_taken', ''))
+                                    : [];
+                                const sample_taken = !!sampleTakens.length ? sampleTakens.find((sampleTaken) => sampleTaken === 'valid') || sampleTakens[0]  : '';
+
                                 return (
                                     <TableRow key={appointment.id}>
                                         <TableCell align='left' style={{ ...styles.tableText }}>
@@ -110,14 +116,14 @@ const PastAppointmentsTable = ({ token }) => {
                                             {get(appointment, 'booking_users.length', '')}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
-                                            {get(appointment, 'booking_user.metadata.test_type', '')}
+                                            {test_type}
                                         </TableCell>
                                         <TableCell
                                             align='center'
                                             className={result.toLocaleLowerCase() === 'positive' ? 'red-bold-text' : ''}
                                             style={{ ...styles.tableText }}
                                         >
-                                            {startCase(result)}
+                                            {startCase(result || sample_taken) }
                                         </TableCell>
                                         <TableCell align='right' style={{ ...styles.tableText }}>
                                             <div className="row flex-end">

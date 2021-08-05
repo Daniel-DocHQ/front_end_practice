@@ -49,17 +49,18 @@ const timeDifference = (now, start_time, status) => {
     }
 }
 
-const TodayDoctors = ({ doctors }) => {
+const TodayDoctors = ({ doctors = [] }) => {
     const {
         app,
         call,
         setCall,
     } = useVonageApp();
+    const sortedDoctors = doctors.sort((aDoctor, bDoctor) => ((!!aDoctor.start_time ? new Date(aDoctor.start_time).getTime() : 0) - (!!bDoctor.start_time ? new Date(bDoctor.start_time).getTime() : 0)));
 
     return (
         <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
-                <h2>Today Doctors</h2>
+                <h2>Shift Overview</h2>
             </div>
             <TableContainer
                 style={{
@@ -80,10 +81,10 @@ const TodayDoctors = ({ doctors }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {typeof doctors !== 'undefined' &&
-                            typeof doctors === 'object' &&
-                            doctors.length > 0 &&
-                            doctors
+                        {typeof sortedDoctors !== 'undefined' &&
+                            typeof sortedDoctors === 'object' &&
+                            sortedDoctors.length > 0 &&
+                            sortedDoctors
                                 .map(doctor => {
                                 {/* const start = new Date(doctor.start_in).getTime();
                                 const duration = intervalToDuration({ start, end: (new Date().getTime()) })
@@ -140,7 +141,7 @@ const TodayDoctors = ({ doctors }) => {
                                     </TableRow>
                                 );
                             })}
-                        {typeof doctors !== 'object' || doctors.length === 0 ? (
+                        {typeof sortedDoctors !== 'object' || sortedDoctors.length === 0 ? (
                             <TableRow>
                                 <TableCell style={styles.tableText}>
                                     <p>No doctors to display</p>

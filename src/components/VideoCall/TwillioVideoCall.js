@@ -71,7 +71,8 @@ function TwillioVideoCall({
 	const [isMuted, setIsMuted] = useState(false);
 
 	const updateAppointmentStatus = (status) =>
-		bookingService.updateAppointmentStatus(appointmentId, { status }, authToken);
+		bookingService.updateAppointmentStatus(appointmentId, { status }, authToken)
+		.catch(err => console.log(err));
 
 	useEffect(() => {
 		const participantConnected = participant => {
@@ -81,6 +82,7 @@ function TwillioVideoCall({
 
 		const participantDisconnected = participant => {
 			setMessage(isNurse ? 'Patient Disconnected' : 'Medical Professional Left');
+			if (isNurse) updateAppointmentStatus('PATIENT_LEFT');
 			setParticipants(prevParticipants => prevParticipants.filter(p => p !== participant));
 		};
 
@@ -114,6 +116,8 @@ function TwillioVideoCall({
 
 	useEffect(() => {
 		return () => {
+			if (isNurse) updateAppointmentStatus('PRACTITIONER_LEFT')
+			else updateAppointmentStatus('PATIENT_LEFT');
 			if (!!room) {
 				room.disconnect();
 			}

@@ -54,6 +54,9 @@ const HUMAN_STATUSES = {
 
 const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
     const currentTime = new Date().getTime();
+    const filteredAppointments = appointments.filter(({ status, start_time }) => (
+        status !== 'WAITING' || (currentTime >= new Date(start_time).getTime() && status === 'WAITING')
+    ));
 
     return (
         <div className='doc-container' style={{ justifyContent: 'unset' }}>
@@ -80,10 +83,10 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {typeof appointments !== 'undefined' &&
-                            typeof appointments === 'object' &&
-                            appointments.length > 0 &&
-                            appointments.map(appointment => {
+                        {typeof filteredAppointments !== 'undefined' &&
+                            typeof filteredAppointments === 'object' &&
+                            filteredAppointments.length > 0 &&
+                            filteredAppointments.map(appointment => {
                                 const appointmentStatus = camelCase(get(appointment, 'status', ''));
                                 const statusLastUpdated = get(appointment, 'status_last_updated', '');
                                 const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
@@ -147,7 +150,7 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                     </TableRow>
                                 );
                             })}
-                        {typeof appointments !== 'object' || appointments.length === 0 ? (
+                        {typeof filteredAppointments !== 'object' || filteredAppointments.length === 0 ? (
                             <TableRow>
                                 <TableCell style={styles.tableText}>
                                     <p>No appointments to display</p>

@@ -24,7 +24,14 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
-export const useServerDateFilter = ({ token, userId, query, status, isLive = false, practitionerName = false }) => {
+export const useServerDateFilter = ({
+    token,
+    userId,
+    query,
+    status,
+    isLive = false,
+    practitionerName = false,
+}) => {
     const today = moment();
 	const [filter, setFilter] = useState('today');
 	const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +43,7 @@ export const useServerDateFilter = ({ token, userId, query, status, isLive = fal
         setIsLoading(true);
         await query({
                 dateRange: {
-                    start_time: moment(start_time).utc(0).startOf('day').format(),
+                    start_time: (status === 'AVAILABLE' && filter === 'today') ? moment().utc(0).format() : moment(start_time).utc(0).startOf('day').format(),
                     end_time: moment(end_time).utc(0).endOf('day').format(),
                 },
                 status,

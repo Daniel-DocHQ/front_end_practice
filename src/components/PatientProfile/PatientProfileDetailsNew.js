@@ -84,8 +84,8 @@ const PersonalInformation = ({
 	token,
 	setRole,
 	setUser,
-	isEditable,
 }) => {
+	const [isEditable, setIsEditable] = useState(false);
 	const [first_name, setFirst_name] = useState(!!user && !!user.first_name ? user.first_name : '');
 	const [last_name, setLast_name] = useState(!!user && !!user.last_name ? user.last_name : '');
 	const [date_of_birth, setDateOfBirth] = useState(
@@ -136,11 +136,48 @@ const PersonalInformation = ({
 	}
 
 	function proceed() {
-		if (errors.length === 0) {
-		} else {
-			setAttemptedSubmit(true);
-		}
-	}
+		// const body = {
+		// 	shipping_details: { ...shipping_details, address_1, address_2, city, county, postcode },
+		// };
+		// if (
+		// 	!!user &&
+		// 	!!user.id &&
+		// 	!!user.roles &&
+		// 	!!user.roles[0] &&
+		// 	!!user.roles[0].id &&
+		// 	!!user.roles[0].organisation_id &&
+		// 	!!user.first_name &&
+		// 	!!user.last_name
+		// ) {
+		// 	body.role_id = user.roles[0].id;
+		// 	body.organisation_profile_id = user.roles[0].organisation_id;
+		// 	body.user_id = user.id;
+		// 	body.name = `${user.first_name} ${user.last_name}`;
+		// }
+		// if (errors.length === 0) {
+		// 	body.shipping_details.id = shipping_details.id;
+		// 	bookingUserDataService
+		// 		.updateProfileData(token, body)
+		// 		.then(result => {
+		// 			if (result.success && result.role_profile) {
+		// 				setRoleProfile(result.role_profile);
+		// 				setStatus({
+		// 					severity: 'success',
+		// 					message: 'Successfully saved shipping details',
+		// 				});
+		// 			}
+		// 		})
+		// 		.catch(() => {
+		// 			setStatus({
+		// 				severity: 'error',
+		// 				message: 'Error saving shipping details',
+		// 			});
+		// 		});
+		// } else {
+		// 	setAttemptedSubmit(true);
+		// }
+		setIsEditable(false);
+	};
 	return isEditable ? (
 		<React.Fragment>
 			<div className='row flex-start' style={{ flexWrap: 'wrap' }}>
@@ -182,6 +219,18 @@ const PersonalInformation = ({
 			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
 				<PhoneNumber value={telephone} onChange={setTelephone} required disabled={!isEditable} />
 			</div>
+			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
+				<DocButton
+					color="pink"
+					text="Cancel"
+					onClick={() => setIsEditable(false)}
+				/>
+				<DocButton
+					color="green"
+					text="Save"
+					onClick={proceed}
+				/>
+			</div>
 			{/* <div className='row flex-end'>
 				{isEditable ? (
 					<DocButton
@@ -215,6 +264,13 @@ const PersonalInformation = ({
 			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
 				<p className='title-info'>Phone:</p>
 				<p>{telephone}</p>
+			</div>
+			<div className='row flex-end' style={{ width: '300px', maxWidth: '90%' }}>
+				<DocButton
+					color="pink"
+					text="Edit"
+					onClick={() => setIsEditable(true)}
+				/>
 			</div>
 		</React.Fragment>
 	);
