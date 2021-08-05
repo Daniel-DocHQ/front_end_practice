@@ -119,6 +119,7 @@ const ClaimableAppointmentsTable = ({ token, reload }) => {
 										<TableCell align='center' style={{ ...styles.tableText }}>
 											{get(appointment, 'booking_user.metadata.test_type', '')}
 										</TableCell>
+										<TableCell />
 									</TableRow>
 								);
 							})
