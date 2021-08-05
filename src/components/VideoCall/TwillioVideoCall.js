@@ -36,6 +36,7 @@ function TwillioVideoCall({
 	const isEarly = timeBeforeStart > 0;
 	const patients = useBookingUsers();
 	const [counter, setCounter] = useState(0);
+	const [isPaused, setIsPaused] = useState(false);
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
@@ -116,7 +117,7 @@ function TwillioVideoCall({
 
 	useEffect(() => {
 		return () => {
-			if (isNurse) updateAppointmentStatus('PRACTITIONER_LEFT')
+			if (isNurse && !isPaused) updateAppointmentStatus('PRACTITIONER_LEFT')
 			else updateAppointmentStatus('PATIENT_LEFT');
 			if (!!room) {
 				room.disconnect();
@@ -179,6 +180,7 @@ function TwillioVideoCall({
 	};
 
 	const handlePause = async () => {
+		setIsPaused(true);
 		await updateAppointmentStatus('ON_HOLD');
 		if (!!hideVideoAppointment) {
 			hideVideoAppointment();
