@@ -52,7 +52,7 @@ const Box = ({
 					headers: {
 						'Content-Type': 'application/json',
 					},
-				}).then(res => res.json()).catch((err) => ToastsStore.error(err));
+				}).then(res => res.json()).catch((err) => console.log(err));
 				setVideoCallToken(data.token);
 				if (isNurse) {
 				 await bookingService.setVideoToken(
@@ -61,13 +61,13 @@ const Box = ({
 							user_video_token: data.token,
 						},
 						token,
-					).catch((err) => ToastsStore.error(err))
+					).catch((err) => console.log(err))
 				} else setCookie('video-token', data.token);
 			}
 			await bookingService
 				.updateAppointmentStatus(appointmentId, {
 					status: isNurse ? 'PRACTITIONER_ATTENDED' : 'PATIENT_ATTENDED',
-				}, token).catch((err) => ToastsStore.error(err))
+				}, token).catch((err) => console.log(err))
 		},
 		[params, isNurse]
 	);
