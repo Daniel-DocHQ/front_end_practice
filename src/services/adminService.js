@@ -43,7 +43,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/search?q=user:${userId} AND start_time:[${start_time} TO ${end_time}] AND claimable_slot:false AND NOT status:(LOCKED OR PROVIDER_CANCELLED OR UNAVAILABLE OR USER_CANCELLED OR COMPLETED OR AVAILABLE)&sort=start_time:desc`,
+					url: `${bookingUrl}/search?q=user:${userId} AND start_time:[${start_time} TO ${end_time}] AND claimable_slot:false AND NOT status:(LOCKED OR PROVIDER_CANCELLED OR UNAVAILABLE OR USER_CANCELLED OR COMPLETED OR AVAILABLE)&sort=start_time:asc`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
@@ -77,7 +77,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/search?q=start_time:[${start_time} TO ${end_time}] AND status:(WAITING OR PATIENT_ATTENDED OR PRACTITIONER_ATTENDED OR IN_PROGRESS OR ON_HOLD OR PRACTITIONER_LEFT OR PATIENT_LEFT)&inc_practitioner_name=1&sort=start_time:desc`,
+					url: `${bookingUrl}/search?q=start_time:[${start_time} TO ${end_time}] AND status:(WAITING OR PATIENT_ATTENDED OR PRACTITIONER_ATTENDED OR IN_PROGRESS OR ON_HOLD OR PRACTITIONER_LEFT OR PATIENT_LEFT)&inc_practitioner_name=1&sort=start_time:asc`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
@@ -673,7 +673,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/search?q=${statusQuery}${userQuery} AND start_time:[${start_time} TO ${end_time}]${practitionerName ? '&inc_practitioner_name=1' : ''}&sort=start_time:desc`,
+					url: `${bookingUrl}/search?q=${statusQuery}${userQuery} AND start_time:[${start_time} TO ${end_time}]${practitionerName ? '&inc_practitioner_name=1' : ''}&sort=start_time:asc`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
