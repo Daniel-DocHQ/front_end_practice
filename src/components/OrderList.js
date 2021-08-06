@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const SOURCE_STRING = {
+    'ROCS': 'Rock',
+}
+
 const date_format = {
     type: 'dateTime',
     width: 200,
@@ -37,8 +41,11 @@ const date_format = {
 };
 
 const price_format = {
-    valueFormatter: ({ value })  => {return "£" + value},
+    valueFormatter: ({ value })  => ("£" + value),
 };
+const source_format = {
+    valueFormatter: ({ value })  => !!SOURCE_STRING[value] ? SOURCE_STRING[value] : value,
+}
 const columns = [
     { field: 'id', headerName: 'ID', width: 60 },
     { field: 'billing_detail', headerName: 'Customer Email', width: 250, valueFormatter: ({value}) => value.email},
@@ -48,7 +55,7 @@ const columns = [
     { field: 'price', headerName: 'Amount', width: 90, ...price_format},
     { field: 'created_at', headerName: 'Order placed', ...date_format },
     { field: 'modified_at', headerName: 'Last order action', ...date_format },
-    { field: 'source', headerName: 'Source'},
+    { field: 'source', headerName: 'Source', ...source_format},
 ];
 
 

@@ -49,11 +49,11 @@ const RotaPastAppointmentsTable = ({ doctors = [] }) => {
 					<TableBody>
 						{doctors.length > 0 && doctors.map((doctor, indx) =>
                             <TableRow key={indx} className='noneBackground'>
-                                <TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
+                                <TableCell align='left' style={{ ...styles.tableText }}>
                                     {`${doctor.first_name} ${doctor.last_name}`}
                                 </TableCell>
                                 {[...Array(24)].map((_, i) => (
-                                    <TableCell key={i} align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell key={i} align='center' style={{ ...styles.tableText }}>
                                         <div>
                                             <svg
                                                 style={ {
@@ -96,7 +96,7 @@ const RotaPastAppointmentsTable = ({ doctors = [] }) => {
                                         </div>
                                     </TableCell>
                                 ))}
-                                <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                <TableCell align='left' style={{ ...styles.tableText }}>
                                     <LinkButton
                                         color='pink'
                                         text='Release'

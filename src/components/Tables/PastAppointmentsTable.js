@@ -88,19 +88,19 @@ const PastAppointmentsTable = ({
 
 							return (
 								<TableRow key={appointment.id}>
-									<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='left' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{appointmentStartTime.toLocaleDateString()}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{format(appointmentStartTime, 'p')}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
-									<TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
+									<TableCell align='right' style={{ ...styles.tableText }}>
 										<LinkButton
 											text='View'
 											color='green'

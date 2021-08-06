@@ -61,7 +61,7 @@ const CertificatesListTable = ({ certificates = [] }) => (
                             >
                                 {get(certificate, 'name', '')}
                             </TableCell>
-                            <TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
+                            <TableCell align='right' style={{ ...styles.tableText }}>
                                 <div style={{ display: 'flex' }}>
                                     <LinkButton
                                         newTab

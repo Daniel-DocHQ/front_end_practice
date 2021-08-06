@@ -76,15 +76,15 @@ const LiveDoctorsTable = ({ doctors }) => (
                                 if (doctor.status == "Online"){
                                     return (
                                         <TableRow key={doctor.id}>
-                                            <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            <TableCell align='left' style={{ ...styles.tableText }}>
                                                 {doctor.name}
                                             </TableCell>
-                                            <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            <TableCell align='center' style={{ ...styles.tableText }}>
                                             </TableCell>
-                                            <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            <TableCell align='center' style={{ ...styles.tableText }}>
                                                 {doctor.patients}
                                             </TableCell>
-                                            <TableCell align='center' className={`text-status-${doctor.status}`} style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            <TableCell align='center' className={`text-status-${doctor.status}`} style={{ ...styles.tableText }}>
                                                 <div className={`circle status-${doctor.status.toLowerCase()}`}/>
                                             </TableCell>
                                         </TableRow>

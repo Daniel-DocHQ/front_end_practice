@@ -133,7 +133,7 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                         <TableRow key={appointment.id}>
                                             <TableCell
                                                 align='left'
-                                                style={{ ...styles.medCol, ...styles.tableText }}
+                                                style={{ ...styles.tableText }}
                                                 className={appointmentStatus === APPOINTMENT_STATUSES.patientAttended && 'red-bold-text'}
                                             >
                                                 {get(appointment, 'user_name', '')}
@@ -141,29 +141,29 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                             <TableCell
                                                 align='center'
                                                 className={`text-status-${appointmentStatus}`}
-                                                style={{ ...styles.medCol, ...styles.tableText }}
+                                                style={{ ...styles.tableText }}
                                                 className={appointmentStatus === APPOINTMENT_STATUSES.practitionerAttended && 'red-bold-text'}
                                             >
                                                 {get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
                                             </TableCell>
-                                            <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            <TableCell align='center' style={{ ...styles.tableText }}>
                                                 {get(appointment, 'booking_user.metadata.test_type', '')}
                                             </TableCell>
-                                            <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            <TableCell align='center' style={{ ...styles.tableText }}>
                                                 {format(appointmentStartTime, 'p')}
                                             </TableCell>
-                                            <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            <TableCell align='center' style={{ ...styles.tableText }}>
                                                 <Timer
                                                     statusLastUpdated={statusLastUpdated ? new Date(statusLastUpdated).getTime() : appointmentStartTime.getTime()}
                                                 />
                                             </TableCell>
-                                            <TableCell align='center' className={`text-status-${appointmentStatus}`} style={{ ...styles.medCol, ...styles.tableText }}>
+                                            <TableCell align='center' className={`text-status-${appointmentStatus}`} style={{ ...styles.tableText }}>
                                                 {HUMAN_STATUSES[appointmentStatus] || ''}
                                             </TableCell>
-                                            <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                            <TableCell align='center' style={{ ...styles.tableText }}>
                                                 <div className={`circle status-${appointmentStatus}`}/>
                                             </TableCell>
-                                            <TableCell align='right' style={{ ...styles.medCol, ...styles.tableText }}>
+                                            <TableCell align='right' style={{ ...styles.tableText }}>
                                                 <div className="row flex-end">
                                                     <LinkButton
                                                         text='View'

@@ -111,25 +111,25 @@ const TodayDoctors = ({ doctors = [] }) => {
 
                                 return (
                                     <TableRow key={doctor.id}>
-                                        <TableCell align='left' className={isAppointmentSoon && 'red-bold-text'} style={{ ...styles.medCol, ...styles.tableText }}>
+                                        <TableCell align='left' className={isAppointmentSoon && 'red-bold-text'} style={{ ...styles.tableText }}>
                                             {doctor.name}
                                         </TableCell>
-                                        <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        <TableCell align='center' style={{ ...styles.tableText }}>
                                             {format(new Date(doctor.start_time), 'p')}
                                         </TableCell>
-                                        <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        <TableCell align='center' style={{ ...styles.tableText }}>
                                             {format(new Date(doctor.end_time), 'p')}
                                         </TableCell>
-                                        <TableCell align='center' className={isAppointmentSoon && 'red-bold-text'} style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        <TableCell align='center' className={isAppointmentSoon && 'red-bold-text'} style={{ ...styles.tableText }}>
                                             {timeDifference(now, start_time, doctor.status)}
                                         </TableCell>
-                                        <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        <TableCell align='center' style={{ ...styles.tableText }}>
                                             {!!doctor.next_appointment ? format(new Date(doctor.next_appointment), 'p') : ''}
                                         </TableCell>
-                                        <TableCell align='center' className={isAppointmentSoon ? 'red-bold-text' : `text-status-${lowerCase(doctor.status)}`} style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        <TableCell align='center' className={isAppointmentSoon ? 'red-bold-text' : `text-status-${lowerCase(doctor.status)}`} style={{ ...styles.tableText }}>
                                             {doctor.status}
                                         </TableCell>
-                                        <TableCell align='right' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                        <TableCell align='right' style={{ ...styles.tableText }}>
                                             <VonageVoiceCall
                                                 isTable
                                                 app={app}

@@ -80,13 +80,13 @@ const NextAppointmentsTable = ({
 
                                         return (
                                             <TableRow key={appointment.id}>
-                                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                                <TableCell align='center' style={{ ...styles.tableText }}>
                                                     {get(appointment, 'booking_user.metadata.test_type', '')}
                                                 </TableCell>
-                                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                                <TableCell align='center' style={{ ...styles.tableText }}>
                                                     {!!statusLastUpdated && <Timer statusLastUpdated={new Date(statusLastUpdated).getTime()} paused />}
                                                 </TableCell>
-                                                <TableCell align='center' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                                <TableCell align='center' style={{ ...styles.tableText }}>
                                                     <DocButton
                                                         text='Join'
                                                         color='green'
@@ -125,13 +125,13 @@ const NextAppointmentsTable = ({
                             filteredAppointments.length > 0 &&
                             filteredAppointments.map(appointment => (
                                 <TableRow key={appointment.id}>
-                                    <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='left' style={{ ...styles.tableText }}>
                                         {get(appointment, 'booking_user.metadata.test_type', '')}
                                     </TableCell>
-                                    <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='left' style={{ ...styles.tableText }}>
                                         {format(new Date(appointment.start_time), 'p')}
                                     </TableCell>
-                                    <TableCell align='left' style={{ ...styles.smallCol, ...styles.tableText }}>
+                                    <TableCell align='left' style={{ ...styles.tableText }}>
                                         <DocButton
                                             text='Join'
                                             color='green'

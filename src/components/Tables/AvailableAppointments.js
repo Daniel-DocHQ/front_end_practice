@@ -93,10 +93,10 @@ const AvailableAppointments = ({
 
 							return (
 								<TableRow key={appointment.id}>
-									<TableCell align='left' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='left' style={{ ...styles.tableText }}>
 										{appointmentStartTime.toLocaleDateString()}
 									</TableCell>
-									<TableCell align='center' style={{ ...styles.medCol, ...styles.tableText }}>
+									<TableCell align='center' style={{ ...styles.tableText }}>
 										{format(appointmentStartTime, 'p')}
 									</TableCell>
 								</TableRow>
