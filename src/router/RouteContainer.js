@@ -54,6 +54,7 @@ import DropboxReceipts from '../screens/super-admin-portal/DropboxReceipts';
 import GenerateDiscount from '../screens/super-admin-portal/GenerateDiscount';
 import CSDashboard from '../screens/cs-portal/CSDashboard';
 import RegisterKit from '../screens/RegisterKit';
+import LufthansaTestRegister from '../screens/b2c-portal/LufthansaTestRegister';
 
 const { isSupported } = require('twilio-video');
 
@@ -241,6 +242,11 @@ const RouteHandler = () => {
 					<B2CDashboard />
 				</Layout>
 			</PrivateRoute>
+			<Route path='/test-register' requiredRole='b2c'>
+				<Layout title="Book an appointment">
+					<LufthansaTestRegister />
+				</Layout>
+			</Route>
 			<Route path='/activate-kit' requiredRole='b2c'>
 				<Layout title="Book an appointment">
 					<PharmacyActivateTestKit />

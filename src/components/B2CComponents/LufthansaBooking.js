@@ -6,20 +6,20 @@ import { format } from 'date-fns';
 import cityTimezones from 'city-timezones';
 import { ToastsStore } from 'react-toasts';
 import BigWhiteContainer from '../Containers/BigWhiteContainer';
-import BookingEngineForm from './BookingEngineForm';
+import LufthansaBookingEngineForm from './LufthansaBookingEngineForm';
 import bookingFormModel from './bookingFormModel';
-import useValidationSchema from './validationSchema';
+import useLufthansaValidationSchema from './lufthansaValidationSchema';
 import bookingService from '../../services/bookingService';
 import adminService from '../../services/adminService';
 import COUNTRIES from '../../helpers/countries';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR, FIT_TO_FLY_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
+import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
 
 const AmberDay2 = 'SYN-UK-PCR-SNS-002';
 
-const PharmacyBookingEngine = () => {
+const LufthansaBooking = () => {
     const [shortToken, setShortToken] = useState();
 	const [products, setProducts] = useState([]);
 	const [timerStart, setTimerStart] = useState();
@@ -30,10 +30,10 @@ const PharmacyBookingEngine = () => {
 	const { formInitialValues } = bookingFormModel;
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
-	const currentValidationSchema = useValidationSchema(activeStep, false, true);
+	const currentValidationSchema = useLufthansaValidationSchema(activeStep);
 	const steps = [
-		'Purchase Code',
 		'Travel Details',
+		'Purchase Code',
 		'Booking Appointment',
 		'Passenger Details',
 		'Summary',
@@ -99,6 +99,8 @@ const PharmacyBookingEngine = () => {
             <Formik
                 initialValues={{
                     ...formInitialValues,
+                    product: undefined,
+                    purchaseCode: [{ code: ''}],
                     numberOfPeople: 1,
                     testType: {},
                     passengers: [
@@ -126,34 +128,6 @@ const PharmacyBookingEngine = () => {
                         actions.setSubmitting(false);
                         actions.setErrors({});
                         handleNext();
-                    } else if (steps[activeStep] === 'Purchase Code') {
-                        const { purchaseCode } = values;
-                        await adminService.checkPurchaseCodeInfo(purchaseCode)
-                            .then(result => {
-                                if (result.success && result.data && result.data.value) {
-                                    if (!!result.data.uses) {
-                                        switch (purchaseCode.slice(0, 3)) {
-                                            case 'ANT':
-                                                actions.setFieldValue('testType', products.find(({ sku }) => sku === FIT_TO_FLY_ANTIGEN));
-                                                break;
-                                            case 'PFF':
-                                                actions.setFieldValue('testType', products.find(({ sku }) => sku === FIT_TO_FLY_PCR));
-                                                break;
-                                            case 'ATE':
-                                                actions.setFieldValue('testType', products.find(({ sku }) => sku === AmberDay2));
-                                                break;
-                                        }
-                                        actions.setSubmitting(false);
-                                        actions.setTouched({});
-                                        actions.setErrors({});
-                                        handleNext();
-                                    } else {
-                                        actions.setFieldValue('Your code is expired', result.error);
-                                    }
-                                } else {
-                                    actions.setFieldValue('purchaseCodeError', result.error);
-                                }
-                            }).catch((error) => actions.setFieldValue('purchaseCodeError', error.error));
                     } else if (steps[activeStep] === 'Passenger Details') {
                         const {
                             numberOfPeople,
@@ -238,11 +212,11 @@ const PharmacyBookingEngine = () => {
                                             product_id: id,
                                             title,
                                             sku,
-                                            quantity: 1,
+                                            quantity: numberOfPeople,
                                             price,
                                         },
                                     ],
-                                    discount: purchaseCode,
+                                    discount: purchaseCode[0].code,
                                 }).then(result => {
                                     if (
                                         result.success && result.order_details
@@ -285,7 +259,7 @@ const PharmacyBookingEngine = () => {
                                 country: 'GB',
                                 toc_accept: tocAccept,
                                 metadata: {
-                                    source: 'Pharmacy',
+                                    source: 'Lufthansa',
                                     short_token: shortTokenValue,
                                     product_id: parseInt(id),
                                     passport_number: passportNumber,
@@ -387,8 +361,9 @@ const PharmacyBookingEngine = () => {
                             </div>
                         )}
                     </div>
-                    <BookingEngineForm
+                    <LufthansaBookingEngineForm
                         isPharmacy
+                        products={products}
                         activePassenger={activePassenger}
                         activeStep={activeStep}
                         defaultTimezone={defaultTimeZone}
@@ -405,4 +380,4 @@ const PharmacyBookingEngine = () => {
 	);
 };
 
-export default PharmacyBookingEngine;
+export default LufthansaBooking;
