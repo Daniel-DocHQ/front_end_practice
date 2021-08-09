@@ -76,7 +76,7 @@ const LufthansaStep0 = ({
                     </Field>
                 </div>
             </div>
-            <Divider style={{ width: '45%' }} />
+            <Divider style={{ width: '22%' }} />
             {!!product && (
                 <>
                     <h4 style={{ margin: 0, paddingTop: 20 }}>
