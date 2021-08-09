@@ -464,7 +464,7 @@ const Step2 = ({
                     </p>
                 </>
             )}
-            {isPharmacy && (
+            {(isPharmacy && activePassenger === 0) && (
                 <>
                     <h4 style={{ margin: 0, paddingTop: 20 }}>
 						Address Information
