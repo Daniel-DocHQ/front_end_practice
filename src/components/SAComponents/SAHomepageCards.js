@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import { get } from 'lodash';
 import LinkButton from '../DocButton/LinkButton';
 import DocCard from '../DocCard/DocCard';
 import DocCardContainer from '../DocCard/DocCardContainer';
@@ -7,7 +8,9 @@ import DocCardContainer from '../DocCard/DocCardContainer';
 const BookAppointmentIcon = require('../../assets/images/icons/homepage-book-appointment.svg');
 const apiUrl  = process.env.REACT_APP_API_URL;
 
-const SAHomepageCards = () => {
+const SAHomepageCards = ({ user }) => {
+	console.log(user);
+	const userName = `${get(user, 'first_name', '')} ${get(user, 'last_name', '')}`;
 	const [cards, setCards] = useState([
 		{
 			display: true,

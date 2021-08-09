@@ -29,7 +29,7 @@ const SADiscountManagement = ({ token, role, isAuthenticated, user }) => {
 		logout();
 		history.push('/login');
 	};
-	if ((isAuthenticated !== true && role !== 'super_admin') || (!!user && (userName !== 'Super Admin' && userName !== 'Silva Quattrocchi' && userName !== 'Madhur Srivastava'))) {
+	if ((isAuthenticated !== true && role !== 'super_admin') || (!!user && (userName !== 'Super Admin' && userName !== 'Silva Quattrocchi' && userName !== 'Madhur Srivastava' && userName !== 'Janet Webber'))) {
 		logoutUser();
 	}
 

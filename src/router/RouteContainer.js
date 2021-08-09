@@ -267,7 +267,7 @@ const RouteHandler = () => {
 
 			<PrivateRoute path='/super_admin/dashboard' requiredRole='super_admin'>
 				<Layout title='Dashboard'>
-					<SADashboard />
+					<SADashboard {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/generate-discount' requiredRole='super_admin'>

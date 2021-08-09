@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import * as Yup from 'yup';
+import { get } from 'lodash';
 import { Formik } from 'formik';
 import { Alert } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
@@ -9,7 +10,8 @@ import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import DiscountForm from '../../components/SAComponents/DiscountForm';
 
-const GenerateDiscount = ({ token, isAuthenticated, role }) => {
+const GenerateDiscount = ({ token, isAuthenticated, role, user }) => {
+	const userName = `${get(user, 'first_name', '')} ${get(user, 'last_name', '')}`;
 	const { logout } = useContext(AuthContext);
 	const today = new Date();
 	const [status, setStatus] = useState(); // { severity, message }
@@ -18,7 +20,7 @@ const GenerateDiscount = ({ token, isAuthenticated, role }) => {
 		logout();
 		history.push('/login');
 	};
-	if (isAuthenticated !== true && role !== 'super_admin') {
+	if ((isAuthenticated !== true && role !== 'super_admin') || (!!user && (userName !== 'Super Admin' && userName !== 'Silva Quattrocchi' && userName !== 'Madhur Srivastava' && userName !== 'Janet Webber'))) {
 		logoutUser();
 	}
 

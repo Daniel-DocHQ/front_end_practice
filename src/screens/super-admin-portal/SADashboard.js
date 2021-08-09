@@ -3,10 +3,10 @@ import SAHomepageCards from '../../components/SAComponents/SAHomepageCards';
 import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 import '../../assets/css/PatientDashboard.scss';
 
-const SADashboard = () => (
+const SADashboard = (props) => (
 	<React.Fragment>
 		<BigWhiteContainer>
-			<SAHomepageCards/>
+			<SAHomepageCards {...props} />
 		</BigWhiteContainer>
 	</React.Fragment>
 );

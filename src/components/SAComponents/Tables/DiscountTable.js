@@ -7,9 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../../DocButton/LinkButton';
-import DocButton from '../../DocButton/DocButton';
 import '../../Tables/Tables.scss';
-import adminService from '../../../services/adminService';
 import { format } from 'date-fns';
 
 const styles = {
