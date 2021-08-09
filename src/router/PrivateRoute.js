@@ -27,6 +27,8 @@ function PrivateRoute({ children, requiredRole, requiredFlag, ...rest }) {
 		});
 		return childrenWithProps;
 	}
+	if (!!requiredRole && !!roleName && roleName !== requiredRole)
+		return <Redirect to={{ pathname }} />;
 	return (
 		<Route
 			{...rest}

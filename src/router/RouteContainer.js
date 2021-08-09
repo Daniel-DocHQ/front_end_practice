@@ -55,6 +55,7 @@ import GenerateDiscount from '../screens/super-admin-portal/GenerateDiscount';
 import CSDashboard from '../screens/cs-portal/CSDashboard';
 import RegisterKit from '../screens/RegisterKit';
 import LufthansaTestRegister from '../screens/b2c-portal/LufthansaTestRegister';
+import SADiscountManagement from '../screens/super-admin-portal/SADiscountManagement';
 
 const { isSupported } = require('twilio-video');
 
@@ -277,6 +278,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/pickups-list' requiredRole='super_admin'>
 				<Layout title='Pickups List'>
 					<PickupsManagement />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/discount-management' requiredRole='super_admin'>
+				<Layout title='Discount List'>
+					<SADiscountManagement />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/dropbox-list' requiredRole='super_admin'>

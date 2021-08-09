@@ -113,18 +113,18 @@ const SAHomepageCards = () => {
 		},
 		{
 			display: true,
-			title: 'Generate Discount',
-			icon: <img src={BookAppointmentIcon} alt='Generate Discount' />,
+			title: 'Discount Management',
+			icon: <img src={BookAppointmentIcon} alt='Discount Management' />,
 			content: (
 				<React.Fragment>
-					<p>Generate Discount</p>
+					<p>Discount Management</p>
 				</React.Fragment>
 			),
 			actions: (
 				<LinkButton
 					color='green'
 					text='View'
-					linkSrc='/super_admin/generate-discount'
+					linkSrc='/super_admin/discount-management'
 				/>
 			),
 		},

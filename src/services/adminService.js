@@ -349,6 +349,39 @@ const adminService = {
 			}
 		});
 	},
+	getDiscounts(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/discount`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data && response.data.discounts) {
+							resolve({
+								success: true,
+								discounts: response.data.discounts,
+							});
+						} else if (response.status === 200 && !response.data.discounts) {
+							resolve({
+								success: true,
+								discounts: [],
+							});
+						} else {
+							resolve({
+								success: false,
+								error: 'Unable to retrieve drop boxes.',
+							});
+						}
+					})
+					.catch(err => console.error(err));
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getDropboxes(token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
