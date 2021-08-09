@@ -117,13 +117,28 @@ function TwillioVideoCall({
 
 	useEffect(() => {
 		return () => {
-			if (isNurse && !isPaused) updateAppointmentStatus('PRACTITIONER_LEFT')
-			else updateAppointmentStatus('PATIENT_LEFT');
-			if (!!room) {
-				room.disconnect();
-			}
+			setTimeout(async () => {
+				if (isNurse) {
+					await nurseSvc
+						.getAppointmentDetails(appointmentId, token)
+						.then(result => {
+							if (result.success && result.appointment) {
+								const { status } = result.appointment;
+								if (status !== 'ON_HOLD') {
+									updateAppointmentStatus('PRACTITIONER_LEFT')
+								}
+							}
+						})
+						.catch(err => {
+							console.log(err)
+						});
+				} else if (!isNurse) updateAppointmentStatus('PATIENT_LEFT');
+				if (!!room) {
+					room.disconnect();
+				}
+			}, 2000);
 		};
-	}, []);
+	}, [isPaused]);
 
 	useEffect(() => {
 		if (!isNurse && timeBeforeStart > 0) { // 3 min until show message
