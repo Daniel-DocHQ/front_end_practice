@@ -35,7 +35,7 @@ const LufthansaBookingEngineForm = ({
     const { values: { numberOfPeople }} = useFormikContext();
 
     const stepsComponents = [
-        <Step1 />,
+        <Step1 isPharmacy />,
         <LufthansaStep0 products={products} />,
         <Step2
             isEdit={isEdit}

@@ -124,7 +124,7 @@ const AppointmentTable = ({
 										{get(appointment, 'booking_user.metadata.test_type', '')}
 									</TableCell>
 									<TableCell align='right' style={{ ...styles.tableText }}>
-										<div className="row flex-end">
+										<div className="row flex-end no-margin">
 											<LinkButton
 												text='View'
 												color='green'

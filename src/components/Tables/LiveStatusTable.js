@@ -164,7 +164,7 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                                 <div className={`circle status-${appointmentStatus}`}/>
                                             </TableCell>
                                             <TableCell align='right' style={{ ...styles.tableText }}>
-                                                <div className="row flex-end">
+                                                <div className="row flex-end no-margin">
                                                     <LinkButton
                                                         text='View'
                                                         color='green'

@@ -33,7 +33,7 @@ const LufthansaBooking = () => {
 	const currentValidationSchema = useLufthansaValidationSchema(activeStep);
 	const steps = [
 		'Travel Details',
-		'Purchase Code',
+		'Number of travellers',
 		'Booking Appointment',
 		'Passenger Details',
 		'Summary',
@@ -254,12 +254,13 @@ const LufthansaBooking = () => {
                                 last_name: lastName,
                                 tz_location: (isAdditionalProduct || isPCR) ? defaultTimeZone.timezone : timezoneValue,
                                 date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
-                                language: 'EN',
+                                language: 'DE',
                                 phone: `${countryCode.label}${phone.trim()}`,
                                 country: 'GB',
                                 toc_accept: tocAccept,
                                 metadata: {
-                                    source: 'Lufthansa',
+                                    source: 'EURO',
+                                    discount: purchaseCode[item],
                                     short_token: shortTokenValue,
                                     product_id: parseInt(id),
                                     passport_number: passportNumber,
@@ -276,7 +277,15 @@ const LufthansaBooking = () => {
                                 },
                                 ...rest,
                             });
-                        })
+                        });
+                        for (let index = 0; index < purchaseCode.length; index++) {
+                            await adminService.checkPurchaseCodeInfo(purchaseCode[index])
+                                .then(async (result) => {
+                                    if (result.success && result.data && result.data.value && result.data.uses) {
+                                        await adminService.useDiscountCode(result.data.id);
+                                    }
+                                }).catch((error) => console.log(error));
+                        }
                         const body = {
                             type: 'video_gp_dochq',
                             booking_users,
@@ -339,6 +348,7 @@ const LufthansaBooking = () => {
                     <div className="fixed-box">
                         {(activeStep < 4 && activeStep > 0) && (
                             <Summary
+                                isPharmacy
                                 activeStep={activeStep}
                                 defaultTimezone={defaultTimeZone}
                             />

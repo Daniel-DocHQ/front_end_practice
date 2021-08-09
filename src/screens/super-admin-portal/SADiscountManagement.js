@@ -6,11 +6,13 @@ import { ToastsStore } from 'react-toasts';
 import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import DiscountTable from '../../components/SAComponents/Tables/DiscountTable';
+import DiscountAppBar from '../../components/SAComponents/DiscountAppBar';
 
 const SADiscountManagement = ({ token, role, isAuthenticated, user }) => {
     const userName = `${get(user, 'first_name', '')} ${get(user, 'last_name', '')}`;
 	const { logout } = useContext(AuthContext);
 	const [discounts, setDiscounts] = useState();
+    const [usedDiscounts, setUsedDiscounts] = useState();
 	let history = useHistory();
 
 	const getDiscounts = async () => (
@@ -18,7 +20,10 @@ const SADiscountManagement = ({ token, role, isAuthenticated, user }) => {
 			.getDiscounts(token)
 			.then(data => {
 				if (data.success) {
-					setDiscounts(data.discounts);
+                    const discountsToUse = [...data.discounts].filter((item) => !!item.uses);
+					setDiscounts(discountsToUse);
+                    const usedDiscountCodes = [...data.discounts].filter((item) => !item.uses);
+                    setUsedDiscounts(usedDiscountCodes);
 				} else {
 					ToastsStore.error('Error fetching Discounts');
 				}
@@ -38,11 +43,16 @@ const SADiscountManagement = ({ token, role, isAuthenticated, user }) => {
 	}, []);
 
 	return (
-        <Grid container justify="space-between">
-            <Grid item xs={12}>
-                <DiscountTable token={token} reload={getDiscounts} discounts={discounts} />
+        <DiscountAppBar value={0}>
+            <Grid container justify="space-between">
+                <Grid item xs={12}>
+                    <DiscountTable token={token} reload={getDiscounts} discounts={discounts} />
+                </Grid>
+                <Grid item xs={12}>
+                    <DiscountTable isUsed discounts={usedDiscounts} />
+                </Grid>
             </Grid>
-        </Grid>
+        </DiscountAppBar>
 	);
 };
 

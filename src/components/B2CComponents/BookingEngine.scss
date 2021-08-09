@@ -38,6 +38,9 @@
 .title-text {
 	font-size: 24px;
 }
+.gray-text {
+	color: var(--doc-light-grey);
+}
 .fixed-box {
 	@media screen and (min-width: 1024px) {
         position: fixed;

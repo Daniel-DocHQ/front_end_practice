@@ -8,8 +8,7 @@ import DocCardContainer from '../DocCard/DocCardContainer';
 const BookAppointmentIcon = require('../../assets/images/icons/homepage-book-appointment.svg');
 const apiUrl  = process.env.REACT_APP_API_URL;
 
-const SAHomepageCards = ({ user }) => {
-	console.log(user);
+const SAHomepageCards = ({ token, user }) => {
 	const userName = `${get(user, 'first_name', '')} ${get(user, 'last_name', '')}`;
 	const [cards, setCards] = useState([
 		{
@@ -138,7 +137,7 @@ const SAHomepageCards = ({ user }) => {
             url: `${apiUrl}/v1/processor`,
             method: "GET",
             headers: {
-                'Authorization': localStorage.getItem("auth_token")
+                'Authorization': token,
             }
         }).then((response) => {
             if (response.status === 200) {

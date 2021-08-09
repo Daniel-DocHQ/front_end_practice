@@ -8,12 +8,12 @@ import {
 	FormControl,
     IconButton,
     FormHelperText,
+    Divider,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
-import { Alert } from '@material-ui/lab';
 import { FIT_TO_FLY_ANTIGEN, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
@@ -29,11 +29,9 @@ const LufthansaStep0 = ({
     } = bookingFormModel;
     const {
         values: {
-            purchaseCodeError,
             purchaseCode: purchaseCodeValue,
             product,
         },
-        setFieldValue,
     } = useFormikContext();
 
 	return (
@@ -78,6 +76,7 @@ const LufthansaStep0 = ({
                     </Field>
                 </div>
             </div>
+            <Divider style={{ width: '45%' }} />
             {!!product && (
                 <>
                     <h4 style={{ margin: 0, paddingTop: 20 }}>
@@ -115,6 +114,12 @@ const LufthansaStep0 = ({
                         )}
                         </Field>
                     </div>
+                    <p className="MuiFormLabel-root no-margin">
+                        Maximum 4 people per appointment
+                    </p>
+                    <h4 style={{ margin: 0, paddingTop: 30 }}>
+                        Please enter one purchase code per person.
+                    </h4>
                     <h4 style={{ margin: 0, paddingTop: 20 }}>
                         Purchase Code
                     </h4>
@@ -132,6 +137,7 @@ const LufthansaStep0 = ({
                                                     helperText={(meta.error && meta.touched) && meta.error}
                                                     {...purchaseCode}
                                                     {...field}
+                                                    label={`${purchaseCode.label} ${indx + 1}`}
                                                 />
                                             )}
                                         </Field>

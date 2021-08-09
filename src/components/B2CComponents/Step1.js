@@ -25,7 +25,7 @@ import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/pro
 // import googleService from '../../services/googleService';
 import './BookingEngine.scss';
 
-const Step1 = () => {
+const Step1 = ({ isPharmacy }) => {
 	const {
 		formField: {
 			vaccineType,
@@ -88,6 +88,11 @@ const Step1 = () => {
 					</div>
 				</>
 			)} */}
+			{isPharmacy && (
+				<h4 style={{ margin: 0, paddingTop: 10 }}>
+					Book your appointment for one single trip.
+				</h4>
+			)}
 			{!isPCR && (
 				<>
 					<div className='row'>

@@ -9,6 +9,7 @@ import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import DiscountForm from '../../components/SAComponents/DiscountForm';
+import DiscountAppBar from '../../components/SAComponents/DiscountAppBar';
 
 const GenerateDiscount = ({ token, isAuthenticated, role, user }) => {
 	const userName = `${get(user, 'first_name', '')} ${get(user, 'last_name', '')}`;
@@ -25,7 +26,7 @@ const GenerateDiscount = ({ token, isAuthenticated, role, user }) => {
 	}
 
 	return (
-		<BigWhiteContainer>
+		<DiscountAppBar value={1}>
 			<Formik
 				initialValues={{
 					code: '',
@@ -67,7 +68,7 @@ const GenerateDiscount = ({ token, isAuthenticated, role, user }) => {
 					</Alert>
 				</div>
 			)}
-		</BigWhiteContainer>
+		</DiscountAppBar>
 	);
 };
 

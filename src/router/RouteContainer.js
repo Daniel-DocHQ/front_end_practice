@@ -218,7 +218,7 @@ const RouteHandler = () => {
 					<ShiftDetails {...ctx} />
 				</Layout>
 			</PrivateRoute>
-			<PrivateRoute path='/practitioner/appointment' requiredRole='practitioner'>
+			<PrivateRoute path='/practitioner/appointment'>
 				<Layout title='Appointment Information'>
 					<AppointmentView {...ctx} />
 				</Layout>

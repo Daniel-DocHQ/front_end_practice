@@ -1,5 +1,6 @@
 import React  from 'react';
 import { get } from 'lodash';
+import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,7 +9,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../../DocButton/LinkButton';
 import '../../Tables/Tables.scss';
-import { format } from 'date-fns';
 
 const styles = {
 	tableText: {
@@ -32,19 +32,13 @@ const styles = {
     }
 };
 
-const DiscountTable = ({ reload, token, discounts = [] }) => {
+const DiscountTable = ({ isUsed = false, discounts = [] }) => {
+    const sortedDiscounts = discounts.sort(({ created_at: aStartTime }, { created_at: bStartTime }) => new Date(bStartTime * 1000).getTime() - new Date(aStartTime * 1000).getTime());
 
     return (
         <div className='doc-container' style={{ justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
-                <h2>Discount Table</h2>
-                <div>
-                    <LinkButton
-                        text='Create Discount'
-                        color='pink'
-                        linkSrc="/super_admin/generate-discount"
-                    />
-                </div>
+                <h2>{isUsed && 'Used '}Discount List</h2>
             </div>
             <TableContainer
                 style={{
@@ -65,10 +59,10 @@ const DiscountTable = ({ reload, token, discounts = [] }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {typeof discounts !== 'undefined' &&
-                            typeof discounts === 'object' &&
-                            discounts.length > 0 &&
-                            discounts.map((discount, indx) => (
+                        {typeof sortedDiscounts !== 'undefined' &&
+                            typeof sortedDiscounts === 'object' &&
+                            sortedDiscounts.length > 0 &&
+                            sortedDiscounts.map((discount, indx) => (
                                 <TableRow key={indx}>
                                     <TableCell
                                         align='left'
@@ -86,7 +80,7 @@ const DiscountTable = ({ reload, token, discounts = [] }) => {
                                         align='center'
                                         style={{ ...styles.tableText }}
                                     >
-                                        {get(discount, 'uses', '')}
+                                        {get(discount, 'uses', 0)}
                                     </TableCell>
                                     <TableCell
                                         align='center'
@@ -113,22 +107,22 @@ const DiscountTable = ({ reload, token, discounts = [] }) => {
                                         {format(new Date(get(discount, 'active_to', new Date())), 'dd/MM/yyyy')}
                                     </TableCell>
                                     <TableCell align='right' style={{ ...styles.tableText }}>
-                                        <div style={{ display: 'inline-flex' }}>
+                                        {/* <div style={{ display: 'inline-flex' }}>
                                             <div style={{ margin: '0 10px' }}>
-                                                {/* <DocButton
-                                                    text={!!discount.active ? 'Deactivate' : 'Activate'}
-                                                    color={!!discount.active ? 'pink' : 'green'}
+                                                <DocButton
+                                                    text="Calculate"
+                                                    color='green'
                                                     onClick={async () => {
-                                                        await adminService.switchDropboxStatus(token, discount.id);
+                                                        await adminService.useDiscountCode(discount.id);
                                                         reload();
                                                     }}
-                                                /> */}
+                                                />
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </TableCell>
                                 </TableRow>
                             ))}
-                        {typeof discounts !== 'object' || discounts.length === 0 ? (
+                        {typeof sortedDiscounts !== 'object' || sortedDiscounts.length === 0 ? (
                             <TableRow>
                                 <TableCell style={styles.tableText}>
                                     <p>No discounts to display</p>

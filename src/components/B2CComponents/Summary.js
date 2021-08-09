@@ -1,17 +1,20 @@
 import React from 'react';
+import { format } from 'date-fns';
 import { useFormikContext } from 'formik';
 import { Divider } from '@material-ui/core';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
 import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
-const Summary = ({ defaultTimezone, activeStep }) => {
+const Summary = ({ isPharmacy, defaultTimezone, activeStep }) => {
     const {
         values: {
             testType: {
                 sku,
                 title,
             },
+            travelTime,
+            travelDate,
             appointmentDate,
             numberOfPeople,
             timezone: timezoneValue,
@@ -29,6 +32,22 @@ const Summary = ({ defaultTimezone, activeStep }) => {
                 <i class="far fa-check-circle " style={{ marginRight: 7 }} />Your Booking
             </h2>
             <Divider className="divider" style={{ marginTop: 16, width: '65%' }} />
+            {(!!timezone && activeStep > 0 && isPharmacy) && (
+                <div className='row no-margin'>
+                    <p>
+                        <strong>Travel from:&nbsp;</strong>
+                        {timezone}
+                    </p>
+                </div>
+            )}
+            {(!!travelTime && !!travelDate && activeStep > 0 && isPharmacy) && (
+                <div className='row no-margin'>
+                    <p>
+                        <strong>Travel Date and Time:&nbsp;</strong>
+                        {ddMMyyyy(travelDate)} {format(travelTime, 'p')}
+                    </p>
+                </div>
+            )}
             {(!!title && activeStep > 0) && (
                 <div className='row no-margin'>
                     <p>
@@ -37,7 +56,7 @@ const Summary = ({ defaultTimezone, activeStep }) => {
                     </p>
                 </div>
             )}
-            {(numberOfPeople && activeStep > 0) && (
+            {(isPharmacy ? (numberOfPeople && activeStep > 1) : (numberOfPeople && activeStep > 0)) && (
                 <div className='row no-margin'>
                     <p>
                         <strong>People attending:&nbsp;</strong>
