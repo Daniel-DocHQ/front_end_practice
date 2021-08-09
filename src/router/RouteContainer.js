@@ -223,7 +223,7 @@ const RouteHandler = () => {
 					<AppointmentView {...ctx} />
 				</Layout>
 			</PrivateRoute>
-			<PrivateRoute path='/practitioner/video-appointment' requiredRole='practitioner'>
+			<PrivateRoute path='/practitioner/video-appointment'>
 				<Layout title='Video Appointment'>
 					<NurseMeeting2 isVideo={true} {...ctx} />
 				</Layout>
