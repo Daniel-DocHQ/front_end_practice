@@ -49,7 +49,7 @@ const useLufthansaValidationSchema = (activeStep) => (
                     .test('checkCode', 'Invalid code. You have chosen another test type',
                         function checkCode(value) {
                             const { product } = this.parent;
-                            return !!value ? product === FIT_TO_FLY_ANTIGEN ? String(value).match(/^(ANT)-*/) : String(value).match(/^(PCR)*/) : true;
+                            return !!value ? product === FIT_TO_FLY_ANTIGEN ? String(value).match(/^(EANT|EAIR)*/) : String(value).match(/^(EPCR)*/) : true;
                         }
                     )
                     .test('checkCodeBE', 'Your code is invalid',
