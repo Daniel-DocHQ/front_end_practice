@@ -206,7 +206,7 @@ const LufthansaBooking = () => {
                                         telephone: passengersPhone,
                                         county: passengers[0].region,
                                     },
-                                    source: 'Pharmacy',
+                                    source: 'euro',
                                     items: [
                                         {
                                             product_id: id,
@@ -259,7 +259,7 @@ const LufthansaBooking = () => {
                                 country: 'GB',
                                 toc_accept: tocAccept,
                                 metadata: {
-                                    source: 'EURO',
+                                    source: 'euro',
                                     discount: purchaseCode[item],
                                     short_token: shortTokenValue,
                                     product_id: parseInt(id),

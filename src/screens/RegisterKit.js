@@ -186,7 +186,7 @@ const RegisterKit = () => {
                             timeSampled.getHours(),
                             timeSampled.getMinutes(),
                             0,
-                        )).format(),
+                        )).utc(0).format(),
                 });
                 await getData();
             }}

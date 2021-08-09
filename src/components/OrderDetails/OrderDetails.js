@@ -97,6 +97,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 	const swabbingMethod = get(orderDetail, 'items', []).find(({ product: { type }}) => type === 'Virtual');
 	const orderItems = get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual');
 	const paymentStatus = get(orderDetail, 'payment_flag');
+	const wasPayment = orderDetail.source !== 'Pharmacy' && orderDetail.source !== 'euro'
 
 	const fetchData = async () => {
 		if (!!order && !!order.id) {
@@ -364,7 +365,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 							</Table>
 						</TableContainer>
 					</Grid>
-					{orderDetail.source !== 'Pharmacy' && (
+					{wasPayment && (
 						<Grid item xs={6}>
 							<Typography variant="h6" className={classes.title}>
 								Billing Details
@@ -400,7 +401,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 					)}
 					<Grid item xs={6}>
 						<Typography variant="h6" className={classes.title}>
-							{orderDetail.source === 'Pharmacy' ? 'Customer Address' : 'Shipping Address'}
+							{!wasPayment ? 'Customer Address' : 'Shipping Address'}
 						</Typography>
 						<List>
 							<ListItem>
