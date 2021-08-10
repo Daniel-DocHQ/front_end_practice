@@ -38,7 +38,7 @@ export const useServerDateFilter = ({
 	const [appointments, setAppointments] = useState([]);
 	const [start_time, setStartTime] = useState(today);
     const [end_time, setEndTime] = useState(today);
-	const [sortOrder, setSortOrder] = useState('asc');
+	const [sortOrder, setSortOrder] = useState('');
 
     const compareFunc = (i, j, newSortOrder) => {
         if (i.user_name < j.user_name) {
@@ -59,13 +59,13 @@ export const useServerDateFilter = ({
                 const newAppointments = [...appointments];
                 setAppointments(newAppointments.sort((i, j) => compareFunc(i, j, newSortOrder)))
             } else {
-                getData();
+                getData(newSortOrder);
             }
             setSortOrder(newSortOrder);
         }
     };
 
-    const getData = async () => {
+    const getData = async (srtOrder) => {
         setIsLoading(true);
         await query({
                 dateRange: {
@@ -80,8 +80,8 @@ export const useServerDateFilter = ({
             .then(data => {
                 if (data.success) {
                     const dataAppointments = [...data.appointments];
-                    setAppointments(sortOrder && practitionerName
-                        ? dataAppointments.sort((i, j) => compareFunc(i, j, sortOrder))
+                    setAppointments(srtOrder && practitionerName
+                        ? dataAppointments.sort((i, j) => compareFunc(i, j, srtOrder))
                         : dataAppointments);
                 } else setAppointments([]);
             })
@@ -101,7 +101,7 @@ export const useServerDateFilter = ({
     };
 
 	useEffect(() => {
-        getData();
+        getData(sortOrder);
 	}, [start_time, end_time]);
 
     useEffect(isLive ? liveFunc : () => {}, []);
