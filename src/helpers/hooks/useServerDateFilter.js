@@ -37,7 +37,33 @@ export const useServerDateFilter = ({
 	const [isLoading, setIsLoading] = useState(true);
 	const [appointments, setAppointments] = useState([]);
 	const [start_time, setStartTime] = useState(today);
-	const [end_time, setEndTime] = useState(today);
+    const [end_time, setEndTime] = useState(today);
+	const [sortOrder, setSortOrder] = useState('');
+
+    const compareFunc = (i, j, newSortOrder) => {
+        if (i.user_name < j.user_name) {
+            return newSortOrder === "asc" ? -1 : 1;
+        } else {
+            if (i.user_name > j.user_name) {
+                return newSortOrder === "asc" ? 1 : -1;
+            } else {
+                return 0;
+            }
+        }
+    };
+
+    const sort = () => {
+        if (practitionerName) {
+            const newSortOrder = sortOrder === 'asc' ? 'desc' : sortOrder === 'desc' ? '' : 'asc';
+            if (!!newSortOrder) {
+                const newAppointments = [...appointments];
+                setAppointments(newAppointments.sort((i, j) => compareFunc(i, j, newSortOrder)))
+            } else {
+                getData();
+            }
+            setSortOrder(newSortOrder);
+        }
+    };
 
     const getData = async () => {
         setIsLoading(true);
@@ -53,7 +79,10 @@ export const useServerDateFilter = ({
             })
             .then(data => {
                 if (data.success) {
-                    setAppointments(data.appointments);
+                    const dataAppointments = [...data.appointments];
+                    setAppointments(sortOrder && practitionerName
+                        ? dataAppointments.sort((i, j) => compareFunc(i, j, sortOrder))
+                        : dataAppointments);
                 } else setAppointments([]);
             })
             .catch(err => {
@@ -85,6 +114,8 @@ export const useServerDateFilter = ({
         setStartTime,
         appointments,
         filter,
+        sortOrder,
+        sort,
         setFilter,
         getData,
     });

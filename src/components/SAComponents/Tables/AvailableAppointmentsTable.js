@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -46,6 +47,8 @@ const AvailableAppointmentsTable = ({ token }) => {
         setStartTime,
 		start_time,
 		end_time,
+		sort,
+		sortOrder,
     } = useServerDateFilter({
         token,
         query: adminService.getAppointmentsSearch,
@@ -75,7 +78,15 @@ const AvailableAppointmentsTable = ({ token }) => {
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
-							<TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
+							<TableCell align='left' style={styles.tableText}>
+                                <TableSortLabel
+                                    active={!!sortOrder}
+                                    direction={sortOrder}
+                                    onClick={sort}
+                                >
+                                    Practitioner Name
+                                </TableSortLabel>
+                            </TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
 						</TableRow>
