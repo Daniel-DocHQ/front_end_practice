@@ -731,7 +731,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/search?q=${statusQuery}${userQuery} AND NOT type:video_gp_tui AND start_time:[${start_time} TO ${end_time}]${practitionerName ? '&inc_practitioner_name=1' : ''}&sort=start_time:asc`,
+					url: `${bookingUrl}/search?q=${statusQuery}${userQuery}${status !== 'AVAILABLE' ? ' AND NOT type:video_gp_tui' : ''} AND start_time:[${start_time} TO ${end_time}]${practitionerName ? '&inc_practitioner_name=1' : ''}&sort=start_time:asc`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
