@@ -8,7 +8,6 @@ import { AuthContext } from '../../context/AuthContext';
 import TodayDoctors from '../../components/Tables/TodayDoctors';
 import nurseSvc from '../../services/nurseService';
 import LiveStatusTable from '../../components/Tables/LiveStatusTable';
-import LiveDoctorsTable from '../../components/Tables/LiveDoctorsTable';
 import bookingService from '../../services/bookingService';
 
 const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
@@ -99,9 +98,6 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}
 				/>
-            </Grid>
-            <Grid item xs={12} style={{ paddingTop: 20 }}>
-                <LiveDoctorsTable doctors={doctors} />
             </Grid>
 		</Grid>
 	);

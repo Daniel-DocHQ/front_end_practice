@@ -209,7 +209,7 @@ const AdminNavigator = ({
                             />
                         </ListItem>
                     </NavLink>
-                    <NavLink
+                    {/* <NavLink
                         activeClassName='active'
                         to='/practitioner/rota'
                         style={{ display: 'flex' }}
@@ -229,7 +229,7 @@ const AdminNavigator = ({
                                 })}
                             />
                         </ListItem>
-                    </NavLink>
+                    </NavLink> */}
                 </List>
             </Drawer>
         </>

@@ -77,7 +77,7 @@ const adminService = {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/search?q=start_time:[${start_time} TO ${end_time}] AND status:(WAITING OR PATIENT_ATTENDED OR PRACTITIONER_ATTENDED OR IN_PROGRESS OR ON_HOLD OR PRACTITIONER_LEFT OR PATIENT_LEFT)&inc_practitioner_name=1&sort=start_time:asc`,
+					url: `${bookingUrl}/search?q=start_time:[${start_time} TO ${end_time}] AND NOT type:video_gp_tui AND status:(WAITING OR PATIENT_ATTENDED OR PRACTITIONER_ATTENDED OR IN_PROGRESS OR ON_HOLD OR PRACTITIONER_LEFT OR PATIENT_LEFT)&inc_practitioner_name=1&sort=start_time:asc`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
