@@ -38,7 +38,7 @@ export const useServerDateFilter = ({
 	const [appointments, setAppointments] = useState([]);
 	const [start_time, setStartTime] = useState(today);
     const [end_time, setEndTime] = useState(today);
-	const [sortOrder, setSortOrder] = useState('');
+	const [sortOrder, setSortOrder] = useState('asc');
 
     const compareFunc = (i, j, newSortOrder) => {
         if (i.user_name < j.user_name) {
