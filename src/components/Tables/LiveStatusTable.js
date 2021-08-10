@@ -125,9 +125,12 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                 typeof appointments === 'object' &&
                                 appointments.length > 0 &&
                                 appointments.map(appointment => {
+                                    const now = new Date().getTime();
                                     const appointmentStatus = camelCase(get(appointment, 'status', ''));
+                                    const isWaiting = appointmentStatus === 'waiting';
                                     const statusLastUpdated = get(appointment, 'status_last_updated', '');
                                     const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
+                                    const appointmentStartTimeNumber = new Date(appointmentStartTime).getTime();
 
                                     return (
                                         <TableRow key={appointment.id}>
@@ -153,9 +156,11 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                                 {format(appointmentStartTime, 'p')}
                                             </TableCell>
                                             <TableCell align='center' style={{ ...styles.tableText }}>
-                                                <Timer
-                                                    statusLastUpdated={statusLastUpdated ? new Date(statusLastUpdated).getTime() : appointmentStartTime.getTime()}
-                                                />
+                                                {!(isWaiting && appointmentStartTimeNumber >= now) && (
+                                                    <Timer
+                                                        statusLastUpdated={isWaiting ? appointmentStartTimeNumber : statusLastUpdated ? new Date(statusLastUpdated).getTime() : appointmentStartTimeNumber}
+                                                    />
+                                                )}
                                             </TableCell>
                                             <TableCell align='center' className={`text-status-${appointmentStatus}`} style={{ ...styles.tableText }}>
                                                 {HUMAN_STATUSES[appointmentStatus] || ''}

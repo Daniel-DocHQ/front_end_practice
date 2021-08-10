@@ -89,7 +89,7 @@ const ClaimableAppointments = ({ token, reload, claimAppointment }) => {
 						<TableRow>
 							<TableCell align='left' style={styles.tableText}>
 									<TableSortLabel
-										active={!!sortOrder}
+										active
 										direction={sortOrder}
 										onClick={sort}
 									>
