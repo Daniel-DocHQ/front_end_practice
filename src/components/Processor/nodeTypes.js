@@ -970,10 +970,6 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         label:"Data Validation",
         initalWidth: 175,
         inputs: ports => [
-            ports.boolean({
-                name:"takeAsTaskError",
-                label: "Fail task on validation error",
-            }),
             ports.string({
                 name:"object",
                 label: "Validation template"
