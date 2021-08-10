@@ -9,7 +9,6 @@ import { ToastsStore } from 'react-toasts';
 import ClaimableAppointments from '../../components/Tables/ClaimableAppointments';
 import bookingService from '../../services/bookingService';
 import { Grid } from '@material-ui/core';
-import TodayDoctors from '../../components/Tables/TodayDoctors';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
@@ -18,7 +17,6 @@ const NurseDashboard = props => {
 	const { logout } = useContext(AuthContext);
 	const [ongoingAppointmentId, setOngoingAppointmentId] = useState();
 	const [reload, setReload] = useState(false);
-	const [todayDoctors, setTodayDoctors] = useState();
 	const [isLoading, setIsLoading] = useState(false);
 	let history = useHistory();
 
@@ -28,20 +26,6 @@ const NurseDashboard = props => {
 	};
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		logoutUser();
-	}
-	const getTodayDoctors = async () => {
-		await nurseService
-			.getTodayDoctors(props.token)
-			.then(data => {
-				if (data.success) {
-					setTodayDoctors(data.appointments);
-				} else if (!data.authenticated) {
-					logoutUser();
-				} else {
-					ToastsStore.error('Error fetching doctors');
-				}
-			})
-			.catch(err => ToastsStore.error('Error fetching doctors'));
 	}
 	function claimAppointment(slot_id) {
 		bookingService
@@ -89,7 +73,6 @@ const NurseDashboard = props => {
 			.catch(err => ToastsStore.error('Error fetching practitioner information'))
 	}
 	const getAllInfo = async () => {
-		await getTodayDoctors();
 		await getPractitionerInfo();
 	};
 
@@ -138,9 +121,6 @@ const NurseDashboard = props => {
 					token={props.token}
 					userId={userId}
 				/>
-			</Grid>
-			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<TodayDoctors doctors={todayDoctors} />
 			</Grid>
 		</Grid>
 	);
