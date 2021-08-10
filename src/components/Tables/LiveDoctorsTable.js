@@ -73,7 +73,7 @@ const LiveDoctorsTable = ({ doctors }) => (
                         typeof doctors === 'object' &&
                             doctors.length > 0 &&
                             doctors.map(doctor => {
-                                if (doctor.status == "Online"){
+                                if (doctor.status === "Online"){
                                     return (
                                         <TableRow key={doctor.id}>
                                             <TableCell align='left' style={{ ...styles.tableText }}>

@@ -10,7 +10,7 @@ const msToHMS = (ms) => {
 }
 
 const timeToString = (minutes, seconds) =>
-    (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+    (seconds === 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
 
 const Timer = ({ statusLastUpdated, paused = false }) => {
     let currentTime = new Date();

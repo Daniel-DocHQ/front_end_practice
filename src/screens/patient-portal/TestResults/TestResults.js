@@ -74,7 +74,7 @@ const TestResults = props => {
     };
 
     const FormatResult = ({result}) => {
-        let color = (result == 'Positive') ?'pink' : 'black'
+        let color = (result === 'Positive') ?'pink' : 'black'
         return <Typography color={color}>{ result }</Typography>
     }
 
