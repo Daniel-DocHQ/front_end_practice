@@ -10,7 +10,7 @@ const apiUrl  = process.env.REACT_APP_API_URL;
 
 const SAHomepageCards = ({ token, user }) => {
 	const userName = `${get(user, 'first_name', '')} ${get(user, 'last_name', '')}`;
-	const [cards, setCards] = useState([
+	const saCards = [
 		{
 			display: true,
 			title: 'Live Doctors Management',
@@ -114,7 +114,7 @@ const SAHomepageCards = ({ token, user }) => {
 			),
 		},
 		{
-			display: true,
+			display: (userName === 'Super Admin' || userName === 'Silva Quattrocchi' || userName === 'Madhur Srivastava' || userName === 'Janet Webber'),
 			title: 'Discount Management',
 			icon: <img src={BookAppointmentIcon} alt='Discount Management' />,
 			content: (
@@ -130,37 +130,41 @@ const SAHomepageCards = ({ token, user }) => {
 				/>
 			),
 		},
-    ]);
-    useEffect(() => {
-        // Check if the logged in user has access to the processor system
-        axios({
-            url: `${apiUrl}/v1/processor`,
-            method: "GET",
-            headers: {
-                'Authorization': token,
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                setCards([...cards, {
-                    display: true,
-                    title: 'Processor',
-                    icon: <img src={BookAppointmentIcon} alt='Order Management' />,
-                    content: (
-                        <React.Fragment>
-                            <p>Processor task management</p>
-                        </React.Fragment>
-                    ),
-                    actions: (
-                        <LinkButton
-                        color='green'
-                        text='Processor management'
-                        linkSrc='/super_admin/processor'
-                    />
-                    ),
-                }])
-            }
-        }).catch(() => {})
-    }, [])
+	];
+	const [cards, setCards] = useState([]);
+	useEffect(() => {
+		if (!!user) {
+			axios({
+				url: `${apiUrl}/v1/processor`,
+				method: "GET",
+				headers: {
+					'Authorization': token,
+				}
+			}).then((response) => {
+				if (response.status === 200) {
+					setCards([...saCards, {
+						display: true,
+						title: 'Processor',
+						icon: <img src={BookAppointmentIcon} alt='Order Management' />,
+						content: (
+							<React.Fragment>
+								<p>Processor task management</p>
+							</React.Fragment>
+						),
+						actions: (
+							<LinkButton
+							color='green'
+							text='Processor management'
+							linkSrc='/super_admin/processor'
+						/>
+						),
+					}])
+				} else setCards([...saCards]);
+			}).catch(() => {
+				setCards([...saCards]);
+			})
+		};
+	}, [user]);
 
 	return (
 		<DocCardContainer>
