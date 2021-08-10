@@ -944,6 +944,27 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             })
         ],
     })
+    .addNodeType({
+        type:"dataToData",
+        label:"Data to Data conversion",
+        initalWidth: 175,
+        inputs: ports => [
+            ports.string({
+                name:"object",
+                label: "Conversion template"
+            }),
+            ports.data({
+                name:"inputData",
+                label:"Input Data"
+            })
+        ],
+        outputs: ports => [
+            ports.data({
+                name:"outputData",
+                label:"Output Data"
+            })
+        ]
+    })
 }
 
 const PrettyPrint = ({data}) => {
