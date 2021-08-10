@@ -31,7 +31,7 @@ tr.MuiTableRow-root:nth-of-type(even) {
 .status-onHold, .status-waiting, .status-practitionerAttended {
 	background-color: var(--doc-yellow);
 }
-status-patientAttended, .status-offline, .status-patientLeft, .status-practitionerLeft {
+.status-patientAttended, .status-offline, .status-patientLeft, .status-practitionerLeft {
 	background-color: var(--doc-pink);
 }
 .red-bold-text, .text-status-patientAttended, .text-status-practitionerLeft {
