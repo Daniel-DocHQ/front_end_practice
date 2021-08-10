@@ -43,7 +43,7 @@ const timeDifference = (now, start_time, status) => {
         return format(new Date(differenceInMilliseconds(start_time, now)), "hh:mm:ss")
     } else {
         // Past
-        if (status == "Offline") {
+        if (status === "Offline") {
             return format(new Date(differenceInMilliseconds(now, start_time)), "hh:mm:ss") + " Ago"
         }
     }
@@ -104,7 +104,7 @@ const TodayDoctors = ({ doctors = [] }) => {
                                 now.setMinutes(now.getMinutes() - 10);
 
                                 if (start_time.getTime() < now.getTime()) {
-                                    if (doctor.status == "Offline") {
+                                    if (doctor.status === "Offline") {
                                         isAppointmentSoon = true;
                                     }
                                 }

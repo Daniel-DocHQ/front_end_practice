@@ -123,7 +123,7 @@ const OrderList = props => {
     }
 
     const searchButtonClick =() => {
-        if (searchBox == "") {
+        if (searchBox === "") {
             return
         }
 
