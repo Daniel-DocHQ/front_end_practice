@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
+import { FormControl, Select, MenuItem, InputLabel } from '@material-ui/core';
 import { GridOverlay, DataGrid, GridToolbar  } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -12,6 +13,7 @@ import OrderDetails from './OrderDetails/OrderDetails';
 import { AuthContext } from '../context/AuthContext';
 import { ToastsStore } from 'react-toasts';
 import adminService from '../services/adminService';
+import getURLParams from '../helpers/getURLParams';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(1),
         width: '40ch',
     },
+    formControl: {
+        width: '40ch',
+      },
 }));
 
 const SOURCE_STRING = {
@@ -61,6 +66,8 @@ const columns = [
 
 const OrderList = props => {
     const classes = useStyles();
+    const params = getURLParams(window.location.href);
+	const discount = params['discount'] || '';
     const { user, token } = useContext(AuthContext);
     const [rows, setRows] = useState([]);
     const [pageSize, setPageSize] = useState(0);
@@ -73,7 +80,18 @@ const OrderList = props => {
     const [dataTableLoading, setDataTableLoading] = useState(true);
     const [searchBox, setSearchBox] = useState("");
     const [searchEmail, setSearchEmail] = useState("");
-
+    const [searchDiscount, setSearchDiscount] = useState(discount);
+    const [searchType, setSearchType] = useState(discount ? 3 : 1);
+    const searchValues = {
+        1: searchBox,
+        2: searchEmail,
+        3: searchDiscount,
+    };
+    const onChangeSearchValue = {
+        1: setSearchBox,
+        2: setSearchEmail,
+        3: setSearchDiscount,
+    };
     const clickedRow = (param, event) => {
         setOrderDetail(param);
         setDetailsOpen(true);
@@ -81,7 +99,7 @@ const OrderList = props => {
 
     useEffect(() => {
         setDataTableLoading(true);
-        adminService.getOrders(token, page, searchEmail)
+        adminService.getOrders(token, page, searchEmail, searchDiscount)
             .then(res => {
                 if (res.success && res.data) {
                     setPageSize(res.data.pagnation_page_size);
@@ -95,7 +113,7 @@ const OrderList = props => {
     useDebounce(() => {
         setPage(0);
         setSearch(!search);
-	}, 300, [searchEmail]);
+	}, 300, [searchEmail, searchDiscount]);
 
     const toggleDrawer = (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -118,11 +136,28 @@ const OrderList = props => {
             <Grid container spacing={3} direction="column">
                 <Grid container item xs={12} justify="space-between" alignItems="center">
                     <Grid item xs={6} alignItems="center">
-                        <TextField className={classes.textField} id="standard-basic" label="Order search by short token" value={searchBox} onChange={(e) => setSearchBox(e.target.value)} />
-                        <Button variant="contained" onClick={searchButtonClick}>Search</Button>
+                        <TextField className={classes.textField} id="standard-basic" label="Search" value={searchValues[searchType]} onChange={(e) => onChangeSearchValue[searchType](e.target.value)} />
+                        {searchType === 1 && (
+                            <Button variant="contained" onClick={searchButtonClick}>Search</Button>
+                        )}
                     </Grid>
                     <Grid item xs={6}>
-                        <TextField className={classes.textField} id="standard-basic" label="Order search by email" value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="demo-simple-select-label">Search Type</InputLabel>
+                            <Select
+                                value={searchType}
+                                onChange={(e) => {
+                                    setSearchBox('');
+                                    setSearchEmail('');
+                                    setSearchDiscount('');
+                                    setSearchType(e.target.value);
+                                }}
+                            >
+                                <MenuItem value={1}>Short token</MenuItem>
+                                <MenuItem value={2}>Email</MenuItem>
+                                <MenuItem value={3}>Discount code</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
                 <Grid item className={classes.data_grid}>

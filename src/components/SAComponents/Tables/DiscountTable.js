@@ -55,7 +55,9 @@ const DiscountTable = ({ isUsed = false, discounts = [] }) => {
                             <TableCell align='center' style={styles.tableText}>Generated</TableCell>
                             <TableCell align='center' style={styles.tableText}>Valid From</TableCell>
                             <TableCell align='center' style={styles.tableText}>Valid Until</TableCell>
-                            <TableCell align='right' style={styles.tableText}>Actions</TableCell>
+                            {isUsed && (
+                                <TableCell align='right' style={styles.tableText}>Actions</TableCell>
+                            )}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -106,20 +108,19 @@ const DiscountTable = ({ isUsed = false, discounts = [] }) => {
                                     >
                                         {format(new Date(get(discount, 'active_to', new Date())), 'dd/MM/yyyy')}
                                     </TableCell>
-                                    <TableCell align='right' style={{ ...styles.tableText }}>
-                                        {/* <div style={{ display: 'inline-flex' }}>
-                                            <div style={{ margin: '0 10px' }}>
-                                                <DocButton
-                                                    text="Calculate"
-                                                    color='green'
-                                                    onClick={async () => {
-                                                        await adminService.useDiscountCode(discount.id);
-                                                        reload();
-                                                    }}
-                                                />
+                                    {isUsed && (
+                                        <TableCell align='right' style={{ ...styles.tableText }}>
+                                            <div style={{ display: 'inline-flex' }}>
+                                                <div style={{ margin: '0 10px' }}>
+                                                    <LinkButton
+                                                        text="View Order"
+                                                        color='green'
+                                                        linkSrc={`/super_admin/order-list?discount=${discount.code}`}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div> */}
-                                    </TableCell>
+                                        </TableCell>
+                                    )}
                                 </TableRow>
                             ))}
                         {typeof sortedDiscounts !== 'object' || sortedDiscounts.length === 0 ? (

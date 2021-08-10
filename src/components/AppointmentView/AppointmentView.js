@@ -3,9 +3,6 @@ import { useHistory } from 'react-router-dom';
 import {
     Box,
     Grid,
-    List,
-    ListItem,
-    ListItemText,
     Typography,
 } from '@material-ui/core';
 import { ToastsStore } from 'react-toasts';
