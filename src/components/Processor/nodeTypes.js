@@ -965,6 +965,27 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             })
         ]
     })
+    .addNodeType({
+        type:"validation",
+        label:"Data Validation",
+        initalWidth: 175,
+        inputs: ports => [
+            ports.string({
+                name:"object",
+                label: "Validation template"
+            }),
+            ports.data({
+                name:"inputData",
+                label:"Input Data"
+            })
+        ],
+        outputs: ports => [
+            ports.boolean({
+                name:"validationResult",
+                label: "Validation Result",
+            }),
+        ]
+    })
 }
 
 const PrettyPrint = ({data}) => {
