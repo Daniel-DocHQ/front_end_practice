@@ -139,7 +139,7 @@ const AppointmentTable = ({
 												<LinkButton
 													text='Join'
 													color='green'
-													linkSrc={`/practitioner/live/my-rooms`}
+													linkSrc={`/practitioner/live/dashboard`}
 												/>
 											</div>
 											{/* <DocButton
