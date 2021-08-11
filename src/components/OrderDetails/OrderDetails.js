@@ -693,6 +693,7 @@ const AppointmentDetails = ({
 	const isCompleted = appointmentStatus === 'COMPLETED';
     const flightDate = get(appointment, 'booking_user.metadata.travel_date');
     const product_id = get(appointment, 'booking_user.metadata.product_id');
+	const location = get(appointment, 'booking_user.tz_location');
 
 	return (
 		<>
@@ -700,10 +701,17 @@ const AppointmentDetails = ({
 				<ListItemText>
 					<b>Appointment {appointmentIndx + 1}</b>
 				</ListItemText>
+				{!!location && (
+					<ListItem>
+						<ListItemText>
+							<b>Location</b>: {location}
+						</ListItemText>
+					</ListItem>
+				)}
 				{!!flightDate && (
 					<ListItem>
 						<ListItemText>
-							<b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p', {timeZone: appointment.booking_user.tz_location})} ({appointment.booking_user.tz_location})
+							<b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p', { timeZone: location })} ({location})
 						</ListItemText>
 					</ListItem>
 				)}
