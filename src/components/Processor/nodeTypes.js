@@ -986,6 +986,66 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             }),
         ]
     })
+    .addNodeType({
+        type: "staticData",
+        label: "Static Data",
+        initalWidth: 250,
+        inputs: ports => [
+            ports.string({
+                name: "object",
+                label: "JSON Object"
+            })
+        ],
+        outputs: ports => [
+            ports.data({
+                name: "data",
+                label: "Data"
+            })
+        ]
+    })
+    .addNodeType({
+        type: "awinServerToServer",
+        name: "Awin S2S node",
+        initalWidth: 150,
+        inputs: ports => [
+            ports.boolean({
+                name: "test_mode",
+                label: "Test Mode",
+            }),
+            ports.string({
+                name: "cks",
+                label: "Awin Checksum"
+            }),
+            ports.string({
+                name: "merchant_id",
+                label: "Merchant ID"
+            }),
+            ports.string({
+                name: "amount",
+                label: "Amount"
+            }),
+            ports.string({
+                name: "channel",
+                label: "Channel"
+            }),
+            ports.string({
+                name: "parts",
+                label: "Parts"
+            }),
+            ports.string({
+                name: "vc",
+                label: "Voucher Code"
+            }),
+            ports.string({
+                name: "cr",
+                label: "Currency Code"
+            }),
+            ports.string({
+                name: "ref",
+                label: "Order reference code"
+            }),
+        ]
+    })
 }
 
 const PrettyPrint = ({data}) => {
