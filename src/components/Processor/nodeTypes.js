@@ -700,6 +700,14 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
                 label: "To"
             }),
             ports.string({
+                name: "cc",
+                label: "CC"
+            }),
+            ports.string({
+                name: "bcc",
+                label: "BCC"
+            }),
+            ports.string({
                 name: "from",
                 label: "From",
             }),
