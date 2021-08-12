@@ -137,6 +137,11 @@ const PersonalInformation = ({
 
 	function proceed() {
 		const body = {
+			id: user.id,
+			first_name,
+			last_name,
+			email,
+			date_of_birth,
 			telephone,
 		};
 		if (errors.length === 0) {
@@ -192,7 +197,7 @@ const PersonalInformation = ({
 			<div className='row' style={{ width: '300px', maxWidth: '90%' }}>
 				<DateOfBirth
 					onChange={setDateOfBirth}
-					value={new Date(date_of_birth).getTime()}
+					value={new Date(date_of_birth * 1000).getTime()}
 					required
 					disabled
 				/>
@@ -239,7 +244,7 @@ const PersonalInformation = ({
 			</div>
 			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
 				<p className='title-info'>Date of Birth:</p>
-				<p>{format(new Date(date_of_birth), 'dd-MM-yyyy')}</p>
+				<p>{format(new Date(date_of_birth * 1000), 'dd-MM-yyyy')}</p>
 			</div>
 			<div className='row space-between no-margin' style={{ width: '300px', maxWidth: '90%' }}>
 				<p className='title-info'>Email:</p>
