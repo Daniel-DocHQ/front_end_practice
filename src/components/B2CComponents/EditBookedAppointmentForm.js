@@ -47,6 +47,7 @@ const BookingEngine = () => {
 	const bookingUsersQuantity = get(bookingUsers, 'length', 0);
 	const bookingUsersTestType = get(bookingUsers, '[0].test_type', 'Antigen');
 	const bookingUsersProductId = get(bookingUsers, '[0].product_id');
+	const isEuro = get(bookingUsers, '[0].metadata.source') === 'euro';
 	const bookingUsersProduct = items.find(({ id }) => bookingUsersProductId === id) || get(items, '[0]', {});
 	const usersTimeZoneObj = cityTimezones.cityMapping.find(({ timezone }) => timezone === usersTimeZone);
 	const steps = [
@@ -342,6 +343,7 @@ const BookingEngine = () => {
 					>
 						<BookingEngineForm
 							isEdit
+							isEuro={isEuro}
 							status={status}
 							items={items}
 							defaultCountryCode={defaultCountryCode}

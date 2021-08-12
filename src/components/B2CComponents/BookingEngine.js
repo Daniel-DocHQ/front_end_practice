@@ -41,6 +41,7 @@ const BookingEngine = () => {
 	const usersPhoneNumber = get(orderInfo, 'shipping_address.telephone', '');
 	const orderId = get(orderInfo, 'id', 0);
 	const isBookingSkip = items.find(({ sku }) => (sku === 'FACE-2-FACE-HOTEL' || sku === 'SELF-SWABBING'));
+	const isEuro = get(orderInfo, 'source') === 'euro';
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = useValidationSchema(activeStep, isBookingSkip);
@@ -298,7 +299,7 @@ const BookingEngine = () => {
 											});
 										})
 										const body = {
-											type: 'video_gp_dochq',
+											type: isEuro ? 'video_gp_euro' : 'video_gp_dochq',
 											booking_users,
 											flight_details: {
 												transport_arrival_country: isAdditionalProduct ? 'GB' : timezoneValue,
@@ -383,6 +384,7 @@ const BookingEngine = () => {
 									)}
 								</div>
 								<BookingEngineForm
+									isEuro={isEuro}
 									activePassenger={activePassenger}
 									activeStep={activeStep}
 									defaultTimezone={defaultTimeZone}
