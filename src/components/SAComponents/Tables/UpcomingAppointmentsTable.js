@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { get } from 'lodash';
+import moment from 'moment';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
@@ -35,7 +36,12 @@ const styles = {
 	},
 };
 
-const UpcomingAppointmentsTable = ({ releaseAppointment, reload, token }) => {
+const UpcomingAppointmentsTable = ({
+	releaseAppointment,
+	reload,
+	token,
+	fixedEndTime = null,
+}) => {
 	const [isVisible, setIsVisible] = useState(false);
     const [appId, setAppId] = useState();
 
@@ -58,6 +64,7 @@ const UpcomingAppointmentsTable = ({ releaseAppointment, reload, token }) => {
         sortOrder,
     } = useServerDateFilter({
         token,
+		fixedEndTime,
         query: adminService.getAppointmentsSearch,
         status: 'WAITING',
 		practitionerName: true,
@@ -104,15 +111,17 @@ const UpcomingAppointmentsTable = ({ releaseAppointment, reload, token }) => {
 			<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 				<div style={styles.mainContainer}>
 					<h2>Upcoming Appointments</h2>
-					<DateFilter
-						filter={filter}
-						setFilter={setFilter}
-						appointments={appointments}
-						setEndTime={setEndTime}
-						setStartTime={setStartTime}
-						start_time={start_time}
-						end_time={end_time}
-					/>
+					{!fixedEndTime && (
+						<DateFilter
+							filter={filter}
+							setFilter={setFilter}
+							appointments={appointments}
+							setEndTime={setEndTime}
+							setStartTime={setStartTime}
+							start_time={start_time}
+							end_time={end_time}
+						/>
+					)}
 				</div>
 				<TableContainer
 					style={{

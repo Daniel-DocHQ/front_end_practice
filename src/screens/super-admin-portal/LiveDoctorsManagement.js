@@ -9,10 +9,12 @@ import TodayDoctors from '../../components/Tables/TodayDoctors';
 import nurseSvc from '../../services/nurseService';
 import LiveStatusTable from '../../components/Tables/LiveStatusTable';
 import bookingService from '../../services/bookingService';
+import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
 
 const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 	const { logout } = useContext(AuthContext);
 	const today = moment();
+	const [reload, setReload] = useState(false);
 	const [appointments, setAppointments] = useState();
 	const [doctors, setDoctors] = useState();
 	let history = useHistory();
@@ -38,7 +40,8 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 			.then(result => {
 				if (result.success) {
 					ToastsStore.success('Appointment released');
-					getFutureAppointments()
+					getFutureAppointments();
+					setReload(!reload);
 				} else {
 					ToastsStore.error('Error releasing appointment');
 				}
@@ -91,14 +94,22 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 	return (
 		<Grid container justify="space-between">
 			<Grid item xs={12}>
-				<TodayDoctors doctors={doctors} />
-			</Grid>
+                <UpcomingAppointmentsTable
+					token={token}
+					fixedEndTime={moment().add(1, 'hours')}
+					releaseAppointment={releaseAppointment}
+					reload={reload}
+				/>
+            </Grid>
             <Grid item xs={12} style={{ paddingTop: 20 }}>
                 <LiveStatusTable
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}
 				/>
             </Grid>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<TodayDoctors doctors={doctors} />
+			</Grid>
 		</Grid>
 	);
 };

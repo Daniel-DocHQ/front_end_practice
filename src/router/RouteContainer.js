@@ -133,7 +133,7 @@ const RouteHandler = () => {
 					<PatientDashboard />
 				</Layout>
 			</PrivateRoute>
-			<PrivateRoute path='/patient/profile' requiredRole='patient'>
+			<PrivateRoute path='/patient/profile'>
 				<Layout title='My Account'>
 					<PatientProfile />
 				</Layout>

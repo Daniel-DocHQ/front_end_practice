@@ -28,7 +28,7 @@ tr.MuiTableRow-root:nth-of-type(even) {
 	border-radius: 50%;
 	margin: auto;
 }
-.status-onHold, .status-waiting, .status-practitionerAttended {
+.status-onHold, .status-waiting, .status-practitionerAttended, .status-yellow {
 	background-color: var(--doc-yellow);
 }
 .status-patientAttended, .status-offline, .status-patientLeft, .status-practitionerLeft {

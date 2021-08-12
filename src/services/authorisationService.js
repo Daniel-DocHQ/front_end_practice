@@ -195,7 +195,7 @@ const authorisationSvc = {
 		return new Promise((resolve, reject) => {
 			if (body && token) {
 				axios({
-					url: `${identitiesUrl}/users`,
+					url: `${identitiesUrl}/users/${body.id}`,
 					method: 'PATCH',
 					headers: {
 						'Content-type': 'application,json',

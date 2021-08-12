@@ -131,6 +131,8 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                     const statusLastUpdated = get(appointment, 'status_last_updated', '');
                                     const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
                                     const appointmentStartTimeNumber = new Date(appointmentStartTime).getTime();
+                                    const isEarly = appointmentStartTimeNumber >= now;
+                                    const isPatientAttended = appointmentStatus === APPOINTMENT_STATUSES.patientAttended;
 
                                     return (
                                         <TableRow key={appointment.id}>
@@ -156,17 +158,17 @@ const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
                                                 {format(appointmentStartTime, 'p')}
                                             </TableCell>
                                             <TableCell align='center' style={{ ...styles.tableText }}>
-                                                {!(isWaiting && appointmentStartTimeNumber >= now) && (
+                                                {!(isWaiting && isEarly) && (
                                                     <Timer
                                                         statusLastUpdated={isWaiting ? appointmentStartTimeNumber : statusLastUpdated ? new Date(statusLastUpdated).getTime() : appointmentStartTimeNumber}
                                                     />
                                                 )}
                                             </TableCell>
-                                            <TableCell align='center' className={`text-status-${appointmentStatus}`} style={{ ...styles.tableText }}>
+                                            <TableCell align='center' className={`text-status-${isEarly && isPatientAttended ? 'none' : appointmentStatus}`} style={{ ...styles.tableText }}>
                                                 {HUMAN_STATUSES[appointmentStatus] || ''}
                                             </TableCell>
                                             <TableCell align='center' style={{ ...styles.tableText }}>
-                                                <div className={`circle status-${appointmentStatus}`}/>
+                                                <div className={`circle status-${isEarly && isPatientAttended ? 'yellow' : appointmentStatus}`}/>
                                             </TableCell>
                                             <TableCell align='right' style={{ ...styles.tableText }}>
                                                 <div className="row flex-end no-margin">
