@@ -1005,7 +1005,8 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
     })
     .addNodeType({
         type: "awinServerToServer",
-        name: "Awin S2S node",
+        label: "Awin S2S node",
+        description: "Allows pushing information through to Awin",
         initalWidth: 150,
         inputs: ports => [
             ports.boolean({
