@@ -247,15 +247,36 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 								<Typography variant="h6" className={classes.title}>
 									Order Notes
 								</Typography>
-								<DocButton
-									color="green"
-									color={addingNote ? "pink" : "green"}
-									onClick={() => setAddingNote(!addingNote)}
-									text={addingNote ? "Cancel" : "Add note"}
-								/>
+								{!addingNote && (
+									<DocButton
+										color="green"
+										onClick={() => setAddingNote(!addingNote)}
+										text="Add note"
+									/>
+								)}
+							</div>
+							<div className={classes.notesBlock}>
+								{!!orderDetail.order_notes && orderDetail.order_notes.map(({ note, id, created_by, created_at }) => (
+									<div key={id}>
+										<Typography className={classes.note}>
+											{note}
+										</Typography>
+										<div className="row space-between">
+											<Typography className={classes.smallText}>
+												{created_by}
+											</Typography>
+											<Typography className={classes.smallText}>
+												{format(new Date(created_at * 1000), 'dd/MM/yyyy p')}
+											</Typography>
+										</div>
+									</div>
+								))}
 							</div>
 							{addingNote && (
 								<>
+									<Typography>
+										New Note
+									</Typography>
 									<TextInputElement
 										rows={4}
 										multiline
@@ -263,7 +284,12 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 										value={notes}
 										onChange={setNotes}
 									/>
-									<div className='row flex-end'>
+									<div className='row space-between'>
+										<DocButton
+											color="pink"
+											onClick={() => setAddingNote(!addingNote)}
+											text="Cancel"
+										/>
 										<DocButton
 											color='green'
 											text='Submit'
@@ -284,23 +310,6 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 									)}
 								</>
 							)}
-							<div className={classes.notesBlock}>
-								{!!orderDetail.order_notes && orderDetail.order_notes.map(({ note, id, created_by, created_at }) => (
-									<div key={id}>
-										<Typography className={classes.note}>
-											{note}
-										</Typography>
-										<div className="row space-between">
-											<Typography className={classes.smallText}>
-												{created_by}
-											</Typography>
-											<Typography className={classes.smallText}>
-												{format(new Date(created_at * 1000), 'dd/MM/yyyy p')}
-											</Typography>
-										</div>
-									</div>
-								))}
-							</div>
 						</Grid>
 					</Grid>
 					<Grid item xs={12}>
