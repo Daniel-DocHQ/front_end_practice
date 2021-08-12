@@ -30,6 +30,7 @@ export const useServerDateFilter = ({
     query,
     status,
     isLive = false,
+    fixedEndTime = null,
     practitionerName = false,
 }) => {
     const today = moment();
@@ -37,7 +38,7 @@ export const useServerDateFilter = ({
 	const [isLoading, setIsLoading] = useState(true);
 	const [appointments, setAppointments] = useState([]);
 	const [start_time, setStartTime] = useState(today);
-    const [end_time, setEndTime] = useState(today);
+    const [end_time, setEndTime] = useState(!!fixedEndTime ? fixedEndTime : today);
 	const [sortOrder, setSortOrder] = useState('');
 
     const compareFunc = (i, j, newSortOrder) => {
@@ -70,7 +71,7 @@ export const useServerDateFilter = ({
         await query({
                 dateRange: {
                     start_time: (status === 'AVAILABLE' && filter === 'today') ? moment().utc(0).format() : moment(start_time).utc(0).startOf('day').format(),
-                    end_time: moment(end_time).utc(0).endOf('day').format(),
+                    end_time: !!fixedEndTime ? moment(fixedEndTime).utc(0).format() : moment(end_time).utc(0).endOf('day').format(),
                 },
                 status,
                 token,

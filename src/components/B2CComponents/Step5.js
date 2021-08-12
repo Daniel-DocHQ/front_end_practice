@@ -61,6 +61,11 @@ const Step5 = ({ isBookingSkip, defaultTimezone }) => {
                                 A confirmation email will be sent to: {passengers[0].email}
                             </strong></p>
                         </div>
+					    <div className='row no-margin '>
+                            <p className="red-bold-text">
+                                Please check your spam folder.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </React.Fragment>

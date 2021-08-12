@@ -285,7 +285,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 								</>
 							)}
 							<div className={classes.notesBlock}>
-								{!!orderDetail.order_notes && ([...orderDetail.order_notes].sort((a, b) => new Date(b.created_at * 1000).getTime() - new Date(a.created_at * 1000).getTime())).map(({ note, id, created_by, created_at }) => (
+								{!!orderDetail.order_notes && orderDetail.order_notes.map(({ note, id, created_by, created_at }) => (
 									<div key={id}>
 										<Typography className={classes.note}>
 											{note}

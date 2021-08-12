@@ -64,7 +64,6 @@ const TodayDoctors = ({ doctors = [] }) => {
             </div>
             <TableContainer
                 style={{
-                    maxHeight: '500px',
                     marginBottom: '40px',
                 }}
             >
