@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { get } from 'lodash';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -50,14 +49,11 @@ const ClaimableAppointments = ({ token, reload, claimAppointment }) => {
 		start_time,
 		end_time,
 		getData,
-		sort,
-		sortOrder,
     } = useServerDateFilter({
         token,
         query: adminService.getAppointmentsSearch,
         status: 'CLAIMABLE',
 		isLive: true,
-		practitionerName: true,
     });
 
 	useEffect(() => {
@@ -87,15 +83,7 @@ const ClaimableAppointments = ({ token, reload, claimAppointment }) => {
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
-							<TableCell align='left' style={styles.tableText}>
-									<TableSortLabel
-										active
-										direction={sortOrder}
-										onClick={sort}
-									>
-										Practitioner Name
-									</TableSortLabel>
-								</TableCell>
+							<TableCell align='left' style={styles.tableText}>Patient Name</TableCell>
 							<TableCell align='center' style={styles.tableText}>Date</TableCell>
 							<TableCell align='center' style={styles.tableText}>Time</TableCell>
 							<TableCell align='center' style={styles.tableText}>People</TableCell>

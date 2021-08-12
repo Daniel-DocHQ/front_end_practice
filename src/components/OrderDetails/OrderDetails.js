@@ -73,6 +73,10 @@ const useStyles = makeStyles((theme) => ({
 		lineHeight: 0.8,
 		whiteSpace: 'break-spaces',
 	},
+	notesBlock: {
+		maxHeight: 235,
+		overflowY: 'scroll',
+	},
 }));
 
 const READABLE_STATUSES = {
@@ -250,7 +254,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 									text={addingNote ? "Cancel" : "Add note"}
 								/>
 							</div>
-							{addingNote ? (
+							{addingNote && (
 								<>
 									<TextInputElement
 										rows={4}
@@ -279,25 +283,24 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 										</div>
 									)}
 								</>
-							) : (
-								<>
-									{!!orderDetail.order_notes && orderDetail.order_notes.map(({ note, id, created_by, created_at }) => (
-										<div key={id}>
-											<Typography className={classes.note}>
-												{note}
-											</Typography>
-											<div className="row space-between">
-												<Typography className={classes.smallText}>
-													{created_by}
-												</Typography>
-												<Typography className={classes.smallText}>
-													{format(new Date(created_at * 1000), 'dd/MM/yyyy p')}
-												</Typography>
-											</div>
-										</div>
-									))}
-								</>
 							)}
+							<div className={classes.notesBlock}>
+								{!!orderDetail.order_notes && ([...orderDetail.order_notes].sort((a, b) => new Date(b.created_at * 1000).getTime() - new Date(a.created_at * 1000).getTime())).map(({ note, id, created_by, created_at }) => (
+									<div key={id}>
+										<Typography className={classes.note}>
+											{note}
+										</Typography>
+										<div className="row space-between">
+											<Typography className={classes.smallText}>
+												{created_by}
+											</Typography>
+											<Typography className={classes.smallText}>
+												{format(new Date(created_at * 1000), 'dd/MM/yyyy p')}
+											</Typography>
+										</div>
+									</div>
+								))}
+							</div>
 						</Grid>
 					</Grid>
 					<Grid item xs={12}>
@@ -693,6 +696,7 @@ const AppointmentDetails = ({
 	const isCompleted = appointmentStatus === 'COMPLETED';
     const flightDate = get(appointment, 'booking_user.metadata.travel_date');
     const product_id = get(appointment, 'booking_user.metadata.product_id');
+	const location = get(appointment, 'booking_user.tz_location');
 
 	return (
 		<>
@@ -700,10 +704,17 @@ const AppointmentDetails = ({
 				<ListItemText>
 					<b>Appointment {appointmentIndx + 1}</b>
 				</ListItemText>
+				{!!location && (
+					<ListItem>
+						<ListItemText>
+							<b>Location</b>: {location}
+						</ListItemText>
+					</ListItem>
+				)}
 				{!!flightDate && (
 					<ListItem>
 						<ListItemText>
-							<b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p', {timeZone: appointment.booking_user.tz_location})} ({appointment.booking_user.tz_location})
+							<b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p', { timeZone: location })} ({location})
 						</ListItemText>
 					</ListItem>
 				)}

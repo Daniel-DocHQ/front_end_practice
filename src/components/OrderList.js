@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         width: '40ch',
     },
     formControl: {
-        width: '40ch',
+        width: '30ch',
       },
 }));
 
@@ -81,7 +81,7 @@ const OrderList = props => {
     const [searchBox, setSearchBox] = useState("");
     const [searchEmail, setSearchEmail] = useState("");
     const [searchDiscount, setSearchDiscount] = useState(discount);
-    const [searchType, setSearchType] = useState(discount ? 3 : 1);
+    const [searchType, setSearchType] = useState(discount ? 3 : 2);
     const searchValues = {
         1: searchBox,
         2: searchEmail,
@@ -135,13 +135,7 @@ const OrderList = props => {
         <Container className={classes.root}>
             <Grid container spacing={3} direction="column">
                 <Grid container item xs={12} justify="space-between" alignItems="center">
-                    <Grid item xs={6} alignItems="center">
-                        <TextField className={classes.textField} id="standard-basic" label="Search" value={searchValues[searchType]} onChange={(e) => onChangeSearchValue[searchType](e.target.value)} />
-                        {searchType === 1 && (
-                            <Button variant="contained" onClick={searchButtonClick}>Search</Button>
-                        )}
-                    </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={1}>
                         <FormControl className={classes.formControl}>
                             <InputLabel id="demo-simple-select-label">Search Type</InputLabel>
                             <Select
@@ -158,6 +152,12 @@ const OrderList = props => {
                                 <MenuItem value={3}>Discount code</MenuItem>
                             </Select>
                         </FormControl>
+                    </Grid>
+                    <Grid item xs={8} alignItems="center">
+                        <TextField className={classes.textField} id="standard-basic" label="Search" value={searchValues[searchType]} onChange={(e) => onChangeSearchValue[searchType](e.target.value)} />
+                        {searchType === 1 && (
+                            <Button variant="contained" onClick={searchButtonClick}>Search</Button>
+                        )}
                     </Grid>
                 </Grid>
                 <Grid item className={classes.data_grid}>

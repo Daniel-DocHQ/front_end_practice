@@ -12,6 +12,7 @@ import bookingService from '../../services/bookingService';
 import { AppointmentContext, useBookingUsers } from '../../context/AppointmentContext';
 import nurseSvc from '../../services/nurseService';
 import './VideoCallAppointment.scss';
+import { ToastsStore } from 'react-toasts';
 
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
@@ -36,7 +37,6 @@ function TwillioVideoCall({
 	const isEarly = timeBeforeStart > 0;
 	const patients = useBookingUsers();
 	const [counter, setCounter] = useState(0);
-	const [isPaused, setIsPaused] = useState(false);
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
@@ -73,7 +73,8 @@ function TwillioVideoCall({
 
 	const updateAppointmentStatus = (status) =>
 		bookingService.updateAppointmentStatus(appointmentId, { status }, authToken)
-		.catch(err => console.log(err));
+		.then((resp) => !!resp.error ? ToastsStore.error(resp.error, 10000) : null)
+		.catch(err => ToastsStore.error(err.error, 10000));
 
 	useEffect(() => {
 		const participantConnected = participant => {
@@ -124,8 +125,8 @@ function TwillioVideoCall({
 						.then(result => {
 							if (result.success && result.appointment) {
 								const { status } = result.appointment;
-								if (status !== 'ON_HOLD') {
-									updateAppointmentStatus('PRACTITIONER_LEFT')
+								if (status !== 'ON_HOLD' && status !== 'COMPLETED') {
+									updateAppointmentStatus('PRACTITIONER_LEFT');
 								}
 							}
 						})
@@ -138,7 +139,7 @@ function TwillioVideoCall({
 				}
 			}, 2000);
 		};
-	}, [isPaused]);
+	}, []);
 
 	useEffect(() => {
 		if (!isNurse && timeBeforeStart > 0) { // 3 min until show message
@@ -195,7 +196,6 @@ function TwillioVideoCall({
 	};
 
 	const handlePause = async () => {
-		setIsPaused(true);
 		await updateAppointmentStatus('ON_HOLD');
 		if (!!hideVideoAppointment) {
 			hideVideoAppointment();

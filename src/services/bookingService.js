@@ -23,7 +23,7 @@ const bookingService = {
 };
 
 // Booking engine
-function getSlots(selectedDate, isPharmacy = false) {
+function getSlots(selectedDate, isPharmacy = false,  isEuro = false) {
 	const params = getURLParams();
 	const date = ddMMyyyy(selectedDate);
 	function additionalParams() {
@@ -37,7 +37,7 @@ function getSlots(selectedDate, isPharmacy = false) {
 		if (date) {
 			axios({
 				url: `${baseURL}?&service=${
-					typeof params['service'] === 'undefined' ? (isPharmacy ? 'video_gp_dochq' : SERVICE_TYPE) : params['service']
+					isEuro ? 'video_gp_euro' : typeof params['service'] === 'undefined' ? (isPharmacy ? 'video_gp_dochq' : SERVICE_TYPE) : params['service']
 				}&date=${date}${additionalParams()}`,
 				method: 'get',
 				headers: { 'Content-type': 'application,json' },
@@ -93,7 +93,7 @@ function getAppointmentsByShortToken(shortToken, token) {
 			.catch(err => reject(err));
 	});
 }
-function getSlotsByTime({ date_time, date_time_to, language, isPharmacy = false }) {
+function getSlotsByTime({ date_time, date_time_to, language, isPharmacy = false, isEuro = false }) {
 	const params = getURLParams();
 	function additionalParams() {
 		// used to book group face to face appointments
@@ -106,7 +106,7 @@ function getSlotsByTime({ date_time, date_time_to, language, isPharmacy = false 
 		if (!!date_time || !!date_time_to) {
 			axios({
 				url: `${baseURL}?&service=${
-					typeof params['service'] === 'undefined' ? (isPharmacy ? 'video_gp_dochq' : SERVICE_TYPE) : params['service']
+					isEuro ? 'video_gp_euro' : typeof params['service'] === 'undefined' ? (isPharmacy ? 'video_gp_dochq' : SERVICE_TYPE) : params['service']
 				}&date_time=${date_time}&date_time_to=${date_time_to || ''}&language=${language}${additionalParams()}`,
 				method: 'get',
 				headers: { 'Content-type': 'application,json' },
@@ -367,13 +367,19 @@ function updateAppointmentStatus(slot_id, body, authToken) {
 					if (response.status === 200 || response.data.status === 'ok') {
 						resolve({ success: true });
 					} else {
-						reject({
+						resolve({
 							success: false,
-							error: response.data.error,
+							error: response.data.message || 'Something went wrong',
 						});
 					}
 				})
-				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
 		} else {
 			resolve({ success: false, error: 'Missing Details' });
 		}
