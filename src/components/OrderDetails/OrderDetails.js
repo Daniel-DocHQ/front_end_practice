@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 		color: 'grey',
 	},
 	note: {
-		lineHeight: 0.8,
+		lineHeight: 1.2,
 		whiteSpace: 'break-spaces',
 	},
 	notesBlock: {
@@ -342,7 +342,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 											<TableCell align="right">{row.product.type}</TableCell>
 											<TableCell align="right">{row.quantity}</TableCell>
 											<TableCell align="right">£{(row.return_method_id === 2 ? (10 * row.quantity) : 0).toFixed(2)}</TableCell>
-											<TableCell align="right">£{row.product.price.toFixed(2)}</TableCell>
+											<TableCell align="right">£{(get(row, 'parent.price') || row.product.price).toFixed(2)}</TableCell>
 											{discountValue && (
 												<>
 													<TableCell align="right">
@@ -361,7 +361,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 										<TableCell align="right"></TableCell>
 										<TableCell align="right">{orderItems.reduce((sum, { quantity }) => (sum + quantity), 0)}</TableCell>
 										<TableCell align="right">£{orderItems.reduce((sum, { quantity, return_method_id }) => (sum + (return_method_id === 2 ? (10 * quantity) : 0)), 0).toFixed(2)}</TableCell>
-										<TableCell align="right">£{discountValue ? orderItems.reduce((sum, { quantity, product: { price } }) => (sum + price * quantity), 0).toFixed(2) : orderDetail.price.toFixed(2)}</TableCell>
+										<TableCell align="right">£{discountValue ? get(orderDetail, 'original_price', 0).toFixed(2) : orderDetail.price.toFixed(2)}</TableCell>
 										{discountValue && (
 											<>
 												<TableCell align="right">
