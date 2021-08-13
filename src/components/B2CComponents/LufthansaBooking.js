@@ -216,7 +216,7 @@ const LufthansaBooking = () => {
                                             price,
                                         },
                                     ],
-                                    discount: purchaseCode[0].code,
+                                    discount: purchaseCode[0].code.trim(),
                                 }).then(result => {
                                     if (
                                         result.success && result.order_details
