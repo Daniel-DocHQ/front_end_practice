@@ -38,6 +38,7 @@ const LufthansaBookingEngineForm = ({
         <Step1 isPharmacy />,
         <LufthansaStep0 products={products} />,
         <Step2
+            isEuro
             isEdit={isEdit}
             defaultTimezone={defaultTimezone}
             isPharmacy={isPharmacy}

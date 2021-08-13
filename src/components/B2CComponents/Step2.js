@@ -187,7 +187,7 @@ const Step2 = ({
 				.getSlotsByTime({
 					date_time: moment(new Date(new Date(startDate).setHours(startDateTime.getHours())).setMinutes(startDateTime.getMinutes())).tz(timezone).format().replace('+', '%2B'),
 					date_time_to: moment(new Date(new Date(maxDate).setHours(maxDate.getHours())).setMinutes(maxDate.getMinutes())).tz(timezone).format().replace('+', '%2B'),
-					language: 'EN',
+					language: isEuro ? 'DE': 'EN',
 					isPharmacy,
 					isEuro,
 				})

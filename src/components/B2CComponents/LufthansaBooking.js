@@ -17,8 +17,6 @@ import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/pro
 import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
 
-const AmberDay2 = 'SYN-UK-PCR-SNS-002';
-
 const LufthansaBooking = () => {
     const [shortToken, setShortToken] = useState();
 	const [products, setProducts] = useState([]);
@@ -287,7 +285,7 @@ const LufthansaBooking = () => {
                                 }).catch((error) => console.log(error));
                         }
                         const body = {
-                            type: 'video_gp_dochq',
+                            type: 'video_gp_euro',
                             booking_users,
                             flight_details: {
                                 transport_arrival_country: isAdditionalProduct ? 'GB' : timezoneValue,

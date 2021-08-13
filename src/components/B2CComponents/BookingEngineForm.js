@@ -25,7 +25,6 @@ const BookingEngineForm = ({
     dropTimer,
     timer,
     createdAppointmentId,
-    isEuro = false,
     isPharmacy = false,
     isBookingSkip = false,
     totalAvailableQuantity = 0,
@@ -44,7 +43,6 @@ const BookingEngineForm = ({
         <Step1 />,
         ...(isBookingSkip ? [] : [
             <Step2
-                isEuro={isEuro}
                 isEdit={isEdit}
                 defaultTimezone={defaultTimezone}
                 isPharmacy={isPharmacy}
