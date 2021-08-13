@@ -32,7 +32,7 @@ const LufthansaBookingEngineForm = ({
     ...restProps
 }) => {
     const isLastStep = activeStep === steps.length - 1;
-    const { values: { numberOfPeople }} = useFormikContext();
+    const { values: { numberOfPeople } } = useFormikContext();
 
     const stepsComponents = [
         <Step1 isPharmacy />,

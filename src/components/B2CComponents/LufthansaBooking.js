@@ -279,7 +279,7 @@ const LufthansaBooking = () => {
                             });
                         });
                         for (let index = 0; index < purchaseCode.length; index++) {
-                            await adminService.checkPurchaseCodeInfo(purchaseCode[index])
+                            await adminService.checkPurchaseCodeInfo(purchaseCode[index].code)
                                 .then(async (result) => {
                                     if (result.success && result.data && result.data.value && result.data.uses) {
                                         await adminService.useDiscountCode(result.data.id);
