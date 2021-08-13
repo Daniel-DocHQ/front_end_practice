@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	FormControl,
 	FormControlLabel,
@@ -48,7 +48,7 @@ const useStyles = makeStyles({
 	},
 });
 
-const Step2 = ({
+const Step3 = ({
     isEdit,
     isPharmacy,
     defaultCountryCode,
@@ -83,6 +83,10 @@ const Step2 = ({
             region,
         },
     } = bookingFormModel;
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [activePassenger]);
 
 	return (
 		<React.Fragment>
@@ -550,4 +554,4 @@ const Step2 = ({
 	);
 };
 
-export default Step2;
+export default Step3;

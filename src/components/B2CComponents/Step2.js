@@ -99,7 +99,7 @@ const datePickerTheme = () => createMuiTheme({
 	},
 });
 
-const Step3 = ({
+const Step2 = ({
 	defaultTimezone,
 	dropTimer,
 	isPharmacy,
@@ -348,4 +348,4 @@ const Step3 = ({
 	);
 }
 
-export default Step3;
+export default Step2;
