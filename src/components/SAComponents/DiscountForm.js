@@ -19,8 +19,10 @@ import {
 import DocButton from '../DocButton/DocButton';
 import Input from '../FormComponents/Input';
 import datePickerTheme from '../../helpers/datePickerTheme';
+import { Alert } from '@material-ui/lab';
 
 const DiscountForm = ({
+    status,
     ...restProps
 }) => {
     const pickerTheme = datePickerTheme();
@@ -28,7 +30,7 @@ const DiscountForm = ({
     return (
         <Form {...restProps}>
             <Box p={8}>
-                <Grid container justify="space-between" alignItems="flex-end" spacing={10}>
+                <Grid container justify="space-between" spacing={10}>
                     <Grid item xs={6}>
                         <div className="row">
                             <Field name="code" >
@@ -162,6 +164,15 @@ const DiscountForm = ({
                                 )}
                             </Field>
                         </div>
+                    </Grid>
+                    <Grid item xs={4}>
+                        {typeof status !== 'undefined' && (
+                            <div className='row center'>
+                                <Alert severity={status.severity} variant='outlined'>
+                                    {status.message}
+                                </Alert>
+                            </div>
+                        )}
                     </Grid>
                 </Grid>
                 <div className='row flex-end'>

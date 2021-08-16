@@ -2,10 +2,8 @@ import React, { useContext, useState } from 'react';
 import * as Yup from 'yup';
 import { get } from 'lodash';
 import { Formik } from 'formik';
-import { Alert } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
 import { ToastsStore } from 'react-toasts';
-import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import DiscountForm from '../../components/SAComponents/DiscountForm';
@@ -26,7 +24,7 @@ const GenerateDiscount = ({ token, isAuthenticated, role, user }) => {
 	}
 
 	return (
-		<DiscountAppBar value={1}>
+		<DiscountAppBar value={0}>
 			<Formik
 				initialValues={{
 					code: '',
@@ -59,15 +57,8 @@ const GenerateDiscount = ({ token, isAuthenticated, role, user }) => {
 					.catch((err) => setStatus({ severity: 'error', message: err.error }));
 				}}
 			>
-				<DiscountForm />
+				<DiscountForm status={status} />
 			</Formik>
-			{typeof status !== 'undefined' && (
-				<div className='row center'>
-					<Alert severity={status.severity} variant='outlined'>
-						{status.message}
-					</Alert>
-				</div>
-			)}
 		</DiscountAppBar>
 	);
 };

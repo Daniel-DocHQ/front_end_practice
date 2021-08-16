@@ -43,7 +43,7 @@ const SADiscountManagement = ({ token, role, isAuthenticated, user }) => {
 	}, []);
 
 	return (
-        <DiscountAppBar value={0}>
+        <DiscountAppBar value={1}>
             <Grid container justify="space-between">
                 <Grid item xs={12}>
                     <DiscountTable token={token} reload={getDiscounts} discounts={discounts} />

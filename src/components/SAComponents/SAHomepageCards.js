@@ -126,7 +126,7 @@ const SAHomepageCards = ({ token, user }) => {
 				<LinkButton
 					color='green'
 					text='View'
-					linkSrc='/super_admin/discount-management'
+					linkSrc='/super_admin/generate-discount'
 				/>
 			),
 		},

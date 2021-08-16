@@ -40,18 +40,8 @@ const DiscountAppBar = ({ value, children }) => {
             <AppBar position="static">
                 <Tabs value={value} aria-label="simple tabs example">
                     <Tab
-                        label="Discount Management"
-                        {...a11yProps(0)}
-                        classes={{
-                            root: classes.tab,
-                            selected: classes.selected,
-                        }}
-                        component={Link}
-                        to="/super_admin/discount-management"
-                    />
-                    <Tab
                         label="Generate Discount"
-                        {...a11yProps(1)}
+                        {...a11yProps(0)}
 
                         classes={{
                             root: classes.tab,
@@ -59,6 +49,16 @@ const DiscountAppBar = ({ value, children }) => {
                         }}
                         component={Link}
                         to="/super_admin/generate-discount"
+                    />
+                    <Tab
+                        label="Discount Management"
+                        {...a11yProps(1)}
+                        classes={{
+                            root: classes.tab,
+                            selected: classes.selected,
+                        }}
+                        component={Link}
+                        to="/super_admin/discount-management"
                     />
                 </Tabs>
             </AppBar>

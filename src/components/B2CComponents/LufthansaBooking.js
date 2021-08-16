@@ -189,7 +189,7 @@ const LufthansaBooking = () => {
                                         date_of_birth: passengers[0].dateOfBirth,
                                     },
                                     billing_address: {
-                                        country: 'GB',
+                                        country: 'DE',
                                         postcode: '',
                                         address_1: '',
                                         town: '',
@@ -198,7 +198,7 @@ const LufthansaBooking = () => {
                                     },
                                     shipping_address: {
                                         postcode: passengers[0].postal_code,
-                                        country: 'GB',
+                                        country: 'DE',
                                         address_1: passengers[0].street_address,
                                         town: passengers[0].locality,
                                         telephone: passengersPhone,
@@ -254,7 +254,7 @@ const LufthansaBooking = () => {
                                 date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
                                 language: 'DE',
                                 phone: `${countryCode.label}${phone.trim()}`,
-                                country: 'GB',
+                                country: 'DE',
                                 toc_accept: tocAccept,
                                 metadata: {
                                     source: 'euro',
@@ -288,7 +288,7 @@ const LufthansaBooking = () => {
                             type: 'video_gp_euro',
                             booking_users,
                             flight_details: {
-                                transport_arrival_country: isAdditionalProduct ? 'GB' : timezoneValue,
+                                transport_arrival_country: isAdditionalProduct ? 'DE' : timezoneValue,
                                 transport_arrival_date_time: moment(
                                     new Date(
                                         landingDate.getFullYear(),
@@ -298,7 +298,7 @@ const LufthansaBooking = () => {
                                         landingTime.getMinutes(),
                                         0,
                                     )).format(),
-                                transport_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
+                                transport_departure_country: isAdditionalProduct ? city.iso2 : 'DE',
                                 transport_departure_date_time: moment(
                                     new Date(
                                         travelDate.getFullYear(),
