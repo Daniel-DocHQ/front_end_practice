@@ -186,7 +186,7 @@ const PharmacyBookingEngine = () => {
                             travelTime,
                             passengers,
                             timezone: timezoneValue,
-                            testType: { title, id, sku, type, price },
+                            testType: { title, id, sku, type, price, bundle_id },
                             transportNumber,
                             transportType,
                             landingDate,
@@ -278,6 +278,8 @@ const PharmacyBookingEngine = () => {
                             return ({
                                 first_name: firstName,
                                 last_name: lastName,
+                                product_id: parseInt(id),
+                                bundle_id,
                                 tz_location: (isAdditionalProduct || isPCR) ? defaultTimeZone.timezone : timezoneValue,
                                 date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
                                 language: 'EN',

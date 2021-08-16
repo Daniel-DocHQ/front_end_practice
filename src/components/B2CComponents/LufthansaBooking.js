@@ -158,7 +158,7 @@ const LufthansaBooking = () => {
                             travelTime,
                             passengers,
                             timezone: timezoneValue,
-                            testType: { title, id, sku, type, price },
+                            testType: { title, id, sku, type, price, bundle_id },
                             transportNumber,
                             transportType,
                             landingDate,
@@ -255,6 +255,8 @@ const LufthansaBooking = () => {
                                 language: 'DE',
                                 phone: `${countryCode.label}${phone.trim()}`,
                                 country: 'DE',
+                                product_id: parseInt(id),
+                                bundle_id,
                                 toc_accept: tocAccept,
                                 metadata: {
                                     source: 'euro',

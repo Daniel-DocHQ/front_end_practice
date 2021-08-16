@@ -238,7 +238,7 @@ const BookingEngine = () => {
 											travelTime,
 											passengers,
 											timezone: timezoneValue,
-											testType: { id, sku, type },
+											testType: { id, sku, type, bundle_id },
 											transportNumber,
 											transportType,
 											landingDate,
@@ -276,6 +276,7 @@ const BookingEngine = () => {
 												country: 'GB',
 												toc_accept: tocAccept,
 												locality: town,
+												bundle_id,
 												product_id: parseInt(id),
 												metadata: {
 													source,
