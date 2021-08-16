@@ -765,13 +765,14 @@ const adminService = {
 			}
 		});
 	},
-	getAllAppointments(dateRange, token) {
+	getAllAppointments({ dateRange, token }) {
 		const { start_time, end_time } = dateRange;
+
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${bookingUrl}/admin/allappointments?start_time=${start_time}&end_time=${end_time}`,
+					url: `${bookingUrl}/search?q=start_time:[${start_time} TO ${end_time}]&inc_practitioner_name=1&sort=start_time:asc`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {

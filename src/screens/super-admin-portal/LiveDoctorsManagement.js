@@ -10,6 +10,7 @@ import nurseSvc from '../../services/nurseService';
 import LiveStatusTable from '../../components/Tables/LiveStatusTable';
 import bookingService from '../../services/bookingService';
 import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
+import AllAppointments from '../../components/SAComponents/Tables/AllAppointments';
 
 const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 	const { logout } = useContext(AuthContext);
@@ -109,6 +110,9 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
             </Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<TodayDoctors doctors={doctors} />
+			</Grid>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<AllAppointments token={token} />
 			</Grid>
 		</Grid>
 	);
