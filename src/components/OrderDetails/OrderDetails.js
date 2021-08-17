@@ -99,7 +99,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 	const refetchData = () => setReloadInfo((value) => !value);
 	const swabbingMethod = get(orderDetail, 'items', []).find(({ product: { type }}) => type === 'Virtual');
-	const orderItems = get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual');
+	const orderItems = get(orderDetail, 'basket', []).filter(({ product: { type } }) => type !== 'Virtual');
 	const paymentStatus = get(orderDetail, 'payment_flag');
 	const wasPayment = orderDetail.source !== 'Pharmacy' && orderDetail.source !== 'euro'
 
@@ -342,7 +342,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 											<TableCell align="right">{row.product.type}</TableCell>
 											<TableCell align="right">{row.quantity}</TableCell>
 											<TableCell align="right">£{(row.return_method_id === 2 ? (10 * row.quantity) : 0).toFixed(2)}</TableCell>
-											<TableCell align="right">£{(get(row, 'parent.price') || row.product.price).toFixed(2)}</TableCell>
+											<TableCell align="right">£{row.product.price.toFixed(2)}</TableCell>
 											{discountValue && (
 												<>
 													<TableCell align="right">
