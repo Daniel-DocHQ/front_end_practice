@@ -1062,7 +1062,7 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         initalWidth: 150,
         inputs: ports => [
             ports.string({
-                name: "certificate_id"
+                name: "certificate_id",
                 label: "certificate ID",
             }),
         ],
