@@ -1055,6 +1055,24 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             }),
         ]
     })
+    .addNodeType({
+        type:"getCertificate",
+        label: "Get Certificate",
+        description: "retrieves a certificate from the system",
+        initalWidth: 150,
+        inputs: ports => [
+            ports.string({
+                name: "certificate_id"
+                label: "certificate ID",
+            }),
+        ],
+        outputa: ports => [
+            ports.data({
+                name: "data",
+                label: "Certificate Data",
+            })
+        ]
+    })
 }
 
 const PrettyPrint = ({data}) => {
