@@ -1066,7 +1066,7 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
                 label: "certificate ID",
             }),
         ],
-        outputa: ports => [
+        outputs: ports => [
             ports.data({
                 name: "data",
                 label: "Certificate Data",
