@@ -70,7 +70,7 @@ const OrderList = props => {
 	const discount = params['discount'] || '';
     const { user, token } = useContext(AuthContext);
     const [rows, setRows] = useState([]);
-    const [pageSize, setPageSize] = useState(0);
+    const [pageSize, setPageSize] = useState(50);
     const [page, setPage] = useState(0);
     const [pageCount, setPageCount] = useState(0);
     const [error, setError] = useState(<></>);
@@ -99,16 +99,15 @@ const OrderList = props => {
 
     useEffect(() => {
         setDataTableLoading(true);
-        adminService.getOrders(token, page, searchEmail, searchDiscount)
+        adminService.getOrders(token, page, searchEmail, searchDiscount, pageSize)
             .then(res => {
                 if (res.success && res.data) {
-                    setPageSize(res.data.pagnation_page_size);
                     setPageCount(!!res.data.total_count ? res.data.total_count : !!res.data.orders ? pageCount : 0);
                     setRows(res.data.orders || []);
                 }
             }).catch((err) => ToastsStore.error('Error fetching orders'));
         setDataTableLoading(false);
-    }, [page, search]);
+    }, [page, search, pageSize]);
 
     useDebounce(() => {
         setPage(0);
@@ -172,6 +171,7 @@ const OrderList = props => {
                         }}
                         onRowClick={clickedRow}
                         paginationMode="server"
+                        onPageSizeChange={(params) => setPageSize(params.pageSize)}
                         onPageChange={(params) => setPage(params.page)}
                         loading={dataTableLoading}
                         rowCount={pageCount}

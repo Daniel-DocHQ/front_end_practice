@@ -608,12 +608,12 @@ const adminService = {
 			}
 		});
 	},
-	getOrders(token, page, email, discount) {
+	getOrders(token, page, email, discount, page_size = 50) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
 				axios({
 					method: 'get',
-					url: `${baseUrl}/v1/order?page=${page}${!!email ? `&email=${email}` : ''}${!!discount ? `&discount=${discount}` : ''}`,
+					url: `${baseUrl}/v1/order?page=${page}&page_size=${page_size}${!!email ? `&email=${email}` : ''}${!!discount ? `&discount=${discount}` : ''}`,
 					headers: { Authorization: `Bearer ${token}` },
 				})
 					.then(response => {
