@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
     data_grid: {
         marginTop: 30,
-        height: 700,
+        height: 2800,
         width: '100%',
     },
     textField: {
