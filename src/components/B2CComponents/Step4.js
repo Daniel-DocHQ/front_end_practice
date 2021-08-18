@@ -127,7 +127,7 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 						</div>
 						<div className='row no-margin'>
 							<p>
-								<strong>Passport/Travel ID document:&nbsp;</strong>
+								<strong>Passport/National identity card number:&nbsp;</strong>
 								{passportNumber}
 							</p>
 						</div>

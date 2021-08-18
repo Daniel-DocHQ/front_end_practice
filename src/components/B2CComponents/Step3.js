@@ -11,6 +11,7 @@ import {
     MenuItem,
 	makeStyles,
     FormHelperText,
+    Tooltip,
 } from '@material-ui/core';
 import {
 	MuiPickersUtilsProvider,
@@ -29,6 +30,8 @@ import COUNTRIES from '../../helpers/countries';
 import datePickerTheme from '../../helpers/datePickerTheme';
 import preventCopyPaste from '../../helpers/preventCopyPaste';
 import './BookingEngine.scss';
+
+const passportIdImage = require('../../assets/images/passportId.webp');
 
 const countryToFlag = (isoCode) => (
 	typeof String.fromCodePoint !== 'undefined'
@@ -400,17 +403,31 @@ const Step3 = ({
 					)}
 				</Field>
 			</div>
-            <h4 style={{ margin: 0, paddingTop: 20 }}>
-                {passportNumber.label}
+            <h4 style={{ margin: 0, paddingTop: 20, width: 301, cursor: 'pointer' }}>
+                <Tooltip
+                    title={
+                        <>
+                            <img src={passportIdImage} />
+                        </>
+                    }
+                    placement='right'
+                    arrow
+                >
+                    <div>
+                        {passportNumber.label}&nbsp;
+                        <i className="fas fa-info-circle"></i>
+                    </div>
+                </Tooltip>
             </h4>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                <div style={{ maxWidth: '40%', minWidth: '440px' }}>
                     <Field
                         name={`passengers[${activePassenger}].passportNumber`}
-                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].passportNumber`, false) ? 'Input Passport/Travel ID document' : undefined)}
+                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].passportNumber`, false) ? 'Input Passport/National identity card number' : undefined)}
                     >
                         {({ field, meta }) => (
                             <Input
+                                {...passportNumber}
                                 onCopy={preventCopyPaste}
                                 onDrag={preventCopyPaste}
                                 onDrop={preventCopyPaste}
@@ -418,7 +435,6 @@ const Step3 = ({
                                 error={!!meta.error}
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
-                                {...passportNumber}
                                 {...field}
                             />
                         )}
@@ -431,13 +447,13 @@ const Step3 = ({
 						{passportNumberConfirmation.label}
 					</h4>
                     <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                        <div style={{ maxWidth: '40%', minWidth: '440px' }}>
                             <Field
                                 name={`passengers[${activePassenger}].passportNumberConfirmation`}
                                 validate={(value) => {
                                     let error;
                                     if (!value && get(touched, `passengers[${activePassenger}].passportNumberConfirmation`, false)) {
-                                        error = 'Input Passport/Travel ID document confirmation';
+                                        error = 'Input Passport/National identity card number confirmation';
                                     } else if (value !== passengers[activePassenger].passportNumber) {
                                         error = 'Passport/Travel ID documents should match';
                                     }
@@ -463,7 +479,7 @@ const Step3 = ({
                     <p style={{ maxWidth: '50%', fontWeight: 'bold' }} className="pink-text">
                         This document number will be shown on your test result certificate.<br />
                         Please enter the number of the document you will be using for travelling.<br />
-                        Please make sure you have entered the correct Passport/Travel ID document.<br />
+                        Please make sure you have entered the correct Passport/National identity card number.<br />
                         After you submit this number, you will not be able to change it at any point.
                     </p>
                 </>
