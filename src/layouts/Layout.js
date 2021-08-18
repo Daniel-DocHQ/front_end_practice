@@ -39,9 +39,10 @@ const Layout = ({ title, children }) => {
 		return childrenWithProps;
 	};
 
-	return role === 'practitioner' ? (
+	return (role === 'practitioner' || role === 'shift_manager')  ? (
 		<div style={{ display: 'flex' }}>
 			<AdminNavigator
+				role={role}
 				isAuthenticated={isAuthenticated}
 				title={title}
 				user={user}

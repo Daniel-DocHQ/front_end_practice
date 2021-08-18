@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
+import { NavLink } from 'react-router-dom';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -14,9 +15,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import './Navigation.scss';
-import { NavLink } from 'react-router-dom';
 import UserMenu from './UserMenu';
+import './Navigation.scss';
 
 const docIcon = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const vistaLogo = require('../../assets/images/vista-logo.png');
@@ -97,6 +97,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AdminNavigator = ({
+    role,
 	title,
 	isAuthenticated,
 	user,
@@ -169,7 +170,7 @@ const AdminNavigator = ({
                 <Divider />
                 <List>
                     <NavLink
-                        to='practitioner/dashboard'
+                        to={`/${role}/dashboard`}
                         activeClassName='active'
                         style={{ display: 'flex' }}
                     >
@@ -177,20 +178,20 @@ const AdminNavigator = ({
                             <ListItemIcon>
                                 <i className='fa fa-home' style={{
                                     fontSize: '36px',
-                                    color: pathname === '/practitioner/dashboard' && '#e5014d'
+                                    color: pathname === `/${role}/dashboard` && '#e5014d'
                                 }}></i>
                             </ListItemIcon>
                             <ListItemText
                                 primary={"Home"}
                                 className={clsx({
-                                    [classes.blackText]: pathname !== '/practitioner/dashboard',
+                                    [classes.blackText]: pathname !== `/${role}/dashboard`,
                                 })}
                             />
                         </ListItem>
                     </NavLink>
                     <NavLink
                         activeClassName='active'
-                        to='/practitioner/live/dashboard'
+                        to={`/${role}/live/dashboard`}
                         style={{ display: 'flex' }}
                     >
                         <ListItem button>
@@ -209,27 +210,29 @@ const AdminNavigator = ({
                             />
                         </ListItem>
                     </NavLink>
-                    {/* <NavLink
-                        activeClassName='active'
-                        to='/practitioner/rota'
-                        style={{ display: 'flex' }}
-                    >
-                        <ListItem button>
-                            <ListItemIcon>
-                                <img
-                                    alt='Vista Health'
-                                    style={{ fontSize: '36px', paddingLeft: 7 }}
-                                    src={pathname === '/practitioner/rota' ? calendarActive : calendar}
+                    {role === 'shift_manager' && (
+                        <NavLink
+                            activeClassName='active'
+                            to={`/${role}/doctors-management`}
+                            style={{ display: 'flex' }}
+                        >
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <img
+                                        alt='Vista Health'
+                                        style={{ fontSize: '36px', paddingLeft: 7 }}
+                                        src={pathname === `/${role}/doctors-management` ? calendarActive : calendar}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={"Rota"}
+                                    className={clsx({
+                                        [classes.blackText]: pathname !== `/${role}/doctors-management`,
+                                    })}
                                 />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={"Rota"}
-                                className={clsx({
-                                    [classes.blackText]: pathname !== '/practitioner/rota',
-                                })}
-                            />
-                        </ListItem>
-                    </NavLink> */}
+                            </ListItem>
+                        </NavLink>
+                    )}
                 </List>
             </Drawer>
         </>

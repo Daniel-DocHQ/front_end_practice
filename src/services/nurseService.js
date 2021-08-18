@@ -37,11 +37,11 @@ const nurseSvc = {
 			}
 		});
 	},
-	getAppointmentDetails(appointmentId, token) {
+	getAppointmentDetails(appointmentId, token, withPractitionerName = false) {
         return new Promise((resolve, reject) => {
             let thing = {
                 method: 'get',
-                url: `${baseUrl}/${appointmentId}`,
+                url: `${baseUrl}/${appointmentId}${withPractitionerName ? '?inc_practitioner_name=true' : ''}`,
             }
 
             if (typeof token !== 'undefined') {
@@ -321,37 +321,6 @@ const nurseSvc = {
 					success: false,
 					authenticated: false,
 				});
-			}
-		});
-	},
-	getTodayDoctors(token) {
-		return new Promise((resolve, reject) => {
-			if (typeof token !== 'undefined') {
-				axios({
-					method: 'get',
-					url: `${baseUrl}/practitioner`,
-					headers: { Authorization: `Bearer ${token}` },
-				})
-					.then(response => {
-						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
-							resolve({
-								success: true,
-								appointments: response.data,
-							});
-						} else  {
-							resolve({
-								success: true,
-								appointments: [],
-							});
-						}
-					})
-					.catch(err => {
-						console.error(err)
-						resolve({success: true, appointment: []})
-					});
-			} else {
-				// return unauthorized
-				resolve({ success: false, authenticated: false });
 			}
 		});
 	},

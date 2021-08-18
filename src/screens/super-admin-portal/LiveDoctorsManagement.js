@@ -5,35 +5,18 @@ import { Grid } from '@material-ui/core';
 import { ToastsStore } from 'react-toasts';
 import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
-import TodayDoctors from '../../components/Tables/TodayDoctors';
-import nurseSvc from '../../services/nurseService';
 import LiveStatusTable from '../../components/Tables/LiveStatusTable';
 import bookingService from '../../services/bookingService';
 import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
 import AllAppointments from '../../components/SAComponents/Tables/AllAppointments';
+import ShiftOverview from '../../components/Tables/ShiftOverview';
 
 const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 	const { logout } = useContext(AuthContext);
 	const today = moment();
 	const [reload, setReload] = useState(false);
 	const [appointments, setAppointments] = useState();
-	const [doctors, setDoctors] = useState();
 	let history = useHistory();
-
-	const getTodayDoctors = async () => {
-		nurseSvc
-			.getTodayDoctors(token)
-			.then(data => {
-				if (data.success) {
-					setDoctors(data.appointments);
-				} else if (!data.authenticated) {
-					logoutUser();
-				} else {
-					ToastsStore.error('Error fetching doctors');
-				}
-			})
-			.catch(err => ToastsStore.error('Error fetching doctors'));
-	}
 
 	const releaseAppointment = (slot_id) => {
 		bookingService
@@ -74,7 +57,7 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 		logout();
 		history.push('/login');
 	};
-	if (isAuthenticated !== true && role !== 'super_admin') {
+	if (isAuthenticated !== true && (role !== 'super_admin' || role !== 'shift_manager')) {
 		logoutUser();
 	}
 
@@ -82,12 +65,8 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 		if (!appointments) {
 			getFutureAppointments();
 		}
-		if (!doctors) {
-			getTodayDoctors();
-		}
 		const interval = setInterval(() => {
 			getFutureAppointments();
-			getTodayDoctors();
 		}, 15000);
 		return () => clearInterval(interval);
 	}, []);
@@ -109,7 +88,7 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 				/>
             </Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<TodayDoctors doctors={doctors} />
+				<ShiftOverview token={token} />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<AllAppointments token={token} />

@@ -3,19 +3,19 @@ import nexmoClient from 'nexmo-client';
 import { ToastsStore } from 'react-toasts';
 import adminService from '../../services/adminService';
 
-const getToken = async () => (
+const getToken = async (userName) => (
     await adminService
-      .getIvrToken('Practitioner1')
+      .getIvrToken(userName)
       .catch((err) => ToastsStore.error(err.error))
 );
 
-const useVonageApp = () => {
+const useVonageApp = (userName = 'Practitioner1') => {
     const [app, setApp] = useState(null);
 	const [call, setCall] = useState();
 
     useEffect(() => {
         (async () => {
-            const { token } = await getToken();
+            const { token } = await getToken(userName);
             new nexmoClient({ debug: true })
             .login(token)
             .then(app => {

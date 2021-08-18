@@ -56,6 +56,9 @@ import CSDashboard from '../screens/cs-portal/CSDashboard';
 import RegisterKit from '../screens/RegisterKit';
 import LufthansaTestRegister from '../screens/b2c-portal/LufthansaTestRegister';
 import SADiscountManagement from '../screens/super-admin-portal/SADiscountManagement';
+import SmDashboard from '../screens/sm-portal/SmDashboard';
+import SmLiveDashboard from '../screens/sm-portal/SmLiveDashboard';
+import SmMyRooms from '../screens/sm-portal/SmMyRooms';
 
 const { isSupported } = require('twilio-video');
 
@@ -263,6 +266,27 @@ const RouteHandler = () => {
 					<B2CBookAppointment />
 				</Layout>
 			</Route>
+			{/* Shift Manager Routes */}
+			<PrivateRoute path='/shift_manager/dashboard' requiredRole='shift_manager'>
+				<Layout title='Dashboard'>
+					<SmDashboard {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/shift_manager/doctors-management' requiredRole='shift_manager'>
+				<Layout title='Doctors Management'>
+					<DoctorsManagement {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/shift_manager/live/dashboard' requiredRole='shift_manager'>
+				<Layout title='Live Dashboard'>
+					<SmLiveDashboard {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/shift_manager/live/my-rooms' requiredRole='shift_manager'>
+				<Layout title='My Rooms'>
+					<SmMyRooms {...ctx} />
+				</Layout>
+			</PrivateRoute>
 			{/* Super Admin Routes */}
 
 			<PrivateRoute path='/super_admin/dashboard' requiredRole='super_admin'>

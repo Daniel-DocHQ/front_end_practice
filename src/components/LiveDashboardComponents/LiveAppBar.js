@@ -47,7 +47,7 @@ const LiveAppBar = ({ value, children }) => {
                             selected: classes.selected,
                         }}
                         component={Link}
-                        to="/practitioner/live/dashboard"
+                        to="/shift_manager/live/dashboard"
                     />
                     <Tab
                         label="My Rooms"
@@ -58,7 +58,7 @@ const LiveAppBar = ({ value, children }) => {
                             selected: classes.selected,
                         }}
                         component={Link}
-                        to="/practitioner/live/my-rooms"
+                        to="/shift_manager/live/my-rooms"
                     />
                 </Tabs>
             </AppBar>

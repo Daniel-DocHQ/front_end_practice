@@ -8,9 +8,8 @@ import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/Upco
 import ClaimableAppointmentsTable from '../../components/SAComponents/Tables/ClaimableAppointmentsTable';
 import AvailableAppointmentsTable from '../../components/SAComponents/Tables/AvailableAppointmentsTable';
 import bookingService from '../../services/bookingService';
-import ShiftOverview from '../../components/Tables/ShiftOverview';
 
-const DoctorsManagement = ({ token, role, isAuthenticated }) => {
+const SmDoctorsManagement = ({ token, role, isAuthenticated }) => {
 	const [reload, setReload] = useState(false);
 	const { logout } = useContext(AuthContext);
 	let history = useHistory();
@@ -49,9 +48,6 @@ const DoctorsManagement = ({ token, role, isAuthenticated }) => {
 				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<ShiftOverview token={token} isTimeFilters />
-			</Grid>
-			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<PastAppointmentsTable token={token} />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
@@ -61,4 +57,4 @@ const DoctorsManagement = ({ token, role, isAuthenticated }) => {
 	);
 };
 
-export default memo(DoctorsManagement);
+export default memo(SmDoctorsManagement);

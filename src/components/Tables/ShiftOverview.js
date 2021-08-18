@@ -10,6 +10,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import VonageVoiceCall from '../VoiceCall/VonageVoiceCall';
 import useVonageApp from '../../helpers/hooks/useVonageApp';
+import { useServerDateFilter, DateFilter } from '../../helpers/hooks/useServerDateFilter';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import adminService from '../../services/adminService';
 import './Tables.scss';
 
 const styles = {
@@ -49,7 +52,20 @@ const timeDifference = (now, start_time, status) => {
     }
 }
 
-const TodayDoctors = ({ doctors = [] }) => {
+const ShiftOverview = ({ token, isTimeFilters = false }) => {
+	const {
+		filter,
+		setFilter,
+        isLoading,
+        appointments: doctors,
+        setEndTime,
+        setStartTime,
+		start_time,
+		end_time,
+    } = useServerDateFilter({
+        token,
+        query: adminService.getShiftOverview,
+    });
     const {
         app,
         call,
@@ -61,6 +77,17 @@ const TodayDoctors = ({ doctors = [] }) => {
         <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
                 <h2>Shift Overview</h2>
+                {isTimeFilters && (
+                    <DateFilter
+                        filter={filter}
+                        setFilter={setFilter}
+                        appointments={doctors}
+                        setEndTime={setEndTime}
+                        setStartTime={setStartTime}
+                        start_time={start_time}
+                        end_time={end_time}
+                    />
+                )}
             </div>
             <TableContainer
                 style={{
@@ -80,7 +107,11 @@ const TodayDoctors = ({ doctors = [] }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {typeof sortedDoctors !== 'undefined' &&
+                        {isLoading ? (
+							<TableRow>
+								<LoadingSpinner />
+							</TableRow>
+						) : (typeof sortedDoctors !== 'undefined' &&
                             typeof sortedDoctors === 'object' &&
                             sortedDoctors.length > 0 &&
                             sortedDoctors
@@ -139,7 +170,7 @@ const TodayDoctors = ({ doctors = [] }) => {
                                         </TableCell>
                                     </TableRow>
                                 );
-                            })}
+                        }))}
                         {typeof sortedDoctors !== 'object' || sortedDoctors.length === 0 ? (
                             <TableRow>
                                 <TableCell style={styles.tableText}>
@@ -160,4 +191,4 @@ const TodayDoctors = ({ doctors = [] }) => {
     );
 };
 
-export default TodayDoctors;
+export default ShiftOverview;

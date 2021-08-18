@@ -10,6 +10,7 @@ const VonageVoiceCall = ({
   call,
   setCall,
   phoneNumber,
+  noBtnClass = false,
   isTable = false,
 }) => {
   const parsedPhoneNumber = !!phoneNumber && parsePhoneNumber(phoneNumber);
@@ -20,7 +21,7 @@ const VonageVoiceCall = ({
       {!isTable && (
         <p style={{ minWidth: 'max-content' }} className='tab-row-text title-info no-margin'>Phone No Client:</p>
       )}
-      <div className="row flex-end no-margin">
+      <div className={noBtnClass ? '' : 'row flex-end no-margin'}>
         {isTable ? (
           !!app && !!formattedPhoneNumber && (
             <DocButton

@@ -46,6 +46,9 @@ import CertificatesAaron from '../Certificates/CertificatesAaron';
 import AppointmentNotes from '../AppointmentView/AppointmentNotes';
 import TextInputElement from '../../components/FormComponents/TextInputElement';
 import { differenceInHours } from 'date-fns/esm';
+import nurseSvc from '../../services/nurseService';
+import VonageVoiceCall from '../VoiceCall/VonageVoiceCall';
+import useVonageApp from '../../helpers/hooks/useVonageApp';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -101,7 +104,12 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 	const swabbingMethod = get(orderDetail, 'items', []).find(({ product: { type }}) => type === 'Virtual');
 	const orderItems = get(orderDetail, 'basket', []).filter(({ product: { type } }) => type !== 'Virtual');
 	const paymentStatus = get(orderDetail, 'payment_flag');
-	const wasPayment = orderDetail.source !== 'Pharmacy' && orderDetail.source !== 'euro'
+	const wasPayment = orderDetail.source !== 'Pharmacy' && orderDetail.source !== 'euro';
+	const {
+        app,
+        call,
+        setCall,
+    } = useVonageApp('Customer Service');
 
 	const fetchData = async () => {
 		if (!!order && !!order.id) {
@@ -504,7 +512,12 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 							{appointments.map((row, appointmentIndx) => (
 								<AppointmentDetails
 									key={row.id}
+									id={row.id}
 									token={token}
+									app={app}
+									call={call}
+									setCall={setCall}
+									reloadInfo={reloadInfo}
 									orderItems={orderItems}
 									shortToken={order.id}
 									appointment={row}
@@ -688,6 +701,11 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
 };
 
 const AppointmentDetails = ({
+	id,
+	app,
+	call,
+	setCall,
+	reloadInfo,
 	appointment,
 	appointmentIndx,
 	refetchData,
@@ -697,6 +715,8 @@ const AppointmentDetails = ({
 	shortToken,
 }) => {
 	const linkRef = useRef(null);
+	const [loading, setLoading] = useState(true);
+	const [practitionerInfo, setPractitionerInfo] = useState();
 	const timezone = get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time');
 	const notes = get(appointment, 'notes', []);
 	const [isVisible, setIsVisible] = useState(false);
@@ -706,8 +726,32 @@ const AppointmentDetails = ({
     const flightDate = get(appointment, 'booking_user.metadata.travel_date');
     const product_id = get(appointment, 'booking_user.metadata.product_id');
 	const location = get(appointment, 'booking_user.tz_location');
+	const practitionerName = get(practitionerInfo, 'user_name');
+	const practitionerPhoneNumber = get(practitionerInfo, 'user_number');
 
-	return (
+	const fetchData = async () => {
+		if (!!id) {
+			await nurseSvc.getAppointmentDetails(id, token, true)
+				.then(result => {
+					if (result.success && result.appointment) {
+						setPractitionerInfo(result.appointment);
+					}
+				}).catch(err => console.log(err));
+		}
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		fetchData();
+	}, [reloadInfo, id]);
+
+	return loading ? (
+		<Grid container spacing={10} direction="column" justify="center" alignItems="center">
+			<Grid item>
+				<CircularProgress />
+			</Grid>
+		</Grid>
+	) : (
 		<>
 			<List>
 				<ListItemText>
@@ -764,6 +808,27 @@ const AppointmentDetails = ({
 								<b>Appointment Joining link</b>: https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointment.id}
 							</Typography>
 						</Tooltip>
+					</ListItemText>
+				</ListItem>
+				<ListItem>
+					<ListItemText>
+						<div className="row center no-margin">
+							{practitionerName && (
+								<>
+									<b>Practitioner</b><span style={{ width: 200 }}>: {practitionerName}</span>
+								</>
+							)}
+							{practitionerPhoneNumber && (
+								<VonageVoiceCall
+									isTable
+									noBtnClass
+									app={app}
+									call={call}
+									setCall={setCall}
+									phoneNumber={practitionerPhoneNumber}
+								/>
+							)}
+						</div>
 					</ListItemText>
 				</ListItem>
 				{appointment.booking_users.map((patient, indx) => (
