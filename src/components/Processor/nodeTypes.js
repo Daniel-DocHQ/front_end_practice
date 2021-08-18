@@ -528,12 +528,6 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
                 name: "email",
                 label: "Email",
             })
-        ],
-        outputs: ports => [
-            ports.data({
-                name: "data",
-                label: "Certificate Data"
-            })
         ]
     })
     .addNodeType({
