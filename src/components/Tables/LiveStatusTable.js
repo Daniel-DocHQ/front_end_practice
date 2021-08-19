@@ -55,9 +55,11 @@ const HUMAN_STATUSES = {
     patientLeft: 'Patient Left',
 };
 
-const LiveStatusTable = ({ appointments = [], releaseAppointment }) => {
+const LiveStatusTable = ({ appointments: appointmentsToFilter = [], releaseAppointment }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [appId, setAppId] = useState();
+    const now = new Date().getTime();
+    const appointments = (appointmentsToFilter || []).filter((item) => !(get(item, 'status', '') === 'WAITING' && new Date(get(item, 'start_time', '')).getTime() > now ));
 
     const closeModal = () => {
         setAppId();

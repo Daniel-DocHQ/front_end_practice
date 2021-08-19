@@ -56,6 +56,7 @@ const Step3 = ({
     isPharmacy,
     defaultCountryCode,
     activePassenger,
+    isLufthansa = false,
 }) => {
 	const classes = useStyles();
     const pickerTheme = datePickerTheme();
@@ -84,6 +85,7 @@ const Step3 = ({
             extendedAddress,
             locality,
             region,
+            country,
         },
     } = bookingFormModel;
 
@@ -485,86 +487,157 @@ const Step3 = ({
                 </>
             )}
             {(isPharmacy && activePassenger === 0) && (
-                <>
-                    <h4 style={{ margin: 0, paddingTop: 20 }}>
-						Address Information
-					</h4>
-                    <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                            <Field name={`passengers[${activePassenger}].postal_code`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].postal_code`, false)) ? 'Input postcode' : undefined}>
-                                {({ field, meta }) => (
-                                    <Input
-                                        error={!!meta.error}
-                                        touched={meta.touched}
-                                        helperText={(meta.error && meta.touched) && meta.error}
-                                        {...postalCode}
-                                        {...field}
-                                    />
-                                )}
-                            </Field>
+                isLufthansa ? (
+                    <>
+                        <h4 style={{ margin: 0, paddingTop: 20 }}>
+                            Address Information
+                        </h4>
+                        <h6 className="grey-text" style={{ margin: 0, fontSize: 12 }}>
+                            Please enter your address at the time of the appointment.
+                        </h6>
+                        <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                            <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                <Field name={`passengers[${activePassenger}].street_address`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].street_address`, false)) ? 'Input address' : undefined}>
+                                    {({ field, meta }) => (
+                                        <Input
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...streetAddress}
+                                            {...field}
+                                        />
+                                    )}
+                                </Field>
+                            </div>
                         </div>
-                    </div>
-                    <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                            <Field name={`passengers[${activePassenger}].street_address`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].street_address`, false)) ? 'Input address' : undefined}>
-                                {({ field, meta }) => (
-                                    <Input
-                                        error={!!meta.error}
-                                        touched={meta.touched}
-                                        helperText={(meta.error && meta.touched) && meta.error}
-                                        {...streetAddress}
-                                        {...field}
-                                    />
-                                )}
-                            </Field>
+                        <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                            <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                <Field name={`passengers[${activePassenger}].extended_address`}>
+                                    {({ field, meta }) => (
+                                        <Input
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...extendedAddress}
+                                            {...field}
+                                        />
+                                    )}
+                                </Field>
+                            </div>
                         </div>
-                    </div>
-                    <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                            <Field name={`passengers[${activePassenger}].extended_address`}>
-                                {({ field, meta }) => (
-                                    <Input
-                                        error={!!meta.error}
-                                        touched={meta.touched}
-                                        helperText={(meta.error && meta.touched) && meta.error}
-                                        {...extendedAddress}
-                                        {...field}
-                                    />
-                                )}
-                            </Field>
+                        <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                            <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                <Field name={`passengers[${activePassenger}].locality`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].locality`, false)) ? 'Input city' : undefined}>
+                                    {({ field, meta }) => (
+                                        <Input
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...locality}
+                                            {...field}
+                                        />
+                                    )}
+                                </Field>
+                            </div>
                         </div>
-                    </div>
-                    <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                            <Field name={`passengers[${activePassenger}].locality`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].locality`, false)) ? 'Input city' : undefined}>
-                                {({ field, meta }) => (
-                                    <Input
-                                        error={!!meta.error}
-                                        touched={meta.touched}
-                                        helperText={(meta.error && meta.touched) && meta.error}
-                                        {...locality}
-                                        {...field}
-                                    />
-                                )}
-                            </Field>
+                        <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                            <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                <Field name={`passengers[${activePassenger}].country`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].country`, false)) ? 'Input country' : undefined}>
+                                    {({ field, meta }) => (
+                                        <Input
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...country}
+                                            {...field}
+                                        />
+                                    )}
+                                </Field>
+                            </div>
                         </div>
-                    </div>
-                    <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-                        <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                            <Field name={`passengers[${activePassenger}].region`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].region`, false)) ? 'Input county' : undefined}>
-                                {({ field, meta }) => (
-                                    <Input
-                                        error={!!meta.error}
-                                        touched={meta.touched}
-                                        helperText={(meta.error && meta.touched) && meta.error}
-                                        {...region}
-                                        {...field}
-                                    />
-                                )}
-                            </Field>
+                    </>
+                ) : (
+                    <>
+                        <h4 style={{ margin: 0, paddingTop: 20 }}>
+                            Address Information
+                        </h4>
+                        <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                            <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                <Field name={`passengers[${activePassenger}].postal_code`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].postal_code`, false)) ? 'Input postcode' : undefined}>
+                                    {({ field, meta }) => (
+                                        <Input
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...postalCode}
+                                            {...field}
+                                        />
+                                    )}
+                                </Field>
+                            </div>
                         </div>
-                    </div>
-                </>
+                        <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                            <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                <Field name={`passengers[${activePassenger}].street_address`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].street_address`, false)) ? 'Input address' : undefined}>
+                                    {({ field, meta }) => (
+                                        <Input
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...streetAddress}
+                                            {...field}
+                                        />
+                                    )}
+                                </Field>
+                            </div>
+                        </div>
+                        <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                            <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                <Field name={`passengers[${activePassenger}].extended_address`}>
+                                    {({ field, meta }) => (
+                                        <Input
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...extendedAddress}
+                                            {...field}
+                                        />
+                                    )}
+                                </Field>
+                            </div>
+                        </div>
+                        <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                            <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                <Field name={`passengers[${activePassenger}].locality`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].locality`, false)) ? 'Input city' : undefined}>
+                                    {({ field, meta }) => (
+                                        <Input
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...locality}
+                                            {...field}
+                                        />
+                                    )}
+                                </Field>
+                            </div>
+                        </div>
+                        <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                            <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                <Field name={`passengers[${activePassenger}].region`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].region`, false)) ? 'Input county' : undefined}>
+                                    {({ field, meta }) => (
+                                        <Input
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...region}
+                                            {...field}
+                                        />
+                                    )}
+                                </Field>
+                            </div>
+                        </div>
+                    </>
+                )
             )}
 		</React.Fragment>
 	);

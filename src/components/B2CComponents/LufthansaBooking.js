@@ -53,6 +53,7 @@ const LufthansaBooking = () => {
         extended_address: '',
         locality: '',
         region: '',
+        country: '',
         passportNumber: '',
         passportNumberConfirmation: '',
 	};
@@ -189,7 +190,7 @@ const LufthansaBooking = () => {
                                         date_of_birth: passengers[0].dateOfBirth,
                                     },
                                     billing_address: {
-                                        country: 'DE',
+                                        country: passengers[0].country,
                                         postcode: '',
                                         address_1: '',
                                         town: '',
@@ -197,12 +198,12 @@ const LufthansaBooking = () => {
                                         county: '',
                                     },
                                     shipping_address: {
-                                        postcode: passengers[0].postal_code,
-                                        country: 'DE',
+                                        postcode: '',
+                                        country: passengers[0].country,
                                         address_1: passengers[0].street_address,
                                         town: passengers[0].locality,
                                         telephone: passengersPhone,
-                                        county: passengers[0].region,
+                                        county: '',
                                     },
                                     source: 'euro',
                                     items: [

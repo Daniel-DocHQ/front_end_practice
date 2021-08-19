@@ -79,6 +79,13 @@ const bookingFormModel = {
             required: true,
             type: 'text',
         },
+        country: {
+            name: 'country',
+            label: 'Country',
+            id: 'country',
+            required: true,
+            type: 'text',
+        },
         purchaseCode: {
             name: 'purchaseCode',
             label: 'Purchase Code',

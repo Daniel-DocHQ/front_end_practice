@@ -17,9 +17,9 @@ const Controls = ({
 					<div className='control-item' onClick={handlePause}>
 						<i className='fa fa-pause'></i>
 					</div>
-					<div className='control-item'>
+					{/* <div className='control-item'>
 						<i className='fas fa-comment-alt'></i>
-					</div>
+					</div> */}
 				</div>
 			)}
 		</div>

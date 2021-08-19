@@ -46,6 +46,7 @@ const LufthansaBookingEngineForm = ({
             timer={timer}
         />,
         <Step3
+            isLufthansa
             activePassenger={activePassenger}
             defaultCountryCode={defaultCountryCode}
             isPharmacy={isPharmacy}
