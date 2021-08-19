@@ -50,6 +50,7 @@ const APPOINTMENT_TYPES = {
 	tui: 'video_gp_tui',
 	vista: 'video_gp',
 	dochq: 'video_gp_dochq',
+	euro: 'video_gp_euro',
 };
 
 const NurseMeeting2 = ({
@@ -118,7 +119,7 @@ const TabContainer = ({
 		setValue((oldValue) => oldValue + 1);
 	});
 	const isAntigenType = test_type === TEST_TYPES.antigen;
-	const isTuiType = type === APPOINTMENT_TYPES.tui || type === APPOINTMENT_TYPES.dochq;
+	const isTuiType = type !== APPOINTMENT_TYPES.vista;
 
 	useEffect(() => {
 		if (isJoined && value === 0 && test_type === TEST_TYPES.pcr) {
@@ -398,7 +399,7 @@ const PatientDetails = ({
 								newTab
 								color='green'
 								text='Join customer on alternative video'
-								linkSrc={`https://8x8.vc/dochq/${patient.metadata.short_token}`}
+								linkSrc={`https://8x8.vc/dochq/${get(patient, 'metadata.short_token', '')}`}
 							/>
 						</div>
 						<div className='row center no-margin' style={{ padding: '20px 0' }}>
@@ -1121,7 +1122,22 @@ const PatientIdVerification = ({
 								</p>
 							</div>
 						)}
-						{!isTuiType && (
+						{isTuiType ? (
+							<>
+								<div className='row space-between padding-top-box'>
+									<h3 className='no-margin'>{currentPatientName} - ID Document Number</h3>
+								</div>
+								<div className='row'>
+									<TextInputElement
+										id='passport-id'
+										value={passportId}
+										placeholder='ID Document Number'
+										onChange={setPassportId}
+										required
+									/>
+								</div>
+							</>
+						) : (
 							<div className='row'>
 								<FormControl variant='filled' style={{ width: '100%' }}>
 									<InputLabel id='security-document-label'>{currentPatientName} - Security Document</InputLabel>
@@ -1138,22 +1154,6 @@ const PatientIdVerification = ({
 									</Select>
 								</FormControl>
 							</div>
-						)}
-						{(isTuiType) && (
-							<>
-								<div className='row space-between padding-top-box'>
-									<h3 className='no-margin'>{currentPatientName} - ID Document Number</h3>
-								</div>
-								<div className='row'>
-									<TextInputElement
-										id='passport-id'
-										value={passportId}
-										placeholder='ID Document Number'
-										onChange={setPassportId}
-										required
-									/>
-								</div>
-							</>
 						)}
 						<div className='row'>
 							<MaterialCheckbox
