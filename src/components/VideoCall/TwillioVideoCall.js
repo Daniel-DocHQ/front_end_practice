@@ -11,8 +11,8 @@ import { Redirect } from 'react-router-dom';
 import bookingService from '../../services/bookingService';
 import { AppointmentContext, useBookingUsers } from '../../context/AppointmentContext';
 import nurseSvc from '../../services/nurseService';
-import './VideoCallAppointment.scss';
 import { ToastsStore } from 'react-toasts';
+import './VideoCallAppointment.scss';
 
 const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');

@@ -349,7 +349,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 											<TableCell align="right">{row.product.description}</TableCell>
 											<TableCell align="right">{row.product.type}</TableCell>
 											<TableCell align="right">{row.quantity}</TableCell>
-											<TableCell align="right">£{(row.return_method_id === 2 ? (10 * row.quantity) : 0).toFixed(2)}</TableCell>
+											<TableCell align="right">£{(get(row, 'return_method.price', 0) * row.quantity).toFixed(2)}</TableCell>
 											<TableCell align="right">£{row.product.price.toFixed(2)}</TableCell>
 											{discountValue && (
 												<>
@@ -368,7 +368,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 										<TableCell align="right"></TableCell>
 										<TableCell align="right"></TableCell>
 										<TableCell align="right">{orderItems.reduce((sum, { quantity }) => (sum + quantity), 0)}</TableCell>
-										<TableCell align="right">£{orderItems.reduce((sum, { quantity, return_method_id }) => (sum + (return_method_id === 2 ? (10 * quantity) : 0)), 0).toFixed(2)}</TableCell>
+										<TableCell align="right">£{orderItems.reduce((sum, { quantity, return_method }) => (sum + (get(return_method, 'price', 0) * quantity)), 0).toFixed(2)}</TableCell>
 										<TableCell align="right">£{discountValue ? get(orderDetail, 'original_price', 0).toFixed(2) : orderDetail.price.toFixed(2)}</TableCell>
 										{discountValue && (
 											<>
