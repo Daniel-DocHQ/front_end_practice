@@ -88,7 +88,7 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 				/>
             </Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<ShiftOverview token={token} />
+				<ShiftOverview token={token} isTimeFilters />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<AllAppointments token={token} />
