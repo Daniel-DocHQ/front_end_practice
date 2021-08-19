@@ -803,10 +803,6 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
                 label: "Recipient number",
             }),
             ports.string({
-                name: "sender_name",
-                label: "Sender name",
-            }),
-            ports.string({
                 name: "sender",
                 label: "Sender Number",
             }),
