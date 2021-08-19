@@ -298,6 +298,7 @@ function TwillioVideoCall({
 					{typeof isNurse !== 'undefined' && !isNurse ? <PatientHeader /> : null}
 					<Controls
 						isMuted={isMuted}
+						isPause={!!hideVideoAppointment}
 						updateMuted={handleToggleAudio}
 						capturePhoto={capturePhoto}
 						handlePause={handlePause}

@@ -128,6 +128,7 @@ const TabContainer = ({
 		if (get(status_changes, `${[status_changes.length - 1]}.changed_to`) === 'ON_HOLD' && test_type === TEST_TYPES.antigen) {
 			setValue(1);
 			toggleDisplayCertificates();
+			setKitProvider(get(patient, 'metadata.kit_provider'));
 		}
 	}, [isJoined]);
 
