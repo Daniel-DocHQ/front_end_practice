@@ -61,7 +61,6 @@
   },
   "devDependencies": {
     "babel-eslint": "10.1.x",
-    "cypress": "^7.2.0",
     "eslint": "6.6.x",
     "eslint-config-prettier": "6.11.x",
     "eslint-plugin-import": "2.21.x",
