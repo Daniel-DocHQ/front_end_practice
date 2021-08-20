@@ -5,6 +5,6 @@ ENV ENVIRONMENT=${ENVIRONMENT}
 
 COPY . .
 
-RUN npm i && npm run build:$ENVIRONMENT
+RUN npm set progress=false ; npm ci && npm run build:$ENVIRONMENT
 
 CMD ["sh", "-c", "node server.js"]
