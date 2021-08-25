@@ -135,7 +135,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 					if (result.success && result.appointments) {
 						setAppointments(result.appointments);
 					}
-				});
+				}).catch(err => console.log(err));
 		}
 		setLoading(false);
 
@@ -206,7 +206,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 						<CloseIcon />
 					</IconButton>
 					<Typography variant="h6" className={classes.title}>
-						Order Details for {orderDetail.billing_detail.first_name} {orderDetail.billing_detail.last_name}
+						Order Details for {get(orderDetail, 'billing_detail.first_name', '')} {get(orderDetail, 'billing_detail.last_name', '')}
 					</Typography>
 				</Toolbar>
 			</AppBar>
@@ -798,6 +798,7 @@ const AppointmentDetails = ({
 				</ListItem>
 				<ListItem>
 					<ListItemText>
+						<b>Appointment Joining link</b>:&nbsp;
 						<Tooltip title="Click to copy">
 							<Typography
 								noWrap
@@ -805,7 +806,7 @@ const AppointmentDetails = ({
 								onClick={() => copyToClipboard(linkRef)}
 								className='tab-row-text patient-link-text'
 							>
-								<b>Appointment Joining link</b>: https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointment.id}
+								https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointment.id}
 							</Typography>
 						</Tooltip>
 					</ListItemText>

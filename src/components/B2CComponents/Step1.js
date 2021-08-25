@@ -9,6 +9,7 @@ import {
 	FormControlLabel,
 	FormControl,
 	FormHelperText,
+	Grid,
 } from '@material-ui/core';
 import {
 	MuiPickersUtilsProvider,
@@ -130,53 +131,57 @@ const Step1 = ({ isPharmacy }) => {
 			<div className='no-margin col'>
 				<ThemeProvider theme={pickerTheme}>
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
-						<div className='row'>
-							<div className='appointment-calendar-container'>
-								<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-									Select Departure Date
-								</h4>
-								<Field name={travelDate.name}>
-									{({ field, form }) => (
-										<KeyboardDatePicker
-											{...field}
-											{...travelDate}
-											disablePast={!isBundle}
-											inputVariant='filled'
-											format="dd/MM/yyyy"
-											KeyboardButtonProps={{
-												'aria-label': 'change date',
-											}}
-											onChange={(value) => {
-												form.setFieldValue(field.name, value);
-												form.setFieldValue(landingDate.name, value);
-											}}
-										/>
-									)}
-								</Field>
-							</div>
-							<div className='appointment-calendar-container'>
-								<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-									Select Departure Time
-								</h4>
-								<Field name={travelTime.name}>
-									{({ field, form }) => (
-										<KeyboardTimePicker
-											autoOk
-											{...field}
-											{...travelTime}
-											inputVariant='filled'
-											onChange={(value) => {
-												form.setFieldValue(field.name, value);
-												form.setFieldValue(landingTime.name, value);
-											}}
-											KeyboardButtonProps={{
-												'aria-label': 'change time',
-											}}
-										/>
-									)}
-								</Field>
-							</div>
-						</div>
+						<Grid container>
+							<Grid item xs={12} md={3}>
+								<div className='appointment-calendar-container'>
+									<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+										Select Departure Date
+									</h4>
+									<Field name={travelDate.name}>
+										{({ field, form }) => (
+											<KeyboardDatePicker
+												{...field}
+												{...travelDate}
+												disablePast={!isBundle}
+												inputVariant='filled'
+												format="dd/MM/yyyy"
+												KeyboardButtonProps={{
+													'aria-label': 'change date',
+												}}
+												onChange={(value) => {
+													form.setFieldValue(field.name, value);
+													form.setFieldValue(landingDate.name, value);
+												}}
+											/>
+										)}
+									</Field>
+								</div>
+							</Grid>
+							<Grid item xs={12} md={3}>
+								<div className='appointment-calendar-container'>
+									<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+										Select Departure Time
+									</h4>
+									<Field name={travelTime.name}>
+										{({ field, form }) => (
+											<KeyboardTimePicker
+												autoOk
+												{...field}
+												{...travelTime}
+												inputVariant='filled'
+												onChange={(value) => {
+													form.setFieldValue(field.name, value);
+													form.setFieldValue(landingTime.name, value);
+												}}
+												KeyboardButtonProps={{
+													'aria-label': 'change time',
+												}}
+											/>
+										)}
+									</Field>
+								</div>
+							</Grid>
+						</Grid>
 					</MuiPickersUtilsProvider>
 				</ThemeProvider>
 			</div>
