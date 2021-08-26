@@ -518,7 +518,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 									call={call}
 									setCall={setCall}
 									reloadInfo={reloadInfo}
-									orderItems={orderItems}
+									orderItems={get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual')}
 									shortToken={order.id}
 									appointment={row}
 									refetchData={refetchData}
@@ -774,7 +774,7 @@ const AppointmentDetails = ({
 				{!!product_id && (
 					<ListItem>
 						<ListItemText>
-							<b>Selected Product</b>: {orderItems.find(({ product_id }) => product_id === appointment.booking_user.product_id).product.title}
+							<b>Selected Product</b>: {get(orderItems.find(({ product_id }) => product_id === appointment.booking_user.product_id), 'product.title', '')}
 						</ListItemText>
 					</ListItem>
 				)}
