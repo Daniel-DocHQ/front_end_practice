@@ -357,7 +357,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 														{discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
 													</TableCell>
 													<TableCell align="right">
-														£{discountValue.type === 'percentage' ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : '-'}
+														£{discountValue.type === 'percentage' ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : ''}
 													</TableCell>
 												</>
 											)}
