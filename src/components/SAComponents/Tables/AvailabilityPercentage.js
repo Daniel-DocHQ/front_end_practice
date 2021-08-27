@@ -51,7 +51,7 @@ const AvailabilityPercentage = ({ token }) => {
                 }).catch(err => {
                     console.log(err);
                 });
-            if (availableSlotsResponse.success)
+            if (!!availableSlotsResponse && availableSlotsResponse.success)
                 tmpAvailableSlots.push((availableSlotsResponse.appointments || []).length);
             else tmpAvailableSlots.push(0);
             const bookedSlotsResponse = await adminService.getAppointmentsSearch({
@@ -65,7 +65,7 @@ const AvailabilityPercentage = ({ token }) => {
                 .catch(err => {
                     console.log(err);
                 });
-            if (bookedSlotsResponse.success)
+            if (!!bookedSlotsResponse && bookedSlotsResponse.success)
                 tmpBookedSlots.push((bookedSlotsResponse.appointments || []).length);
             else tmpBookedSlots.push(0);
             tmpDate = moment(tmpDate).add(1, 'day');
@@ -121,7 +121,7 @@ const AvailabilityPercentage = ({ token }) => {
                                             {item + bookedSlots[indx]}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
-                                            {((item / (item + bookedSlots[indx])) * 100).toFixed(2)}%
+                                            {((item / (item + bookedSlots[indx])) * 100 || 0).toFixed(2)}%
                                         </TableCell>
                                     </TableRow>
                                 );
