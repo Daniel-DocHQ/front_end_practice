@@ -102,7 +102,7 @@ const BookingEngine = () => {
 					if (result.success && result.appointments) {
 						setAppointments(result.appointments);
 					}
-				});
+				}).catch(err => console.log(err));
 		}
 		setLoading(false);
 	};

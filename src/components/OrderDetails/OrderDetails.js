@@ -135,7 +135,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 					if (result.success && result.appointments) {
 						setAppointments(result.appointments);
 					}
-				});
+				}).catch(err => console.log(err));
 		}
 		setLoading(false);
 
@@ -206,7 +206,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 						<CloseIcon />
 					</IconButton>
 					<Typography variant="h6" className={classes.title}>
-						Order Details for {orderDetail.billing_detail.first_name} {orderDetail.billing_detail.last_name}
+						Order Details for {get(orderDetail, 'billing_detail.first_name', '')} {get(orderDetail, 'billing_detail.last_name', '')}
 					</Typography>
 				</Toolbar>
 			</AppBar>
@@ -357,7 +357,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 														{discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
 													</TableCell>
 													<TableCell align="right">
-														£{discountValue.type === 'percentage' ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : '-'}
+														£{discountValue.type === 'percentage' ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : ''}
 													</TableCell>
 												</>
 											)}
@@ -518,7 +518,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 									call={call}
 									setCall={setCall}
 									reloadInfo={reloadInfo}
-									orderItems={orderItems}
+									orderItems={get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual')}
 									shortToken={order.id}
 									appointment={row}
 									refetchData={refetchData}
@@ -774,7 +774,7 @@ const AppointmentDetails = ({
 				{!!product_id && (
 					<ListItem>
 						<ListItemText>
-							<b>Selected Product</b>: {orderItems.find(({ product_id }) => product_id === appointment.booking_user.product_id).product.title}
+							<b>Selected Product</b>: {get(orderItems.find(({ product_id }) => product_id === appointment.booking_user.product_id), 'product.title', '')}
 						</ListItemText>
 					</ListItem>
 				)}
@@ -798,6 +798,7 @@ const AppointmentDetails = ({
 				</ListItem>
 				<ListItem>
 					<ListItemText>
+						<b>Appointment Joining link</b>:&nbsp;
 						<Tooltip title="Click to copy">
 							<Typography
 								noWrap
@@ -805,7 +806,7 @@ const AppointmentDetails = ({
 								onClick={() => copyToClipboard(linkRef)}
 								className='tab-row-text patient-link-text'
 							>
-								<b>Appointment Joining link</b>: https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointment.id}
+								https://{process.env.REACT_APP_JOIN_LINK_PREFIX}.dochq.co.uk/appointment?appointmentId={appointment.id}
 							</Typography>
 						</Tooltip>
 					</ListItemText>

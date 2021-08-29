@@ -9,6 +9,7 @@ import ClaimableAppointmentsTable from '../../components/SAComponents/Tables/Cla
 import AvailableAppointmentsTable from '../../components/SAComponents/Tables/AvailableAppointmentsTable';
 import bookingService from '../../services/bookingService';
 import ShiftOverview from '../../components/Tables/ShiftOverview';
+import AvailabilityPercentage from '../../components/SAComponents/Tables/AvailabilityPercentage';
 
 const DoctorsManagement = ({ token, role, isAuthenticated }) => {
 	const [reload, setReload] = useState(false);
@@ -56,6 +57,9 @@ const DoctorsManagement = ({ token, role, isAuthenticated }) => {
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<AvailableAppointmentsTable token={token} />
+			</Grid>
+			<Grid item xs={12} style={{ paddingTop: 20 }}>
+				<AvailabilityPercentage token={token} />
 			</Grid>
 		</Grid>
 	);
