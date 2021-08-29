@@ -529,12 +529,12 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
                 label: "Email",
             })
         ],
-        outputs: ports => {
+        outputs: ports => [
             ports.data({
                 name: "data",
                 label: "data"
-        }),
-        }
+            }),
+        ]
     })
     .addNodeType({
         type: "createDropboxReceipt",
