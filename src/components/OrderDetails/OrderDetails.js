@@ -220,7 +220,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 							<List>
 								<ListItem>
 									<ListItemText>
-										<b>Customer name</b>: {orderDetail.billing_detail.first_name} {orderDetail.billing_detail.last_name}
+										<b>Customer name</b>: {get(orderDetail, 'billing_detail.first_name', '')} {get(orderDetail, 'billing_detail.last_name', '')}
 									</ListItemText>
 								</ListItem>
 								<ListItem>

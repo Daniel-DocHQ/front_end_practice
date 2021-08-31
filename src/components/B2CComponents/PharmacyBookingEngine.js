@@ -279,7 +279,7 @@ const PharmacyBookingEngine = () => {
                                 first_name: firstName,
                                 last_name: lastName,
                                 product_id: parseInt(id),
-                                bundle_id,
+                                bundle_id: parseInt(bundle_id),
                                 tz_location: (isAdditionalProduct || isPCR) ? defaultTimeZone.timezone : timezoneValue,
                                 date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
                                 language: 'EN',

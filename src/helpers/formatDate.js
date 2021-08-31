@@ -13,5 +13,5 @@ export function formatOrderDate(date) {
 	return `${dString[1]} ${dString[2]}, ${dString[3]}`;
 }
 export function formatTimeSlotWithTimeZone(date, tz) {
-	return moment.utc(date).tz(tz).format('hh:mm A');
+	return moment(date).utc(0).tz(tz).format('hh:mm A');
 }

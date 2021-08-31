@@ -257,7 +257,7 @@ const LufthansaBooking = () => {
                                 phone: `${countryCode.label}${phone.trim()}`,
                                 country: 'DE',
                                 product_id: parseInt(id),
-                                bundle_id,
+                                bundle_id: parseInt(bundle_id),
                                 toc_accept: tocAccept,
                                 metadata: {
                                     source: 'euro',
