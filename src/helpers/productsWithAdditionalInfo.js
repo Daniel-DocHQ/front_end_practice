@@ -2,6 +2,8 @@ export const PRODUCTS_WITH_ADDITIONAL_INFO = [
 	'SYN-UK-PCR-SNS-004', // Test to Release
 	'SYN-UK-PCR-SNS-003', // Day 8 PCR Test
 	'SYN-UK-PCR-SNS-002', // Day 2 PCR Test
+	'GREEN-BUNDLE', // Green Bundle
+	'AMBER-V-BUNDLE', // Amber List Vaccinated
 	'SYN-UK-PCR-SNS-002,SYN-UK-PCR-SNS-003', // Amber Bundle
 	'SPORT-UK-PCR-SNS-001', // Day 8 PCR Test Sports
 	'SPORT-UK-PCR-SNS-002', // Day 2 PCR Test Sports
