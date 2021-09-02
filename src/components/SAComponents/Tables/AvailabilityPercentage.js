@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import adminService from '../../../services/adminService';
 import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
 import '../../Tables/Tables.scss';
+import DocButton from '../../DocButton/DocButton';
 
 const styles = {
 	tableText: {
@@ -27,16 +28,22 @@ const styles = {
 		justifyContent: 'space-between',
 		alignItems: 'center',
 	},
+    container: {
+        display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+    },
 };
 
 const AvailabilityPercentage = ({ token }) => {
+    const [currentDate, setCurrentDate] = useState(moment().add(1, 'day').utc(0).startOf('day'));
+    const nextWeek = moment(currentDate).add(7, 'day').utc(0).startOf('day');
     const [availableSlots, setAvailableSlots] = useState([]);
     const [bookedSlots, setBookedSlots] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const getData = async () => {
-        let tmpDate = moment().add(1, 'day').utc(0).startOf('day');
-        const nextWeek = moment().add(7, 'day').utc(0).startOf('day');
+        let tmpDate = moment(currentDate);
         const tmpAvailableSlots = [];
         const tmpBookedSlots = [];
         setIsLoading(true);
@@ -77,12 +84,27 @@ const AvailabilityPercentage = ({ token }) => {
 
     useEffect(() => {
         getData();
-    }, []);
+    }, [currentDate]);
 
 	return (
         <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
                 <h2>Availability</h2>
+                <div style={styles.container}>
+                    <DocButton
+                        text="Previous"
+                        color="green"
+                        style={{ marginRight: 10 }}
+                        onClick={() => setCurrentDate(moment(currentDate).subtract(7, 'day').utc(0).startOf('day'))}
+                    />
+                    <p>{currentDate.format('DD/MM/YYYY')} - {nextWeek.format('DD/MM/YYYY')}</p>
+                    <DocButton
+                        text="Next"
+                        color="green"
+                        style={{ marginLeft: 10 }}
+                        onClick={() => setCurrentDate(moment(currentDate).add(7, 'day').utc(0).startOf('day'))}
+                    />
+                </div>
             </div>
             <TableContainer
                 style={{
@@ -109,7 +131,7 @@ const AvailabilityPercentage = ({ token }) => {
                                 return (
                                     <TableRow key={indx}>
                                         <TableCell align='left' style={{ ...styles.tableText }}>
-                                            {moment().add(indx + 1, 'days').format('DD/MM/YYYY')}
+                                            {moment(currentDate).add(indx, 'days').format('DD/MM/YYYY')}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
                                             {item}
