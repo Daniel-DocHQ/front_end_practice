@@ -91,6 +91,7 @@ const AllAppointments = ({ token }) => {
                                 const type = get(appointment, 'type', '');
                                 const status = startCase(get(appointment, 'status', ''));
                                 const source = get(appointment, 'booking_user.metadata.source', '');
+                                const quantityOfPeople = get(appointment, 'booking_users.length', '');
 
                                 return (
                                     <TableRow key={appointment.id}>
@@ -110,7 +111,7 @@ const AllAppointments = ({ token }) => {
                                             {!!source ? source : type && (type === 'video_gp_dochq' ? 'DocHQ' : type)}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
-                                            {get(appointment, 'booking_users.length', '')}
+                                            {quantityOfPeople}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
                                             {get(appointment, 'booking_user.metadata.test_type', '')}
@@ -133,7 +134,7 @@ const AllAppointments = ({ token }) => {
                                                         linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
                                                     />
                                                 </div>
-                                                {status === 'UNAVAILABLE' && (
+                                                {(status === 'UNAVAILABLE' && !!quantityOfPeople) && (
                                                     <DocButton
                                                         text="Make it Waiting"
                                                         color="green"
