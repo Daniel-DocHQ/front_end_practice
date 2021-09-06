@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
 import { get } from 'lodash';
-import moment from 'moment';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
