@@ -366,7 +366,7 @@ const RouteHandler = () => {
 			</PrivateRoute>
 			{/* Customer Services Routes */}
 
-			<PrivateRoute path='/customer_services/booking/edit' requiredRole='customer_services'>
+			<PrivateRoute path='/booking/edit' requiredRole={['customer_services', 'super_admin']}>
 				<Layout title='Edit Booking'>
 					<EditBookedAppointment  {...ctx} />
 				</Layout>

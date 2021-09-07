@@ -919,7 +919,7 @@ const AppointmentDetails = ({
 					<Grid item xs={2}>
 						<LinkButton
 							color="green"
-							linkSrc={`/customer_services/booking/edit?appointmentId=${appointment.id}&short_token=${shortToken}&service=video_gp_dochq`}
+							linkSrc={`/booking/edit?appointmentId=${appointment.id}&short_token=${shortToken}&service=video_gp_dochq`}
 							text="Edit"
 						/>
 						<DocButton
