@@ -225,7 +225,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 								</ListItem>
 								<ListItem>
 									<ListItemText>
-										<b>Email</b>: {orderDetail.billing_detail.email}
+										<b>Email</b>: {get(orderDetail, 'billing_detail.email', '')}
 									</ListItemText>
 								</ListItem>
 								<ListItem>
