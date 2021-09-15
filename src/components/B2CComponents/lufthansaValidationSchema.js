@@ -43,21 +43,21 @@ const useLufthansaValidationSchema = (activeStep) => (
       }),
     Yup.object().shape({
         [purchaseCode.name]: Yup.array()
-            .of(
-            Yup.object().shape({
-                code: Yup.string().required('Input your code')
-                    .test('checkCode', 'Invalid code. You have chosen another test type',
-                        function checkCode(value) {
-                            const { product } = this.parent;
-                            return !!value ? product === FIT_TO_FLY_ANTIGEN ? String(value).match(/^(EANT|EAIR)*/) : String(value).match(/^(EPCR)*/) : true;
-                        }
-                    )
-                    .test('checkCodeBE', 'Your code is invalid',
-                        function checkCodeBE(value) {
-                        return !!value ? checkPurchaseCodeInfo(value) : true;
-                    }),
-            }))
-            .min(1, 'Minimum 1 person'),
+          .of(
+          Yup.object().shape({
+            code: Yup.string().required('Input your code')
+              .test('checkCode', 'Invalid code. You have chosen another test type',
+                function checkCode(value) {
+                  const { product } = this.parent;
+                  return !!value ? product === FIT_TO_FLY_ANTIGEN ? String(value).match(/^(EANT|EAIR)*/) : String(value).match(/^(EPCR)*/) : true;
+                }
+              )
+              .test('checkCodeBE', 'Your code is invalid',
+                function checkCodeBE(value) {
+                return !!value ? checkPurchaseCodeInfo(value) : true;
+              }),
+          }))
+          .min(1, 'Minimum 1 person'),
         [product.name]: Yup.string().required('Select test kit to book appointment'),
         [numberOfPeople.name]: Yup.number().required('Input number of people').min(1, 'Minimum 1 person for appointment').max(4, 'Maximum 4 people per appointment')
     }),

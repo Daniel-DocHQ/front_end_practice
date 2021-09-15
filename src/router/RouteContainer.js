@@ -59,6 +59,7 @@ import SADiscountManagement from '../screens/super-admin-portal/SADiscountManage
 import SmDashboard from '../screens/sm-portal/SmDashboard';
 import SmLiveDashboard from '../screens/sm-portal/SmLiveDashboard';
 import SmMyRooms from '../screens/sm-portal/SmMyRooms';
+import OFLBookingAppointment from '../screens/b2c-portal/OFLBookingAppointment';
 
 const { isSupported } = require('twilio-video');
 
@@ -246,6 +247,11 @@ const RouteHandler = () => {
 					<B2CDashboard />
 				</Layout>
 			</PrivateRoute>
+			<Route path='/book_test_OFL' requiredRole='b2c'>
+				<Layout title="Book an appointment">
+					<OFLBookingAppointment />
+				</Layout>
+			</Route>
 			<Route path='/test-register' requiredRole='b2c'>
 				<Layout title="Book an appointment">
 					<LufthansaTestRegister />
