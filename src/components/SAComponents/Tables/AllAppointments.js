@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import { get, startCase } from 'lodash';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
@@ -11,7 +11,9 @@ import TableRow from '@material-ui/core/TableRow';
 import LinkButton from '../../DocButton/LinkButton';
 import adminService from '../../../services/adminService';
 import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
-import { useServerDateFilter  } from '../../../helpers/hooks/useServerDateFilter';
+import { useServerDateFilter } from '../../../helpers/hooks/useServerDateFilter';
+import DocButton from '../../DocButton/DocButton';
+import bookingService from '../../../services/bookingService';
 import '../../Tables/Tables.scss';
 
 const styles = {
@@ -39,6 +41,7 @@ const AllAppointments = ({ token }) => {
         appointments,
 		sort,
         sortOrder,
+        getData,
     } = useServerDateFilter({
         token,
         query: adminService.getAllAppointments,
@@ -86,7 +89,9 @@ const AllAppointments = ({ token }) => {
                             appointments.length > 0 && appointments.map(appointment => {
                                 const appointmentStartTime = get(appointment, 'start_time', '');
                                 const type = get(appointment, 'type', '');
+                                const status = startCase(get(appointment, 'status', ''));
                                 const source = get(appointment, 'booking_user.metadata.source', '');
+                                const quantityOfPeople = get(appointment, 'booking_users.length', '');
 
                                 return (
                                     <TableRow key={appointment.id}>
@@ -106,13 +111,13 @@ const AllAppointments = ({ token }) => {
                                             {!!source ? source : type && (type === 'video_gp_dochq' ? 'DocHQ' : type)}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
-                                            {get(appointment, 'booking_users.length', '')}
+                                            {quantityOfPeople}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
                                             {get(appointment, 'booking_user.metadata.test_type', '')}
                                         </TableCell>
                                         <TableCell align='center' style={{ ...styles.tableText }}>
-                                            {startCase(get(appointment, 'status', ''))}
+                                            {status}
                                         </TableCell>
                                         <TableCell align='right' style={{  ...styles.tableText }}>
                                             <div className="row flex-end no-margin">
@@ -129,6 +134,20 @@ const AllAppointments = ({ token }) => {
                                                         linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
                                                     />
                                                 </div>
+                                                {(status === 'UNAVAILABLE' && !!quantityOfPeople) && (
+                                                    <DocButton
+                                                        text="Make it Waiting"
+                                                        color="green"
+                                                        onClick={async () => {
+                                                            await bookingService.updateAppointmentStatus(
+                                                                appointment.id,
+                                                                { status: 'WAITING' },
+                                                                token,
+                                                            ).catch(() => console.log('error'));
+                                                            getData();
+                                                        }}
+                                                    />
+                                                )}
                                             </div>
                                         </TableCell>
                                     </TableRow>

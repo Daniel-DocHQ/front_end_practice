@@ -68,7 +68,7 @@ const MyRoomsContainer = () => {
 			.getNextAppointments({
 				token,
 				dateRange: {
-					start_time: moment().subtract(1, 'hours').utc(0).format(),
+					start_time: moment().startOf('day').utc(0).format(),
 					end_time: moment().endOf('day').utc(0).format(),
 				},
 				userId,

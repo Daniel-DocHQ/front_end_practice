@@ -71,7 +71,7 @@ const DiscountForm = ({
                                             onChange={(({ target: { value } }) => form.setFieldValue(field.name, value))}
                                         >
                                             <FormControlLabel value='percentage' control={<Radio />} label='Percentage' />
-                                            <FormControlLabel value='value' control={<Radio />} label='Value' />
+                                            <FormControlLabel value='reduction' control={<Radio />} label='Value' />
                                         </RadioGroup>
                                         <FormHelperText>{(meta.error && meta.touched) && meta.error}</FormHelperText>
                                     </FormControl>

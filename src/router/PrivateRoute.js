@@ -7,6 +7,7 @@ function PrivateRoute({ children, requiredRole, requiredFlag, ...rest }) {
 	const isAuthenticated = useAuthenticated();
 	const roleName = useRoleName();
 	const organisation_profile = useOrgProfile();
+	const typeofRequiredRole = typeof requiredRole;
 	const pathname = () => {
 		if (!!roleName && isAuthenticated) {
 			return `/${roleName}/dashboard`;
@@ -27,7 +28,7 @@ function PrivateRoute({ children, requiredRole, requiredFlag, ...rest }) {
 		});
 		return childrenWithProps;
 	}
-	if (!!requiredRole && !!roleName && roleName !== requiredRole)
+	if (!!requiredRole && !!roleName && (typeofRequiredRole === 'object' ? !requiredRole.includes(roleName) : roleName !== requiredRole))
 		return <Redirect to={{ pathname }} />;
 	return (
 		<Route

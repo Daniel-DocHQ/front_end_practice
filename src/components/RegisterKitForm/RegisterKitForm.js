@@ -197,57 +197,61 @@ const RegisterKitForm = ({
                                     </h3>
                                     <ThemeProvider theme={pickerTheme}>
                                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                            <div className='row center'>
-                                                <div className='appointment-calendar-container'>
-                                                    <h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-                                                        Select Sampled Date
-                                                    </h4>
-                                                    <Field name="dateSampled">
-                                                        {({ field, form }) => (
-                                                            <KeyboardDatePicker
-                                                                {...field}
-                                                                label="Select Sampled Date"
-                                                                placeholder="DD/MM/YYYY"
-                                                                required
-                                                                inputVariant='filled'
-                                                                format="dd/MM/yyyy"
-                                                                KeyboardButtonProps={{
-                                                                    'aria-label': 'change date',
-                                                                }}
-                                                                onChange={(value) => {
-                                                                    form.setFieldValue(field.name, value);
-                                                                }}
-                                                            />
-                                                        )}
-                                                    </Field>
-                                                </div>
-                                                <div className='appointment-calendar-container'>
-                                                    <h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-                                                        Select Sampled Time
-                                                    </h4>
-                                                    <Field name="timeSampled">
-                                                        {({ field, form }) => (
-                                                            <KeyboardTimePicker
-                                                                autoOk
-                                                                {...field}
-                                                                required
-                                                                label="Select Sampled Time"
-                                                                placeholder="DD/MM/YYYY"
-                                                                inputVariant='filled'
-                                                                onChange={(value) => {
-                                                                    form.setFieldValue(field.name, value);
-                                                                }}
-                                                                KeyboardButtonProps={{
-                                                                    'aria-label': 'change time',
-                                                                }}
-                                                            />
-                                                        )}
-                                                    </Field>
-                                                </div>
-                                            </div>
+                                            <Grid container>
+                                                <Grid item xs={12} md={6}>
+                                                    <div className='appointment-calendar-container'>
+                                                        <h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+                                                            Select Sampled Date
+                                                        </h4>
+                                                        <Field name="dateSampled">
+                                                            {({ field, form }) => (
+                                                                <KeyboardDatePicker
+                                                                    {...field}
+                                                                    label="Select Sampled Date"
+                                                                    placeholder="DD/MM/YYYY"
+                                                                    required
+                                                                    inputVariant='filled'
+                                                                    format="dd/MM/yyyy"
+                                                                    KeyboardButtonProps={{
+                                                                        'aria-label': 'change date',
+                                                                    }}
+                                                                    onChange={(value) => {
+                                                                        form.setFieldValue(field.name, value);
+                                                                    }}
+                                                                />
+                                                            )}
+                                                        </Field>
+                                                    </div>
+                                                </Grid>
+                                                <Grid item xs={12} md={6}>
+                                                    <div className='appointment-calendar-container'>
+                                                        <h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+                                                            Select Sampled Time
+                                                        </h4>
+                                                        <Field name="timeSampled">
+                                                            {({ field, form }) => (
+                                                                <KeyboardTimePicker
+                                                                    autoOk
+                                                                    {...field}
+                                                                    required
+                                                                    label="Select Sampled Time"
+                                                                    placeholder="DD/MM/YYYY"
+                                                                    inputVariant='filled'
+                                                                    onChange={(value) => {
+                                                                        form.setFieldValue(field.name, value);
+                                                                    }}
+                                                                    KeyboardButtonProps={{
+                                                                        'aria-label': 'change time',
+                                                                    }}
+                                                                />
+                                                            )}
+                                                        </Field>
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
                                         </MuiPickersUtilsProvider>
                                     </ThemeProvider>
-                                    <h4 style={{ margin: 0 }}>
+                                    <h4 style={{ margin: 0, paddingTop: 15 }}>
                                         Enter your kit ID
                                     </h4>
                                     <div className="row">

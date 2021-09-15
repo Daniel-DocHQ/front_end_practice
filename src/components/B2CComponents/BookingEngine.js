@@ -102,7 +102,7 @@ const BookingEngine = () => {
 					if (result.success && result.appointments) {
 						setAppointments(result.appointments);
 					}
-				});
+				}).catch(err => console.log(err));
 		}
 		setLoading(false);
 	};
@@ -276,7 +276,7 @@ const BookingEngine = () => {
 												country: 'GB',
 												toc_accept: tocAccept,
 												locality: town,
-												bundle_id,
+												bundle_id: parseInt(bundle_id),
 												product_id: parseInt(id),
 												metadata: {
 													source,

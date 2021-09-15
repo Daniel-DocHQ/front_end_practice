@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { get } from 'lodash';
 import nexmoClient from 'nexmo-client';
 import { ToastsStore } from 'react-toasts';
 import adminService from '../../services/adminService';
@@ -15,15 +16,15 @@ const useVonageApp = (userName = 'Practitioner1') => {
 
     useEffect(() => {
         (async () => {
-            const { token } = await getToken(userName);
+            const response = await getToken(userName);
             new nexmoClient({ debug: true })
-            .login(token)
-            .then(app => {
-                setApp(app);
-                app.on("call:status:changed",(call) => {
-                setCall(call);
-                });
-            }).catch((error) => console.log(error));
+                .login(get(response, 'token', ''))
+                .then(app => {
+                    setApp(app);
+                    app.on("call:status:changed",(call) => {
+                    setCall(call);
+                    });
+                }).catch((error) => console.log(error));
         })();
     }, []);
 
