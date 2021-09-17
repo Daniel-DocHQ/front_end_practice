@@ -1,6 +1,10 @@
 import React, { memo } from 'react';
 import { get, startCase } from 'lodash';
 import { format } from 'date-fns';
+import moment from 'moment';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { ThemeProvider } from '@material-ui/styles';
+import DateFnsUtils from '@date-io/date-fns';
 import Table from '@material-ui/core/Table';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,6 +18,7 @@ import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
 import { useServerDateFilter } from '../../../helpers/hooks/useServerDateFilter';
 import DocButton from '../../DocButton/DocButton';
 import bookingService from '../../../services/bookingService';
+import datePickerTheme from '../../../helpers/datePickerTheme';
 import '../../Tables/Tables.scss';
 
 const styles = {
@@ -33,15 +38,24 @@ const styles = {
 		justifyContent: 'space-between',
 		alignItems: 'center',
 	},
+    container: {
+        display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+    },
 };
 
 const AllAppointments = ({ token }) => {
+    const pickerTheme = datePickerTheme();
 	const {
         isLoading,
         appointments,
 		sort,
         sortOrder,
         getData,
+        start_time,
+        setEndTime,
+        setStartTime,
     } = useServerDateFilter({
         token,
         query: adminService.getAllAppointments,
@@ -52,6 +66,48 @@ const AllAppointments = ({ token }) => {
         <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
                 <h2>All Appointments</h2>
+                <div style={styles.container}>
+                    <ThemeProvider theme={pickerTheme}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <DocButton
+                                text="Previous"
+                                color="green"
+                                style={{ marginRight: 10 }}
+                                onClick={() => {
+                                    setStartTime(moment(start_time).subtract(1, 'day').utc(0).startOf('day'))
+                                    setEndTime(moment(start_time).subtract(1, 'day').utc(0).endOf('day'))
+                                }}
+                            />
+                            <div>
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="dd/MM/yyyy"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="From"
+                                    value={start_time}
+                                    onChange={(date)=> {
+                                        setStartTime(moment(date).utc(0).startOf('day'))
+                                        setEndTime(moment(date).utc(0).endOf('day'))
+                                    }}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </div>
+                            <DocButton
+                                text="Next"
+                                color="green"
+                                style={{ marginLeft: 10 }}
+                                onClick={() => {
+                                    setStartTime(moment(start_time).add(1, 'day').utc(0).startOf('day'))
+                                    setEndTime(moment(start_time).add(1, 'day').utc(0).endOf('day'))
+                                }}
+                            />
+                        </MuiPickersUtilsProvider>
+                    </ThemeProvider>
+                </div>
             </div>
             <TableContainer
                 style={{
