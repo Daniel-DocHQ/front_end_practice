@@ -230,7 +230,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 								</ListItem>
 								<ListItem>
 									<ListItemText>
-										<b>Phone</b>: {get(orderDetail, 'billing_detail.telephone', '')}
+										<b>Phone</b>: {get(orderDetail, 'billing_detail.telephone', '') || get(orderDetail, 'shipping_address.telephone', '')}
 									</ListItemText>
 								</ListItem>
 								<ListItem>

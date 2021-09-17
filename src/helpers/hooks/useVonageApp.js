@@ -3,6 +3,7 @@ import { get } from 'lodash';
 import nexmoClient from 'nexmo-client';
 import { ToastsStore } from 'react-toasts';
 import adminService from '../../services/adminService';
+import getRandomIntFromRange from '../getRandomIntFromRange';
 
 const getToken = async (userName) => (
     await adminService
@@ -10,13 +11,13 @@ const getToken = async (userName) => (
       .catch((err) => ToastsStore.error(err.error))
 );
 
-const useVonageApp = (userName = 'Practitioner1') => {
+const useVonageApp = (userName = 'Practitioner') => {
     const [app, setApp] = useState(null);
 	const [call, setCall] = useState();
 
     useEffect(() => {
         (async () => {
-            const response = await getToken(userName);
+            const response = await getToken(`${userName}${getRandomIntFromRange(0, 10)}`);
             new nexmoClient({ debug: true })
                 .login(get(response, 'token', ''))
                 .then(app => {
