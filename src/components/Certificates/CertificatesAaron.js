@@ -186,9 +186,9 @@ const CertificatesAaron = ({
 		}
 
 		if (isValid(body)) {
-			if (kitProvider !== 'Roche') {
-				body.specificity = '96.52%';
-				body.sensitivity = '99.68%';
+			if (kitProvider === 'Roche') {
+				body.specificity = '99.68%';
+				body.sensitivity = '96.52%';
 			} else {
 				body.specificity = '99.6%';
 				body.sensitivity = '97.1%';
