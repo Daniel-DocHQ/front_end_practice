@@ -118,12 +118,12 @@ const Meeting = () => {
 				}
 			} else {
 				switch (step) {
-					case 1: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
-						setMarketing_accept(value);
-						increaseStep(1);
-					}} />;
-					case 2: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
-					case 3: return <TestKit isEnglish={isEnglish} next={() => {
+					// case 1: return <DelphinDataSharingPolicies isEnglish={isEnglish} next={(value) => {
+					// 	setMarketing_accept(value);
+					// 	increaseStep(1);
+					// }} />;
+					case 1: return <QuietSpace isEnglish={isEnglish} next={() => increaseStep(1)} />;
+					case 2: return <TestKit isEnglish={isEnglish} next={() => {
 						increaseStep(1);
 						bookingService
 							.updateTerms(appointmentId, {
