@@ -50,6 +50,25 @@ function TwillioVideoCall({
 			? (!!lastStatus && lastStatus.changed_to === 'PATIENT_ATTENDED') ? `Patient joined at ${format(new Date(lastStatus.created_at), 'dd/MM/yyyy pp')}` : 'Your patient will be with you shortly'
 			: 'Your medical practitioner will be with you shortly'
 	);
+	const disconnectRoom = () => (
+		setRoom(currentRoom => {
+			if (currentRoom && currentRoom.localParticipant.state === 'connected') {
+				currentRoom.localParticipant.tracks.forEach(function(trackPublication) {
+					trackPublication.track.stop();
+				});
+				currentRoom.disconnect();
+				return null;
+			} else {
+				return currentRoom;
+			}
+		})
+	);
+	const handleHideVideoAppointment = () => {
+		if (!!hideVideoAppointment) {
+			hideVideoAppointment();
+		}
+		disconnectRoom();
+	};
 	function capturePhoto() {
 		setTakePhoto(true);
 		setTimeout(() => {
@@ -101,19 +120,7 @@ function TwillioVideoCall({
 			room.participants.forEach(participantConnected);
 		});
 
-		return () => {
-			setRoom(currentRoom => {
-				if (currentRoom && currentRoom.localParticipant.state === 'connected') {
-					currentRoom.localParticipant.tracks.forEach(function(trackPublication) {
-						trackPublication.track.stop();
-					});
-					currentRoom.disconnect();
-					return null;
-				} else {
-					return currentRoom;
-				}
-			});
-		};
+		return () => disconnectRoom;
 	}, [token]);
 
 	useEffect(() => {
@@ -134,9 +141,7 @@ function TwillioVideoCall({
 							console.log(err)
 						});
 				} else if (!isNurse) updateAppointmentStatus('PATIENT_LEFT');
-				if (!!room) {
-					room.disconnect();
-				}
+				disconnectRoom();
 			}, 2000);
 		};
 	}, []);
@@ -197,12 +202,7 @@ function TwillioVideoCall({
 
 	const handlePause = async () => {
 		await updateAppointmentStatus('ON_HOLD');
-		if (!!hideVideoAppointment) {
-			hideVideoAppointment();
-		}
-		if (!!room) {
-			room.disconnect();
-		}
+		handleHideVideoAppointment();
 	}
 
 	const handleToggleAudio = () => {
@@ -251,10 +251,7 @@ function TwillioVideoCall({
 									if (isNurse) {
 										if (!!room) {
 											await updateAppointmentStatus('COMPLETED');
-											if (!!hideVideoAppointment) {
-												hideVideoAppointment();
-											}
-											room.disconnect();
+											handleHideVideoAppointment();
 										}
 										setIsVideoClosed(true);
 									}

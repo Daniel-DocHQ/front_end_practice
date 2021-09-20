@@ -1,6 +1,9 @@
 tr.MuiTableRow-root:nth-of-type(even) {
 	background-color: var(--doc-light-grey);
 }
+.MuiTableCell-root {
+	padding: 8px !important;
+}
 .noneBackground {
 	background-color: unset !important;
 }

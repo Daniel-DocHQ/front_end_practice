@@ -80,6 +80,15 @@ const useStyles = makeStyles((theme) => ({
 		maxHeight: 235,
 		overflowY: 'scroll',
 	},
+	appointmentStatusItem: {
+		paddingBottom: 0,
+		paddingTop: 0,
+	},
+	appointmentItem: {
+		'&:nth-child(odd)': {
+			backgroundColor: 'var(--doc-light-grey)',
+		},
+	},
 }));
 
 const READABLE_STATUSES = {
@@ -509,23 +518,25 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 							<Typography variant="h6" className={classes.title}>
 								Appointments Details
 							</Typography>
-							{appointments.map((row, appointmentIndx) => (
-								<AppointmentDetails
-									key={row.id}
-									id={row.id}
-									token={token}
-									app={app}
-									call={call}
-									setCall={setCall}
-									reloadInfo={reloadInfo}
-									orderItems={get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual')}
-									shortToken={order.id}
-									appointment={row}
-									refetchData={refetchData}
-									swabbingMethod={swabbingMethod}
-									appointmentIndx={appointmentIndx}
-								/>
-							))}
+							<div className={classes.appointmentBox}>
+								{appointments.map((row, appointmentIndx) => (
+									<AppointmentDetails
+										key={row.id}
+										id={row.id}
+										token={token}
+										app={app}
+										call={call}
+										setCall={setCall}
+										reloadInfo={reloadInfo}
+										orderItems={get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual')}
+										shortToken={order.id}
+										appointment={row}
+										refetchData={refetchData}
+										swabbingMethod={swabbingMethod}
+										appointmentIndx={appointmentIndx}
+									/>
+								))}
+							</div>
 						</Grid>
 					</Grid>
 				)}
@@ -714,6 +725,7 @@ const AppointmentDetails = ({
 	orderItems = [],
 	shortToken,
 }) => {
+	const classes = useStyles();
 	const linkRef = useRef(null);
 	const [loading, setLoading] = useState(true);
 	const [practitionerInfo, setPractitionerInfo] = useState();
@@ -752,7 +764,7 @@ const AppointmentDetails = ({
 			</Grid>
 		</Grid>
 	) : (
-		<>
+		<div className={classes.appointmentItem}>
 			<List>
 				<ListItemText>
 					<b>Appointment {appointmentIndx + 1}</b>
@@ -780,7 +792,7 @@ const AppointmentDetails = ({
 				)}
 				<ListItem>
 					<ListItemText>
-						<b>Test Type</b>: {appointment.booking_user.metadata.test_type}
+						<b>Test Type</b>: <b className="green-text">{appointment.booking_user.metadata.test_type}</b>
 					</ListItemText>
 				</ListItem>
 				<ListItem>
@@ -864,7 +876,7 @@ const AppointmentDetails = ({
 						<ListItemText>
 							<b>Appointment Status Changes</b>:
 							{statusChanges.map(({ changed_to, created_at }, indx) => (
-								<ListItem key={indx}>
+								<ListItem key={indx} className={classes.appointmentStatusItem}>
 									<ListItemText>
 										<b>{startCase(changed_to.replace('_', ' ').toLowerCase())}</b> - {format(new Date(created_at), 'dd/MM/yyyy pp')} ({timezone})
 									</ListItemText>
@@ -967,7 +979,7 @@ const AppointmentDetails = ({
 				}
 			/>
 			<Divider style={{ margin: '20px 0' }} />
-		</>
+		</div>
 	);
 };
 
