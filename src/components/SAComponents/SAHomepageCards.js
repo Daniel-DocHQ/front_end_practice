@@ -4,6 +4,7 @@ import { get } from 'lodash';
 import LinkButton from '../DocButton/LinkButton';
 import DocCard from '../DocCard/DocCard';
 import DocCardContainer from '../DocCard/DocCardContainer';
+import DISCOUNT_USER_NAMES from '../../helpers/discountUserNames';
 
 const BookAppointmentIcon = require('../../assets/images/icons/homepage-book-appointment.svg');
 const apiUrl  = process.env.REACT_APP_API_URL;
@@ -114,7 +115,7 @@ const SAHomepageCards = ({ token, user }) => {
 			),
 		},
 		{
-			display: (userName === 'Super Admin' || userName === 'Silva Quattrocchi' || userName === 'Madhur Srivastava' || userName === 'Janet Webber'),
+			display: DISCOUNT_USER_NAMES.includes(userName),
 			title: 'Discount Management',
 			icon: <img src={BookAppointmentIcon} alt='Discount Management' />,
 			content: (

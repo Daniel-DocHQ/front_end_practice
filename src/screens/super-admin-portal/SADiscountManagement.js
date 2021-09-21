@@ -7,6 +7,7 @@ import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import DiscountTable from '../../components/SAComponents/Tables/DiscountTable';
 import DiscountAppBar from '../../components/SAComponents/DiscountAppBar';
+import DISCOUNT_USER_NAMES from '../../helpers/discountUserNames';
 
 const SADiscountManagement = ({ token, role, isAuthenticated, user }) => {
     const userName = `${get(user, 'first_name', '')} ${get(user, 'last_name', '')}`;
@@ -34,7 +35,7 @@ const SADiscountManagement = ({ token, role, isAuthenticated, user }) => {
 		logout();
 		history.push('/login');
 	};
-	if ((isAuthenticated !== true && role !== 'super_admin') || (!!user && (userName !== 'Super Admin' && userName !== 'Silva Quattrocchi' && userName !== 'Madhur Srivastava' && userName !== 'Janet Webber'))) {
+	if ((isAuthenticated !== true && role !== 'super_admin') || (!!user && !DISCOUNT_USER_NAMES.includes(userName))) {
 		logoutUser();
 	}
 
