@@ -50,12 +50,13 @@ const AllAppointments = ({ token }) => {
 	const {
         isLoading,
         appointments,
-		sort,
         sortOrder,
         getData,
         start_time,
         setEndTime,
         setStartTime,
+        sortField,
+        sort,
     } = useServerDateFilter({
         token,
         query: adminService.getAllAppointments,
@@ -120,8 +121,8 @@ const AllAppointments = ({ token }) => {
                             <TableCell align='left' style={styles.tableText}>
                                 <TableSortLabel
                                     active
-                                    direction={sortOrder}
-                                    onClick={sort}
+                                    direction={sortField === 'user_name' ? sortOrder : 'desc'}
+                                    onClick={() => sort({sortBy: 'user_name'})}
                                 >
                                     Practitioner Name
                                 </TableSortLabel>
@@ -132,7 +133,15 @@ const AllAppointments = ({ token }) => {
                             <TableCell align='center' style={styles.tableText}>Project</TableCell>
                             <TableCell align='center' style={styles.tableText}>People</TableCell>
                             <TableCell align='center' style={styles.tableText}>Test</TableCell>
-                            <TableCell align='center' style={styles.tableText}>Status</TableCell>
+                            <TableCell align='center' style={styles.tableText}>
+                                <TableSortLabel
+                                    active
+                                    direction={sortField === 'status' ? sortOrder : 'desc'}
+                                    onClick={() => sort({sortBy: 'status'})}
+                                >
+                                    Status
+                                </TableSortLabel>
+                            </TableCell>
                             <TableCell align='right' style={styles.tableText}>Actions</TableCell>
                         </TableRow>
                     </TableHead>

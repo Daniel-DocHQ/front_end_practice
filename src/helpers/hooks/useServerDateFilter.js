@@ -40,12 +40,13 @@ export const useServerDateFilter = ({
 	const [start_time, setStartTime] = useState(today);
     const [end_time, setEndTime] = useState(!!fixedEndTime ? fixedEndTime : today);
 	const [sortOrder, setSortOrder] = useState('');
+    const [sortField, setSortField] = useState('');
 
-    const compareFunc = (i, j, newSortOrder) => {
-        if (i.user_name < j.user_name) {
+    const compareFunc = (i, j, newSortOrder, sortField) => {
+        if (i[sortField] < j[sortField]) {
             return newSortOrder === "asc" ? -1 : 1;
         } else {
-            if (i.user_name > j.user_name) {
+            if (i[sortField] > j[sortField]) {
                 return newSortOrder === "asc" ? 1 : -1;
             } else {
                 return 0;
@@ -53,15 +54,16 @@ export const useServerDateFilter = ({
         }
     };
 
-    const sort = () => {
+    const sort = ({ sortBy = 'user_name' }) => {
         if (practitionerName) {
-            const newSortOrder = sortOrder === 'asc' ? 'desc' : sortOrder === 'desc' ? '' : 'asc';
+            const newSortOrder = sortBy !== sortField ? 'asc' : sortOrder === 'asc' ? 'desc' : sortOrder === 'desc' ? '' : 'asc';
             if (!!newSortOrder) {
                 const newAppointments = [...appointments];
-                setAppointments(newAppointments.sort((i, j) => compareFunc(i, j, newSortOrder)))
+                setAppointments(newAppointments.sort((i, j) => compareFunc(i, j, newSortOrder, sortBy)))
             } else {
                 getData(newSortOrder);
             }
+            setSortField(!!newSortOrder ? sortBy : '');
             setSortOrder(newSortOrder);
         }
     };
@@ -82,7 +84,7 @@ export const useServerDateFilter = ({
                 if (data.success) {
                     const dataAppointments = [...data.appointments];
                     setAppointments(srtOrder && practitionerName
-                        ? dataAppointments.sort((i, j) => compareFunc(i, j, srtOrder))
+                        ? dataAppointments.sort((i, j) => compareFunc(i, j, srtOrder, sortField))
                         : dataAppointments);
                 } else setAppointments([]);
             })
@@ -119,6 +121,8 @@ export const useServerDateFilter = ({
         sort,
         setFilter,
         getData,
+        sortField,
+        setSortField,
     });
 };
 
