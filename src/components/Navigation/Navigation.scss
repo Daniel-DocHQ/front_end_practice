@@ -41,7 +41,10 @@
 			height: 42px;
 		}
 	}
-
+	.claimable-notification {
+		position: absolute;
+		right: 90px;
+	}
 	.personal-profile {
 		color: var(--doc-light-grey);
 		font-size: 36px;

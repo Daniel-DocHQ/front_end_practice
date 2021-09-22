@@ -16,6 +16,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import UserMenu from './UserMenu';
+import ClaimableNotification from './ClaimableNotification';
 import './Navigation.scss';
 
 const docIcon = require('../../assets/images/icons/dochq-logo-rect-white.svg');
@@ -101,6 +102,7 @@ const AdminNavigator = ({
 	title,
 	isAuthenticated,
 	user,
+    token,
 	logout,
 }) => {
 	const classes = useStyles();
@@ -142,10 +144,13 @@ const AdminNavigator = ({
                         </div>
                     )}
                     {isAuthenticated && (
-                        <UserMenu
-                            user={user}
-                            logout={logout}
-                        />
+                        <>
+                            <ClaimableNotification title={title} token={token} />
+                            <UserMenu
+                                user={user}
+                                logout={logout}
+                            />
+                        </>
                     )}
                 </Toolbar>
             </AppBar>

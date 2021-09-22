@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const Layout = ({ title, children }) => {
 	const classes = useStyles();
 	const contextValue = useContext(AuthContext);
-	const { isAuthenticated, user, logout } = contextValue;
+	const { isAuthenticated, user, logout, token } = contextValue;
 	const role = (!!user && !!user.roles ? user.roles[0].name : '').toLowerCase();
 
 	const addProps = () => {
@@ -46,6 +46,7 @@ const Layout = ({ title, children }) => {
 				isAuthenticated={isAuthenticated}
 				title={title}
 				user={user}
+				token={token}
 				logout={logout}
 			/>
 			<main className={classes.content}>
@@ -66,6 +67,7 @@ const Layout = ({ title, children }) => {
 			<TopNavigation
 				role={role}
 				user={user}
+				token={token}
 				title={title}
 				logout={logout}
 				{...contextValue}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import UserMenu from './UserMenu';
 import './Navigation.scss';
+import ClaimableNotification from './ClaimableNotification';
 
 const docIcon = require('../../assets/images/icons/dochq-logo-rect-white.svg');
 const vistaLogo = require('../../assets/images/vista-logo.png');
@@ -12,6 +13,7 @@ const TopNavigation = ({
 	user,
 	role,
 	logout,
+	token,
 	...rest
 }) => {
 	const isVista = window.location.href.includes('vista');
@@ -35,10 +37,13 @@ const TopNavigation = ({
 			</div>
 			<h1 className='page-title'>{title}</h1>
 			{isAuthenticated && (
-				<UserMenu
-					user={user}
-					logout={logout}
-				/>
+				<>
+					<ClaimableNotification title={title} token={token} />
+					<UserMenu
+						user={user}
+						logout={logout}
+					/>
+				</>
 			)}
 		</div>
 	);
