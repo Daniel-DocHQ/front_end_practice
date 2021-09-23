@@ -37,10 +37,9 @@ const SmDashboard = props => {
 					// getFutureAppointments();
 					// getClaimableAppointments();
 				} else {
-					ToastsStore.error('Error claiming appointment');
+					ToastsStore.error(result.error);
 				}
-			})
-			.catch(() => ToastsStore.error('Error claiming appointment'));
+			}).catch((err) => ToastsStore.error(err.error));
 	}
 	function releaseAppointment(slot_id) {
 		bookingService

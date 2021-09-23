@@ -101,10 +101,10 @@ const AppointmentLiveStatus = () => {
 					ToastsStore.success('Appointment claimed');
 					getClaimableAppointments();
 				} else {
-					ToastsStore.error('Error claiming appointment');
+					ToastsStore.error(result.error);
 				}
 			})
-			.catch(() => ToastsStore.error('Error claiming appointment'));
+			.catch((err) => ToastsStore.error(err.error));
 	}
 
 	return (

@@ -37,6 +37,9 @@ function TwillioVideoCall({
 	const isEarly = timeBeforeStart > 0;
 	const patients = useBookingUsers();
 	const [counter, setCounter] = useState(0);
+	const [room, setRoom] = useState(null);
+	const [participants, setParticipants] = useState([]);
+	const [isMuted, setIsMuted] = useState(false);
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
@@ -50,7 +53,15 @@ function TwillioVideoCall({
 			? (!!lastStatus && lastStatus.changed_to === 'PATIENT_ATTENDED') ? `Patient joined at ${format(new Date(lastStatus.created_at), 'dd/MM/yyyy pp')}` : 'Your patient will be with you shortly'
 			: 'Your medical practitioner will be with you shortly'
 	);
-	const disconnectRoom = () => (
+	const disconnectRoom = () => {
+		try {
+			room.disconnect();
+			room.localParticipant.tracks.forEach(function(trackPublication) {
+				trackPublication.track.stop();
+			});
+		} catch (err) {
+			console.log(err);
+		}
 		setRoom(currentRoom => {
 			if (currentRoom && currentRoom.localParticipant.state === 'connected') {
 				currentRoom.localParticipant.tracks.forEach(function(trackPublication) {
@@ -61,8 +72,8 @@ function TwillioVideoCall({
 			} else {
 				return currentRoom;
 			}
-		})
-	);
+		});
+	};
 	const handleHideVideoAppointment = () => {
 		if (!!hideVideoAppointment) {
 			hideVideoAppointment();
@@ -86,9 +97,6 @@ function TwillioVideoCall({
 	function updateImage(data) {
 		updateImageData(data);
 	}
-	const [room, setRoom] = useState(null);
-	const [participants, setParticipants] = useState([]);
-	const [isMuted, setIsMuted] = useState(false);
 
 	const updateAppointmentStatus = (status) =>
 		bookingService.updateAppointmentStatus(appointmentId, { status }, authToken)
@@ -125,6 +133,7 @@ function TwillioVideoCall({
 
 	useEffect(() => {
 		return () => {
+			disconnectRoom();
 			setTimeout(async () => {
 				if (isNurse) {
 					await nurseSvc
@@ -141,7 +150,6 @@ function TwillioVideoCall({
 							console.log(err)
 						});
 				} else if (!isNurse) updateAppointmentStatus('PATIENT_LEFT');
-				disconnectRoom();
 			}, 2000);
 		};
 	}, []);

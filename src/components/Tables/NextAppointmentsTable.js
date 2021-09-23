@@ -87,11 +87,13 @@ const NextAppointmentsTable = ({
                                                     {!!statusLastUpdated && <Timer statusLastUpdated={new Date(statusLastUpdated).getTime()} paused />}
                                                 </TableCell>
                                                 <TableCell align='center' style={{ ...styles.tableText }}>
-                                                    <DocButton
-                                                        text='Join'
-                                                        color='green'
-                                                        onClick={() => join(appointment.id)}
-                                                    />
+                                                    {!appointmentId && (
+                                                        <DocButton
+                                                            text='Join'
+                                                            color='green'
+                                                            onClick={() => join(appointment.id)}
+                                                        />
+                                                    )}
                                                 </TableCell>
                                             </TableRow>
                                         );
@@ -132,11 +134,13 @@ const NextAppointmentsTable = ({
                                         {format(new Date(appointment.start_time), 'p')}
                                     </TableCell>
                                     <TableCell align='left' style={{ ...styles.tableText }}>
-                                        <DocButton
-                                            text='Join'
-                                            color='green'
-                                            onClick={() => join(appointment.id)}
-                                        />
+                                        {!appointmentId && (
+                                            <DocButton
+                                                text='Join'
+                                                color='green'
+                                                onClick={() => join(appointment.id)}
+                                            />
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             ))}
