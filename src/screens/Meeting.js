@@ -24,6 +24,7 @@ import '../assets/css/Meeting.scss';
 const Meeting = () => {
 	const [step, setStep] = useState(1);
 	const [isLoading, setIsLoading] = useState(true);
+	const [invalidLink, setIsInvalidLink] = useState(false);
 	const [videoCallToken, setVideoCallToken] = useState('');
 	const [toc_accept, setToc_accept] = useState(true);
 	const [marketing_accept, setMarketing_accept] = useState(false);
@@ -52,9 +53,11 @@ const Meeting = () => {
 					setIsVista(isVistaType);
 					setIsEnglish(isVistaType ? true : language === 'EN');
 					setIsLoading(false);
-				}
-			})
-			.catch(err => console.log(err));
+				} else setIsInvalidLink(true);
+			}).catch(err => {
+				console.log(err);
+				setIsInvalidLink(true);
+			});
 		setIsLoading(false);
 	}
 
@@ -85,6 +88,13 @@ const Meeting = () => {
 	const increaseStep = (value) => setStep(step + value);
 	const displayContent = () => {
 		if (questionsVisible) {
+			if (invalidLink) {
+				return (
+					<InvalidLinkMessage
+						isEnglish={isEnglish}
+					/>
+				);
+			}
 			if ((isEarly && !skiptime)) {
 				return (
 					<AppointmentSummary
@@ -195,6 +205,15 @@ const CameraMicrophoneCheck = ({ isEnglish }) => (
 		{isEnglish
 			? 'Please make sure you enable your camera and microphone before the appointment.'
 			: 'Bitte stellen Sie sicher, dass Sie Ihre Kamera und Ihr Mikrofon vor dem Termin aktivieren.'
+		}
+	</h3>
+);
+
+const InvalidLinkMessage = ({ isEnglish }) => (
+	<h3>
+		{isEnglish
+			? 'You appointment link is invalid, please contact customer services to discuss your further support@dochq.co.uk'
+			: 'Ihr Terminlink ist ungültig. Bitte wenden Sie sich an den Kundenservice, um Ihr weiteres Vorgehen zu besprechen support@dochq.co.uk'
 		}
 	</h3>
 );
