@@ -36,7 +36,7 @@ const OFLStep0 = ({
 
 	return (
         <>
-            <h4 style={{ margin: 0, paddingTop: 20 }}>
+            {/* <h4 style={{ margin: 0, paddingTop: 20 }}>
                 What test are you booking?
             </h4>
             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
@@ -75,8 +75,8 @@ const OFLStep0 = ({
                         )}
                     </Field>
                 </div>
-            </div>
-            <Divider style={{ width: '22%' }} />
+            </div> */}
+            {/* <Divider style={{ width: '22%' }} /> */}
             {!!product && (
                 <>
                     <h4 style={{ margin: 0, paddingTop: 20 }}>
