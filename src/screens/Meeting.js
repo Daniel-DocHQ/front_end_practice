@@ -90,9 +90,7 @@ const Meeting = () => {
 		if (questionsVisible) {
 			if (invalidLink) {
 				return (
-					<InvalidLinkMessage
-						isEnglish={isEnglish}
-					/>
+					<InvalidLinkMessage />
 				);
 			}
 			if ((isEarly && !skiptime)) {
@@ -209,12 +207,11 @@ const CameraMicrophoneCheck = ({ isEnglish }) => (
 	</h3>
 );
 
-const InvalidLinkMessage = ({ isEnglish }) => (
+const InvalidLinkMessage = () => (
 	<h3>
-		{isEnglish
-			? 'You appointment link is invalid, please contact customer services to discuss your further support@dochq.co.uk'
-			: 'Ihr Terminlink ist ungültig. Bitte wenden Sie sich an den Kundenservice, um Ihr weiteres Vorgehen zu besprechen support@dochq.co.uk'
-		}
+		This appointment has been cancelled.<br />
+		Please look for your new appointment link in your emails from DocHQ.<br />
+		If you believe this is an error, please contact customer services at support@dochq.co.uk
 	</h3>
 );
 

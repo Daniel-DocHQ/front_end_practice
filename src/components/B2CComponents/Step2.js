@@ -8,11 +8,11 @@ import { ThemeProvider } from '@material-ui/styles';
 import bookingService from '../../services/bookingService';
 import bookingFormModel from './bookingFormModel';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
-import Slot from './Slot';
 import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import DocButton from '../DocButton/DocButton';
-import './BookingEngine.scss';
 import ADDITIONAL_PRODUCT_TEXT from './additionalProductText';
+import Slot from './Slot';
+import './BookingEngine.scss';
 
 const datePickerTheme = () => createMuiTheme({
 	overrides: {
