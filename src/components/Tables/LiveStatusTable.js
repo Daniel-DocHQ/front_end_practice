@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { get, camelCase } from 'lodash';
+import Collapse from '@material-ui/core/Collapse';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -56,10 +59,15 @@ const HUMAN_STATUSES = {
 };
 
 const LiveStatusTable = ({ appointments: appointmentsToFilter = [], releaseAppointment }) => {
+    const [checked, setChecked] = useState(true);
     const [isVisible, setIsVisible] = useState(false);
     const [appId, setAppId] = useState();
     const now = new Date().getTime();
     const appointments = (appointmentsToFilter || []).filter((item) => !(get(item, 'status', '') === 'WAITING' && new Date(get(item, 'start_time', '')).getTime() > now ));
+
+    const handleChange = () => {
+		setChecked((prev) => !prev);
+	};
 
     const closeModal = () => {
         setAppId();
@@ -102,121 +110,126 @@ const LiveStatusTable = ({ appointments: appointmentsToFilter = [], releaseAppoi
             />
             <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
                 <div style={styles.mainContainer}>
-                    <h2>Live status</h2>
+                    <div className='row no-margin' style={{ paddingBottom: 10, cursor: 'pointer' }} onClick={handleChange}>
+					    <h2>Live status</h2>
+					    {checked ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+				    </div>
                 </div>
-                <TableContainer
-                    style={{
-                        marginBottom: '40px',
-                    }}
-                >
-                    <Table stickyHeader>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
-                                <TableCell align='center' style={styles.tableText}>Patient Name</TableCell>
-                                <TableCell align='center' style={styles.tableText}>Test</TableCell>
-                                <TableCell align='center' style={styles.tableText}>Appointment Time</TableCell>
-                                <TableCell align='center' style={styles.tableText}>Timer</TableCell>
-                                <TableCell align='center' style={styles.tableText}>Status</TableCell>
-                                <TableCell align='center' style={styles.tableText}>Status</TableCell>
-                                <TableCell align='right' style={styles.tableText}>Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {typeof appointments !== 'undefined' &&
-                                typeof appointments === 'object' &&
-                                appointments.length > 0 &&
-                                appointments.map(appointment => {
-                                    const now = new Date().getTime();
-                                    const appointmentStatus = camelCase(get(appointment, 'status', ''));
-                                    const isWaiting = appointmentStatus === 'waiting';
-                                    const statusLastUpdated = get(appointment, 'status_last_updated', '');
-                                    const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
-                                    const appointmentStartTimeNumber = new Date(appointmentStartTime).getTime();
-                                    const isEarly = appointmentStartTimeNumber >= now;
-                                    const isPatientAttended = appointmentStatus === APPOINTMENT_STATUSES.patientAttended;
+                <Collapse in={checked}>
+                    <TableContainer
+                        style={{
+                            marginBottom: '40px',
+                        }}
+                    >
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align='left' style={styles.tableText}>Practitioner Name</TableCell>
+                                    <TableCell align='center' style={styles.tableText}>Patient Name</TableCell>
+                                    <TableCell align='center' style={styles.tableText}>Test</TableCell>
+                                    <TableCell align='center' style={styles.tableText}>Appointment Time</TableCell>
+                                    <TableCell align='center' style={styles.tableText}>Timer</TableCell>
+                                    <TableCell align='center' style={styles.tableText}>Status</TableCell>
+                                    <TableCell align='center' style={styles.tableText}>Status</TableCell>
+                                    <TableCell align='right' style={styles.tableText}>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {typeof appointments !== 'undefined' &&
+                                    typeof appointments === 'object' &&
+                                    appointments.length > 0 &&
+                                    appointments.map(appointment => {
+                                        const now = new Date().getTime();
+                                        const appointmentStatus = camelCase(get(appointment, 'status', ''));
+                                        const isWaiting = appointmentStatus === 'waiting';
+                                        const statusLastUpdated = get(appointment, 'status_last_updated', '');
+                                        const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
+                                        const appointmentStartTimeNumber = new Date(appointmentStartTime).getTime();
+                                        const isEarly = appointmentStartTimeNumber >= now;
+                                        const isPatientAttended = appointmentStatus === APPOINTMENT_STATUSES.patientAttended;
 
-                                    return (
-                                        <TableRow key={appointment.id}>
-                                            <TableCell
-                                                align='left'
-                                                style={{ ...styles.tableText }}
-                                                className={appointmentStatus === APPOINTMENT_STATUSES.patientAttended && 'red-bold-text'}
-                                            >
-                                                {get(appointment, 'user_name', '')}
-                                            </TableCell>
-                                            <TableCell
-                                                align='center'
-                                                className={`text-status-${appointmentStatus}`}
-                                                style={{ ...styles.tableText }}
-                                                className={appointmentStatus === APPOINTMENT_STATUSES.practitionerAttended && 'red-bold-text'}
-                                            >
-                                                {get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
-                                            </TableCell>
-                                            <TableCell align='center' style={{ ...styles.tableText }}>
-                                                {get(appointment, 'booking_user.metadata.test_type', '')}
-                                            </TableCell>
-                                            <TableCell align='center' style={{ ...styles.tableText }}>
-                                                {format(appointmentStartTime, 'p')}
-                                            </TableCell>
-                                            <TableCell align='center' style={{ ...styles.tableText }}>
-                                                {!(isWaiting && isEarly) && (
-                                                    <Timer
-                                                        statusLastUpdated={isWaiting ? appointmentStartTimeNumber : statusLastUpdated ? new Date(statusLastUpdated).getTime() : appointmentStartTimeNumber}
-                                                    />
-                                                )}
-                                            </TableCell>
-                                            <TableCell align='center' className={`text-status-${isEarly && isPatientAttended ? 'none' : appointmentStatus}`} style={{ ...styles.tableText }}>
-                                                {HUMAN_STATUSES[appointmentStatus] || ''}
-                                            </TableCell>
-                                            <TableCell align='center' style={{ ...styles.tableText }}>
-                                                <div className={`circle status-${isEarly && isPatientAttended ? 'yellow' : appointmentStatus}`}/>
-                                            </TableCell>
-                                            <TableCell align='right' style={{ ...styles.tableText }}>
-                                                <div className="row flex-end no-margin">
-                                                    <LinkButton
-                                                        text='View'
-                                                        color='green'
-                                                        linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
-                                                    />
-                                                    <div style={{ margin: '0 10px' }}>
+                                        return (
+                                            <TableRow key={appointment.id}>
+                                                <TableCell
+                                                    align='left'
+                                                    style={{ ...styles.tableText }}
+                                                    className={appointmentStatus === APPOINTMENT_STATUSES.patientAttended && 'red-bold-text'}
+                                                >
+                                                    {get(appointment, 'user_name', '')}
+                                                </TableCell>
+                                                <TableCell
+                                                    align='center'
+                                                    className={`text-status-${appointmentStatus}`}
+                                                    style={{ ...styles.tableText }}
+                                                    className={appointmentStatus === APPOINTMENT_STATUSES.practitionerAttended && 'red-bold-text'}
+                                                >
+                                                    {get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
+                                                </TableCell>
+                                                <TableCell align='center' style={{ ...styles.tableText }}>
+                                                    {get(appointment, 'booking_user.metadata.test_type', '')}
+                                                </TableCell>
+                                                <TableCell align='center' style={{ ...styles.tableText }}>
+                                                    {format(appointmentStartTime, 'p')}
+                                                </TableCell>
+                                                <TableCell align='center' style={{ ...styles.tableText }}>
+                                                    {!(isWaiting && isEarly) && (
+                                                        <Timer
+                                                            statusLastUpdated={isWaiting ? appointmentStartTimeNumber : statusLastUpdated ? new Date(statusLastUpdated).getTime() : appointmentStartTimeNumber}
+                                                        />
+                                                    )}
+                                                </TableCell>
+                                                <TableCell align='center' className={`text-status-${isEarly && isPatientAttended ? 'none' : appointmentStatus}`} style={{ ...styles.tableText }}>
+                                                    {HUMAN_STATUSES[appointmentStatus] || ''}
+                                                </TableCell>
+                                                <TableCell align='center' style={{ ...styles.tableText }}>
+                                                    <div className={`circle status-${isEarly && isPatientAttended ? 'yellow' : appointmentStatus}`}/>
+                                                </TableCell>
+                                                <TableCell align='right' style={{ ...styles.tableText }}>
+                                                    <div className="row flex-end no-margin">
                                                         <LinkButton
-                                                            newTab
-                                                            text='Join'
-                                                            color='pink'
-                                                            linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+                                                            text='View'
+                                                            color='green'
+                                                            linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
+                                                        />
+                                                        <div style={{ margin: '0 10px' }}>
+                                                            <LinkButton
+                                                                newTab
+                                                                text='Join'
+                                                                color='pink'
+                                                                linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+                                                            />
+                                                        </div>
+                                                        <DocButton
+                                                            color="pink"
+                                                            text="Release"
+                                                            onClick={() => {
+                                                                setAppId(appointment.id);
+                                                                setIsVisible(true);
+                                                            }}
                                                         />
                                                     </div>
-                                                    <DocButton
-                                                        color="pink"
-                                                        text="Release"
-                                                        onClick={() => {
-                                                            setAppId(appointment.id);
-                                                            setIsVisible(true);
-                                                        }}
-                                                    />
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            {typeof appointments !== 'object' || appointments.length === 0 ? (
-                                <TableRow>
-                                    <TableCell style={styles.tableText}>
-                                        <p>No appointments to display</p>
-                                    </TableCell>
-                                    <TableCell />
-                                    <TableCell />
-                                    <TableCell />
-                                    <TableCell />
-                                    <TableCell />
-                                    <TableCell/>
-                                    <TableCell />
-                                </TableRow>
-                            ) : null}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                {typeof appointments !== 'object' || appointments.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell style={styles.tableText}>
+                                            <p>No appointments to display</p>
+                                        </TableCell>
+                                        <TableCell />
+                                        <TableCell />
+                                        <TableCell />
+                                        <TableCell />
+                                        <TableCell />
+                                        <TableCell/>
+                                        <TableCell />
+                                    </TableRow>
+                                ) : null}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Collapse>
             </div>
         </>
     );

@@ -10,13 +10,13 @@ import {
 	AppointmentContext,
 } from '../../context/AppointmentContext';
 import './box-test.scss';
-import { ToastsStore } from 'react-toasts';
 import { jwtDecode } from '../../helpers/jwtDecode';
 
 const Box = ({
 	token,
 	isNurse,
 	appointmentInfo = {},
+	isHackLink = false,
 	isEnglish = true,
 	updateImageData,
 	captureDisabled,
@@ -55,7 +55,7 @@ const Box = ({
 				}).then(res => res.json()).catch((err) => console.log(err));
 				setVideoCallToken(data.token);
 				if (isNurse) {
-				 await bookingService.setVideoToken(
+					await bookingService.setVideoToken(
 						appointmentId,
 						{
 							user_video_token: data.token,
@@ -64,12 +64,24 @@ const Box = ({
 					).catch((err) => console.log(err))
 				} else setCookie('video-token', data.token);
 			}
+			if (isNurse && isHackLink) {
+				await bookingService
+					.claimAppointment(token, appointmentId)
+					.then(result => {
+						if (result.success) {
+							console.log('Appointment claimed')
+						} else {
+							console.log(result.error);
+						}
+					})
+					.catch((err) => console.log(err.error));
+			}
 			await bookingService
 				.updateAppointmentStatus(appointmentId, {
 					status: isNurse ? 'PRACTITIONER_ATTENDED' : 'PATIENT_ATTENDED',
 				}, token).catch((err) => console.log(err))
 		},
-		[params, isNurse]
+		[params, isNurse],
 	);
 	return videoCallToken ? (
 		<div className='vid-box'>

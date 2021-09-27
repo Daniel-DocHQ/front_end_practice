@@ -1,6 +1,9 @@
 import React, { memo, useEffect, useState } from 'react';
 import { get } from 'lodash';
 import { format } from 'date-fns';
+import Collapse from '@material-ui/core/Collapse';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Table from '@material-ui/core/Table';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableBody from '@material-ui/core/TableBody';
@@ -41,6 +44,7 @@ const UpcomingAppointmentsTable = ({
 	token,
 	fixedEndTime = null,
 }) => {
+	const [checked, setChecked] = useState(true);
 	const [isVisible, setIsVisible] = useState(false);
     const [appId, setAppId] = useState();
 
@@ -68,6 +72,10 @@ const UpcomingAppointmentsTable = ({
         status: 'WAITING',
 		practitionerName: true,
     });
+
+	const handleChange = () => {
+		setChecked((prev) => !prev);
+	};
 
 	useEffect(() => {
 		getData()
@@ -109,8 +117,11 @@ const UpcomingAppointmentsTable = ({
             />
 			<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
 				<div style={styles.mainContainer}>
-					<h2>Upcoming Appointments</h2>
-					{!fixedEndTime && (
+					<div className='row no-margin' style={{ paddingBottom: 10, cursor: 'pointer' }} onClick={handleChange}>
+						<h2>Upcoming Appointments</h2>
+						{checked ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+					</div>
+					{(!fixedEndTime && checked) && (
 						<DateFilter
 							filter={filter}
 							setFilter={setFilter}
@@ -122,111 +133,113 @@ const UpcomingAppointmentsTable = ({
 						/>
 					)}
 				</div>
-				<TableContainer
-					style={{
-						marginBottom: '40px',
-					}}
-				>
-					<Table stickyHeader>
-						<TableHead>
-							<TableRow>
-								<TableCell align='left' style={styles.tableText}>
-									<TableSortLabel
-										active
-										direction={sortOrder}
-										onClick={sort}
-									>
-										Practitioner Name
-									</TableSortLabel>
-								</TableCell>
-								<TableCell align='center' style={styles.tableText}>Patient Name</TableCell>
-								<TableCell align='center' style={styles.tableText}>Date</TableCell>
-								<TableCell align='center' style={styles.tableText}>Time</TableCell>
-								<TableCell align='center' style={styles.tableText}>Project</TableCell>
-								<TableCell align='center' style={styles.tableText}>People</TableCell>
-								<TableCell align='center' style={styles.tableText}>Test</TableCell>
-								<TableCell align='right' style={styles.tableText}>Actions</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{isLoading ? (
+				<Collapse in={checked}>
+					<TableContainer
+						style={{
+							marginBottom: '40px',
+						}}
+					>
+						<Table stickyHeader>
+							<TableHead>
 								<TableRow>
-									<LoadingSpinner />
+									<TableCell align='left' style={styles.tableText}>
+										<TableSortLabel
+											active
+											direction={sortOrder}
+											onClick={sort}
+										>
+											Practitioner Name
+										</TableSortLabel>
+									</TableCell>
+									<TableCell align='center' style={styles.tableText}>Patient Name</TableCell>
+									<TableCell align='center' style={styles.tableText}>Date</TableCell>
+									<TableCell align='center' style={styles.tableText}>Time</TableCell>
+									<TableCell align='center' style={styles.tableText}>Project</TableCell>
+									<TableCell align='center' style={styles.tableText}>People</TableCell>
+									<TableCell align='center' style={styles.tableText}>Test</TableCell>
+									<TableCell align='right' style={styles.tableText}>Actions</TableCell>
 								</TableRow>
-							) : (
-								appointments.length > 0 && appointments.map(appointment => {
-									const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
-									const type = get(appointment, 'type', '');
-									const source = get(appointment, 'booking_user.metadata.source', '');
+							</TableHead>
+							<TableBody>
+								{isLoading ? (
+									<TableRow>
+										<LoadingSpinner />
+									</TableRow>
+								) : (
+									appointments.length > 0 && appointments.map(appointment => {
+										const appointmentStartTime = new Date(get(appointment, 'start_time', ''));
+										const type = get(appointment, 'type', '');
+										const source = get(appointment, 'booking_user.metadata.source', '');
 
-									return (
-										<TableRow key={appointment.id}>
-											<TableCell align='left' style={{ ...styles.tableText }}>
-												{get(appointment, 'user_name', '')}
-											</TableCell>
-											<TableCell align='center' style={{ ...styles.tableText }}>
-												{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
-											</TableCell>
-											<TableCell align='center' style={{ ...styles.tableText }}>
-												{appointmentStartTime.toLocaleDateString()}
-											</TableCell>
-											<TableCell align='center' style={{  ...styles.tableText }}>
-												{format(appointmentStartTime, 'p')}
-											</TableCell>
-											<TableCell align='center' style={{ ...styles.tableText }}>
-												{!!source ? source : type && (type === 'video_gp_dochq' ? 'DocHQ' : type)}
-											</TableCell>
-											<TableCell align='center' style={{ ...styles.tableText }}>
-												{get(appointment, 'booking_users.length', '')}
-											</TableCell>
-											<TableCell align='center' style={{ ...styles.tableText }}>
-												{get(appointment, 'booking_user.metadata.test_type', '')}
-											</TableCell>
-											<TableCell align='right' style={{  ...styles.tableText }}>
-												<div className="row flex-end no-margin">
-													<LinkButton
-														text='View'
-														color='green'
-														linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
-													/>
-													<div style={{ margin: '0 10px' }}>
+										return (
+											<TableRow key={appointment.id}>
+												<TableCell align='left' style={{ ...styles.tableText }}>
+													{get(appointment, 'user_name', '')}
+												</TableCell>
+												<TableCell align='center' style={{ ...styles.tableText }}>
+													{get(appointment, 'booking_user.first_name', '')} {get(appointment, 'booking_user.last_name', '')}
+												</TableCell>
+												<TableCell align='center' style={{ ...styles.tableText }}>
+													{appointmentStartTime.toLocaleDateString()}
+												</TableCell>
+												<TableCell align='center' style={{  ...styles.tableText }}>
+													{format(appointmentStartTime, 'p')}
+												</TableCell>
+												<TableCell align='center' style={{ ...styles.tableText }}>
+													{!!source ? source : type && (type === 'video_gp_dochq' ? 'DocHQ' : type)}
+												</TableCell>
+												<TableCell align='center' style={{ ...styles.tableText }}>
+													{get(appointment, 'booking_users.length', '')}
+												</TableCell>
+												<TableCell align='center' style={{ ...styles.tableText }}>
+													{get(appointment, 'booking_user.metadata.test_type', '')}
+												</TableCell>
+												<TableCell align='right' style={{  ...styles.tableText }}>
+													<div className="row flex-end no-margin">
 														<LinkButton
-															newTab
-															text='Join'
-															color='pink'
-															linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+															text='View'
+															color='green'
+															linkSrc={`/practitioner/appointment?appointmentId=${appointment.id}`}
+														/>
+														<div style={{ margin: '0 10px' }}>
+															<LinkButton
+																newTab
+																text='Join'
+																color='pink'
+																linkSrc={`/practitioner/video-appointment?appointmentId=${appointment.id}`}
+															/>
+														</div>
+														<DocButton
+															color="pink"
+															text="Release"
+															onClick={() => {
+																setAppId(appointment.id);
+																setIsVisible(true);
+															}}
 														/>
 													</div>
-													<DocButton
-														color="pink"
-														text="Release"
-														onClick={() => {
-                                                            setAppId(appointment.id);
-                                                            setIsVisible(true);
-                                                        }}
-													/>
-												</div>
-											</TableCell>
-										</TableRow>
-									);
-							}))}
-							{appointments.length === 0 ? (
-								<TableRow>
-									<TableCell style={styles.tableText}>
-										<p>No appointments to display</p>
-									</TableCell>
-									<TableCell />
-									<TableCell />
-									<TableCell/>
-									<TableCell />
-									<TableCell />
-									<TableCell />
-									<TableCell />
-								</TableRow>
-							) : null}
-						</TableBody>
-					</Table>
-				</TableContainer>
+												</TableCell>
+											</TableRow>
+										);
+								}))}
+								{appointments.length === 0 ? (
+									<TableRow>
+										<TableCell style={styles.tableText}>
+											<p>No appointments to display</p>
+										</TableCell>
+										<TableCell />
+										<TableCell />
+										<TableCell/>
+										<TableCell />
+										<TableCell />
+										<TableCell />
+										<TableCell />
+									</TableRow>
+								) : null}
+							</TableBody>
+						</Table>
+					</TableContainer>
+				</Collapse>
 			</div>
 		</>
 	);

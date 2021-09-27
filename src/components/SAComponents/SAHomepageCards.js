@@ -14,23 +14,6 @@ const SAHomepageCards = ({ token, user }) => {
 	const saCards = [
 		{
 			display: true,
-			title: 'Live Doctors Management',
-			icon: <img src={BookAppointmentIcon} alt='Live Doctors Management' />,
-			content: (
-				<React.Fragment>
-					<p>Live Doctors Management</p>
-				</React.Fragment>
-			),
-			actions: (
-				<LinkButton
-					text='View'
-					color='green'
-					linkSrc='/super_admin/live-doctors-management'
-				/>
-			),
-		},
-		{
-			display: true,
 			title: 'Doctors Management',
 			icon: <img src={BookAppointmentIcon} alt='Doctors Management' />,
 			content: (

@@ -5,10 +5,10 @@ import { ToastsStore } from 'react-toasts';
 import { AuthContext } from '../../context/AuthContext';
 import PastAppointmentsTable from '../../components/SAComponents/Tables/PastAppointmentsTable';
 import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
-import ClaimableAppointmentsTable from '../../components/SAComponents/Tables/ClaimableAppointmentsTable';
 import AvailableAppointmentsTable from '../../components/SAComponents/Tables/AvailableAppointmentsTable';
 import bookingService from '../../services/bookingService';
 import ShiftOverview from '../../components/Tables/ShiftOverview';
+import AllAppointments from '../../components/SAComponents/Tables/AllAppointments';
 import AvailabilityPercentage from '../../components/SAComponents/Tables/AvailabilityPercentage';
 
 const DoctorsManagement = ({ token, role, isAuthenticated }) => {
@@ -40,9 +40,6 @@ const DoctorsManagement = ({ token, role, isAuthenticated }) => {
 	return (
         <Grid container justify="space-between">
 			<Grid item xs={12}>
-				<ClaimableAppointmentsTable token={token} reload={reload} />
-			</Grid>
-			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<UpcomingAppointmentsTable
 					releaseAppointment={releaseAppointment}
 					token={token}
@@ -50,16 +47,16 @@ const DoctorsManagement = ({ token, role, isAuthenticated }) => {
 				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<ShiftOverview token={token} isTimeFilters />
+				<AvailableAppointmentsTable token={token} />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
 				<PastAppointmentsTable token={token} />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<AvailableAppointmentsTable token={token} />
+				<AvailabilityPercentage token={token} />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<AvailabilityPercentage token={token} />
+				<AllAppointments token={token} />
 			</Grid>
 		</Grid>
 	);

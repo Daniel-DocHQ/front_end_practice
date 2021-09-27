@@ -7,8 +7,7 @@ import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import LiveStatusTable from '../../components/Tables/LiveStatusTable';
 import bookingService from '../../services/bookingService';
-import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
-import AllAppointments from '../../components/SAComponents/Tables/AllAppointments';
+import ClaimableAppointmentsTable from '../../components/SAComponents/Tables/ClaimableAppointmentsTable';
 import ShiftOverview from '../../components/Tables/ShiftOverview';
 
 const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
@@ -73,25 +72,17 @@ const LiveDoctorsManagement = ({ token, role, isAuthenticated }) => {
 
 	return (
 		<Grid container justify="space-between">
-			<Grid item xs={12}>
-                <UpcomingAppointmentsTable
-					token={token}
-					fixedEndTime={moment().add(1, 'hours')}
-					releaseAppointment={releaseAppointment}
-					reload={reload}
-				/>
-            </Grid>
-            <Grid item xs={12} style={{ paddingTop: 20 }}>
+            <Grid item xs={12}>
                 <LiveStatusTable
 					releaseAppointment={releaseAppointment}
 					appointments={appointments}
 				/>
             </Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<ShiftOverview token={token} isTimeFilters />
+				<ClaimableAppointmentsTable token={token} reload={reload} />
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>
-				<AllAppointments token={token} />
+				<ShiftOverview token={token} isTimeFilters />
 			</Grid>
 		</Grid>
 	);

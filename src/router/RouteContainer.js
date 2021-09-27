@@ -38,8 +38,6 @@ import TermsConditionsDe from '../screens/TermsConditionsDe';
 import TermsConditionsEn from '../screens/TermsConditionsEn';
 import MyRooms from '../screens/nurse-portal/MyRooms';
 import SADashboard from '../screens/super-admin-portal/SADashboard';
-import DoctorsManagement from '../screens/super-admin-portal/DoctorsManagement';
-import LiveDoctorsManagement from '../screens/super-admin-portal/LiveDoctorsManagement';
 import CertificatesList from '../screens/super-admin-portal/CertificatesList';
 import ProcessorManagement from '../screens/super-admin-portal/ProcessorManagement';
 import ProcessorTaskEdit from '../screens/super-admin-portal/ProcessorTaskEdit';
@@ -60,6 +58,7 @@ import SmDashboard from '../screens/sm-portal/SmDashboard';
 import SmLiveDashboard from '../screens/sm-portal/SmLiveDashboard';
 import SmMyRooms from '../screens/sm-portal/SmMyRooms';
 import OFLBookingAppointment from '../screens/b2c-portal/OFLBookingAppointment';
+import NewDoctorsManagement from '../screens/super-admin-portal/NewDoctorsManagement';
 
 const { isSupported } = require('twilio-video');
 
@@ -229,7 +228,7 @@ const RouteHandler = () => {
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/video-appointment'>
 				<Layout title='Video Appointment'>
-					<NurseMeeting2 isVideo={true} {...ctx} />
+					<NurseMeeting2 isVideo isHackLink {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/face-to-face-appointment' requiredRole='practitioner'>
@@ -280,7 +279,7 @@ const RouteHandler = () => {
 			</PrivateRoute>
 			<PrivateRoute path='/shift_manager/doctors-management' requiredRole='shift_manager'>
 				<Layout title='Doctors Management'>
-					<DoctorsManagement {...ctx} />
+					<NewDoctorsManagement {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/shift_manager/live/dashboard' requiredRole='shift_manager'>
@@ -342,17 +341,12 @@ const RouteHandler = () => {
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/doctors-management' requiredRole='super_admin'>
 				<Layout title='Doctors Management'>
-					<DoctorsManagement />
+					<NewDoctorsManagement />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/pcr-management' requiredRole='super_admin'>
 				<Layout title='PCR Tests Management'>
 					<PcrManagementTable />
-				</Layout>
-			</PrivateRoute>
-			<PrivateRoute path='/super_admin/live-doctors-management' requiredRole='super_admin'>
-				<Layout title='Live Doctors Management'>
-					<LiveDoctorsManagement />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/order-list' requiredRole='super_admin'>
