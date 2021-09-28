@@ -249,6 +249,7 @@ const BookingEngine = () => {
 											vaccineTypeName,
 											city,
 											tocAccept,
+											selectedKit,
 										} = values;
 										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 										const isPCR = sku === FIT_TO_FLY_PCR;
@@ -278,6 +279,7 @@ const BookingEngine = () => {
 												locality: town,
 												bundle_id: parseInt(bundle_id),
 												product_id: parseInt(id),
+												selected_kit: selectedKit,
 												metadata: {
 													source,
 													product_id: parseInt(id),

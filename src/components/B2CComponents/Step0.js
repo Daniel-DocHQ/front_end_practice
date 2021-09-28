@@ -1,5 +1,5 @@
-import React from 'react';
-import { Alert } from '@material-ui/lab';
+import React, { useState, useEffect } from 'react';
+import { Alert, Autocomplete } from '@material-ui/lab';
 import { useDebounce } from 'react-use';
 import { Field, useFormikContext } from 'formik';
 import {
@@ -13,6 +13,9 @@ import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
 import ADDITIONAL_PRODUCT_TEXT from './additionalProductText';
 import adminService from '../../services/adminService';
+import {
+	CERTIFICATE_PRODUCTS,
+} from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
 const Step0 = ({
@@ -21,15 +24,18 @@ const Step0 = ({
     isPharmacy,
     bookingUsersQuantity,
 }) => {
+    const [approvedProducts, setApprovedProducts] = useState([]);
     const {
         formField: {
             product: productField,
             numberOfPeople,
             purchaseCode,
+            selectedKit,
         }
     } = bookingFormModel;
     const {
         values: {
+            product: productValue,
             purchaseCodeError,
             purchaseCode: purchaseCodeValue,
         },
@@ -37,6 +43,21 @@ const Step0 = ({
     } = useFormikContext();
 
     const filteredItems = items.filter(({ type }) => type !== 'Virtual');
+
+    const getApprovedProducts = async () => {
+        await adminService.getApprovedProducts()
+            .then(result => {
+                if (result.success && result.kits) {
+                   setApprovedProducts([...result.kits].sort(({name: nameA}, {name: nameB}) => nameA < nameB ? -1 : nameA > nameB ? 1 : 0))
+                } else {
+                    setApprovedProducts([]);
+                   console.log(result.error);
+                }
+            }).catch((error) => {
+                console.log(error.error)
+                setApprovedProducts([]);
+            });
+    };
 
     const checkPurchaseCodeInfo = async () => {
         await adminService.checkPurchaseCodeInfo(purchaseCodeValue)
@@ -51,13 +72,20 @@ const Step0 = ({
                    setFieldValue('purchaseCodeError', { severity: 'error', message: 'Your code is invalid' });
                 }
             }).catch((error) => setFieldValue('purchaseCodeError', { severity: 'error', message: 'Your code is invalid' }));
-    }
+    };
 
     useDebounce(async () => {
         if (!!purchaseCodeValue && purchaseCodeValue.match(new RegExp(/^(ANT|PFF|ATE)*/))) {
             checkPurchaseCodeInfo();
         }
     }, 300, [purchaseCodeValue]);
+
+    useEffect(() => {
+        const chosenProduct = items.find(({ id }) => id === productValue);
+        if (chosenProduct && CERTIFICATE_PRODUCTS.includes(chosenProduct.sku) && !approvedProducts.length) {
+            getApprovedProducts();
+        }
+    }, [productValue]);
 
 	return (isPharmacy ? (
         <>
@@ -147,8 +175,39 @@ const Step0 = ({
                     </Field>
                 </div>
             </div>
+            {!!approvedProducts.length && (
+                <>
+                    <h4 style={{ margin: 0, paddingTop: 20 }}>
+                        Which test kit are you going to use?
+                    </h4>
+                    <div className='row'>
+                        <Field name={selectedKit.name}>
+                            {({ field, meta, form }) => (
+                                <Autocomplete
+                                    {...field}
+                                    options={[{ name: 'NHS Test Kit' }, ...approvedProducts]}
+                                    getOptionLabel={({ name }) => name}
+                                    style={{ width: 300 }}
+                                    getOptionDisabled={({ name }) => name === 'NHS Test Kit'}
+                                    onChange={(event, newValue) => {
+                                        form.setFieldValue(selectedKit.name, newValue);
+                                    }}
+                                    renderInput={(params) => <Input
+                                        {...params}
+                                        {...selectedKit}
+                                        error={!!meta.error}
+                                        touched={meta.touched}
+                                        helperText={(meta.error && meta.touched) && meta.error}
+                                    />}
+                                />
+                            )}
+                        </Field>
+                    </div>
+                </>
+            )}
             <h4 style={{ margin: 0, paddingTop: 20 }}>
-                How many people will take the test?
+                How many people will take the test?<br />
+                <span className="red-bold-text">Please note that all people have to be in one single location</span>
             </h4>
             <div className='row space-between' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>

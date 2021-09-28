@@ -37,6 +37,31 @@ const adminService = {
 			}
 		});
 	},
+	getApprovedProducts() {
+		return new Promise((resolve, reject) => {
+			axios.get(`${baseUrl}/v1/approved_kits`)
+				.then(response => {
+					if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+						resolve({
+							success: true,
+							kits: response.data,
+						});
+					} else {
+						resolve({
+							success: false,
+							error: response.data.message || 'Something went wrong',
+						});
+					}
+				})
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
+		});
+	},
 	getShiftOverview({ token, dateRange }) {
 		return new Promise((resolve, reject) => {
 			const { start_time, end_time } = dateRange;

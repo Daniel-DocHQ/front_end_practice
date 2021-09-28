@@ -13,7 +13,6 @@ import { get } from 'lodash';
 import { useDebounce } from 'react-use';
 import moment from 'moment';
 import { Alert } from '@material-ui/lab';
-import { ToastsStore } from 'react-toasts';
 import React, { useEffect, useState, useContext } from 'react';
 import existsInArray from '../../helpers/existsInArray';
 import DocButton from '../DocButton/DocButton';
@@ -29,6 +28,7 @@ const CertificatesAaron = ({
 	uploadImage,
 	patient_data,
 	appointmentId,
+	approvedTestKits,
 	cancelBtn = null,
 	submitCallback = null,
 	kitProvider: preselectedKidProvider,
@@ -116,7 +116,7 @@ const CertificatesAaron = ({
 		const firstName = get(patient_data, 'metadata.forename', '') || patient_data.first_name;
 		const lastName = get(patient_data, 'metadata.surname', '') || patient_data.last_name;
 		const result = get(patient_data, 'metadata.result', '');
-		const kitProvider = get(patient_data, 'metadata.kit_provider', '') || preselectedKidProvider;
+		const kitProvider = get(patient_data, 'selected_kit.name', '') || preselectedKidProvider;
 		const email = get(patient_data, 'metadata.email', '') || patient_data.email;
 		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
 		const dob = get(patient_data, 'metadata.date_of_birth', '') || patient_data.date_of_birth;
@@ -155,6 +155,7 @@ const CertificatesAaron = ({
 	}
 	// used as the form submit function, super lazy but works a charm
 	function proceed() {
+		const kit = approvedTestKits.find(({ name }) => name === kitProvider);
 		const body = {
 			forename,
 			surname,
@@ -164,7 +165,9 @@ const CertificatesAaron = ({
 			security_checked,
 			result,
 			passport_number: passportId,
-			kit_provider: kitProvider,
+			kit_provider: kit.name,
+			specificity: kit.specificity,
+			sensitivity: kit.sensitivity,
 			reject_notes: '',
 			...(isResultRejected && { reject_notes: isOtherOption ? reject_notes : reasonForRejected }),
 		};
@@ -186,13 +189,6 @@ const CertificatesAaron = ({
 		}
 
 		if (isValid(body)) {
-			if (kitProvider === 'Roche') {
-				body.specificity = '99.68%';
-				body.sensitivity = '96.52%';
-			} else {
-				body.specificity = '99.6%';
-				body.sensitivity = '97.1%';
-			}
 			setIsLoading(true);
 			await bookingService
 				.sendResult(token, appointmentId, body, patientId)
@@ -367,8 +363,9 @@ const CertificatesAaron = ({
 							value={kitProvider}
 							required
 						>
-							<MenuItem value='Roche'>Roche Test Kit</MenuItem>
-							<MenuItem value='Flowflex'>Flowflex Kit</MenuItem>
+							{approvedTestKits.map(({ name }, indx) => (
+								<MenuItem key={indx} value={name}>{name}</MenuItem>
+							))}
 						</Select>
 					</FormControl>
 				</div>

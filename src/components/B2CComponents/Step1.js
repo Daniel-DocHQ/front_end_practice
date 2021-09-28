@@ -95,38 +95,36 @@ const Step1 = ({ isPharmacy }) => {
 				</h4>
 			)}
 			{!isPCR && (
-				<>
-					<div className='row'>
-						<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
-							<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-								Where are you travelling from?
-							</h4>
-							<Field name={city.name}>
-								{({ field, meta, form }) => (
-									<Autocomplete
-										{...field}
-										options={cityTimezones.cityMapping}
-										getOptionLabel={({city, country}) => city ? `${city}, ${country}` : ''}
-										style={{ width: 300 }}
-										onChange={(event, newValue) => {
-											form.setFieldValue(city.name, newValue);
-											if (!!newValue && !!newValue.timezone) {
-												form.setFieldValue('timezone', newValue.timezone);
-											}
-										}}
-										renderInput={(params) => <Input
-											{...params}
-											{...city}
-											error={!!meta.error}
-											touched={meta.touched}
-											helperText={(meta.error && meta.touched) && meta.error}
-										/>}
-									/>
-								)}
-							</Field>
-						</div>
+				<div className='row'>
+					<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
+						<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+							Where are you travelling from?
+						</h4>
+						<Field name={city.name}>
+							{({ field, meta, form }) => (
+								<Autocomplete
+									{...field}
+									options={cityTimezones.cityMapping}
+									getOptionLabel={({city, country}) => city ? `${city}, ${country}` : ''}
+									style={{ width: 300 }}
+									onChange={(event, newValue) => {
+										form.setFieldValue(city.name, newValue);
+										if (!!newValue && !!newValue.timezone) {
+											form.setFieldValue('timezone', newValue.timezone);
+										}
+									}}
+									renderInput={(params) => <Input
+										{...params}
+										{...city}
+										error={!!meta.error}
+										touched={meta.touched}
+										helperText={(meta.error && meta.touched) && meta.error}
+									/>}
+								/>
+							)}
+						</Field>
 					</div>
-				</>
+				</div>
 			)}
 			<div className='no-margin col'>
 				<ThemeProvider theme={pickerTheme}>

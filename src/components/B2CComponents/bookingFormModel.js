@@ -37,8 +37,17 @@ const bookingFormModel = {
         vaccineTypeName: '',
         vaccineType: '',
         purchaseCode: '',
+        selectedKit: {},
     },
     formField: {
+        selectedKit: {
+            name: 'selectedKit',
+            label: 'Select Approved Kit',
+            id: 'selectedKit',
+            type: 'text',
+            placeholder: 'Select Approved Kit',
+            required: true,
+        },
         fillWithBookingUser: {
             name: 'fillWithBookingUser',
             label: 'Fill with passenger details',

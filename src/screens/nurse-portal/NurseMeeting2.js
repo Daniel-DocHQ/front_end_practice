@@ -40,6 +40,7 @@ import copyToClipboard from '../../helpers/copyToClipboard';
 import VonageVoiceCall from '../../components/VoiceCall/VonageVoiceCall';
 import useVonageApp from '../../helpers/hooks/useVonageApp';
 import '../../assets/css/NurseMeeting.scss';
+import adminService from '../../services/adminService';
 
 const TEST_TYPES = {
 	pcr: 'PCR',
@@ -61,7 +62,27 @@ const NurseMeeting2 = ({
 }) => {
 	const token = useToken();
 	const [videoCallToken, setVideoCallToken] = useState();
-	const [kitProvider, setKitProvider] = useState();
+	const [kitProvider, setKitProvider] = useState('Roche COVID-19 Ag Test');
+	const [approvedTestKits, setApprovedTestKits] = useState([]);
+
+	const getApprovedProducts = async () => {
+        await adminService.getApprovedProducts()
+            .then(result => {
+                if (result.success && result.kits) {
+					setApprovedTestKits([...result.kits].sort(({ name: nameA }, { name: nameB }) => nameA < nameB ? -1 : nameA > nameB ? 1 : 0))
+                } else {
+					setApprovedTestKits([]);
+                   	console.log(result.error);
+                }
+            }).catch((error) => {
+                console.log(error.error)
+                setApprovedTestKits([]);
+            });
+    };
+
+	useEffect(() => {
+		getApprovedProducts();
+	}, []);
 
 	return (
 		<AppointmentContextProvider token={token} appointmentId={appointmentId}>
@@ -85,10 +106,14 @@ const NurseMeeting2 = ({
 						kitProvider={kitProvider}
 						isJoined={!!videoCallToken}
 						setKitProvider={setKitProvider}
+						approvedTestKits={approvedTestKits}
 					/>
 				</div>
 			</div>
-			<CertificatesContainer kitProvider={kitProvider} />
+			<CertificatesContainer
+				kitProvider={kitProvider}
+				approvedTestKits={approvedTestKits}
+			/>
 		</AppointmentContextProvider>
 	);
 };
@@ -100,6 +125,7 @@ const TabContainer = ({
 	isJoined,
 	kitProvider,
 	setKitProvider,
+	approvedTestKits,
 }) => {
 	const {
 		type,
@@ -166,6 +192,7 @@ const TabContainer = ({
 						appointmentId={appointmentId}
 						kitProvider={kitProvider}
 						setKitProvider={setKitProvider}
+						approvedTestKits={approvedTestKits}
 					/>
 				)}
 			</div>
@@ -587,7 +614,7 @@ const SubmitPatientResult = ({
 									id='kit-id'
 									value={kitId}
 									placeholder='Eg: 20P456632'
-									onChange={setKitId}
+									onChange={(value) => setKitId(value.toUpperCase())}
 									helperText={(!!kitId && kitId.replace(/[0-9]/g,"").length > 1) && 'Kit ID usually contains only one letter. Please double check your kit ID if you have entered "O" letter instead of zero.'}
 									disabled={kitIdModifyMode}
 									required
@@ -1244,6 +1271,7 @@ const AppointmentActions = ({
 	appointmentId,
 	kitProvider,
 	setKitProvider,
+	approvedTestKits,
 }) => {
 	const {
 		isCaptureDisabled,
@@ -1255,6 +1283,7 @@ const AppointmentActions = ({
 	const [notesStatus, setNotesStatus] = useState();
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
+	const patientKitProvider = get(patient, 'selected_kit.name') || kitProvider;
 
 	useEffect(() => {
 		if (notesStatus && notesStatus.severity === 'success') {
@@ -1262,6 +1291,10 @@ const AppointmentActions = ({
 			return () => clearTimeout(timer);
 		}
 	  }, [notesStatus]);
+
+	  useEffect(() => {
+		setKitProvider(patientKitProvider);
+	  }, []);
 
 	return (
 		<div className='tab-container'>
@@ -1339,8 +1372,9 @@ const AppointmentActions = ({
 									value={kitProvider}
 									required
 								>
-									<MenuItem value='Roche'>Roche Test Kit</MenuItem>
-									<MenuItem value='Flowflex'>Flowflex Kit</MenuItem>
+								{approvedTestKits.map((item, indx) => (
+									<MenuItem key={indx} value={item.name}>{item.name}</MenuItem>
+								))}
 								</Select>
 							</FormControl>
 						</Grid>
@@ -1376,8 +1410,9 @@ const AppointmentActions = ({
 	);
 };
 
-const CertificatesContainer = ({ kitProvider }) => {
+const CertificatesContainer = ({ kitProvider, approvedTestKits }) => {
 	const { displayCertificates, booking_users, img, appointmentId, uploadImage } = useContext(AppointmentContext);
+
 	return displayCertificates ? (
 		<div
 			style={{
@@ -1390,6 +1425,7 @@ const CertificatesContainer = ({ kitProvider }) => {
 			{!!booking_users &&
 				booking_users.map((user, i) => <CertificatesAaron
 					key={i}
+					approvedTestKits={approvedTestKits}
 					uploadImage={uploadImage}
 					appointmentId={appointmentId}
 					img={get(img, `[${i}]`, '')}

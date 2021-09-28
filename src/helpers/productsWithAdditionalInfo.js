@@ -16,6 +16,11 @@ export const VIDEO_CONSULTATION_PRODUCTS = [
     'RECONSULT-PCR', // PCR
 ];
 
+export const CERTIFICATE_PRODUCTS = [
+	'CONSULT-ANT', // Antigen
+    'CONSULT-PCR', // PCR
+];
+
 export const FIT_TO_FLY_PCR = 'SYN-UK-PCR-SNS-001';
 export const FIT_TO_FLY_ANTIGEN = 'FLX-UK-ANT-SNS-001';
 export const PRE_DEPARTURE_ANTIGEN = 'FLX-UK-ANT-SNS-002';
