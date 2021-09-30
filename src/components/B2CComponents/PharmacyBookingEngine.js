@@ -191,10 +191,6 @@ const PharmacyBookingEngine = () => {
                             transportType,
                             landingDate,
                             landingTime,
-                            vaccineNumber,
-                            vaccineStatus,
-                            vaccineType,
-                            vaccineTypeName,
                             city,
                             purchaseCode,
                             tocAccept,
@@ -273,6 +269,10 @@ const PharmacyBookingEngine = () => {
                                 passportNumber,
                                 phone,
                                 countryCode,
+                                vaccineNumber,
+                                vaccineStatus,
+                                vaccineType,
+                                vaccineTypeName,
                                 ...rest
                             } = passengers[item];
                             return ({
@@ -286,6 +286,13 @@ const PharmacyBookingEngine = () => {
                                 phone: `${countryCode.label}${phone.trim()}`,
                                 country: 'GB',
                                 toc_accept: tocAccept,
+                                ...(isAdditionalProduct ? {
+                                    vaccine_information: {
+                                        number: vaccineNumber,
+                                        status: vaccineStatus,
+                                        type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
+                                    }
+                                } : {}),
                                 metadata: {
                                     source: 'Pharmacy',
                                     short_token: shortTokenValue,
@@ -331,9 +338,6 @@ const PharmacyBookingEngine = () => {
                                     )).format(),
                                 transport_number: transportNumber,
                                 transport_type: transportType,
-                                vaccine_number: vaccineNumber,
-                                vaccine_status: vaccineStatus,
-                                vaccine_type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
                             },
                         };
                         await bookingService

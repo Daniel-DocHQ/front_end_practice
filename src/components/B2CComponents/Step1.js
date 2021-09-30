@@ -29,10 +29,6 @@ import './BookingEngine.scss';
 const Step1 = ({ isPharmacy }) => {
 	const {
 		formField: {
-			vaccineType,
-			vaccineNumber,
-			vaccineTypeName,
-			vaccineStatus,
 			transportType,
 			transportNumber,
 			travelDate,
@@ -47,8 +43,6 @@ const Step1 = ({ isPharmacy }) => {
 			testType: {
 				sku,
 			},
-			vaccineStatus: vaccineStatusValue,
-			vaccineType: vaccineTypeValue,
 			transportType: transportTypeValue,
 		},
 		touched,
@@ -286,143 +280,6 @@ const Step1 = ({ isPharmacy }) => {
 							</Field>
 						</div>
 					</div>
-					<div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
-						<div style={{ maxWidth: '40%', minWidth: '320px' }}>
-							<Field
-								name={vaccineStatus.name}
-								validate={(value) => (!value) ? `Select ${vaccineStatus.label}` : undefined}
-							>
-								{({ field, form, meta }) => (
-									<FormControl
-										error={!!meta.error}
-										touched={meta.touched}
-										helperText={(meta.error && meta.touched) && meta.error}
-										component='fieldset'
-										style={{ width: '100%' }}
-									>
-										<FormLabel required={vaccineStatus.required} component='legend'>
-											{vaccineStatus.label}
-										</FormLabel>
-										<RadioGroup
-											aria-label={vaccineStatus.name}
-											name={vaccineStatus.name}
-											value={field.value}
-											style={{ display: 'inline' }}
-											{...vaccineStatus}
-											{...field}
-											onChange={(({ target: { value } }) => {
-												form.setFieldValue(field.name, value);
-											})}
-										>
-											<FormControlLabel value='yes' control={<Radio />} label="Yes" />
-											<FormControlLabel value='no' control={<Radio />} label="No" />
-										</RadioGroup>
-										<FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
-									</FormControl>
-								)}
-							</Field>
-						</div>
-					</div>
-					{vaccineStatusValue === 'yes' && (
-						<>
-							<div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
-								<div style={{ maxWidth: '40%', minWidth: '320px' }}>
-									<Field
-										name={vaccineType.name}
-										validate={(value) => (!value) ? `Select ${vaccineType.label}` : undefined}
-									>
-										{({ field, form, meta }) => (
-											<FormControl
-												component='fieldset'
-												style={{ width: '100%' }}
-												error={!!meta.error && meta.touched}
-												touched={meta.touched}
-												helperText={(meta.error && meta.touched) && meta.error}
-											>
-												<FormLabel required={vaccineType.required} component='legend'>
-													{vaccineType.label}
-												</FormLabel>
-												<RadioGroup
-													aria-label={vaccineType.name}
-													name={vaccineType.name}
-													value={field.value}
-													{...vaccineType}
-													{...field}
-													onChange={(({ target: { value } }) => {
-														form.setFieldValue(field.name, value);
-													})}
-												>
-													<FormControlLabel value="Pfizer" control={<Radio />} label="Pfizer/BioNTech" />
-													<FormControlLabel value="Astrazeneca" control={<Radio />} label="Oxford/AstraZeneca" />
-													<FormControlLabel value="Moderna" control={<Radio />} label="Moderna" />
-													<FormControlLabel value="Johnson & Johnson" control={<Radio />} label="Johnson & Johnson" />
-													<FormControlLabel value="Sputnik" control={<Radio />} label="Sputnik V" />
-													<FormControlLabel value="Other" control={<Radio />} label="Other" />
-												</RadioGroup>
-												<FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
-											</FormControl>
-										)}
-									</Field>
-								</div>
-							</div>
-							{vaccineTypeValue === 'Other' && (
-								<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
-									<div style={{ maxWidth: '40%', minWidth: '300px' }}>
-										<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-											{vaccineTypeName.label}
-										</h4>
-										<Field name={vaccineTypeName.name} validate={(value) => (!value && touched.vaccineTypeName) ? 'Input Vaccine Name' : undefined}>
-											{({ field, meta }) => (
-												<Input
-													error={!!meta.error}
-													touched={meta.touched}
-													helperText={(meta.error && meta.touched) && meta.error}
-													{...vaccineTypeName}
-													{...field}
-												/>
-											)}
-										</Field>
-									</div>
-								</div>
-							)}
-							<div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
-								<div style={{ maxWidth: '40%', minWidth: '320px' }}>
-									<Field
-										name={vaccineNumber.name}
-										validate={(value) => (!value) ? `Select ${vaccineNumber.label}` : undefined}
-									>
-										{({ field, form, meta }) => (
-											<FormControl
-												error={!!meta.error && meta.touched}
-												touched={meta.touched}
-												helperText={(meta.error && meta.touched) && meta.error}
-												component='fieldset'
-												style={{ width: '100%' }}
-											>
-												<FormLabel required={vaccineNumber.required} component='legend'>
-													{vaccineNumber.label}
-												</FormLabel>
-												<RadioGroup
-													aria-label={vaccineNumber.name}
-													name={vaccineNumber.name}
-													value={field.value}
-													{...vaccineNumber}
-													{...field}
-													onChange={(({ target: { value } }) => {
-														form.setFieldValue(field.name, value);
-													})}
-												>
-													<FormControlLabel value="One dose of vaccine" control={<Radio />} label="One dose of vaccine" />
-													<FormControlLabel value="Two doses of vaccine" control={<Radio />} label="Two doses of vaccine" />
-												</RadioGroup>
-												<FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
-											</FormControl>
-										)}
-									</Field>
-								</div>
-							</div>
-						</>
-					)}
 				</>
 			)}
 		</React.Fragment>

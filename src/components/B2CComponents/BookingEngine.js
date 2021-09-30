@@ -68,6 +68,10 @@ const BookingEngine = () => {
 		sex: '',
 		passportNumber: '',
 		passportNumberConfirmation: '',
+		vaccineStatus: '',
+        vaccineNumber: '',
+        vaccineTypeName: '',
+        vaccineType: '',
 	};
 
 	function handleBack() {
@@ -243,10 +247,6 @@ const BookingEngine = () => {
 											transportType,
 											landingDate,
 											landingTime,
-											vaccineNumber,
-											vaccineStatus,
-											vaccineType,
-											vaccineTypeName,
 											city,
 											tocAccept,
 											selectedKit,
@@ -261,6 +261,10 @@ const BookingEngine = () => {
 												passportNumber,
 												phone,
 												countryCode,
+												vaccineNumber,
+												vaccineStatus,
+												vaccineType,
+												vaccineTypeName,
 												...rest
 											} = passengers[item];
 											return ({
@@ -280,6 +284,13 @@ const BookingEngine = () => {
 												bundle_id: parseInt(bundle_id),
 												product_id: parseInt(id),
 												selected_kit: selectedKit,
+												...(isAdditionalProduct ? {
+													vaccine_information: {
+														number: vaccineNumber,
+														status: vaccineStatus,
+														type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
+													}
+												} : {}),
 												metadata: {
 													source,
 													product_id: parseInt(id),
@@ -326,9 +337,6 @@ const BookingEngine = () => {
 													)).format(),
 												transport_number: transportNumber,
 												transport_type: transportType,
-												vaccine_number: vaccineNumber,
-												vaccine_status: vaccineStatus,
-												vaccine_type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
 											},
 										};
 										await bookingService

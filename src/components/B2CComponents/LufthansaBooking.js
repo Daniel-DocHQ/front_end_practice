@@ -164,10 +164,6 @@ const LufthansaBooking = () => {
                             transportType,
                             landingDate,
                             landingTime,
-                            vaccineNumber,
-                            vaccineStatus,
-                            vaccineType,
-                            vaccineTypeName,
                             city,
                             purchaseCode,
                             tocAccept,
@@ -246,6 +242,10 @@ const LufthansaBooking = () => {
                                 passportNumber,
                                 phone,
                                 countryCode,
+                                vaccineNumber,
+                                vaccineStatus,
+                                vaccineType,
+                                vaccineTypeName,
                                 ...rest
                             } = passengers[item];
                             return ({
@@ -259,6 +259,13 @@ const LufthansaBooking = () => {
                                 product_id: parseInt(id),
                                 bundle_id: parseInt(bundle_id),
                                 toc_accept: tocAccept,
+                                ...(isAdditionalProduct ? {
+                                    vaccine_information: {
+                                        number: vaccineNumber,
+                                        status: vaccineStatus,
+                                        type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
+                                    }
+                                } : {}),
                                 metadata: {
                                     source: 'euro',
                                     discount: purchaseCode[item],
@@ -313,9 +320,6 @@ const LufthansaBooking = () => {
                                     )).format(),
                                 transport_number: transportNumber,
                                 transport_type: transportType,
-                                vaccine_number: vaccineNumber,
-                                vaccine_status: vaccineStatus,
-                                vaccine_type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
                             },
                         };
                         await bookingService

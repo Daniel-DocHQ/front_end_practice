@@ -29,6 +29,7 @@ import bookingFormModel from './bookingFormModel';
 import COUNTRIES from '../../helpers/countries';
 import datePickerTheme from '../../helpers/datePickerTheme';
 import preventCopyPaste from '../../helpers/preventCopyPaste';
+import { PRODUCTS_WITH_ADDITIONAL_INFO } from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
 const passportIdImage = require('../../assets/images/passportId.webp');
@@ -64,11 +65,19 @@ const Step3 = ({
         values: {
             passengers,
             bookingUsers,
+            testType: {
+				sku,
+			},
         },
         touched,
     } = useFormikContext();
+    const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
     const {
         formField: {
+            vaccineType,
+			vaccineNumber,
+			vaccineTypeName,
+			vaccineStatus,
             firstName,
             lastName,
             email,
@@ -484,6 +493,149 @@ const Step3 = ({
                         Please make sure you have entered the correct Passport/National identity card number.<br />
                         After you submit this number, you will not be able to change it at any point.
                     </p>
+                </>
+            )}
+            {isBundle && (
+                <>
+                    <div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
+                        <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                            <Field
+                                name={`passengers[${activePassenger}].${vaccineStatus.name}`}
+                                validate={(value) => (!value && get(touched, `passengers[${activePassenger}].${vaccineStatus.name}`, false)) ? `Select ${vaccineStatus.label}` : undefined}
+                            >
+                                {({ field, form, meta }) => (
+                                    <FormControl
+                                        error={!!meta.error}
+                                        touched={meta.touched}
+                                        helperText={(meta.error && meta.touched) && meta.error}
+                                        component='fieldset'
+                                        style={{ width: '100%' }}
+                                    >
+                                        <FormLabel required={vaccineStatus.required} component='legend'>
+                                            {vaccineStatus.label}
+                                        </FormLabel>
+                                        <RadioGroup
+                                            aria-label={vaccineStatus.name}
+                                            name={vaccineStatus.name}
+                                            value={field.value}
+                                            style={{ display: 'inline' }}
+                                            {...vaccineStatus}
+                                            {...field}
+                                            onChange={(({ target: { value } }) => {
+                                                form.setFieldValue(field.name, value);
+                                            })}
+                                        >
+                                            <FormControlLabel value='yes' control={<Radio />} label="Yes" />
+                                            <FormControlLabel value='no' control={<Radio />} label="No" />
+                                        </RadioGroup>
+                                        <FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
+                                    </FormControl>
+                                )}
+                            </Field>
+                        </div>
+                    </div>
+                    {passengers[activePassenger].vaccineStatus === 'yes' && (
+                        <>
+                            <div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
+                                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                                    <Field
+                                        name={`passengers[${activePassenger}].${vaccineType.name}`}
+                                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].${vaccineType.name}`, false)) ? `Select ${vaccineType.label}` : undefined}
+                                    >
+                                        {({ field, form, meta }) => (
+                                            <FormControl
+                                                component='fieldset'
+                                                style={{ width: '100%' }}
+                                                error={!!meta.error && meta.touched}
+                                                touched={meta.touched}
+                                                helperText={(meta.error && meta.touched) && meta.error}
+                                            >
+                                                <FormLabel required={vaccineType.required} component='legend'>
+                                                    {vaccineType.label}
+                                                </FormLabel>
+                                                <RadioGroup
+                                                    aria-label={vaccineType.name}
+                                                    name={vaccineType.name}
+                                                    value={field.value}
+                                                    {...vaccineType}
+                                                    {...field}
+                                                    onChange={(({ target: { value } }) => {
+                                                        form.setFieldValue(field.name, value);
+                                                    })}
+                                                >
+                                                    <FormControlLabel value="Pfizer" control={<Radio />} label="Pfizer/BioNTech" />
+                                                    <FormControlLabel value="Astrazeneca" control={<Radio />} label="Oxford/AstraZeneca" />
+                                                    <FormControlLabel value="Moderna" control={<Radio />} label="Moderna" />
+                                                    <FormControlLabel value="Johnson & Johnson" control={<Radio />} label="Johnson & Johnson" />
+                                                    <FormControlLabel value="Sputnik" control={<Radio />} label="Sputnik V" />
+                                                    <FormControlLabel value="Other" control={<Radio />} label="Other" />
+                                                </RadioGroup>
+                                                <FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
+                                            </FormControl>
+                                        )}
+                                    </Field>
+                                </div>
+                            </div>
+                            {passengers[activePassenger].vaccineType === 'Other' && (
+                                <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                                    <div style={{ maxWidth: '40%', minWidth: '300px' }}>
+                                        <h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+                                            {vaccineTypeName.label}
+                                        </h4>
+                                        <Field
+                                            name={`passengers[${activePassenger}].${vaccineTypeName.name}`}
+                                            validate={(value) => (!value && get(touched, `passengers[${activePassenger}].vaccineTypeName`, false)) ? 'Input Vaccine Name' : undefined}>
+                                            {({ field, meta }) => (
+                                                <Input
+                                                    error={!!meta.error}
+                                                    touched={meta.touched}
+                                                    helperText={(meta.error && meta.touched) && meta.error}
+                                                    {...vaccineTypeName}
+                                                    {...field}
+                                                />
+                                            )}
+                                        </Field>
+                                    </div>
+                                </div>
+                            )}
+                            <div className='row' style={{ flexWrap: 'wrap', width: '60%', paddingTop: 20 }}>
+                                <div style={{ maxWidth: '40%', minWidth: '320px' }}>
+                                    <Field
+                                        name={`passengers[${activePassenger}].${vaccineNumber.name}`}
+                                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].${vaccineNumber.name}`, false)) ? `Select ${vaccineNumber.label}` : undefined}
+                                    >
+                                        {({ field, form, meta }) => (
+                                            <FormControl
+                                                error={!!meta.error && meta.touched}
+                                                touched={meta.touched}
+                                                helperText={(meta.error && meta.touched) && meta.error}
+                                                component='fieldset'
+                                                style={{ width: '100%' }}
+                                            >
+                                                <FormLabel required={vaccineNumber.required} component='legend'>
+                                                    {vaccineNumber.label}
+                                                </FormLabel>
+                                                <RadioGroup
+                                                    aria-label={vaccineNumber.name}
+                                                    name={vaccineNumber.name}
+                                                    value={field.value}
+                                                    {...vaccineNumber}
+                                                    {...field}
+                                                    onChange={(({ target: { value } }) => {
+                                                        form.setFieldValue(field.name, value);
+                                                    })}
+                                                >
+                                                    <FormControlLabel value="One dose of vaccine" control={<Radio />} label="One dose of vaccine" />
+                                                    <FormControlLabel value="Two doses of vaccine" control={<Radio />} label="Two doses of vaccine" />
+                                                </RadioGroup>
+                                                <FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
+                                            </FormControl>
+                                        )}
+                                    </Field>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </>
             )}
             {(isPharmacy && activePassenger === 0) && (
