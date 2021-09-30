@@ -38,6 +38,7 @@ const BookingEngineForm = ({
             items={items}
             isEdit={isEdit}
             isPharmacy={isPharmacy}
+            isBookingSkip={isBookingSkip}
             bookingUsersQuantity={bookingUsersQuantity}
         />,
         <Step1 />,
@@ -76,7 +77,7 @@ const BookingEngineForm = ({
                         <StepContent>
                             {stepsComponents[activeStep]}
                             <div className='row flex-start'>
-                                {(activeStep > 0 && steps[activeStep] !== 'Booking Confirmation') && (
+                                {(activeStep > 0 && !steps[activeStep].includes('Confirmation')) && (
                                     <DocButton
                                         flat
                                         text='Back'
@@ -88,7 +89,7 @@ const BookingEngineForm = ({
                                 {isLastStep ? (
                                     <>
                                         <LinkButton
-                                            text={isBookingSkip ? 'Register your kit' : 'Back to Home'}
+                                            text={isBookingSkip ? 'Activate your kit' : 'Back to Home'}
                                             color='green'
                                             linkSrc={isBookingSkip ? `/register-kit/${createdAppointmentId}` : isEdit ? '/customer_services/dashboard' : process.env.REACT_APP_WEBSITE_LINK}
                                         />

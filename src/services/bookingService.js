@@ -300,11 +300,11 @@ function deleteBooking(slot_id, auth_token) {
 	});
 }
 
-function claimAppointment(auth_token, slot_id) {
+function claimAppointment(auth_token, slot_id, roleId = null) {
 	return new Promise((resolve, reject) => {
 		if (auth_token && slot_id) {
 			axios({
-				url: `${baseURL}/${slot_id}/claim`,
+				url: `${baseURL}/${slot_id}/claim${!!roleId ? `/assigneeRoleId=${roleId}` : '' }`,
 				method: 'POST',
 				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },
 				data: {

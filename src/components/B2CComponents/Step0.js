@@ -22,6 +22,7 @@ const Step0 = ({
     isEdit,
     items = [],
     isPharmacy,
+    isBookingSkip,
     bookingUsersQuantity,
 }) => {
     const [approvedProducts, setApprovedProducts] = useState([]);
@@ -207,7 +208,9 @@ const Step0 = ({
             )}
             <h4 style={{ margin: 0, paddingTop: 20 }}>
                 How many people will take the test?<br />
-                <span className="red-bold-text">Please note that all people have to be in one single location</span>
+                {!isBookingSkip && (
+                    <span className="red-bold-text">Please note that all people have to be in one single location</span>
+                )}
             </h4>
             <div className='row space-between' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>

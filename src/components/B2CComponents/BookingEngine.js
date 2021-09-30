@@ -24,7 +24,7 @@ import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
 import useChat from '../../helpers/hooks/useChat';
 
-const BookingEngine = () => {
+const BookingEngine = ({ skipBooking = false }) => {
 	const params = getURLParams(window.location.href);
 	const short_token = params['short_token'];
 	const [orderInfo, setOrderInfo] = useState();
@@ -40,7 +40,7 @@ const BookingEngine = () => {
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
 	const usersPhoneNumber = get(orderInfo, 'shipping_address.telephone', '');
 	const orderId = get(orderInfo, 'id', 0);
-	const isBookingSkip = items.find(({ sku }) => (sku === 'FACE-2-FACE-HOTEL' || sku === 'SELF-SWABBING'));
+	const isBookingSkip = items.find(({ sku }) => (sku === 'FACE-2-FACE-HOTEL' || sku === 'SELF-SWABBING')) || skipBooking;
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = useValidationSchema(activeStep, isBookingSkip);
@@ -53,7 +53,7 @@ const BookingEngine = () => {
 		...(isBookingSkip ? [] : ['Booking Appointment']),
 		'Passenger Details',
 		'Summary',
-		'Booking Confirmation',
+		...(isBookingSkip ? ['Confirmation'] : ['Booking Confirmation']),
 	];
 
 	const passengerInitialValues = {

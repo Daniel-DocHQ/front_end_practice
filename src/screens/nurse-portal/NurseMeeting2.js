@@ -22,11 +22,12 @@ import {
 import { differenceInYears } from 'date-fns/esm';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { Alert } from '@material-ui/lab';
+import { Alert, Autocomplete } from '@material-ui/lab';
 import { format, differenceInMinutes } from 'date-fns';
 import { ToastsStore } from 'react-toasts';
 import { useToken } from '../../context/AuthContext';
 import Box from '../../components/TwilioVideo/Box';
+import Input from '../../components/FormComponents/Input';
 import MaterialCheckbox from '../../components/FormComponents/MaterialCheckbox/MaterialCheckbox';
 import CertificatesAaron from '../../components/Certificates/CertificatesAaron';
 import DocButton from '../../components/DocButton/DocButton';
@@ -39,8 +40,8 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import copyToClipboard from '../../helpers/copyToClipboard';
 import VonageVoiceCall from '../../components/VoiceCall/VonageVoiceCall';
 import useVonageApp from '../../helpers/hooks/useVonageApp';
-import '../../assets/css/NurseMeeting.scss';
 import adminService from '../../services/adminService';
+import '../../assets/css/NurseMeeting.scss';
 
 const TEST_TYPES = {
 	pcr: 'PCR',
@@ -62,14 +63,15 @@ const NurseMeeting2 = ({
 }) => {
 	const token = useToken();
 	const [videoCallToken, setVideoCallToken] = useState();
-	const [kitProvider, setKitProvider] = useState('Roche COVID-19 Ag Test');
+	const [kitProvider, setKitProvider] = useState();
 	const [approvedTestKits, setApprovedTestKits] = useState([]);
 
 	const getApprovedProducts = async () => {
         await adminService.getApprovedProducts()
             .then(result => {
                 if (result.success && result.kits) {
-					setApprovedTestKits([...result.kits].sort(({ name: nameA }, { name: nameB }) => nameA < nameB ? -1 : nameA > nameB ? 1 : 0))
+					setApprovedTestKits([...result.kits].sort(({ name: nameA }, { name: nameB }) => nameA < nameB ? -1 : nameA > nameB ? 1 : 0));
+					setKitProvider(result.kits.find(({ name }) => name === 'Roche COVID-19 Ag Test'));
                 } else {
 					setApprovedTestKits([]);
                    	console.log(result.error);
@@ -1283,7 +1285,7 @@ const AppointmentActions = ({
 	const [notesStatus, setNotesStatus] = useState();
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
-	const patientKitProvider = get(patient, 'selected_kit.name') || kitProvider;
+	const patientKitProvider = get(patient, 'selected_kit') || kitProvider;
 
 	useEffect(() => {
 		if (notesStatus && notesStatus.severity === 'success') {
@@ -1295,6 +1297,7 @@ const AppointmentActions = ({
 	  useEffect(() => {
 		setKitProvider(patientKitProvider);
 	  }, []);
+	  console.log(kitProvider);
 
 	return (
 		<div className='tab-container'>
@@ -1363,20 +1366,23 @@ const AppointmentActions = ({
 							<p className='no-margin'><b>Kit Provider</b></p>
 						</Grid>
 						<Grid item xs={6}>
-							<FormControl variant='filled' style={{ width: '100%' }}>
-								<InputLabel id='kit-provider-label'>Kit Provider</InputLabel>
-								<Select
-									labelId='kit-provider-label'
-									id='kit-provider'
-									onChange={e => setKitProvider(e.target.value)}
-									value={kitProvider}
+							<Autocomplete
+								required
+								disableClearable
+								value={kitProvider}
+								options={approvedTestKits}
+								getOptionLabel={({ name }) => name}
+								onChange={(event, newValue) => setKitProvider(newValue)}
+								renderInput={(params) => <Input
 									required
-								>
-								{approvedTestKits.map((item, indx) => (
-									<MenuItem key={indx} value={item.name}>{item.name}</MenuItem>
-								))}
-								</Select>
-							</FormControl>
+									name="selectedKit"
+									label="Kit Provider"
+									id="selectedKit"
+									type="text"
+									placeholder="Kit Provider"
+									{...params}
+								/>}
+							/>
 						</Grid>
 					</Grid>
 					{!!isCaptureDisabled && isCaptureDisabled && (

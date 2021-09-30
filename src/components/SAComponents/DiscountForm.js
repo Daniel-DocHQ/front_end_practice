@@ -34,7 +34,7 @@ const DiscountForm = ({
                     <Grid item xs={6}>
                         <div className="row">
                             <Field name="code" >
-                                {({ field, meta }) => (
+                                {({ field, form, meta }) => (
                                     <Input
                                         error={!!meta.error && meta.touched}
                                         touched={meta.touched}
@@ -45,6 +45,7 @@ const DiscountForm = ({
                                         variant="standard"
                                         type="text"
                                         {...field}
+                                        onChange={(({ target: { value } }) => form.setFieldValue(field.name, value.toUpperCase()))}
                                     />
                                 )}
                             </Field>

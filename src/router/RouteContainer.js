@@ -28,6 +28,7 @@ import NurseMeeting2 from '../screens/nurse-portal/NurseMeeting2';
 import Purchase from '../screens/b2c-portal/Purchase';
 import B2CDashboard from '../screens/b2c-portal/B2CDashboard';
 import B2CBookAppointment from '../screens/b2c-portal/B2CBookAppointment';
+import B2CRegisterTrip from '../screens/b2c-portal/B2CRegisterTrip';
 import PharmacyActivateTestKit from '../screens/b2c-portal/PharmacyActivateTestKit';
 import EditBookedAppointment from '../screens/cs-portal/EditBookedAppointment';
 import LiveDashboard from '../screens/nurse-portal/LiveDashboard';
@@ -269,6 +270,11 @@ const RouteHandler = () => {
 			<Route path='/b2c/book-appointment'>
 				<Layout title='Book Appointment'>
 					<B2CBookAppointment />
+				</Layout>
+			</Route>
+			<Route path='/b2c/register-trip'>
+				<Layout title='Register your trip'>
+					<B2CRegisterTrip />
 				</Layout>
 			</Route>
 			{/* Shift Manager Routes */}
