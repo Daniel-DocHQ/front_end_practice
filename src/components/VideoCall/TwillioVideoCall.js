@@ -240,8 +240,8 @@ function TwillioVideoCall({
 					>
 						{(isAppointmentUnfinished && isNurse) && (
 							<>
-								<p>Warning!</p>
-								<p>You have not submitted results for all patients.</p>
+								<p className="red-bold-text">Warning!</p>
+								<p className="red-bold-text">You have not submitted results for all patients.</p>
 							</>
 						)}
 						<p>Are you sure you want to end this call?</p>

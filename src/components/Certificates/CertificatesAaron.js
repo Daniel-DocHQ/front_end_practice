@@ -418,6 +418,11 @@ const CertificatesAaron = ({
 								</Select>
 							</FormControl>
 						</div>
+						{(attemptedSubmit && !reasonForRejected) && (
+							<div className='row no-margin'>
+								<p className='error'>You must select rejection reason</p>
+							</div>
+						)}
 						{isOtherOption && (
 							<>
 								<div className='row space-between'>
@@ -432,6 +437,11 @@ const CertificatesAaron = ({
 									onChange={setReject_notes}
 									placeholder='Add Reason for Rejection. This notes will be sent to the client'
 								/>
+								{(attemptedSubmit && !reject_notes) && (
+									<div className='row no-margin'>
+										<p className='error'>You must enter rejection notes</p>
+									</div>
+								)}
 							</>
 						)}
 					</React.Fragment>
