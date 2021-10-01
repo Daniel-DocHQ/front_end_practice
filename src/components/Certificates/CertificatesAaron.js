@@ -356,6 +356,7 @@ const CertificatesAaron = ({
 				<div className='row'>
 					<Autocomplete
 						required
+						style={{ width: '100%' }}
 						disableClearable
 						value={kitProvider}
 						options={approvedTestKits}
