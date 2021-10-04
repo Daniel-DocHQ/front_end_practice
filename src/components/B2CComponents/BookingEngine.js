@@ -103,10 +103,10 @@ const BookingEngine = ({ skipBooking = false }) => {
 						let preparedItems = [...data.order];
 						const consultation = preparedItems.find(({ sku }) => sku === ANTIGEN_CONSULTATION);
 						const certificates = preparedItems.find(({ sku }) => sku === CERTIFICATE_PRODUCT);
-						if (!!consultation && !!consultation.id && !!certificates && !!certificates.id) {
+						preparedItems = preparedItems.filter(({ sku }) => sku !== CERTIFICATE_PRODUCT);
+						if (!!consultation && !!consultation.id && !!certificates && !!certificates.id && consultation.quantity > 0) {
 							setCertificateProduct(certificates);
 							consultation.quantity = consultation.quantity + certificates.quantity;
-							preparedItems = preparedItems.filter(({ sku }) => sku !== CERTIFICATE_PRODUCT);
 						}
 						setItems(preparedItems);
 					}
