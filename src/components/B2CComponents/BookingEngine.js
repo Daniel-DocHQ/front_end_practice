@@ -19,6 +19,8 @@ import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import {
 	PRODUCTS_WITH_ADDITIONAL_INFO,
 	FIT_TO_FLY_PCR,
+	ANTIGEN_CONSULTATION,
+	CERTIFICATE_PRODUCT,
 } from '../../helpers/productsWithAdditionalInfo';
 import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
@@ -31,6 +33,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 	const [timerStart, setTimerStart] = useState();
 	const [appointments, setAppointments] = useState([]);
 	const [items, setItems] = useState([]);
+	const [certificateProduct, setCertificateProduct] = useState();
 	const [status, setStatus] = useState(); // { severity, message }
 	const [isLoading, setLoading] = useState(false);
 	const [activeStep, setActiveStep] = useState(0);
@@ -96,7 +99,16 @@ const BookingEngine = ({ skipBooking = false }) => {
 			await adminService.getOrderProducts(short_token)
 				.then(data => {
 					if (data.success) {
-						setItems(data.order);
+						let preparedItems = [...data.order];
+						const consultation = preparedItems.find(({ sku }) => sku === ANTIGEN_CONSULTATION);
+						const certificates = preparedItems.find(({ sku }) => sku === CERTIFICATE_PRODUCT);
+
+						if (!!consultation.id && !!certificates.id) {
+							setCertificateProduct(certificates);
+							consultation.quantity = consultation.quantity + certificates.quantity;
+							preparedItems = preparedItems.filter(({ sku }) => sku !== CERTIFICATE_PRODUCT);
+						}
+						setItems(preparedItems);
 					}
 				})
 				.catch(err => ToastsStore.error('Error fetching order information'))
@@ -253,7 +265,8 @@ const BookingEngine = ({ skipBooking = false }) => {
 										} = values;
 										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 										const isPCR = sku === FIT_TO_FLY_PCR;
-										const booking_users = Array.from(Array(passengers.length).keys()).map((item) => {
+										const isAntigenConsultation = sku === ANTIGEN_CONSULTATION;
+										const booking_users = Array.from(Array(passengers.length).keys()).map((item, indx) => {
 											const {
 												firstName,
 												lastName,
@@ -267,6 +280,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 												vaccineTypeName,
 												...rest
 											} = passengers[item];
+											const isCertificateProduct = isAntigenConsultation && indx > 0 && !!certificateProduct;
 											return ({
 												first_name: firstName,
 												last_name: lastName,
@@ -281,8 +295,8 @@ const BookingEngine = ({ skipBooking = false }) => {
 												country: 'GB',
 												toc_accept: tocAccept,
 												locality: town,
-												bundle_id: parseInt(bundle_id),
-												product_id: parseInt(id),
+												bundle_id: isCertificateProduct ? parseInt(certificateProduct.bundle_id) : parseInt(bundle_id),
+												product_id: isCertificateProduct ? parseInt(certificateProduct.id) : parseInt(id),
 												selected_kit: selectedKit,
 												...(isAdditionalProduct ? {
 													vaccine_information: {
@@ -293,7 +307,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 												} : {}),
 												metadata: {
 													source,
-													product_id: parseInt(id),
+													product_id: isCertificateProduct ? parseInt(certificateProduct.id) : parseInt(id),
 													short_token,
 													order_id: parseInt(orderId),
 													passport_number: passportNumber,
