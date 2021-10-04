@@ -102,8 +102,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 						let preparedItems = [...data.order];
 						const consultation = preparedItems.find(({ sku }) => sku === ANTIGEN_CONSULTATION);
 						const certificates = preparedItems.find(({ sku }) => sku === CERTIFICATE_PRODUCT);
-
-						if (!!consultation.id && !!certificates.id) {
+						if (!!consultation && !!consultation.id && !!certificates && !!certificates.id) {
 							setCertificateProduct(certificates);
 							consultation.quantity = consultation.quantity + certificates.quantity;
 							preparedItems = preparedItems.filter(({ sku }) => sku !== CERTIFICATE_PRODUCT);

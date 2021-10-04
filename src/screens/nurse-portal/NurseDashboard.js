@@ -20,6 +20,8 @@ const NurseDashboard = props => {
 	const [isLoading, setIsLoading] = useState(false);
 	let history = useHistory();
 
+	const makeReload = () => setReload(!reload);
+
 	const logoutUser = () => {
 		logout();
 		history.push('/login');
@@ -27,28 +29,13 @@ const NurseDashboard = props => {
 	if (props.isAuthenticated !== true && props.role !== 'practitioner') {
 		logoutUser();
 	}
-	function claimAppointment(slot_id) {
-		bookingService
-			.claimAppointment(props.token, slot_id)
-			.then(result => {
-				if (result.success) {
-					ToastsStore.success('Appointment claimed');
-					setReload(!reload);
-					// getFutureAppointments();
-					// getClaimableAppointments();
-				} else {
-					ToastsStore.error(result.error);
-				}
-			})
-			.catch((err) => ToastsStore.error(err.error));
-	}
 	function releaseAppointment(slot_id) {
 		bookingService
 			.releaseAppointment(props.token, slot_id)
 			.then(result => {
 				if (result.success) {
 					ToastsStore.success('Appointment released');
-					setReload(!reload);
+					makeReload();
 					// getFutureAppointments();
 					// getClaimableAppointments();
 				} else {
@@ -98,7 +85,7 @@ const NurseDashboard = props => {
 				<ClaimableAppointments
 					token={props.token}
 					reload={reload}
-					claimAppointment={claimAppointment}
+					makeReload={makeReload}
 				/>
 			</Grid>
 			<Grid item xs={12} style={{ paddingTop: 20 }}>

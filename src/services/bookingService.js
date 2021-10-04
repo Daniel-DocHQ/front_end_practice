@@ -301,11 +301,11 @@ function deleteBooking(slot_id, auth_token) {
 	});
 }
 
-function claimAppointment(auth_token, slot_id, roleId = null) {
+function claimAppointment(auth_token, slot_id, roleId = null, override = false) {
 	return new Promise((resolve, reject) => {
 		if (auth_token && slot_id) {
 			axios({
-				url: `${baseURL}/${slot_id}/claim${!!roleId ? `/assigneeRoleId=${roleId}` : '' }`,
+				url: `${baseURL}/${slot_id}/claim?${!!roleId ? `&assigneeRoleId=${roleId}` : '' }${!!override ? `override=${override}` : '' }`,
 				method: 'POST',
 				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },
 				data: {
@@ -318,15 +318,16 @@ function claimAppointment(auth_token, slot_id, roleId = null) {
 					} else {
 						reject({
 							success: false,
+							status: response.status,
 							error: response.data.error,
 						});
 					}
 				})
 				.catch(err => {
 					if (err && err.response && err.response.data && err.response.data.message) {
-						reject({ success: false, error: err.response.data.message, });
+						reject({ success: false, error: err.response.data.message, status: err.response.status });
 					} else {
-						reject({ success: false, error: 'Something went wrong, please try again.' });
+						reject({ status: err.response.status, success: false, error: 'Something went wrong, please try again.' });
 					}
 				});
 		} else if (typeof auth_token === 'undefined') {
