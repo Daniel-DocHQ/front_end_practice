@@ -21,6 +21,7 @@ import {
 	FIT_TO_FLY_PCR,
 	ANTIGEN_CONSULTATION,
 	CERTIFICATE_PRODUCT,
+	VACCINES,
 } from '../../helpers/productsWithAdditionalInfo';
 import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
@@ -161,9 +162,11 @@ const BookingEngine = ({ skipBooking = false }) => {
 											metadata: {
 												passport_number,
 											},
+											vaccine_information,
 										}) => {
 											const parsedPhoneNumber = parsePhoneNumber(phone);
-
+											const vaccineType = get(vaccine_information, 'type', '');
+											const isntOtherVaccineType = VACCINES.includes(vaccineType);
 											return ({
 												...passengerInitialValues,
 												firstName: first_name,
@@ -175,6 +178,10 @@ const BookingEngine = ({ skipBooking = false }) => {
 												ethnicity,
 												sex,
 												email,
+												vaccineStatus: get(vaccine_information, 'status', ''),
+												vaccineNumber: get(vaccine_information, 'number', ''),
+												vaccineType: isntOtherVaccineType ? vaccineType : 'Other',
+												vaccineTypeName: isntOtherVaccineType ? '' : vaccineType,
 											});
 										}),
 									} : {

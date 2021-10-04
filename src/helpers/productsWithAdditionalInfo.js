@@ -16,6 +16,14 @@ export const VIDEO_CONSULTATION_PRODUCTS = [
     'RECONSULT-PCR', // PCR
 ];
 
+export const VACCINES = [
+	"Pfizer",
+	"Astrazeneca",
+	"Moderna",
+	"Johnson & Johnson",
+	"Sputnik",
+];
+
 export const ANTIGEN_CONSULTATION = 'CONSULT-ANT';
 export const PCR_CONSULTATION = 'CONSULT-PCR';
 export const CERTIFICATE_PRODUCT = 'COVID-TEST-CERTIFICATE';

@@ -517,7 +517,6 @@ const Step3 = ({
                                         <RadioGroup
                                             aria-label={vaccineStatus.name}
                                             name={vaccineStatus.name}
-                                            value={field.value}
                                             style={{ display: 'inline' }}
                                             {...vaccineStatus}
                                             {...field}
@@ -525,8 +524,8 @@ const Step3 = ({
                                                 form.setFieldValue(field.name, value);
                                             })}
                                         >
-                                            <FormControlLabel value='yes' control={<Radio />} label="Yes" />
-                                            <FormControlLabel value='no' control={<Radio />} label="No" />
+                                            <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                                            <FormControlLabel value="no" control={<Radio />} label="No" />
                                         </RadioGroup>
                                         <FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
                                     </FormControl>
