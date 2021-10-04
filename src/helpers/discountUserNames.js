@@ -4,6 +4,7 @@ const DISCOUNT_USER_NAMES = [
 	'Madhur Srivastava',
 	'Janet Webber',
     'Graham Carter',
+	'Ben Huffey',
 ];
 
 export default DISCOUNT_USER_NAMES;
