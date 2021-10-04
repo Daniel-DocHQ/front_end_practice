@@ -38,7 +38,7 @@ const styles = {
 };
 
 const UploadedPositiveResultsTable = ({ results = [], back, token }) => (
-    <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+   <div className='doc-container tables' style={{ height: '100%', justifyContent: 'unset' }}>
         <div style={styles.mainContainer}>
             <h2>Uploaded/Positive Results</h2>
             <DocButton

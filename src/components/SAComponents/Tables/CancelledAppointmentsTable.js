@@ -57,7 +57,7 @@ const CancelledAppointmentsTable = ({ appointments = [] }) => {
     const { filteredAppointments, filter, setFilter } = useDateFilter(appointments);
 
 	return (
-		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+		<div className='doc-container tables' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
 				<h2>Cancelled Appointments</h2>
 				<ButtonGroup aria-label="outlined primary button group">

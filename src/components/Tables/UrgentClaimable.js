@@ -37,7 +37,7 @@ const styles = {
 
 const UrgentClaimable = ({ claimAppointment, appointments }) => {
 	return (
-		<div className='doc-container' style={{ justifyContent: 'unset' }}>
+		<div className='doc-container tables' style={{ justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
 				<h2>Urgent Claimable</h2>
 			</div>

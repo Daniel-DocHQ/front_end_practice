@@ -1,60 +1,77 @@
-tr.MuiTableRow-root:nth-of-type(even) {
-	background-color: var(--doc-light-grey);
-}
-.MuiTableCell-root {
-	padding: 8px !important;
-}
-.noneBackground {
-	background-color: unset !important;
-}
-.note-parent-container {
-	width: 100%;
-	.note-container {
-		background-color: var(--doc-white);
-		color: var(--doc-dark-grey);
-		padding: 5px;
-		margin-top: 10px;
-		margin-bottom: 10px;
-		&:nth-of-type(even) {
-			background-color: var(--doc-light-grey);
-		}
-		.note-date {
-			width: 100%;
-			text-align: right;
+.tables {
+	tr.MuiTableRow-root:nth-of-type(even) {
+		background-color: var(--doc-light-grey);
+	}
+	.MuiTableCell-root {
+		padding: 8px !important;
+	}
+	.noneBackground {
+		background-color: unset !important;
+	}
+	.note-parent-container {
+		width: 100%;
+		.note-container {
+			background-color: var(--doc-white);
+			color: var(--doc-dark-grey);
+			padding: 5px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			&:nth-of-type(even) {
+				background-color: var(--doc-light-grey);
+			}
+			.note-date {
+				width: 100%;
+				text-align: right;
+			}
 		}
 	}
-}
 
-.circle {
-	width: 14px;
-	height: 14px;
-	border-radius: 50%;
-	margin: auto;
-}
-.status-onHold, .status-waiting, .status-practitionerAttended, .status-yellow {
-	background-color: var(--doc-yellow);
-}
-.status-patientAttended, .status-offline, .status-patientLeft, .status-practitionerLeft {
-	background-color: var(--doc-pink);
-}
-.red-bold-text, .text-status-patientAttended, .text-status-practitionerLeft {
-	font-weight: 700 !important;
-	color: var(--doc-pink) !important;
-}
-.orange-bold-text {
-	font-weight: 700 !important;
-	color: var(--doc-yellow) !important;
-}
-.status-inProgress, .status-online {
-	background-color: var(--doc-green);
-}
-.text-status-online {
-	color: var(--doc-green) !important;
-}
-.upload-file-input {
-	height: unset;
-	text-align: center;
-	& input[type=file] {
-		display: none;
+	.circle {
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		margin: auto;
 	}
+	.status-onHold, .status-waiting, .status-practitionerAttended, .status-yellow {
+		background-color: var(--doc-yellow);
+	}
+	.status-patientAttended, .status-offline, .status-patientLeft, .status-practitionerLeft {
+		background-color: var(--doc-pink);
+	}
+	.red-bold-text, .text-status-patientAttended, .text-status-practitionerLeft {
+		font-weight: 700 !important;
+		color: var(--doc-pink) !important;
+	}
+	.orange-bold-text {
+		font-weight: 700 !important;
+		color: var(--doc-yellow) !important;
+	}
+	.status-inProgress, .status-online {
+		background-color: var(--doc-green);
+	}
+	.text-status-online {
+		color: var(--doc-green) !important;
+	}
+	.upload-file-input {
+		height: unset;
+		text-align: center;
+		& input[type=file] {
+			display: none;
+		}
+	}
+
+	@media only screen and (max-width: 950px) {
+        h2 {
+			font-size: 16px;
+		}
+		.MuiTableCell-root {
+			padding: 3px !important;
+		}
+		.MuiButton-outlined {
+			padding: 3px 9px;
+		}
+		.mobile-btn {
+			font-size: 10px;
+		}
+    }
 }

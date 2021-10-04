@@ -61,7 +61,7 @@ const ClaimableAppointments = ({ token, reload, claimAppointment }) => {
 	}, [reload]);
 
 	return (
-		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+		<div className='doc-container tables' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
 				<h2>Claimable Appointments</h2>
 				<DateFilter

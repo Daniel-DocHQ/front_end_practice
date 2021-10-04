@@ -53,7 +53,7 @@ const PastAppointmentsTable = ({
     });
 
 	return (
-		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+		<div className='doc-container tables' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
 				<h2>Past Appointments</h2>
 				<DateFilter

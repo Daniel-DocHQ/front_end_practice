@@ -36,7 +36,7 @@ const DiscountTable = ({ isUsed = false, discounts = [] }) => {
     const sortedDiscounts = discounts.sort(({ created_at: aStartTime }, { created_at: bStartTime }) => new Date(bStartTime * 1000).getTime() - new Date(aStartTime * 1000).getTime());
 
     return (
-        <div className='doc-container' style={{ justifyContent: 'unset' }}>
+       <div className='doc-container tables' style={{ justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
                 <h2>{isUsed && 'Used '}Discount List</h2>
             </div>

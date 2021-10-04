@@ -64,12 +64,12 @@ const Box = ({
 					).catch((err) => console.log(err))
 				} else setCookie('video-token', data.token);
 			}
-			if (isNurse && isHackLink) {
+			if (isNurse) {
 				await bookingService
-					.claimAppointment(token, appointmentId)
+					.joinAppointment(token, appointmentId)
 					.then(result => {
 						if (result.success) {
-							console.log('Appointment claimed')
+							console.log('Appointment joined')
 						} else {
 							console.log(result.error);
 						}

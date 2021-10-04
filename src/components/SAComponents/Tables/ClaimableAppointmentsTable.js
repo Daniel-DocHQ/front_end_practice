@@ -68,7 +68,7 @@ const ClaimableAppointmentsTable = ({ token, reload }) => {
 	}, [reload]);
 
 	return (
-		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+		<div className='doc-container tables' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
 				<div className='row no-margin' style={{ paddingBottom: 10, cursor: 'pointer' }} onClick={handleChange}>
 					<h2>Claimable Appointments</h2>

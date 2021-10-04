@@ -36,7 +36,7 @@ const styles = {
 };
 
 const CertificatesListTable = ({ certificates = [] }) => (
-    <div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+   <div className='doc-container tables' style={{ height: '100%', justifyContent: 'unset' }}>
         <div style={styles.mainContainer}>
             <h2>Certificates Lists</h2>
         </div>

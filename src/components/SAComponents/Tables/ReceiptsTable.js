@@ -33,7 +33,7 @@ const styles = {
 };
 
 const ReceiptsTable = ({ date, setDate, receipts = [], dropboxName }) => (
-    <div className='doc-container' style={{ justifyContent: 'unset' }}>
+   <div className='doc-container tables' style={{ justifyContent: 'unset' }}>
         <div style={styles.mainContainer}>
             <h2>{dropboxName}</h2>
             <DateFilter date={date} setDate={setDate} />

@@ -35,7 +35,7 @@ const styles = {
 };
 
 const LiveDoctorsTable = ({ doctors }) => (
-    <div className='doc-container' style={{ justifyContent: 'unset' }}>
+   <div className='doc-container tables' style={{ justifyContent: 'unset' }}>
         <div style={styles.mainContainer}>
             <h2>Live Doctors</h2>
         </div>

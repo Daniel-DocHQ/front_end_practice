@@ -69,7 +69,7 @@ const AppointmentTable = ({
 	}, [reload]);
 
 	return (
-		<div className='doc-container' style={{ height: '100%', justifyContent: 'unset' }}>
+		<div className='doc-container tables' style={{ height: '100%', justifyContent: 'unset' }}>
 			<div style={styles.mainContainer}>
 				<h2>Upcoming Appointments</h2>
 				<DateFilter

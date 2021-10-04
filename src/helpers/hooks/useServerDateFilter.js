@@ -151,6 +151,7 @@ export const DateFilter = ({
                         <Button
                             className={clsx(
                                 classes.btn,
+                                'mobile-btn',
                                 {[classes.activeBtn]: filter === 'last week'},
                             )}
                             onClick={() => {
@@ -164,6 +165,7 @@ export const DateFilter = ({
                         <Button
                             className={clsx(
                                 classes.btn,
+                                'mobile-btn',
                                 {[classes.activeBtn]: filter === 'yesterday'},
                             )}
                             onClick={() => {
@@ -179,6 +181,7 @@ export const DateFilter = ({
                 <Button
                     className={clsx(
                         classes.btn,
+                        'mobile-btn',
                         {[classes.activeBtn]: filter === 'today'},
                     )}
                     onClick={() => {
@@ -194,6 +197,7 @@ export const DateFilter = ({
                         <Button
                             className={clsx(
                                 classes.btn,
+                                'mobile-btn',
                                 {[classes.activeBtn]: filter === 'tomorrow'},
                             )}
                             onClick={() => {
@@ -207,6 +211,7 @@ export const DateFilter = ({
                         <Button
                             className={clsx(
                                 classes.btn,
+                                'mobile-btn',
                                 {[classes.activeBtn]: filter === 'week'},
                             )}
                             onClick={() => {
@@ -222,6 +227,7 @@ export const DateFilter = ({
                 <Button
                     className={clsx(
                         classes.btn,
+                        'mobile-btn',
                         {[classes.activeBtn]: filter === 'customize'},
                     )}
                     onClick={() => {

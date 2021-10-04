@@ -34,7 +34,7 @@ const styles = {
 };
 
 const PickupsTable = ({ date, setDate, dropboxes = [] }) => (
-    <div className='doc-container' style={{ justifyContent: 'unset' }}>
+   <div className='doc-container tables' style={{ justifyContent: 'unset' }}>
         <div style={styles.mainContainer}>
             <h2>Pickups Table</h2>
             <DateFilter date={date} setDate={setDate} />

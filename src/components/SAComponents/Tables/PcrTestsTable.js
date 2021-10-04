@@ -70,7 +70,7 @@ const PcrTestsTable = ({ results = [] }) => {
     };
 
     return (
-        <div className='doc-container' style={{ justifyContent: 'unset' }}>
+       <div className='doc-container tables' style={{ justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
                 <h2>PCR Tests Management</h2>
             </div>

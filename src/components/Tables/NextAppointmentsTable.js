@@ -50,7 +50,7 @@ const NextAppointmentsTable = ({
     const filteredHoldAppointments = holdAppointments.filter(({ id }) => id !== appointmentId).sort(({ status_last_updated: aStartTime }, { status_last_updated: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime());
 
     return (
-        <div className='doc-container' style={{ justifyContent: 'unset' }}>
+       <div className='doc-container tables' style={{ justifyContent: 'unset' }}>
             {!!filteredHoldAppointments.length && (
                 <div style={{ paddingBottom: 70 }}>
                     <div style={styles.mainContainer}>
