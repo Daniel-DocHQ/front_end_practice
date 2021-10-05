@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	FormControl,
 	FormControlLabel,
@@ -30,6 +30,7 @@ import COUNTRIES from '../../helpers/countries';
 import datePickerTheme from '../../helpers/datePickerTheme';
 import preventCopyPaste from '../../helpers/preventCopyPaste';
 import { PRODUCTS_WITH_ADDITIONAL_INFO } from '../../helpers/productsWithAdditionalInfo';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import './BookingEngine.scss';
 
 const passportIdImage = require('../../assets/images/passportId.webp');
@@ -59,6 +60,7 @@ const Step3 = ({
     activePassenger,
     isLufthansa = false,
 }) => {
+    const [isLoading, setIsLoading] = useState(false);
 	const classes = useStyles();
     const pickerTheme = datePickerTheme();
     const {
@@ -102,6 +104,14 @@ const Step3 = ({
         window.scrollTo(0, 0);
     }, [activePassenger]);
 
+    if (isLoading) {
+		return (
+            <div className='row'>
+                <LoadingSpinner />
+            </div>
+		);
+	}
+
 	return (
 		<React.Fragment>
             {(!!bookingUsers.length && !isEdit) && (
@@ -124,7 +134,8 @@ const Step3 = ({
 								        name={fillWithBookingUser.name}
                                         {...fillWithBookingUser}
                                         {...field}
-                                        onChange={(({ target: { value } }) => {
+                                        onChange={async ({ target: { value } }) => {
+                                            setIsLoading(true);
                                             form.setFieldValue(field.name, value);
                                             const bookingUser = bookingUsers[parseInt(value)];
                                             const { phone } = bookingUser;
@@ -135,7 +146,10 @@ const Step3 = ({
 								                countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)) : defaultCountryCode,
                                                 fillWithBookingUser: value,
                                             });
-                                        })}
+                                            await setTimeout(() => {
+                                                setIsLoading(false);
+                                            }, 300);
+                                        }}
                                     >
                                         {bookingUsers.map(({ firstName, lastName }, indx) => (
                                             <FormControlLabel

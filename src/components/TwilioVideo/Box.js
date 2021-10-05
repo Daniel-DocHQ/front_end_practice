@@ -1,6 +1,7 @@
 import { get } from 'lodash';
 import { useCookies } from 'react-cookie';
-import React, { useCallback, useContext } from 'react';
+import { runPreflight } from 'twilio-video';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 import getURLParams from '../../helpers/getURLParams';
 import DocButton from '../DocButton/DocButton';
 import bookingService from '../../services/bookingService';
@@ -16,7 +17,6 @@ const Box = ({
 	token,
 	isNurse,
 	appointmentInfo = {},
-	isHackLink = false,
 	isEnglish = true,
 	updateImageData,
 	captureDisabled,
@@ -24,6 +24,7 @@ const Box = ({
 	setVideoCallToken,
 	hideVideoAppointment,
 }) => {
+	const [preflightCheckReport, setPreflightCheckReport] = useState();
 	const params = getURLParams(window.location.href);
 	const {
 		appointmentDetails,
@@ -83,6 +84,29 @@ const Box = ({
 		},
 		[params, isNurse],
 	);
+
+	useEffect(() => {
+		if (!!token) {
+			const preflightTest = runPreflight(videoCallToken);
+
+			preflightTest.on('progress', (progress) => {
+			console.log('preflight progress:', progress);
+			});
+
+			preflightTest.on('failed', (error) => {
+			console.error('preflight error:', error);
+			});
+
+			preflightTest.on('completed', (report) => {
+				console.log(report);
+				setPreflightCheckReport(report);
+				console.log("Test completed in " + report.testTiming.duration + " milliseconds.");
+				console.log(" It took " + report.networkTiming.connect?.duration + " milliseconds to connect");
+				console.log(" It took " + report.networkTiming.media?.duration + " milliseconds to receive media");
+			});
+		}
+	}, [videoCallToken]);
+
 	return videoCallToken ? (
 		<div className='vid-box'>
 			<TwillioVideoCall
