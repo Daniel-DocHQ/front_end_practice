@@ -147,7 +147,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 							<Formik
 								initialValues={{
 									...formInitialValues,
-									numberOfPeople: 1,
+									numberOfPeople: defaultTestType.sku === ANTIGEN_CONSULTATION ? defaultTestType.quantity : 1,
 									product: defaultTestType.id || 0,
 									testType: defaultTestType,
 									...(!!appointments.length ? {
@@ -271,8 +271,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 										} = values;
 										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 										const isPCR = sku === FIT_TO_FLY_PCR;
-										const isAntigenConsultation = sku === ANTIGEN_CONSULTATION;
-										const booking_users = Array.from(Array(passengers.length).keys()).map((item, indx) => {
+										const booking_users = Array.from(Array(passengers.length).keys()).map((item) => {
 											const {
 												firstName,
 												lastName,
@@ -286,7 +285,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 												vaccineTypeName,
 												...rest
 											} = passengers[item];
-											const isCertificateProduct = isAntigenConsultation && indx > 0 && !!certificateProduct;
+
 											return ({
 												first_name: firstName,
 												last_name: lastName,
@@ -301,8 +300,8 @@ const BookingEngine = ({ skipBooking = false }) => {
 												country: 'GB',
 												toc_accept: tocAccept,
 												locality: town,
-												bundle_id: isCertificateProduct ? parseInt(certificateProduct.bundle_id) : parseInt(bundle_id),
-												product_id: isCertificateProduct ? parseInt(certificateProduct.id) : parseInt(id),
+												bundle_id: parseInt(bundle_id),
+												product_id: parseInt(id),
 												selected_kit: selectedKit,
 												...(isAdditionalProduct ? {
 													vaccine_information: {
@@ -313,7 +312,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 												} : {}),
 												metadata: {
 													source,
-													product_id: isCertificateProduct ? parseInt(certificateProduct.id) : parseInt(id),
+													product_id: parseInt(id),
 													short_token,
 													order_id: parseInt(orderId),
 													passport_number: passportNumber,

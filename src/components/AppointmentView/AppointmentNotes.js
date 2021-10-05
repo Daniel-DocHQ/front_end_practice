@@ -1,16 +1,19 @@
 import React from 'react';
+import { format } from 'date-fns';
 import { Box, Typography } from '@material-ui/core';
 import { get } from 'lodash';
 import './AppointmentView.scss';
 
 const AppointmentNotes = ({ notes }) => {
+    const timezone = get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time');
     const filteredNotes = notes.filter(({ content }) => !content.includes('Status Change') && !content.includes('GDPR Terms Change:'));
-    const notesLength = filteredNotes.length;
 
-    return !!notesLength && (
+    return !!filteredNotes.length && (
         <Box>
            <Typography className="row-text"><b>Appointment Notes:</b></Typography>
-            <Typography>{get(filteredNotes, `${notesLength - 1}.content`, '')}</Typography>
+            {filteredNotes.map(({ created_at, content }) => (
+                <Typography>{content} - {format(new Date(created_at), 'dd/MM/yyyy pp')} ({timezone})</Typography>
+            ))}
         </Box>
     );
 };

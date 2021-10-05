@@ -83,8 +83,9 @@ const Step0 = ({
 
     useEffect(() => {
         const chosenProduct = items.find(({ id }) => id === productValue);
-        if (chosenProduct && CERTIFICATE_PRODUCTS.includes(chosenProduct.sku) && !approvedProducts.length) {
-            getApprovedProducts();
+        if (chosenProduct && CERTIFICATE_PRODUCTS.includes(chosenProduct.sku)) {
+            setFieldValue('numberOfPeople', chosenProduct.quantity);
+            if (!approvedProducts.length) getApprovedProducts();
         }
     }, [productValue]);
 
