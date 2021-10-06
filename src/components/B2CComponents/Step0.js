@@ -32,7 +32,6 @@ const Step0 = ({
             numberOfPeople,
             purchaseCode,
             selectedKit,
-            testType,
         }
     } = bookingFormModel;
     const {
@@ -40,10 +39,10 @@ const Step0 = ({
             product: productValue,
             purchaseCodeError,
             purchaseCode: purchaseCodeValue,
+            testType,
         },
         setFieldValue,
     } = useFormikContext();
-    const chosenProduct = items.find(({ id }) => id === productValue);
     const filteredItems = items.filter(({ type }) => type !== 'Virtual');
 
     const getApprovedProducts = async () => {
@@ -223,7 +222,7 @@ const Step0 = ({
                             <Input
                                 error={!!meta.error}
                                 touched={meta.touched}
-                                disabled={CERTIFICATE_PRODUCTS.includes(testType.sku)}
+                                disabled={!!testType && !!testType.sku ? CERTIFICATE_PRODUCTS.includes(testType.sku) : false}
                                 helperText={(meta.error && meta.touched) && meta.error}
                                 inputProps={{ min: 1 }}
                                 {...numberOfPeople}
