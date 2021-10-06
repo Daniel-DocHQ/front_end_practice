@@ -106,7 +106,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 						preparedItems = preparedItems.filter(({ sku }) => sku !== CERTIFICATE_PRODUCT);
 						if (!!consultation && !!consultation.id && !!certificates && !!certificates.id && consultation.quantity > 0) {
 							setCertificateProduct(certificates);
-							consultation.quantity = consultation.quantity + certificates.quantity;
+							consultation.quantity = certificates.quantity;
 						}
 						setItems(preparedItems);
 					}
