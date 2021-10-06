@@ -73,7 +73,6 @@ const NurseMeeting2 = ({
 					setKitProvider(result.kits.find(({ name }) => name === 'Roche COVID-19 Ag Test'));
                 } else {
 					setApprovedTestKits([]);
-                   	console.log(result.error);
                 }
             }).catch((error) => {
                 console.log(error.error)
@@ -1283,7 +1282,7 @@ const AppointmentActions = ({
 	const [notesStatus, setNotesStatus] = useState();
 	const [showNotes, setShowNotes] = useState(false);
 	const [notes, setNotes] = useState();
-	const patientKitProvider = get(patient, 'selected_kit') || kitProvider;
+	const patientKitProvider = get(patient, 'selected_kit') || get(patient, 'metadata.kit_provider') || kitProvider;
 
 	useEffect(() => {
 		if (notesStatus && notesStatus.severity === 'success') {
@@ -1293,9 +1292,11 @@ const AppointmentActions = ({
 	  }, [notesStatus]);
 
 	  useEffect(() => {
-		setKitProvider(patientKitProvider);
+		if (!!patientKitProvider && !!patientKitProvider.name)
+			setKitProvider(patientKitProvider)
+		else
+			setKitProvider(approvedTestKits.find(({ name }) => name === patientKitProvider))
 	  }, []);
-	  console.log(kitProvider);
 
 	return (
 		<div className='tab-container'>

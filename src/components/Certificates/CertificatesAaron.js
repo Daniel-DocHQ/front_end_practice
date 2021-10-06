@@ -94,10 +94,14 @@ const CertificatesAaron = ({
 	}, [status]);
 
 	useEffect(() => {
-		if (preselectedKidProvider) {
-			setKitProvider(preselectedKidProvider);
+		if (populated) {
+			if (!!preselectedKidProvider && !!preselectedKidProvider.name) {
+				setKitProvider(preselectedKidProvider);
+			} else {
+				setKitProvider(approvedTestKits.find(({ name }) => name === preselectedKidProvider));
+			}
 		}
-	}, [preselectedKidProvider])
+	}, [preselectedKidProvider]);
 	function updateErrors(isValid, field) {
 		// if valid and in array remove
 		if (isValid && existsInArray(errors, field)) {
@@ -117,7 +121,7 @@ const CertificatesAaron = ({
 		const firstName = get(patient_data, 'metadata.forename', '') || patient_data.first_name;
 		const lastName = get(patient_data, 'metadata.surname', '') || patient_data.last_name;
 		const result = get(patient_data, 'metadata.result', '');
-		const kitProvider = get(patient_data, 'selected_kit', '') || preselectedKidProvider;
+		const usersKitProvider = get(patient_data, 'selected_kit', '') || get(patient_data, 'metadata.kit_provider', '');
 		const email = get(patient_data, 'metadata.email', '') || patient_data.email;
 		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
 		const dob = get(patient_data, 'metadata.date_of_birth', '') || patient_data.date_of_birth;
@@ -135,8 +139,12 @@ const CertificatesAaron = ({
 		if (lastName) {
 			setSurname(lastName);
 		}
-		if (!!kitProvider) {
-			setKitProvider(kitProvider);
+		if (!!usersKitProvider && !!usersKitProvider.name) {
+			setKitProvider(usersKitProvider);
+		} else if (!!usersKitProvider) {
+			setKitProvider(approvedTestKits.find(({ name }) => name === usersKitProvider));
+		} else {
+			setKitProvider(preselectedKidProvider)
 		}
 		if (!!result) {
 			setResult(result);
@@ -233,7 +241,7 @@ const CertificatesAaron = ({
 				security_checked,
 				result: '',
 				passport_number: passportId,
-				kit_provider: kitProvider,
+				kit_provider: kitProvider.name,
 			};
 			updatePatientInfo(body);
 		}
