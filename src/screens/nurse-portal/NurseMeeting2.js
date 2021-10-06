@@ -70,7 +70,7 @@ const NurseMeeting2 = ({
             .then(result => {
                 if (result.success && result.kits) {
 					setApprovedTestKits([...result.kits].sort(({ name: nameA }, { name: nameB }) => nameA < nameB ? -1 : nameA > nameB ? 1 : 0));
-					setKitProvider(result.kits.find(({ name }) => name === 'Roche COVID-19 Ag Test'));
+					setKitProvider(result.kits.find(({ name }) => name === 'Flowflex ACON COVID-19 Ag Test'));
                 } else {
 					setApprovedTestKits([]);
                 }
@@ -1361,10 +1361,10 @@ const AppointmentActions = ({
 						justify="space-between"
 						style={{ padding: '30px 0'}}
 					>
-						<Grid item xs={4}>
+						<Grid item xs={12}>
 							<p className='no-margin'><b>Kit Provider</b></p>
 						</Grid>
-						<Grid item xs={8}>
+						<Grid item xs={12}>
 							<Autocomplete
 								required
 								fullWidth
