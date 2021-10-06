@@ -1361,12 +1361,13 @@ const AppointmentActions = ({
 						justify="space-between"
 						style={{ padding: '30px 0'}}
 					>
-						<Grid item xs={6}>
+						<Grid item xs={4}>
 							<p className='no-margin'><b>Kit Provider</b></p>
 						</Grid>
-						<Grid item xs={6}>
+						<Grid item xs={8}>
 							<Autocomplete
 								required
+								fullWidth
 								disableClearable
 								value={kitProvider}
 								options={approvedTestKits}

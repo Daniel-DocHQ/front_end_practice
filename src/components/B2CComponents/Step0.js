@@ -32,6 +32,7 @@ const Step0 = ({
             numberOfPeople,
             purchaseCode,
             selectedKit,
+            testType,
         }
     } = bookingFormModel;
     const {
@@ -42,7 +43,7 @@ const Step0 = ({
         },
         setFieldValue,
     } = useFormikContext();
-
+    const chosenProduct = items.find(({ id }) => id === productValue);
     const filteredItems = items.filter(({ type }) => type !== 'Virtual');
 
     const getApprovedProducts = async () => {
@@ -82,9 +83,8 @@ const Step0 = ({
     }, 300, [purchaseCodeValue]);
 
     useEffect(() => {
-        const chosenProduct = items.find(({ id }) => id === productValue);
-        if (chosenProduct && CERTIFICATE_PRODUCTS.includes(chosenProduct.sku)) {
-            setFieldValue('numberOfPeople', chosenProduct.quantity);
+        if (testType && CERTIFICATE_PRODUCTS.includes(testType.sku)) {
+            setFieldValue('numberOfPeople', testType.quantity);
             if (!approvedProducts.length) getApprovedProducts();
         }
     }, [productValue]);
@@ -223,6 +223,7 @@ const Step0 = ({
                             <Input
                                 error={!!meta.error}
                                 touched={meta.touched}
+                                disabled={CERTIFICATE_PRODUCTS.includes(testType.sku)}
                                 helperText={(meta.error && meta.touched) && meta.error}
                                 inputProps={{ min: 1 }}
                                 {...numberOfPeople}

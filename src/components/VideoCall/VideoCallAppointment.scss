@@ -16,6 +16,10 @@
 	text-align: center;
 	z-index: -2;
 }
+.red-bold-text {
+	font-weight: 700 !important;
+	color: var(--doc-pink) !important;
+}
 .make-call {
 	position: absolute;
 	top: 0px;
