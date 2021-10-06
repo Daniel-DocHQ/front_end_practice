@@ -7,7 +7,7 @@ import adminService from '../../services/adminService';
 import { AuthContext } from '../../context/AuthContext';
 import DiscountTable from '../../components/SAComponents/Tables/DiscountTable';
 import DiscountAppBar from '../../components/SAComponents/DiscountAppBar';
-import DISCOUNT_USER_NAMES from '../../helpers/discountUserNames';
+import { DISCOUNT_USER_NAMES } from '../../helpers/permissions';
 
 const SADiscountManagement = ({ token, role, isAuthenticated, user }) => {
     const userName = `${get(user, 'first_name', '')} ${get(user, 'last_name', '')}`;

@@ -236,7 +236,6 @@ const adminService = {
 							// price, delivery_date, appointment_date
 							resolve({ success: true, order_details: response.data });
 						} else {
-							// TODO needs better error handling
 							reject({
 								success: false,
 								error: response.data.message,
@@ -267,11 +266,123 @@ const adminService = {
 					} else {
 						reject({
 							success: false,
-							error: 'Unable to find products',
+							error: response.data.message,
 						});
 					}
 				})
-				.catch(() => reject({ success: false, error: 'Server Error Occurred' }));
+				.catch(errResp => {
+					if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+						reject({ success: false, error: errResp.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.'});
+					}
+				});
+		});
+	},
+	switchProductStatus(token, id) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.put(`${baseUrl}/v1/product/${id}/switch`, {}, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	deactivateAllProducts(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.put(`${baseUrl}/v1/product/switch`, {}, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if (response.status === 200) {
+							resolve({
+								success: true,
+							});
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	getProduct(id, token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined' || !id) {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/product/${id}`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								product: response.data,
+							});
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+							resolve({
+								success: true,
+								product: null,
+							});
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
 		});
 	},
 	getDropbox(id, token) {
@@ -294,13 +405,19 @@ const adminService = {
 								dropbox: null,
 							});
 						} else {
-							resolve({
+							reject({
 								success: false,
-								error: 'Unable to retrieve dropbox.',
+								error: response.data.message,
 							});
 						}
 					})
-					.catch(err => console.error(err));
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
 			} else {
 				// return unauthorized
 				resolve({ success: false, authenticated: false });
@@ -486,13 +603,19 @@ const adminService = {
 								dropboxes: [],
 							});
 						} else {
-							resolve({
+							reject({
 								success: false,
-								error: 'Unable to retrieve drop boxes.',
+								error: response.data.message,
 							});
 						}
 					})
-					.catch(err => console.error(err));
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
 			} else {
 				// return unauthorized
 				resolve({ success: false, authenticated: false });
@@ -514,17 +637,18 @@ const adminService = {
 								data: response.data,
 							});
 						} else {
-							resolve({
+							reject({
 								success: false,
-								error: 'Something went wrong',
+								error: response.data.message,
 							});
 						}
 					})
-					.catch(err => {
-						reject({
-							success: false,
-							error: 'Something went wrong',
-						});
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
 					});
 			} else {
 				// return unauthorized
@@ -546,17 +670,52 @@ const adminService = {
 								success: true,
 							});
 						} else {
-							resolve({
+							reject({
 								success: false,
-								error: 'Something went wrong',
+								error: response.data.message,
 							});
 						}
 					})
-					.catch(err => {
-						reject({
-							success: false,
-							error: 'Something went wrong',
-						});
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	editProduct(id, token, data) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.put(`${baseUrl}/v1/product/${id}`, data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
 					});
 			} else {
 				// return unauthorized
@@ -579,17 +738,51 @@ const adminService = {
 								data: response.data,
 							});
 						} else {
-							resolve({
+							reject({
 								success: false,
-								error: response.data.message || 'Something went wrong',
+								error: response.data.message,
 							});
 						}
 					})
-					.catch(err => {
-						if (err && err.response && err.response.data && err.response.data.message) {
-							reject({ success: false, error: err.response.data.message, });
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
 						} else {
-							reject({ success: false, error: 'Something went wrong, please try again.' });
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	createProduct(token, data) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.post(`${baseUrl}/v1/product`, data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
 						}
 					});
 			} else {
@@ -613,17 +806,17 @@ const adminService = {
 								data: response.data,
 							});
 						} else {
-							resolve({
+							reject({
 								success: false,
-								error: response.data.message || 'Something went wrong',
+								error: response.data.message,
 							});
 						}
 					})
-					.catch(err => {
-						if (err && err.response && err.response.data && err.response.data.message) {
-							reject({ success: false, error: err.response.data.message, });
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
 						} else {
-							reject({ success: false, error: 'Something went wrong, please try again.' });
+							reject({ success: false, error: 'Something went wrong, please try again.'});
 						}
 					});
 			} else {

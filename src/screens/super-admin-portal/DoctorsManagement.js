@@ -7,7 +7,6 @@ import PastAppointmentsTable from '../../components/SAComponents/Tables/PastAppo
 import UpcomingAppointmentsTable from '../../components/SAComponents/Tables/UpcomingAppointmentsTable';
 import AvailableAppointmentsTable from '../../components/SAComponents/Tables/AvailableAppointmentsTable';
 import bookingService from '../../services/bookingService';
-import ShiftOverview from '../../components/Tables/ShiftOverview';
 import AllAppointments from '../../components/SAComponents/Tables/AllAppointments';
 import AvailabilityPercentage from '../../components/SAComponents/Tables/AvailabilityPercentage';
 

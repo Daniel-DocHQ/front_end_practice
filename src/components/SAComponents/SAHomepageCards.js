@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import LinkButton from '../DocButton/LinkButton';
 import DocCard from '../DocCard/DocCard';
 import DocCardContainer from '../DocCard/DocCardContainer';
-import DISCOUNT_USER_NAMES from '../../helpers/discountUserNames';
+import { DISCOUNT_USER_NAMES, PRODUCT_USER_NAMES } from '../../helpers/permissions';
 
 const BookAppointmentIcon = require('../../assets/images/icons/homepage-book-appointment.svg');
 const apiUrl  = process.env.REACT_APP_API_URL;
@@ -111,6 +111,23 @@ const SAHomepageCards = ({ token, user }) => {
 					color='green'
 					text='View'
 					linkSrc='/super_admin/generate-discount'
+				/>
+			),
+		},
+		{
+			display: PRODUCT_USER_NAMES.includes(userName),
+			title: 'Product Management',
+			icon: <img src={BookAppointmentIcon} alt='Product Management' />,
+			content: (
+				<React.Fragment>
+					<p>Product Management</p>
+				</React.Fragment>
+			),
+			actions: (
+				<LinkButton
+					color='green'
+					text='View'
+					linkSrc='/super_admin/product-management'
 				/>
 			),
 		},

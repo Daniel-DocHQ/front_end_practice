@@ -60,6 +60,9 @@ import SmLiveDashboard from '../screens/sm-portal/SmLiveDashboard';
 import SmMyRooms from '../screens/sm-portal/SmMyRooms';
 import OFLBookingAppointment from '../screens/b2c-portal/OFLBookingAppointment';
 import NewDoctorsManagement from '../screens/super-admin-portal/NewDoctorsManagement';
+import ProductManagement from '../screens/super-admin-portal/ProductManagement';
+import SAProductView from '../screens/super-admin-portal/SAProductView';
+import SACreateProduct from '../screens/super-admin-portal/SACreateProduct';
 
 const { isSupported } = require('twilio-video');
 
@@ -305,6 +308,11 @@ const RouteHandler = () => {
 					<SADashboard {...ctx} />
 				</Layout>
 			</PrivateRoute>
+			<PrivateRoute path='/super_admin/product-management' requiredRole='super_admin'>
+				<Layout title='Product Management'>
+					<ProductManagement />
+				</Layout>
+			</PrivateRoute>
 			<PrivateRoute path='/super_admin/generate-discount' requiredRole='super_admin'>
 				<Layout title='Generate Discount'>
 					<GenerateDiscount />
@@ -325,6 +333,11 @@ const RouteHandler = () => {
 					<SADropboxList />
 				</Layout>
 			</PrivateRoute>
+			<PrivateRoute path='/super_admin/product/create' requiredRole='super_admin'>
+				<Layout title='Create Product'>
+					<SACreateProduct />
+				</Layout>
+			</PrivateRoute>
 			<PrivateRoute path='/super_admin/dropbox/create' requiredRole='super_admin'>
 				<Layout title='Create Dropbox'>
 					<SACreateDropbox />
@@ -333,6 +346,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/dropbox-receipts/:id' requiredRole='super_admin'>
 				<Layout title='Dropbox Receipts'>
 					<DropboxReceipts />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/product/:id' requiredRole='super_admin'>
+				<Layout title='Product View'>
+					<SAProductView />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/dropbox/:id' requiredRole='super_admin'>

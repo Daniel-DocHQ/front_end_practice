@@ -33,31 +33,26 @@ const styles = {
     }
 };
 
-const DropboxTable = ({ reload, token, dropboxes = [] }) => {
-    const sortedDropboxes = dropboxes
-        .filter((item) => !!item.facility && !!item.facility.city)
-        .sort(({ facility: { city: cityA } }, { facility: { city: cityB } }) => (
-            cityA < cityB ? -1 : cityA > cityB ? 1 : 0
+const ProductsTable = ({ reload, token, products = [] }) => {
+    const sortedProducts = products
+        .filter((item) => !!item.title)
+        .sort(({ title: titleA }, { title: titleB  }) => (
+            titleA < titleB ? -1 : titleA > titleB ? 1 : 0
         ));
 
     return (
        <div className='doc-container tables' style={{ justifyContent: 'unset' }}>
             <div style={styles.mainContainer}>
-                <h2>Dropbox Table</h2>
+                <h2>Product Table</h2>
                 <div>
                     <DocButton
                         color='pink'
                         text='Deactivate all'
                         style={{ margin: '0 10px' }}
                         onClick={async () => {
-                            await adminService.deactivateAllDropboxes(token);
+                            await adminService.deactivateAllProducts(token);
                             reload();
                         }}
-                    />
-                    <LinkButton
-                        text='Create Dropbox'
-                        color='pink'
-                        linkSrc="/super_admin/dropbox/create"
                     />
                 </div>
             </div>
@@ -69,61 +64,78 @@ const DropboxTable = ({ reload, token, dropboxes = [] }) => {
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <TableCell align='left' style={styles.tableText}>Dropbox name</TableCell>
-                            <TableCell align='center' style={styles.tableText}>City</TableCell>
+                            <TableCell align='left' style={styles.tableText}>Title</TableCell>
+                            <TableCell align='center' style={styles.tableText}>Price</TableCell>
+                            <TableCell align='center' style={styles.tableText}>SKU</TableCell>
+                            <TableCell align='center' style={styles.tableText}>Type</TableCell>
+                            <TableCell align='center' style={styles.tableText}>Tags</TableCell>
                             <TableCell align='right' style={styles.tableText}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {typeof sortedDropboxes !== 'undefined' &&
-                            typeof sortedDropboxes === 'object' &&
-                            sortedDropboxes.length > 0 &&
-                            sortedDropboxes.map(dropbox => (
-                                <TableRow key={dropbox.id}>
+                        {typeof sortedProducts !== 'undefined' &&
+                            typeof sortedProducts === 'object' &&
+                            sortedProducts.length > 0 &&
+                            sortedProducts.map(product => (
+                                <TableRow key={product.id}>
                                     <TableCell
                                         align='left'
                                         style={{ ...styles.tableText }}
                                     >
-                                        {get(dropbox, 'facility.name', '')}
+                                        {get(product, 'title', '')}
                                     </TableCell>
                                     <TableCell
                                         align='center'
                                         style={{ ...styles.tableText }}
                                     >
-                                        {get(dropbox, 'facility.city', '')}
+                                        £{get(product, 'price', '0')}
+                                    </TableCell>
+                                    <TableCell
+                                        align='center'
+                                        style={{ ...styles.tableText }}
+                                    >
+                                        {get(product, 'sku', '')}
+                                    </TableCell>
+                                    <TableCell
+                                        align='center'
+                                        style={{ ...styles.tableText }}
+                                    >
+                                        {get(product, 'type', '')}
+                                    </TableCell>
+                                    <TableCell
+                                        align='center'
+                                        style={{ ...styles.tableText }}
+                                    >
+                                        {get(product, 'tags', []).join(', ')}
                                     </TableCell>
                                     <TableCell align='right' style={{ ...styles.tableText }}>
                                         <div style={{ display: 'inline-flex' }}>
                                             <LinkButton
                                                 text='View'
                                                 color='green'
-                                                linkSrc={`/super_admin/dropbox/${dropbox.id}`}
+                                                linkSrc={`/super_admin/product/${product.id}`}
                                             />
                                             <div style={{ margin: '0 10px' }}>
                                                 <DocButton
-                                                    text={!!dropbox.active ? 'Deactivate' : 'Activate'}
-                                                    color={!!dropbox.active ? 'pink' : 'green'}
+                                                    text={!!product.active ? 'Deactivate' : 'Activate'}
+                                                    color={!!product.active ? 'pink' : 'green'}
                                                     onClick={async () => {
-                                                        await adminService.switchDropboxStatus(token, dropbox.id);
+                                                        await adminService.switchProductStatus(token, product.id);
                                                         reload();
                                                     }}
                                                 />
                                             </div>
-                                            <LinkButton
-                                                text='Download QR'
-                                                color='pink'
-                                                newTab
-                                                linkSrc={`${process.env.REACT_APP_API_URL}/v1/dropbox/${dropbox.id}/render`}
-                                            />
                                         </div>
                                     </TableCell>
                                 </TableRow>
                             ))}
-                        {typeof sortedDropboxes !== 'object' || sortedDropboxes.length === 0 ? (
+                        {typeof sortedProducts !== 'object' || sortedProducts.length === 0 ? (
                             <TableRow>
                                 <TableCell style={styles.tableText}>
-                                    <p>No dropboxes to display</p>
+                                    <p>No products to display</p>
                                 </TableCell>
+                                <TableCell />
+                                <TableCell />
                                 <TableCell />
                                 <TableCell />
                             </TableRow>
@@ -136,4 +148,4 @@ const DropboxTable = ({ reload, token, dropboxes = [] }) => {
 };
 
 
-export default DropboxTable;
+export default ProductsTable;
