@@ -12,6 +12,38 @@ import {
 } from '../../context/AppointmentContext';
 import './box-test.scss';
 import { jwtDecode } from '../../helpers/jwtDecode';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+
+const VideoUserWrapper = ({ isNurse = false, children }) => (
+	isNurse ? (
+		<div className='full-screen-nurse'>
+			<div
+				style={{
+					padding: '20px',
+					backgroundColor: 'var(--doc-white)',
+					borderRadius: '4px',
+				}}
+			>
+				{children}
+			</div>
+		</div>
+	) : (
+		<FullScreenOverlay
+			isVisible={true}
+			content={
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+					}}
+				>
+					{children}
+				</div>
+			}
+		/>
+	)
+);
 
 const Box = ({
 	token,
@@ -24,6 +56,7 @@ const Box = ({
 	setVideoCallToken,
 	hideVideoAppointment,
 }) => {
+	const [preflightLoading, setPreflightLoading] = useState(false);
 	const [preflightCheckReport, setPreflightCheckReport] = useState();
 	const params = getURLParams(window.location.href);
 	const {
@@ -36,6 +69,24 @@ const Box = ({
 	const practitionerVideoToken = get(appointmentDetails, 'user_video_token');
 	const practitionerDecode = !!practitionerVideoToken ? jwtDecode(practitionerVideoToken) : '';
 	const patientDecode = !!patientVideoToken ? jwtDecode(patientVideoToken) : '';
+	const sendInfoAboutJoin = async () => {
+		if (isNurse) {
+			await bookingService
+				.joinAppointment(token, appointmentId)
+				.then(result => {
+					if (result.success) {
+						console.log('Appointment joined')
+					} else {
+						console.log(result.error);
+					}
+				})
+				.catch((err) => console.log(err.error));
+		}
+		await bookingService
+			.updateAppointmentStatus(appointmentId, {
+				status: isNurse ? 'PRACTITIONER_ATTENDED' : 'PATIENT_ATTENDED',
+			}, token).catch((err) => console.log(err))
+	}
 	const handleSubmit = useCallback(
 		async event => {
 			event.preventDefault();
@@ -65,47 +116,57 @@ const Box = ({
 					).catch((err) => console.log(err))
 				} else setCookie('video-token', data.token);
 			}
-			if (isNurse) {
-				await bookingService
-					.joinAppointment(token, appointmentId)
-					.then(result => {
-						if (result.success) {
-							console.log('Appointment joined')
-						} else {
-							console.log(result.error);
-						}
-					})
-					.catch((err) => console.log(err.error));
-			}
-			await bookingService
-				.updateAppointmentStatus(appointmentId, {
-					status: isNurse ? 'PRACTITIONER_ATTENDED' : 'PATIENT_ATTENDED',
-				}, token).catch((err) => console.log(err))
 		},
 		[params, isNurse],
 	);
 
 	useEffect(() => {
-		if (!!token) {
+		if (!!videoCallToken) {
+			setPreflightLoading(true);
 			const preflightTest = runPreflight(videoCallToken);
 
 			preflightTest.on('progress', (progress) => {
-			console.log('preflight progress:', progress);
+				console.log('preflight progress:', progress);
 			});
 
-			preflightTest.on('failed', (error) => {
-			console.error('preflight error:', error);
+			preflightTest.on('failed', async (error) => {
+				await sendInfoAboutJoin();
+				setPreflightLoading(false);
+				console.error('preflight error:', error);
 			});
 
 			preflightTest.on('completed', (report) => {
-				console.log(report);
 				setPreflightCheckReport(report);
-				console.log("Test completed in " + report.testTiming.duration + " milliseconds.");
-				console.log(" It took " + report.networkTiming.connect?.duration + " milliseconds to connect");
-				console.log(" It took " + report.networkTiming.media?.duration + " milliseconds to receive media");
+				setTimeout(async () => {
+					await sendInfoAboutJoin();
+					setPreflightLoading(false);
+				}, 5000);
+
 			});
 		}
 	}, [videoCallToken]);
+
+	if (preflightLoading || !preflightCheckReport && videoCallToken) {
+		return !preflightCheckReport ? (
+			<VideoUserWrapper isNurse={isNurse}>
+				<div className="row center">
+					<LoadingSpinner />
+				</div>
+				<h2>Internet connection check</h2>
+			</VideoUserWrapper>
+
+		) : (
+			<VideoUserWrapper isNurse={isNurse}>
+				<h2>Internet connection check report</h2>
+				{preflightCheckReport.networkTiming.connect?.duration < 950 ? (
+					<h4 className="green-bold-text">You have good internet connection quality</h4>
+				) : (
+					<h4 className="yellow-bold-text">Your internet connection is low. Might be some issues during video appointment</h4>
+				)}
+				<h3>Joining to the appointment...</h3>
+			</VideoUserWrapper>
+		);
+	};
 
 	return videoCallToken ? (
 		<div className='vid-box'>
@@ -124,38 +185,19 @@ const Box = ({
 		<React.Fragment>
 			{!isNurse && <PatientHeader />}
 			{!isNurse ? (
-				<FullScreenOverlay
-					isVisible={true}
-					content={
-						<div
-							style={{
-								display: 'flex',
-								flexDirection: 'column',
-								alignItems: 'center',
-							}}
-						>
-							<h2>{isEnglish ? 'You are ready for your appointment' : 'Sie sind bereit für Ihren Termin.'}</h2>
-							<DocButton
-								text={isEnglish ? 'Join Appointment' : 'Nehmen Sie am Termin teil'}
-								onClick={handleSubmit}
-								color='green'
-							/>
-						</div>
-					}
-				/>
+				<VideoUserWrapper>
+					<h2>{isEnglish ? 'You are ready for your appointment' : 'Sie sind bereit für Ihren Termin.'}</h2>
+					<DocButton
+						text={isEnglish ? 'Join Appointment' : 'Nehmen Sie am Termin teil'}
+						onClick={handleSubmit}
+						color='green'
+					/>
+				</VideoUserWrapper>
 			) : (
-				<div className='full-screen-nurse'>
-					<div
-						style={{
-							padding: '20px',
-							backgroundColor: 'var(--doc-white)',
-							borderRadius: '4px',
-						}}
-					>
-						<h2>You are ready for your appointment</h2>
-						<DocButton text='Join Appointment' onClick={handleSubmit} color='green' />
-					</div>
-				</div>
+				<VideoUserWrapper isNurse>
+					<h2>You are ready for your appointment</h2>
+					<DocButton text='Join Appointment' onClick={handleSubmit} color='green' />
+				</VideoUserWrapper>
 			)}
 		</React.Fragment>
 	);
