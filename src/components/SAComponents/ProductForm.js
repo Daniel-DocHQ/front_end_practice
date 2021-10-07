@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Field } from 'formik';
 import { Box, Grid } from '@material-ui/core';
+import LinkButton from '../DocButton/LinkButton';
 import DocButton from '../DocButton/DocButton';
 import Input from '../FormComponents/Input';
 
@@ -15,7 +16,12 @@ const ProductForm = ({
             <Box p={8}>
                 <Grid container justify="space-between" alignItems="flex-end" spacing={10}>
                     {isView && (
-                        <div className='row flex-end'>
+                        <div className='row space-between'>
+                            <LinkButton
+                                text="Back to Product list"
+                                color="green"
+                                linkSrc="/super_admin/product-management"
+                            />
                             <DocButton
                                 text={isEdit ? 'Cancel' :'Edit'}
                                 color={isEdit ? 'pink' : 'green'}
@@ -34,6 +40,58 @@ const ProductForm = ({
                                         label="Product Title"
                                         id="title"
                                         required
+                                        disabled={!isEdit}
+                                        variant="standard"
+                                        type="text"
+                                        {...field}
+                                    />
+                                )}
+                            </Field>
+                        </div>
+                        <div className="row">
+                            <Field name="country" >
+                                {({ field, meta }) => (
+                                    <Input
+                                        error={!!meta.error}
+                                        touched={meta.touched}
+                                        helperText={(meta.error && meta.touched) && meta.error}
+                                        label="Country"
+                                        id="country"
+                                        required
+                                        disabled={!isEdit}
+                                        variant="standard"
+                                        type="text"
+                                        {...field}
+                                    />
+                                )}
+                            </Field>
+                        </div>
+                        <div className="row">
+                            <Field name="description" >
+                                {({ field, meta }) => (
+                                    <Input
+                                        error={!!meta.error}
+                                        touched={meta.touched}
+                                        helperText={(meta.error && meta.touched) && meta.error}
+                                        label="Product Description"
+                                        id="description"
+                                        disabled={!isEdit}
+                                        variant="standard"
+                                        type="text"
+                                        {...field}
+                                    />
+                                )}
+                            </Field>
+                        </div>
+                        <div className="row">
+                            <Field name="lab" >
+                                {({ field, meta }) => (
+                                    <Input
+                                        error={!!meta.error}
+                                        touched={meta.touched}
+                                        helperText={(meta.error && meta.touched) && meta.error}
+                                        label="Lab"
+                                        id="lab"
                                         disabled={!isEdit}
                                         variant="standard"
                                         type="text"

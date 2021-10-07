@@ -45,7 +45,7 @@ const ProductsTable = ({ reload, token, products = [] }) => {
             <div style={styles.mainContainer}>
                 <h2>Product Table</h2>
                 <div>
-                    <DocButton
+                    {/* <DocButton
                         color='pink'
                         text='Deactivate all'
                         style={{ margin: '0 10px' }}
@@ -53,7 +53,7 @@ const ProductsTable = ({ reload, token, products = [] }) => {
                             await adminService.deactivateAllProducts(token);
                             reload();
                         }}
-                    />
+                    /> */}
                 </div>
             </div>
             <TableContainer
@@ -120,7 +120,10 @@ const ProductsTable = ({ reload, token, products = [] }) => {
                                                     text={!!product.active ? 'Deactivate' : 'Activate'}
                                                     color={!!product.active ? 'pink' : 'green'}
                                                     onClick={async () => {
-                                                        await adminService.switchProductStatus(token, product.id);
+                                                        await adminService.switchProductStatus(token, product.id, {
+                                                            ...product,
+                                                            active: !!product.active ? 0 : 1,
+                                                        });
                                                         reload();
                                                     }}
                                                 />

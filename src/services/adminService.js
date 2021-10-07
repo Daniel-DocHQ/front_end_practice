@@ -257,7 +257,7 @@ const adminService = {
 	getProducts() {
 		return new Promise((resolve, reject) => {
 			axios({
-				url: `${baseUrl}/v1/product`,
+				url: `${baseUrl}/v1/product?include_inactive=true`,
 				method: 'GET',
 			})
 				.then(response => {
@@ -279,10 +279,10 @@ const adminService = {
 				});
 		});
 	},
-	switchProductStatus(token, id) {
+	switchProductStatus(token, id, value) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
-				axios.put(`${baseUrl}/v1/product/${id}/switch`, {}, {
+				axios.put(`${baseUrl}/v1/product/${id}`, value, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},

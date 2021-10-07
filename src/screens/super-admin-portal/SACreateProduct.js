@@ -32,10 +32,15 @@ const SACreateProduct = ({ token, role, isAuthenticated, user }) => {
                         sku: '',
                         price: '',
                         type: '',
+                        description: '',
+                        lab: '',
+                        country: 'UK',
+                        active: 0,
                     }}
                     validationSchema={Yup.object().shape({
                         title: Yup.string().required('Input title'),
                         sku: Yup.string().required('Input sku'),
+                        country: Yup.string().required('Input country'),
                         price: Yup.number().required('Input price'),
                         type: Yup.string().required('Input type'),
                     })}

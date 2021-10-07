@@ -65,7 +65,7 @@ const SAProductView = ({ token, role, isAuthenticated, user }) => {
 		<BigWhiteContainer>
 			<Formik
 				initialValues={{
-					...product
+					...product,
 				}}
 				validationSchema={Yup.object().shape({
 					title: Yup.string().required('Input title'),
