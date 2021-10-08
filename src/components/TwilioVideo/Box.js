@@ -48,12 +48,13 @@ const VideoUserWrapper = ({ isNurse = false, children }) => (
 const Box = ({
 	token,
 	isNurse,
-	appointmentInfo = {},
-	isEnglish = true,
-	updateImageData,
-	captureDisabled,
 	videoCallToken,
+	captureDisabled,
+	updateImageData,
+	isEnglish = true,
 	setVideoCallToken,
+	isHackLink = false,
+	appointmentInfo = {},
 	hideVideoAppointment,
 }) => {
 	const [preflightLoading, setPreflightLoading] = useState(false);
@@ -71,6 +72,16 @@ const Box = ({
 	const patientDecode = !!patientVideoToken ? jwtDecode(patientVideoToken) : '';
 	const sendInfoAboutJoin = async () => {
 		if (isNurse) {
+			if (isHackLink)
+				await bookingService
+					.claimAppointment(token, appointmentId, null, true)
+					.then(result => {
+						if (result.success) {
+							console.log('Appointment Claimed')
+						} else {
+							console.log(result.error);
+						}
+					}).catch((err) => console.log(err.error));
 			await bookingService
 				.joinAppointment(token, appointmentId)
 				.then(result => {
@@ -79,8 +90,7 @@ const Box = ({
 					} else {
 						console.log(result.error);
 					}
-				})
-				.catch((err) => console.log(err.error));
+				}).catch((err) => console.log(err.error));
 		}
 		await bookingService
 			.updateAppointmentStatus(appointmentId, {

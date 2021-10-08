@@ -58,6 +58,7 @@ const APPOINTMENT_TYPES = {
 const NurseMeeting2 = ({
 	isVideo,
 	appointmentId,
+	isHackLink = false,
 	hideVideoAppointment,
 }) => {
 	const token = useToken();
@@ -92,6 +93,7 @@ const NurseMeeting2 = ({
 						<Box
 							isNurse
 							token={token}
+							isHackLink={isHackLink}
 							updateImageData={console.log}
 							videoCallToken={videoCallToken}
 							setVideoCallToken={setVideoCallToken}

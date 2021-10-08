@@ -232,7 +232,7 @@ const RouteHandler = () => {
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/video-appointment'>
 				<Layout title='Video Appointment'>
-					<NurseMeeting2 isVideo {...ctx} />
+					<NurseMeeting2 isVideo isHackLink {...ctx} />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/practitioner/face-to-face-appointment' requiredRole='practitioner'>
