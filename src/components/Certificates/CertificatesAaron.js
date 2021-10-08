@@ -241,7 +241,7 @@ const CertificatesAaron = ({
 				security_checked,
 				result: '',
 				passport_number: passportId,
-				kit_provider: kitProvider.name,
+				kit_provider: !!kitProvider && !!kitProvider.name ? kitProvider.name : kitProvider,
 			};
 			updatePatientInfo(body);
 		}
