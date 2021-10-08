@@ -123,7 +123,12 @@ const adminService = {
 							});
 						}
 					})
-					.catch(err => console.error(err));
+					.catch(err => {
+						console.log(err);
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else reject({ success: false });
+					});
 			} else {
 				// return unauthorized
 				resolve({ success: false, authenticated: false });

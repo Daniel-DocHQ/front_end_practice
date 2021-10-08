@@ -59,7 +59,7 @@ const useDateFilter = (appointments) => {
 			}
 			newAppointments.sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime());
 			setFilteredAppointments(newAppointments);
-		}
+		} else setFilteredAppointments([]);
 	}, [filter, appointments]);
 
 	return ({ filteredAppointments, filter, setFilter });

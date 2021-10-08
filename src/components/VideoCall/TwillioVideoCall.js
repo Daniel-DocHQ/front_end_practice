@@ -18,7 +18,7 @@ const dochqLogo = require('../../assets/images/icons/dochq-logo-rect-white.svg')
 const dochqLogoSq = require('../../assets/images/icons/dochq-logo-sq-white.svg');
 const { isSupported } = require('twilio-video');
 
-function TwillioVideoCall({
+function TwillioVideoCall ({
 	isNurse,
 	updateImageData,
 	token,
@@ -55,7 +55,8 @@ function TwillioVideoCall({
 	);
 	const disconnectRoom = () => {
 		try {
-			room.disconnect();
+			if (!!room && !!room.disconnect)
+				room.disconnect();
 			room.localParticipant.tracks.forEach(function(trackPublication) {
 				trackPublication.track.stop();
 			});

@@ -32,22 +32,6 @@ const MyRoomsContainer = () => {
 		history.push('/login');
 	};
 
-	useEffect(() => {
-		if (!appointmentId) {
-			getPractitionerInfo();
-		}
-
-		const interval = setInterval(() => {
-            getFutureAppointments();
-		}, REQUEST_INTERVAL);
-
-		return () => clearInterval(interval);
-	  }, []);
-
-	useEffect(() => {
-		getFutureAppointments();
-	}, [appointmentId]);
-
 	const getPractitionerInfo = () => {
 		nurseService
 			.getPractitionerInformation(token)
@@ -63,8 +47,8 @@ const MyRoomsContainer = () => {
 			.catch(err => ToastsStore.error('Error fetching practitioner information'))
 	}
 
-	const getFutureAppointments = () => (
-		adminService
+	const getFutureAppointments = async () => {
+		await adminService
 			.getNextAppointments({
 				token,
 				dateRange: {
@@ -81,11 +65,34 @@ const MyRoomsContainer = () => {
 				} else if (!data.authenticated) {
 					logoutUser();
 				} else {
+					setAppointments([]);
+					setHoldAppointments([]);
 					ToastsStore.error('Error fetching appointments');
 				}
 			})
-			.catch(err => ToastsStore.error('Error fetching appointments'))
-    );
+			.catch(err => {
+				setAppointments([]);
+				setHoldAppointments([]);
+				if (!!err && !!err.error)
+					ToastsStore.error(err.error);
+			});
+	};
+
+	useEffect(() => {
+		if (!appointmentId) {
+			getPractitionerInfo();
+		}
+
+		const interval = setInterval(() => {
+            getFutureAppointments();
+		}, REQUEST_INTERVAL);
+
+		return () => clearInterval(interval);
+	  }, []);
+
+	useEffect(() => {
+		getFutureAppointments();
+	}, [appointmentId]);
 
 	return (
 		<>
