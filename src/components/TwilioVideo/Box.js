@@ -126,57 +126,58 @@ const Box = ({
 					).catch((err) => console.log(err))
 				} else setCookie('video-token', data.token);
 			}
+			await sendInfoAboutJoin();
 		},
 		[params, isNurse],
 	);
 
-	useEffect(() => {
-		if (!!videoCallToken) {
-			setPreflightLoading(true);
-			const preflightTest = runPreflight(videoCallToken);
+	// useEffect(() => {
+	// 	if (!!videoCallToken) {
+	// 		setPreflightLoading(true);
+	// 		const preflightTest = runPreflight(videoCallToken);
 
-			preflightTest.on('progress', (progress) => {
-				console.log('preflight progress:', progress);
-			});
+	// 		preflightTest.on('progress', (progress) => {
+	// 			console.log('preflight progress:', progress);
+	// 		});
 
-			preflightTest.on('failed', async (error) => {
-				await sendInfoAboutJoin();
-				setPreflightLoading(false);
-				console.error('preflight error:', error);
-			});
+	// 		preflightTest.on('failed', async (error) => {
+	// 			await sendInfoAboutJoin();
+	// 			setPreflightLoading(false);
+	// 			console.error('preflight error:', error);
+	// 		});
 
-			preflightTest.on('completed', (report) => {
-				setPreflightCheckReport(report);
-				setTimeout(async () => {
-					await sendInfoAboutJoin();
-					setPreflightLoading(false);
-				}, 5000);
+	// 		preflightTest.on('completed', (report) => {
+	// 			setPreflightCheckReport(report);
+	// 			setTimeout(async () => {
+	// 				await sendInfoAboutJoin();
+	// 				setPreflightLoading(false);
+	// 			}, 5000);
 
-			});
-		}
-	}, [videoCallToken]);
+	// 		});
+	// 	}
+	// }, [videoCallToken]);
 
-	if (preflightLoading || !preflightCheckReport && videoCallToken) {
-		return !preflightCheckReport ? (
-			<VideoUserWrapper isNurse={isNurse}>
-				<div className="row center">
-					<LoadingSpinner />
-				</div>
-				<h2>Internet connection check</h2>
-			</VideoUserWrapper>
+	// if (preflightLoading || !preflightCheckReport && videoCallToken) {
+	// 	return !preflightCheckReport ? (
+	// 		<VideoUserWrapper isNurse={isNurse}>
+	// 			<div className="row center">
+	// 				<LoadingSpinner />
+	// 			</div>
+	// 			<h2>Internet connection check</h2>
+	// 		</VideoUserWrapper>
 
-		) : (
-			<VideoUserWrapper isNurse={isNurse}>
-				<h2>Internet connection check report</h2>
-				{preflightCheckReport.networkTiming.connect?.duration < 950 ? (
-					<h4 className="green-bold-text">You have good internet connection quality</h4>
-				) : (
-					<h4 className="yellow-bold-text">Your internet connection is low. Might be some issues during video appointment</h4>
-				)}
-				<h3>Joining to the appointment...</h3>
-			</VideoUserWrapper>
-		);
-	};
+	// 	) : (
+	// 		<VideoUserWrapper isNurse={isNurse}>
+	// 			<h2>Internet connection check report</h2>
+	// 			{preflightCheckReport.networkTiming.connect?.duration < 950 ? (
+	// 				<h4 className="green-bold-text">You have good internet connection quality</h4>
+	// 			) : (
+	// 				<h4 className="yellow-bold-text">Your internet connection is low. Might be some issues during video appointment</h4>
+	// 			)}
+	// 			<h3>Joining to the appointment...</h3>
+	// 		</VideoUserWrapper>
+	// 	);
+	// };
 
 	return videoCallToken ? (
 		<div className='vid-box'>
