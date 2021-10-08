@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo} from 'react';
 import { get } from 'lodash';
 import { format } from 'date-fns';
 import Table from '@material-ui/core/Table';
@@ -11,7 +11,6 @@ import DocButton from '../DocButton/DocButton';
 import useDateFilter from '../../helpers/hooks/useDateFilter';
 import Timer from '../Timer/Timer';
 import './Tables.scss';
-import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const styles = {
 	smallCol: {

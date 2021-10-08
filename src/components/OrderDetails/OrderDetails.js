@@ -102,6 +102,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 	const [orderDetail, setOrderDetail] = useState({});
 	const [discountValue, setDiscountValue] = useState();
 	const [appointments, setAppointments] = useState([]);
+	const [approvedTestKits, setApprovedTestKits] = useState([]);
 	const [reloadInfo, setReloadInfo] = useState(false);
 	const [addingNote, setAddingNote] = useState(false);
 	const [notesStatus, setNotesStatus] = useState();
@@ -145,6 +146,16 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 						setAppointments(result.appointments);
 					}
 				}).catch(err => console.log(err));
+			await adminService.getApprovedProducts()
+            	.then(result => {
+					if (result.success && result.kits) {
+						setApprovedTestKits([...result.kits].sort(({ name: nameA }, { name: nameB }) => nameA < nameB ? -1 : nameA > nameB ? 1 : 0));
+					} else {
+						setApprovedTestKits([]);
+					}
+				}).catch((error) => {
+					setApprovedTestKits([]);
+				});
 		}
 		setLoading(false);
 
@@ -534,6 +545,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 										refetchData={refetchData}
 										swabbingMethod={swabbingMethod}
 										appointmentIndx={appointmentIndx}
+										approvedTestKits={approvedTestKits}
 									/>
 								))}
 							</div>
@@ -545,7 +557,13 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 	)
 }
 
-const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) => {
+const PatientDetails = ({
+	patient,
+	appointmentId,
+	refetchData,
+	isCompleted,
+	approvedTestKits,
+}) => {
 	const [isEditShow, setIsEditShow] = useState(false);
 	const firstName = get(patient, 'metadata.forename', '') || patient.first_name;
 	const lastName = get(patient, 'metadata.surname', '') || patient.last_name;
@@ -694,6 +712,7 @@ const PatientDetails = ({ patient, appointmentId, refetchData, isCompleted }) =>
 				<CertificatesAaron
 					patient_data={patient}
 					appointmentId={appointmentId}
+					approvedTestKits={approvedTestKits}
 					submitCallback={() => {
 						setIsEditShow(false);
 						refetchData();
@@ -724,6 +743,7 @@ const AppointmentDetails = ({
 	swabbingMethod,
 	orderItems = [],
 	shortToken,
+	approvedTestKits,
 }) => {
 	const classes = useStyles();
 	const linkRef = useRef(null);
@@ -856,6 +876,7 @@ const AppointmentDetails = ({
 								isCompleted={isCompleted}
 								refetchData={refetchData}
 								appointmentId={appointment.id}
+								approvedTestKits={approvedTestKits}
 							/>
 						</div>
 					</>

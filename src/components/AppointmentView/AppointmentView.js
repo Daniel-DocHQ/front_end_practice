@@ -153,10 +153,10 @@ const AddressInfo = ({ appointment }) => {
 };
 
 const PatientInfo = ({ patient }) => {
-    const firstName = get(patient, 'first_name', '');
-    const lastName = get(patient, 'last_name', '');
-    const email = get(patient, 'email', '');
-    const phone = get(patient, 'phone', '');
+    const firstName = get(patient, 'metadata.first_name', '') || get(patient, 'first_name', '');
+    const lastName = get(patient, 'metadata.last_name', '') || get(patient, 'last_name', '');
+    const email = get(patient, 'metadata.email', '') || get(patient, 'email', '');
+    const phone = get(patient, 'metadata.phone', '') || get(patient, 'phone', '');
     const date_of_birth = get(patient, 'date_of_birth', '') || get(patient, 'metadata.date_of_birth', '');
     const sex = get(patient, 'sex', '');
     const ethnicity = get(patient, 'ethnicity', '');
