@@ -44,6 +44,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 	const defaultTimeZone = cityTimezones.findFromCityStateProvince('Westminster')[0];
 	const usersPhoneNumber = get(orderInfo, 'shipping_address.telephone', '');
 	const orderId = get(orderInfo, 'id', 0);
+	const isDe = get(orderInfo, 'source', '') === 'dochqde';
 	const isBookingSkip = items.find(({ sku }) => (sku === 'FACE-2-FACE-HOTEL' || sku === 'SELF-SWABBING')) || skipBooking;
 	const parsedPhoneNumber = parsePhoneNumber(usersPhoneNumber);
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
@@ -292,12 +293,12 @@ const BookingEngine = ({ skipBooking = false }) => {
 												tz_location: (isAdditionalProduct || isPCR) ? defaultTimeZone.timezone : timezoneValue,
 												date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
 												street_address: address_1,
-												language: 'EN',
+												language: isDe ? 'DE' : 'EN',
 												extended_address: address_2,
 												postal_code: postcode,
 												phone: `${countryCode.label}${phone.trim()}`,
 												region: county,
-												country: 'GB',
+												country: isDe ? 'DE' : 'GB',
 												toc_accept: tocAccept,
 												locality: town,
 												bundle_id: parseInt(bundle_id),
@@ -421,6 +422,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 									steps={steps}
 									items={items}
 									timer={timerStart}
+									isEuro={isDe}
 									createdAppointmentId={createdAppointmentId}
 									isBookingSkip={isBookingSkip}
 									totalAvailableQuantity={totalAvailableQuantity}

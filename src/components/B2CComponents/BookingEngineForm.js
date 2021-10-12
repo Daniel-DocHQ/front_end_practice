@@ -28,6 +28,7 @@ const BookingEngineForm = ({
     isPharmacy = false,
     isBookingSkip = false,
     totalAvailableQuantity = 0,
+    isEuro = false,
     ...restProps
 }) => {
     const isLastStep = activeStep === steps.length - 1;
@@ -44,6 +45,7 @@ const BookingEngineForm = ({
         <Step1 />,
         ...(isBookingSkip ? [] : [
             <Step2
+                isEuro={isEuro}
                 isEdit={isEdit}
                 defaultTimezone={defaultTimezone}
                 isPharmacy={isPharmacy}
