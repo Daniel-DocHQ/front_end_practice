@@ -1067,28 +1067,43 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             })
         ]
     })
-        .addNodeType({
-            type: "regexpMatch",
-            label: "Regexp Match",
-            description: "Boolean match a regexp pattern",
-            initalWidth: 150,
-            inputs: ports => [
-                ports.string({
-                    name:"regex_pattern",
-                    label: "Regex Pattern",
-                }),
-                ports.string({
-                    name:"string_to_check",
-                    label: "String to check",
-                })
-            ],
-            outputs: ports => [
-                ports.boolean({
-                    name: "patternMatch",
-                    label: "Pattern matched",
-                })
-            ]
-        })
+    .addNodeType({
+        type: "regexpMatch",
+        label: "Regexp Match",
+        description: "Boolean match a regexp pattern",
+        initalWidth: 150,
+        inputs: ports => [
+            ports.string({
+                name:"regex_pattern",
+                label: "Regex Pattern",
+            }),
+            ports.string({
+                name:"string_to_check",
+                label: "String to check",
+            })
+        ],
+        outputs: ports => [
+            ports.boolean({
+                name: "patternMatch",
+                label: "Pattern matched",
+            })
+        ]
+    })
+    .addNodeType({
+        type: "awinUpdateTransactionStatus",
+        label: "Update AWIN Transaction Status",
+        initalWidth: 150,
+        inputs: ports => [
+            ports.string({
+                name: "order",
+                label: "Create Transaction",
+            }),
+            ports.string({
+                name: "status",
+                label: "Transaction data",
+            })
+        ],
+    })
 }
 
 const PrettyPrint = ({data}) => {
