@@ -63,6 +63,7 @@ const ClaimableAppointments = ({ token, reload, makeReload }) => {
         query: adminService.getAppointmentsSearch,
         status: 'CLAIMABLE',
 		isLive: true,
+		liveUpdateIn: 10000,
     });
 
 	const claimAppointment = async (slot_id, override = false) => {
