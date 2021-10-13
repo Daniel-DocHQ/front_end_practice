@@ -1096,11 +1096,11 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         inputs: ports => [
             ports.string({
                 name: "order",
-                label: "Create Transaction",
+                label: "Order ShortToken",
             }),
             ports.string({
                 name: "status",
-                label: "Transaction data",
+                label: "Transaction Status",
             })
         ],
     })
