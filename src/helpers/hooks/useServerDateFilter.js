@@ -30,7 +30,6 @@ export const useServerDateFilter = ({
     query,
     status,
     isLive = false,
-    liveUpdateIn = null,
     fixedEndTime = null,
     practitionerName = false,
 }) => {
@@ -98,8 +97,9 @@ export const useServerDateFilter = ({
 
     const liveFunc = () => {
         const interval = setInterval(() => {
-			getData(sortOrder);
-		}, !!liveUpdateIn ? liveUpdateIn : 60000 * 5);
+			getData();
+            setFilter('today');
+		}, 60000 * 5);
 		return () => clearInterval(interval);
     };
 

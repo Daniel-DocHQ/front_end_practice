@@ -55,7 +55,6 @@ const ClaimableAppointmentsTable = ({ token, reload }) => {
     } = useServerDateFilter({
         token,
 		isLive: true,
-		liveUpdateIn: 10000,
         query: adminService.getAppointmentsSearch,
         status: 'CLAIMABLE',
     });

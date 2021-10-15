@@ -270,7 +270,7 @@ const RegisterKitForm = ({
                                                     touched={meta.touched}
                                                     helperText={((meta.error && meta.touched) && meta.error) || ((!!field.value && field.value.replace(/[0-9]/g,"").length > 1) && 'Kit ID usually contains only one letter. Please double check your kit ID if you have entered "O" letter instead of zero.')}
                                                     {...field}
-                                                    onChange={(value) => form.setFieldValue(field.name, value.target.value.toUpperCase())}
+                                                    onChange={(value) => form.setFieldValue(field.name, value.toUpperCase())}
                                                 />
                                             )}
                                         </Field>
@@ -294,7 +294,7 @@ const RegisterKitForm = ({
                                                     touched={meta.touched}
                                                     helperText={(meta.error && meta.touched) && meta.error}
                                                     {...field}
-                                                    onChange={(value) => form.setFieldValue(field.name, value.target.value.toUpperCase())}
+                                                    onChange={(value) => form.setFieldValue(field.name, value.toUpperCase())}
                                                 />
                                             )}
                                         </Field>
