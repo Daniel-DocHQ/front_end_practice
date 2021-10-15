@@ -39,6 +39,9 @@ const SOURCE_STRING = {
     'ROCS': 'Rock',
 }
 
+const COLLECTION_STRING = {
+    'bristol_airport': 'Bristol',
+}
 const date_format = {
     type: 'dateTime',
     width: 200,
@@ -51,6 +54,9 @@ const price_format = {
 const source_format = {
     valueFormatter: ({ value })  => !!SOURCE_STRING[value] ? SOURCE_STRING[value] : value,
 }
+const collection_format = {
+    valueFormatter: ({ value })  => !!COLLECTION_STRING[value] ? COLLECTION_STRING[value] : value,
+}
 const columns = [
     { field: 'id', headerName: 'ID', width: 60 },
     { field: 'billing_detail', headerName: 'Customer Email', width: 250, valueFormatter: ({value}) => value.email},
@@ -59,8 +65,8 @@ const columns = [
     { field: 'payment_flag', headerName: 'Payment status', width: 150 },
     { field: 'price', headerName: 'Amount', width: 90, ...price_format},
     { field: 'created_at', headerName: 'Order placed', ...date_format },
-    { field: 'modified_at', headerName: 'Last order action', ...date_format },
     { field: 'source', headerName: 'Source', ...source_format},
+    { field: 'collection_point', headerName: 'Collection point', ...collection_format},
 ];
 
 
