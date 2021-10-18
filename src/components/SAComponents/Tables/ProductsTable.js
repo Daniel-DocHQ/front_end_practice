@@ -117,17 +117,28 @@ const ProductsTable = ({ reload, token, products = [] }) => {
                                             />
                                             <div style={{ margin: '0 10px' }}>
                                                 <DocButton
-                                                    text={!!product.active ? 'Deactivate' : 'Activate'}
-                                                    color={!!product.active ? 'pink' : 'green'}
+                                                    text={!!product.out_of_stock ? 'Out of stock Off' : 'Out of stock On'}
+                                                    color={!!product.out_of_stock ? 'pink' : 'green'}
                                                     onClick={async () => {
                                                         await adminService.switchProductStatus(token, product.id, {
                                                             ...product,
-                                                            active: !!product.active ? 0 : 1,
+                                                            out_of_stock: !!product.out_of_stock ? 0 : 1,
                                                         });
                                                         reload();
                                                     }}
                                                 />
                                             </div>
+                                            <DocButton
+                                                text={!!product.active ? 'Deactivate' : 'Activate'}
+                                                color={!!product.active ? 'pink' : 'green'}
+                                                onClick={async () => {
+                                                    await adminService.switchProductStatus(token, product.id, {
+                                                        ...product,
+                                                        active: !!product.active ? 0 : 1,
+                                                    });
+                                                    reload();
+                                                }}
+                                            />
                                         </div>
                                     </TableCell>
                                 </TableRow>

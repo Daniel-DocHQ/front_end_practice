@@ -49,6 +49,7 @@ import { differenceInHours } from 'date-fns/esm';
 import nurseSvc from '../../services/nurseService';
 import VonageVoiceCall from '../VoiceCall/VonageVoiceCall';
 import useVonageApp from '../../helpers/hooks/useVonageApp';
+import { MASK_SKU } from '../../helpers/productsWithAdditionalInfo';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -377,7 +378,7 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 														{discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
 													</TableCell>
 													<TableCell align="right">
-														£{discountValue.type === 'percentage' ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : ''}
+														£{(discountValue.type === 'percentage' && row.product.sku !== MASK_SKU) ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : row.product.sku === MASK_SKU ? row.product.price.toFixed(2) : ''}
 													</TableCell>
 												</>
 											)}
