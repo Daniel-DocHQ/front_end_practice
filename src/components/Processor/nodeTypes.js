@@ -1104,6 +1104,24 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             })
         ],
     })
+    .addNodeType({
+        type: "generateQrCode",
+        label: "Generate QR Code",
+        description: "Generates a QR code from a string",
+        initalWidth:150,
+        inputs: ports => [
+            ports.string({
+                name: "data",
+                label: "Incoming data",
+            }),
+        ],
+        outputs: ports => [
+            ports.string({
+                name: "output",
+                label: "Base 64 data",
+            }),
+        ],
+    })
 }
 
 const PrettyPrint = ({data}) => {
