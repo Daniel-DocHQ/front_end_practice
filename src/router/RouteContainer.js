@@ -61,6 +61,7 @@ import SmMyRooms from '../screens/sm-portal/SmMyRooms';
 import OFLBookingAppointment from '../screens/b2c-portal/OFLBookingAppointment';
 import NewDoctorsManagement from '../screens/super-admin-portal/NewDoctorsManagement';
 import ProductManagement from '../screens/super-admin-portal/ProductManagement';
+import SAPickupManagement from '../screens/super-admin-portal/SAPickupManagement';
 import SAProductView from '../screens/super-admin-portal/SAProductView';
 import SACreateProduct from '../screens/super-admin-portal/SACreateProduct';
 
@@ -306,6 +307,11 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/dashboard' requiredRole='super_admin'>
 				<Layout title='Dashboard'>
 					<SADashboard {...ctx} />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/pickup-management' requiredRole='super_admin'>
+				<Layout title='Pick up Management'>
+					<SAPickupManagement />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/product-management' requiredRole='super_admin'>

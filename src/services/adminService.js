@@ -899,6 +899,79 @@ const adminService = {
 			}
 		});
 	},
+	switchCollectionInfo(id, token, value) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.put(`${baseUrl}/v1/collection/${id}`, value, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	getCollectionInfo(orderId, token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/collection/${orderId}`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+							resolve({
+								success: true,
+								data: null,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: response.data.message || 'Something went wrong',
+							});
+						}
+					})
+					.catch(err => {
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getOrderDetails(orderId, token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {

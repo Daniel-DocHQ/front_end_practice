@@ -98,6 +98,23 @@ const SAHomepageCards = ({ token, user }) => {
 			),
 		},
 		{
+			display: true,
+			title: 'Pick up Management',
+			icon: <img src={BookAppointmentIcon} alt='Pick up Management' />,
+			content: (
+				<React.Fragment>
+					<p>Pick up Management</p>
+				</React.Fragment>
+			),
+			actions: (
+				<LinkButton
+					color='green'
+					text='View'
+					linkSrc='/super_admin/pickup-management'
+				/>
+			),
+		},
+		{
 			display: DISCOUNT_USER_NAMES.includes(userName),
 			title: 'Discount Management',
 			icon: <img src={BookAppointmentIcon} alt='Discount Management' />,

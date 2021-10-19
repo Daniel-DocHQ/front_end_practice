@@ -48,6 +48,7 @@
     "react-draft-wysiwyg": "1.14.5",
     "react-google-autocomplete": "^2.4.0",
     "react-phone-number-input": "3.1.x",
+    "react-qr-scanner": "^1.0.0-alpha.7",
     "react-router-dom": "5.2.x",
     "react-scripts": "3.4.x",
     "react-toasts": "3.0.x",

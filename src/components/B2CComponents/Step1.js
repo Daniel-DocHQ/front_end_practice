@@ -8,7 +8,6 @@ import {
 	RadioGroup,
 	FormControlLabel,
 	FormControl,
-	FormHelperText,
 	Grid,
 } from '@material-ui/core';
 import {
