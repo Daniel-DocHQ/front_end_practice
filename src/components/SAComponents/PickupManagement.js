@@ -89,11 +89,10 @@ const PickupManagement = () => {
     // const [dataTableLoading, setDataTableLoading] = useState(true);
     const [searchBox, setSearchBox] = useState("");
 
-    const updateCollected = async () => {
-        const newCollected = collectionInfo.collected ? collected : true;
-        await adminService.switchCollectionInfo(orderDetail.id, token, {...collectionInfo, collected: newCollected }).then(res => {
+    const updateCollected = async (value) => {
+        await adminService.switchCollectionInfo(collectionInfo.id, token, {...collectionInfo, collected: value }).then(res => {
             if (res.success && res.data) {
-                setCollected(newCollected);
+                setCollected(value);
                 ToastsStore.success('Order collection status has been changed successfully');
             } else {
                 ToastsStore.error(res.error)
@@ -152,7 +151,7 @@ const PickupManagement = () => {
 
     useEffect(() => {
         if (!!orderDetail && !!collectionInfo)
-            updateCollected()
+            updateCollected(true);
     }, [collectionInfo]);
 
     return (
@@ -204,7 +203,9 @@ const PickupManagement = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            onChange={event => setCollected(event.target.checked)}
+                                            onChange={event => {
+                                                updateCollected(event.target.checked);
+                                            }}
                                             checked={collected}
                                         />
                                     }
