@@ -1122,6 +1122,24 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             }),
         ],
     })
+    .addNodeType({
+        type: "readCollection",
+        label: "Read Collection",
+        description: "Retrieve collection from the database",
+        initalWidth:150,
+        inputs: ports => [
+            ports.string({
+                name: "collection_id",
+                label: "Collection ID",
+            }),
+        ],
+        outputs: ports => [
+            ports.({
+                name: "data",
+                label: "Data",
+            }),
+        ],
+    })
 }
 
 const PrettyPrint = ({data}) => {
