@@ -309,7 +309,7 @@ const RouteHandler = () => {
 					<SADashboard {...ctx} />
 				</Layout>
 			</PrivateRoute>
-			<PrivateRoute path='/super_admin/pickup-management' requiredRole='super_admin'>
+			<PrivateRoute path='/collection/:id' requiredRole={['customer_services', 'super_admin']}>
 				<Layout title='Pick up Management'>
 					<SAPickupManagement />
 				</Layout>

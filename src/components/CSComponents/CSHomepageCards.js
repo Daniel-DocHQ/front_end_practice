@@ -24,6 +24,23 @@ const CSHomepageCards = () => {
 				/>
 			),
 		},
+		{
+			display: true,
+			title: 'Pick up Management',
+			icon: <img src={BookAppointmentIcon} alt='Pick up Management' />,
+			content: (
+				<React.Fragment>
+					<p>Pick up Management</p>
+				</React.Fragment>
+			),
+			actions: (
+				<LinkButton
+					color='green'
+					text='View'
+					linkSrc='/collection/0'
+				/>
+			),
+		},
 	];
 
 	return (

@@ -110,7 +110,7 @@ const SAHomepageCards = ({ token, user }) => {
 				<LinkButton
 					color='green'
 					text='View'
-					linkSrc='/super_admin/pickup-management'
+					linkSrc='/collection/0'
 				/>
 			),
 		},

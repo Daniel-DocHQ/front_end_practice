@@ -16,8 +16,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import OrderDetails from '../OrderDetails/OrderDetails';
 import { AuthContext } from '../../context/AuthContext';
-import getURLParams from '../../helpers/getURLParams';
 import adminService from '../../services/adminService';
+import { useParams } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -75,8 +75,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PickupManagement = () => {
     const classes = useStyles();
-    const params = getURLParams(window.location.href);
-	const short_token = params['short_token'];
+    const { id } = useParams();
     const { user, token } = useContext(AuthContext);
     const [collected, setCollected] = useState(false);
     const [collectionInfo, setCollectionInfo] = useState();
@@ -158,9 +157,8 @@ const PickupManagement = () => {
     }, [collectionInfo]);
 
     useEffect(() => {
-        if (short_token)
-
-            searchButtonClick({ orderId: short_token });
+        if (id && id !== '0')
+            searchButtonClick({ orderId: id });
     }, []);
 
     return (
