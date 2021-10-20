@@ -17,6 +17,8 @@ const QrCodeReader = ({ handleResult }) => {
         <QrReader
           delay={100}
           style={previewStyle}
+          facingMode="rear"
+          legacyMode
           onError={(err) => console.error(err)}
           onScan={(data) => {
             if (!!data) {

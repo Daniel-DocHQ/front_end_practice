@@ -194,7 +194,6 @@ const PickupManagement = () => {
             </Grid>
             {(!!orderDetail && !!collectionInfo) && (
                 <>
-                    <OrderDetails user={user} token={token} order={orderDetail} />
                     <div className='row center'>
                         <FormControl
                             component='fieldset'
@@ -214,6 +213,17 @@ const PickupManagement = () => {
                             </FormGroup>
                         </FormControl>
                     </div>
+                    <OrderDetails
+                        user={user}
+                        token={token}
+                        order={orderDetail}
+                        closeHandler={() => {
+                            setOrderDetail();
+                            setCollectionInfo();
+                            setCollected(false);
+                            setSearchBox('');
+                        }}
+                    />
                 </>
             )}
         </Container>
