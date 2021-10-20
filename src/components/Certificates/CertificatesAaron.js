@@ -23,9 +23,11 @@ import bookingService from '../../services/bookingService';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import Input from '../FormComponents/Input';
+import { DAY_2_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
 
 const CertificatesAaron = ({
 	img,
+	sku,
 	uploadImage,
 	patient_data,
 	appointmentId,
@@ -34,6 +36,7 @@ const CertificatesAaron = ({
 	submitCallback = null,
 	kitProvider: preselectedKidProvider,
 }) => {
+	const isDay2Antigen = sku === DAY_2_ANTIGEN;
 	const isVideoAppointment = submitCallback === null;
 	const { user, token } = useContext(AuthContext);
 	const [populated, setPopulated] = useState(false);
@@ -51,6 +54,7 @@ const CertificatesAaron = ({
 	const [result, setResult] = useState('');
 	const [reasonForRejected, setReasonForRejected] = useState('');
 	const [passportId, setPassportId] = useState('');
+	const [kitId, setKitId] = useState('');
 	// Error handling
 	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 	const [errors, setErrors] = useState([]);
@@ -73,6 +77,7 @@ const CertificatesAaron = ({
 			!!obj.result &&
 			!!obj.passport_number &&
 			!!obj.kit_provider &&
+			(isDay2Antigen ? !!obj.kit_id : true) &&
 			(isResultRejected ? !!obj.reject_notes : (doneBy8x8 ? doneBy8x8 : !!img))
 		);
 	}
@@ -125,10 +130,14 @@ const CertificatesAaron = ({
 		const email = get(patient_data, 'metadata.email', '') || patient_data.email;
 		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
 		const dob = get(patient_data, 'metadata.date_of_birth', '') || patient_data.date_of_birth;
+		const patientKitId = get(patient_data, 'metadata.kit_id', '') || patient_data.kit_id;
 		const securityChecked = get(patient_data, 'metadata.security_checked', false);
 		const passportNumber = get(patient_data, 'metadata.passport_number', '') || get(patient_data, 'metadata.passportId', '');
 		if (patient_data.id) {
-			setPatientId(patient_data.id)
+			setPatientId(patient_data.id);
+		}
+		if (patientKitId) {
+			setKitId(patientKitId);
 		}
 		if (firstName) {
 			setForename(firstName);
@@ -144,7 +153,7 @@ const CertificatesAaron = ({
 		} else if (!!usersKitProvider) {
 			setKitProvider(approvedTestKits.find(({ name }) => name === usersKitProvider));
 		} else {
-			setKitProvider(preselectedKidProvider)
+			setKitProvider(preselectedKidProvider);
 		}
 		if (!!result) {
 			setResult(result);
@@ -156,7 +165,7 @@ const CertificatesAaron = ({
 			setSex(sex.toLowerCase());
 		}
 		if (passportNumber) {
-			setPassportId(passportNumber)
+			setPassportId(passportNumber);
 		}
 		if (dob) {
 			setDob(moment(dob).format('DD/MM/YYYY'));
@@ -172,6 +181,7 @@ const CertificatesAaron = ({
 			sex,
 			security_checked,
 			result,
+			kit_id: kitId,
 			passport_number: passportId,
 			kit_provider: kitProvider.name,
 			specificity: kitProvider.specificity,
@@ -240,12 +250,13 @@ const CertificatesAaron = ({
 				sex,
 				security_checked,
 				result: '',
+				kit_id: kitId,
 				passport_number: passportId,
 				kit_provider: !!kitProvider && !!kitProvider.name ? kitProvider.name : kitProvider,
 			};
 			updatePatientInfo(body);
 		}
-	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId]);
+	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId, kitId]);
 
 	return ((!!patient_data && populated) || (!patient_data && !populated)) &&  (
 		<React.Fragment>
@@ -381,6 +392,24 @@ const CertificatesAaron = ({
 						/>}
 					/>
 				</div>
+				<div className='row'>
+					<TextInputElement
+						value={kitId}
+						id='kit-id'
+						label='Kit ID'
+						inputProps={{ minLength: '5' }}
+						required={isDay2Antigen}
+						placeholder='Eg: 20P456632'
+						onChange={(value) => setKitId(value.toUpperCase())}
+						helperText={(!!kitId && kitId.replace(/[0-9]/g,"").length > 1) && 'Kit ID usually contains only one letter. Please double check your kit ID if you have entered "O" letter instead of zero.'}
+						updateStatus={updateErrors}
+					/>
+				</div>
+				{attemptedSubmit && errors.includes('kit id') && (
+					<div className='row no-margin'>
+						<p className='error'>Enter patient Kit ID</p>
+					</div>
+				)}
 				<div className='row'>
 					<FormControl variant='filled' style={{ width: '100%' }}>
 						<InputLabel id='test-result-label'>Test Result</InputLabel>

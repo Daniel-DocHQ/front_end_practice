@@ -98,7 +98,13 @@ const READABLE_STATUSES = {
     IDT: 'Indetermined',
 };
 
-const OrderDetails = ({ user, token, order, closeHandler }) => {
+const OrderDetails = ({
+	user,
+	token,
+	order,
+	closeHandler,
+	shortInfo = false,
+}) => {
 	const classes = useStyles();
 	const [orderDetail, setOrderDetail] = useState({});
 	const [discountValue, setDiscountValue] = useState();
@@ -345,66 +351,76 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 						<Typography variant="h6" className={classes.title}>
 							Products
 						</Typography>
-						<TableContainer component={Paper}>
-							<Table className={classes.table} aria-label="simple table">
-								<TableHead>
-									<TableRow>
-										<TableCell>Name</TableCell>
-										<TableCell align="right">Description</TableCell>
-										<TableCell align="right">Type</TableCell>
-										<TableCell align="right">Quantity</TableCell>
-										<TableCell align="right">Return</TableCell>
-										<TableCell align="right">Price</TableCell>
-										{discountValue && (
-											<>
-												<TableCell align="right">Discount Value</TableCell>
-												<TableCell align="right">Discount Price</TableCell>
-											</>
-										)}
-									</TableRow>
-								</TableHead>
-								<TableBody>
-									{orderItems.map((row) => (
-										<TableRow key={row.order_id + row.product_id}>
-											<TableCell component="th" scope="row">{row.product.title}</TableCell>
-											<TableCell align="right">{row.product.description}</TableCell>
-											<TableCell align="right">{row.product.type}</TableCell>
-											<TableCell align="right">{row.quantity}</TableCell>
-											<TableCell align="right">£{(get(row, 'return_method.price', 0) * row.quantity).toFixed(2)}</TableCell>
-											<TableCell align="right">£{row.product.price.toFixed(2)}</TableCell>
+						{shortInfo ? (
+							<>
+								{orderItems.map((row) => (
+									<Typography>
+										<b>{row.quantity}x</b> - {row.product.title}
+									</Typography>
+								))}
+							</>
+						) : (
+							<TableContainer component={Paper}>
+								<Table className={classes.table} aria-label="simple table">
+									<TableHead>
+										<TableRow>
+											<TableCell>Name</TableCell>
+											<TableCell align="right">Description</TableCell>
+											<TableCell align="right">Type</TableCell>
+											<TableCell align="right">Quantity</TableCell>
+											<TableCell align="right">Return</TableCell>
+											<TableCell align="right">Price</TableCell>
+											{discountValue && (
+												<>
+													<TableCell align="right">Discount Value</TableCell>
+													<TableCell align="right">Discount Price</TableCell>
+												</>
+											)}
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{orderItems.map((row) => (
+											<TableRow key={row.order_id + row.product_id}>
+												<TableCell component="th" scope="row">{row.product.title}</TableCell>
+												<TableCell align="right">{row.product.description}</TableCell>
+												<TableCell align="right">{row.product.type}</TableCell>
+												<TableCell align="right">{row.quantity}</TableCell>
+												<TableCell align="right">£{(get(row, 'return_method.price', 0) * row.quantity).toFixed(2)}</TableCell>
+												<TableCell align="right">£{row.product.price.toFixed(2)}</TableCell>
+												{discountValue && (
+													<>
+														<TableCell align="right">
+															{discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
+														</TableCell>
+														<TableCell align="right">
+															£{(discountValue.type === 'percentage' && row.product.sku !== MASK_SKU) ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : row.product.sku === MASK_SKU ? row.product.price.toFixed(2) : ''}
+														</TableCell>
+													</>
+												)}
+											</TableRow>
+										))}
+										<TableRow>
+											<TableCell align="left">Total</TableCell>
+											<TableCell align="right"></TableCell>
+											<TableCell align="right"></TableCell>
+											<TableCell align="right">{orderItems.reduce((sum, { quantity }) => (sum + quantity), 0)}</TableCell>
+											<TableCell align="right">£{orderItems.reduce((sum, { quantity, return_method }) => (sum + (get(return_method, 'price', 0) * quantity)), 0).toFixed(2)}</TableCell>
+											<TableCell align="right">£{discountValue ? get(orderDetail, 'original_price', 0).toFixed(2) : orderDetail.price.toFixed(2)}</TableCell>
 											{discountValue && (
 												<>
 													<TableCell align="right">
 														{discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
 													</TableCell>
 													<TableCell align="right">
-														£{(discountValue.type === 'percentage' && row.product.sku !== MASK_SKU) ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : row.product.sku === MASK_SKU ? row.product.price.toFixed(2) : ''}
+														£{orderDetail.price.toFixed(2)}
 													</TableCell>
 												</>
 											)}
 										</TableRow>
-									))}
-									<TableRow>
-										<TableCell align="left">Total</TableCell>
-										<TableCell align="right"></TableCell>
-										<TableCell align="right"></TableCell>
-										<TableCell align="right">{orderItems.reduce((sum, { quantity }) => (sum + quantity), 0)}</TableCell>
-										<TableCell align="right">£{orderItems.reduce((sum, { quantity, return_method }) => (sum + (get(return_method, 'price', 0) * quantity)), 0).toFixed(2)}</TableCell>
-										<TableCell align="right">£{discountValue ? get(orderDetail, 'original_price', 0).toFixed(2) : orderDetail.price.toFixed(2)}</TableCell>
-										{discountValue && (
-											<>
-												<TableCell align="right">
-													{discountValue.value}{discountValue.type === 'percentage' ? '%' : '£'}
-												</TableCell>
-												<TableCell align="right">
-													£{orderDetail.price.toFixed(2)}
-												</TableCell>
-											</>
-										)}
-									</TableRow>
-								</TableBody>
-							</Table>
-						</TableContainer>
+									</TableBody>
+								</Table>
+							</TableContainer>
+						)}
 					</Grid>
 					{wasPayment && (
 						<Grid item xs={6}>
@@ -498,19 +514,21 @@ const OrderDetails = ({ user, token, order, closeHandler }) => {
 										}
 									}).catch(() => ToastsStore.error('Something went wrong!'))}
 								/>
-								{paymentStatus === "Complete" && (
+								{(paymentStatus === "Complete" && !shortInfo) &&  (
 									<LinkButton
 										color="green"
 										linkSrc={`/b2c/book-appointment?short_token=${order.id}&service=video_gp_dochq`}
 										text="Book an Appointment"
 									/>
 								)}
-								<DocButton
-									color="pink"
-									style={{ marginLeft: 10 }}
-									onClick={handleCancelDialogToggle}
-									text="Cancel order"
-								/>
+								{!shortInfo && (
+									<DocButton
+										color="pink"
+										style={{ marginLeft: 10 }}
+										onClick={handleCancelDialogToggle}
+										text="Cancel order"
+									/>
+								)}
 								<CancelOrder
 									order={orderDetail}
 									open={cancelDialogOpen}

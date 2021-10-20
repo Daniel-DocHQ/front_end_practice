@@ -38,10 +38,10 @@ const SAProductView = ({ token, role, isAuthenticated, user }) => {
 				} else if (!data.authenticated) {
 					logoutUser();
 				} else {
-					ToastsStore.error('Error fetching Drop Boxes');
+					ToastsStore.error(data.error);
 				}
 			})
-			.catch(err => ToastsStore.error('Error fetching Drop Boxes'));
+			.catch(err => ToastsStore.error(err.err));
         setIsLoading(false);
     };
 

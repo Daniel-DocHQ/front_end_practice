@@ -27,6 +27,7 @@ export const VACCINES = [
 export const ANTIGEN_CONSULTATION = 'CONSULT-ANT';
 export const PCR_CONSULTATION = 'CONSULT-PCR';
 export const CERTIFICATE_PRODUCT = 'COVID-TEST-CERTIFICATE';
+export const DAY_2_ANTIGEN = 'DAY-2-UK-ANT-001';
 
 export const MASK_SKU = 'AGIS-FACE-MASK';
 

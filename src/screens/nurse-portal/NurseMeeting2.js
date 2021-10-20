@@ -112,6 +112,7 @@ const NurseMeeting2 = ({
 				</div>
 			</div>
 			<CertificatesContainer
+				token={token}
 				kitProvider={kitProvider}
 				approvedTestKits={approvedTestKits}
 			/>
@@ -1418,8 +1419,22 @@ const AppointmentActions = ({
 	);
 };
 
-const CertificatesContainer = ({ kitProvider, approvedTestKits }) => {
+const CertificatesContainer = ({ token, kitProvider, approvedTestKits }) => {
+	const [productSku, setProductSku] = useState();
 	const { displayCertificates, booking_users, img, appointmentId, uploadImage } = useContext(AppointmentContext);
+
+	useEffect(() => {
+		if (!!booking_users && !!booking_users.length)
+			adminService.getProduct(booking_users[0].product_id, token)
+				.then(data => {
+					if (data.success) {
+						setProductSku(data.product.sku);
+					} else {
+						ToastsStore.error(data.error);
+					}
+				})
+				.catch(err => ToastsStore.error(err.err));
+	}, [booking_users]);
 
 	return displayCertificates ? (
 		<div
@@ -1433,6 +1448,7 @@ const CertificatesContainer = ({ kitProvider, approvedTestKits }) => {
 			{!!booking_users &&
 				booking_users.map((user, i) => <CertificatesAaron
 					key={i}
+					sku={productSku}
 					approvedTestKits={approvedTestKits}
 					uploadImage={uploadImage}
 					appointmentId={appointmentId}

@@ -16,9 +16,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import OrderDetails from '../OrderDetails/OrderDetails';
 import { AuthContext } from '../../context/AuthContext';
-// import getURLParams from '../helpers/getURLParams';
+import getURLParams from '../../helpers/getURLParams';
 import adminService from '../../services/adminService';
-import QrCodeReader from '../QrCodeReader/QrCodeReader';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,6 +75,8 @@ const useStyles = makeStyles((theme) => ({
 
 const PickupManagement = () => {
     const classes = useStyles();
+    const params = getURLParams(window.location.href);
+	const short_token = params['short_token'];
     const { user, token } = useContext(AuthContext);
     const [collected, setCollected] = useState(false);
     const [collectionInfo, setCollectionInfo] = useState();
@@ -141,6 +142,8 @@ const PickupManagement = () => {
         const newOrderId = searchBox || orderId;
         if (newOrderId === "") return
 
+        if (searchBox !== newOrderId)
+            setSearchBox(newOrderId);
         setOrderDetail({ id: newOrderId });
     }
 
@@ -154,19 +157,18 @@ const PickupManagement = () => {
             updateCollected(true);
     }, [collectionInfo]);
 
+    useEffect(() => {
+        if (short_token)
+
+            searchButtonClick({ orderId: short_token });
+    }, []);
+
     return (
         <Container className={classes.root}>
             <Grid container spacing={3} direction="column">
                 <Grid container item xs={12} justify="space-between" alignItems="center">
                     <Grid item xs={12} container alignItems="center" justify="center">
-                        <QrCodeReader handleResult={(orderId) => {
-                            setSearchBox(orderId);
-                            if (!!orderId)
-                                searchButtonClick({ orderId });
-                        }}/>
-                    </Grid>
-                    <Grid item xs={12} container alignItems="center" justify="center">
-                        <div>
+                        <div className="row center">
                             <TextField className={classes.textField} id="standard-basic" label="Search" value={searchBox} onChange={(e) => setSearchBox(e.target.value)} />
                             <Button variant="contained" onClick={searchButtonClick}>Search</Button>
                         </div>
@@ -214,6 +216,7 @@ const PickupManagement = () => {
                         </FormControl>
                     </div>
                     <OrderDetails
+                        shortInfo
                         user={user}
                         token={token}
                         order={orderDetail}
