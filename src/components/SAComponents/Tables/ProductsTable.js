@@ -185,7 +185,10 @@ const ProductsTable = ({ reload, token, products = [] }) => {
                                                     text="Delete"
                                                     color="pink"
                                                     style={{ marginLeft: 10 }}
-                                                    onClick={() => setProductId(product.id)}
+                                                    onClick={() => {
+                                                        setProductId(product.id);
+                                                        setIsVisible(true);
+                                                    }}
                                                 />
                                             </div>
                                         </TableCell>
