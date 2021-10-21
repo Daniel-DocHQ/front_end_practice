@@ -541,7 +541,7 @@ const OrderDetails = ({
 						</Grid>
 					</Grid>
 				</Grid>
-				{!!appointments.length && (
+				{(!!appointments.length && !shortInfo) && (
 					<Grid container spacing={3}>
 						<Grid item xs={12}>
 							<Divider style={{ margin: '20px 0' }} />
