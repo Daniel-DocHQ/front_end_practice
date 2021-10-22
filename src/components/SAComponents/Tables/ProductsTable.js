@@ -77,6 +77,7 @@ const ProductsTable = ({ reload, token, products = [] }) => {
                                 onClick={async () => {
                                     await adminService.deleteProduct(token, productId);
                                     reload();
+                                    closeModal();
                                 }}
                             />
                         </div>
