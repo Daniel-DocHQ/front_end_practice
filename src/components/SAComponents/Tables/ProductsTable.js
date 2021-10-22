@@ -160,7 +160,7 @@ const ProductsTable = ({ reload, token, products = [] }) => {
                                                 />
                                                 <div style={{ margin: '0 10px' }}>
                                                     <DocButton
-                                                        text={!!product.out_of_stock ? 'Out of stock Off' : 'Out of stock On'}
+                                                        text={!!product.out_of_stock ? 'Out of stock' : 'In stock'}
                                                         color={!!product.out_of_stock ? 'pink' : 'green'}
                                                         onClick={async () => {
                                                             await adminService.switchProductStatus(token, product.id, {
@@ -172,8 +172,8 @@ const ProductsTable = ({ reload, token, products = [] }) => {
                                                     />
                                                 </div>
                                                 <DocButton
-                                                    text={!!product.active ? 'Deactivate' : 'Activate'}
-                                                    color={!!product.active ? 'pink' : 'green'}
+                                                    text={!!product.active ? 'Active' : 'Inactive'}
+                                                    color={!!product.active ? 'green' : 'pink'}
                                                     onClick={async () => {
                                                         await adminService.switchProductStatus(token, product.id, {
                                                             ...product,
