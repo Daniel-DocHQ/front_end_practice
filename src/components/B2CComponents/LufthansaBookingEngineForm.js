@@ -17,7 +17,6 @@ const LufthansaBookingEngineForm = ({
     handleBack,
     steps,
     items,
-    defaultCountryCode,
     defaultTimezone,
     bookingUsersQuantity = 0,
     isEdit = false,
@@ -48,7 +47,6 @@ const LufthansaBookingEngineForm = ({
         <Step3
             isLufthansa
             activePassenger={activePassenger}
-            defaultCountryCode={defaultCountryCode}
             isPharmacy={isPharmacy}
             isEdit={isEdit}
         />,

@@ -56,7 +56,6 @@ const useStyles = makeStyles({
 const Step3 = ({
     isEdit,
     isPharmacy,
-    defaultCountryCode,
     activePassenger,
     isLufthansa = false,
 }) => {
@@ -138,12 +137,8 @@ const Step3 = ({
                                             setIsLoading(true);
                                             form.setFieldValue(field.name, value);
                                             const bookingUser = bookingUsers[parseInt(value)];
-                                            const { phone } = bookingUser;
-                                            const parsedPhoneNumber = parsePhoneNumber(phone);
                                             form.setFieldValue(`passengers[${activePassenger}]`, {
                                                 ...bookingUser,
-                                                phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
-								                countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)) : defaultCountryCode,
                                                 fillWithBookingUser: value,
                                             });
                                             await setTimeout(() => {

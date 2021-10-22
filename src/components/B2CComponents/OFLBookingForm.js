@@ -17,7 +17,6 @@ const OFLBookingForm = ({
     handleBack,
     steps,
     items,
-    defaultCountryCode,
     defaultTimezone,
     bookingUsersQuantity = 0,
     isEdit = false,
@@ -46,7 +45,6 @@ const OFLBookingForm = ({
         />,
         <Step3
             activePassenger={activePassenger}
-            defaultCountryCode={defaultCountryCode}
             isPharmacy={isPharmacy}
             isEdit={isEdit}
         />,

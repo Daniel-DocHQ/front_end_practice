@@ -17,7 +17,6 @@ const BookingEngineForm = ({
     handleBack,
     steps,
     items,
-    defaultCountryCode,
     defaultTimezone,
     bookingUsersQuantity = 0,
     isEdit = false,
@@ -53,7 +52,6 @@ const BookingEngineForm = ({
         ]),
         <Step3
             activePassenger={activePassenger}
-            defaultCountryCode={defaultCountryCode}
             isPharmacy={isPharmacy}
             isEdit={isEdit}
         />,

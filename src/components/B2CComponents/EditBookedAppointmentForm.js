@@ -344,7 +344,6 @@ const BookingEngine = () => {
 							isEdit
 							status={status}
 							items={items}
-							defaultCountryCode={defaultCountryCode}
 							activePassenger={activePassenger}
 							activeStep={activeStep}
 							handleBack={handleBack}

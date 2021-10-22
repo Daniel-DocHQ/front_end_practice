@@ -386,7 +386,6 @@ const OFLBooking = () => {
                         status={status}
                         steps={steps}
                         timer={timerStart}
-                        defaultCountryCode={defaultCountryCode}
                         dropTimer={() => setTimerStart()}
                     />
                 </>

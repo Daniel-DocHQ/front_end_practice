@@ -402,7 +402,6 @@ const PharmacyBookingEngine = () => {
                         status={status}
                         steps={steps}
                         timer={timerStart}
-                        defaultCountryCode={defaultCountryCode}
                         dropTimer={() => setTimerStart()}
                     />
                 </>
