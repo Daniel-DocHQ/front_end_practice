@@ -8,7 +8,8 @@ export const PRODUCTS_WITH_ADDITIONAL_INFO = [
 	'SPORT-UK-PCR-SNS-001', // Day 8 PCR Test Sports
 	'SPORT-UK-PCR-SNS-002', // Day 2 PCR Test Sports
 	'YN-UK-PCR-SNS-002', // Amber Bundle UEFA
-    'SPORT-UK-PCR-SNS-003', //Test to Release PCR Sports
+    	'SPORT-UK-PCR-SNS-003', //Test to Release PCR Sports
+	'DAY-2-UK-ANT-001', // Day 2 Antigen Test Kit
 ];
 
 export const VIDEO_CONSULTATION_PRODUCTS = [
