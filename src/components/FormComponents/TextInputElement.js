@@ -56,7 +56,7 @@ const TextInputElement = ({
 
 	return (
 		<TextField
-			error={completedInput && typeof value !== 'undefined' && value.length <= 2}
+			error={required ? (completedInput && typeof value !== 'undefined' && value.length <= 2) : false}
 			id={id || `text-field-${(Math.random() * 100).toFixed(0)}`}
 			label={label}
 			autoComplete={autoComplete}
