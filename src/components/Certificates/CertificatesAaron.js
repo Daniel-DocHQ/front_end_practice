@@ -77,7 +77,7 @@ const CertificatesAaron = ({
 			!!obj.result &&
 			!!obj.passport_number &&
 			!!obj.kit_provider &&
-			(isDay2Antigen ? !!obj.kit_id : true) &&
+			((isDay2Antigen && !isResultRejected) ? !!obj.kit_id : true) &&
 			(isResultRejected ? !!obj.reject_notes : (doneBy8x8 ? doneBy8x8 : !!img))
 		);
 	}
@@ -97,6 +97,12 @@ const CertificatesAaron = ({
 			return () => clearTimeout(timer);
 		}
 	}, [status]);
+
+	useEffect(() => {
+		if (isResultRejected) {
+			updateErrors(true, 'kit id');
+		}
+	}, [result]);
 
 	useEffect(() => {
 		if (populated) {
@@ -398,7 +404,7 @@ const CertificatesAaron = ({
 						id='kit-id'
 						label='Kit ID'
 						inputProps={{ minLength: '5' }}
-						required={isDay2Antigen}
+						required={isDay2Antigen && !isResultRejected}
 						placeholder='Eg: 20P456632'
 						onChange={(value) => setKitId(value.toUpperCase())}
 						helperText={(!!kitId && kitId.replace(/[0-9]/g,"").length > 1) && 'Kit ID usually contains only one letter. Please double check your kit ID if you have entered "O" letter instead of zero.'}
