@@ -1101,7 +1101,11 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             ports.string({
                 name: "status",
                 label: "Transaction Status",
-            })
+            }),
+            ports.boolean({
+                name:"callAwin",
+                label: "Call AWIN Service",
+            }),
         ],
     })
     .addNodeType({
