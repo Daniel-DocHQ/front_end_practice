@@ -407,7 +407,6 @@ const CertificatesAaron = ({
 						required={isDay2Antigen && !isResultRejected}
 						placeholder='Eg: 20P456632'
 						onChange={(value) => setKitId(value.toUpperCase())}
-						helperText={(!!kitId && kitId.replace(/[0-9]/g,"").length > 1) && 'Kit ID usually contains only one letter. Please double check your kit ID if you have entered "O" letter instead of zero.'}
 						updateStatus={updateErrors}
 					/>
 				</div>
@@ -518,7 +517,7 @@ const CertificatesAaron = ({
 						)}
 						{(attemptedSubmit && !img && !doneBy8x8) && (
 							<div className='row no-margin'>
-								<p className='error'>You must enter make a test result photo</p>
+								<p className='error'>You must take a photo of the test result</p>
 							</div>
 						)}
 					</>
