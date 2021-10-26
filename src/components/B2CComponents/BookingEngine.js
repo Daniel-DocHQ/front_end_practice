@@ -50,6 +50,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 	const currentValidationSchema = useValidationSchema(activeStep, isBookingSkip);
 	const itemsWithoutVirtual = [...items].filter(({ type }) => type !== 'Virtual');
 	const defaultTestType = itemsWithoutVirtual.find(({ quantity }) => quantity > 0) || null;
+	const isCanceled = get(orderInfo, 'shipping_flag', '') === 'Cancelled';
 	const totalAvailableQuantity = itemsWithoutVirtual.filter(({ type }) => type !== 'Virtual').reduce((sum, { quantity }) => quantity + sum, 0);
 	const steps = [
 		'Select Test',
@@ -142,7 +143,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 		<BigWhiteContainer>
 			{(short_token && !!orderInfo) ? (
 				<>
-					{(!!items.length && !!defaultTestType) ? (
+					{(!!items.length && !!defaultTestType && !isCanceled) ? (
 						<>
 							<Formik
 								initialValues={{
