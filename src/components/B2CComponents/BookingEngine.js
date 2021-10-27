@@ -50,7 +50,9 @@ const BookingEngine = ({ skipBooking = false }) => {
 	const currentValidationSchema = useValidationSchema(activeStep, isBookingSkip);
 	const itemsWithoutVirtual = [...items].filter(({ type }) => type !== 'Virtual');
 	const defaultTestType = itemsWithoutVirtual.find(({ quantity }) => quantity > 0) || null;
-	const isCanceled = get(orderInfo, 'shipping_flag', '') === 'Cancelled';
+	const shippingFlag = get(orderInfo, 'shipping_flag', '');
+	const failedShippingFlag = ['cancelled', 'blocked', 'failed'];
+	const isFailedStatus = failedShippingFlag.includes(shippingFlag.toLocaleLowerCase());
 	const totalAvailableQuantity = itemsWithoutVirtual.filter(({ type }) => type !== 'Virtual').reduce((sum, { quantity }) => quantity + sum, 0);
 	const steps = [
 		'Select Test',
@@ -143,7 +145,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 		<BigWhiteContainer>
 			{(short_token && !!orderInfo) ? (
 				<>
-					{(!!items.length && !!defaultTestType && !isCanceled) ? (
+					{(!!items.length && !!defaultTestType && !isFailedStatus) ? (
 						<>
 							<Formik
 								initialValues={{
@@ -433,7 +435,9 @@ const BookingEngine = ({ skipBooking = false }) => {
 					) : (
 						<>
 							<div className="row center">
-								<h3>You don't have available appointments for that order</h3>
+								<h3>
+									{isFailedStatus ? `This order has been ${shippingFlag}` : 'You don\'t have available appointments for that order'}
+								</h3>
 							</div>
 							<div className="row center">
 								<LinkButton
