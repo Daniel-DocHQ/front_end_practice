@@ -23,6 +23,7 @@ const BookingEngineForm = ({
     status,
     dropTimer,
     timer,
+    isCustomer = false,
     createdAppointmentId,
     isPharmacy = false,
     isBookingSkip = false,
@@ -36,6 +37,7 @@ const BookingEngineForm = ({
         <Step0
             items={items}
             isEdit={isEdit}
+            isCustomer={isCustomer}
             isPharmacy={isPharmacy}
             isBookingSkip={isBookingSkip}
             bookingUsersQuantity={bookingUsersQuantity}
@@ -51,6 +53,7 @@ const BookingEngineForm = ({
             />,
         ]),
         <Step3
+            isCustomer={isCustomer}
             activePassenger={activePassenger}
             isPharmacy={isPharmacy}
             isEdit={isEdit}

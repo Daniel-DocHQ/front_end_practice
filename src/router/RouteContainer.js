@@ -64,6 +64,7 @@ import ProductManagement from '../screens/super-admin-portal/ProductManagement';
 import SAPickupManagement from '../screens/super-admin-portal/SAPickupManagement';
 import SAProductView from '../screens/super-admin-portal/SAProductView';
 import SACreateProduct from '../screens/super-admin-portal/SACreateProduct';
+import CustomerEditBookedAppointment from '../screens/b2c-portal/CustomerEditBookedAppointment';
 
 const { isSupported } = require('twilio-video');
 
@@ -274,6 +275,11 @@ const RouteHandler = () => {
 			<Route path='/b2c/book-appointment'>
 				<Layout title='Book Appointment'>
 					<B2CBookAppointment />
+				</Layout>
+			</Route>
+			<Route path='/b2c/edit-appointment'>
+				<Layout title='Edit Appointment'>
+					<CustomerEditBookedAppointment />
 				</Layout>
 			</Route>
 			<Route path='/b2c/register-trip'>

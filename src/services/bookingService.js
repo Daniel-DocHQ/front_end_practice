@@ -274,11 +274,11 @@ function getClaimableAppointments(auth_token) {
 	});
 }
 
-function deleteBooking(slot_id, auth_token) {
+function deleteBooking(slot_id, auth_token, actor, action) {
 	return new Promise((resolve, reject) => {
 		if (auth_token && slot_id) {
 			axios({
-				url: `${baseURL}/${slot_id}`,
+				url: `${baseURL}/${slot_id}?action=${action}&actor=${actor}`,
 				method: 'DELETE',
 				headers: { 'Content-type': 'application,json', Authorization: `Bearer ${auth_token}` },
 			})

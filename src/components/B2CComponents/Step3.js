@@ -56,6 +56,7 @@ const useStyles = makeStyles({
 const Step3 = ({
     isEdit,
     isPharmacy,
+    isCustomer,
     activePassenger,
     isLufthansa = false,
 }) => {
@@ -120,7 +121,11 @@ const Step3 = ({
                             name={`passengers[${activePassenger}].fillWithBookingUser`}
                         >
                             {({ field, form, meta }) => (
-                                <FormControl component='fieldset' style={{ width: '100%' }}>
+                                <FormControl
+                                    disabled={isCustomer}
+                                    component='fieldset'
+                                    style={{ width: '100%' }}
+                                >
                                     <FormLabel component='legend'>
                                         {fillWithBookingUser.label}
                                     </FormLabel>
@@ -168,6 +173,7 @@ const Step3 = ({
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
+                                disabled={isCustomer}
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
                                 {...firstName}
@@ -183,6 +189,7 @@ const Step3 = ({
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
+                                disabled={isCustomer}
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
                                 {...lastName}
@@ -211,6 +218,7 @@ const Step3 = ({
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
+                                disabled={isCustomer}
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
                                 {...email}
@@ -242,6 +250,7 @@ const Step3 = ({
 								classes={{
 									option: classes.option,
 								}}
+                                disabled={isCustomer}
 								disableClearable
 								value={field.value}
 								autoHighlight
@@ -260,6 +269,7 @@ const Step3 = ({
 										{...field}
 										{...params}
 										{...countryCode}
+                                        disabled={isCustomer}
 										error={!!meta.error}
 										touched={meta.touched}
 										helperText={(meta.error && meta.touched) && meta.error}
@@ -291,6 +301,7 @@ const Step3 = ({
                     >
                         {({ field, meta }) => (
                             <Input
+                                disabled={isCustomer}
                                 error={!!meta.error}
                                 touched={meta.touched}
                                 helperText={(meta.error && meta.touched) && meta.error}
@@ -323,6 +334,7 @@ const Step3 = ({
                                         {...field}
                                         {...dateOfBirth}
                                         error={!!meta.error}
+                                        disabled={isCustomer}
                                         touched={meta.touched}
                                         inputVariant='filled'
                                         helperText={(meta.error && meta.touched) && meta.error}
@@ -346,7 +358,11 @@ const Step3 = ({
                 <div style={{ maxWidth: '40%', minWidth: '340px' }}>
                     <Field name={`passengers[${activePassenger}].ethnicity`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].ethnicity`, false)) ? 'Input ethnicity' : undefined}>
                         {({ field, meta }) => (
-                            <FormControl variant='filled' style={{ width: '100%' }}>
+                            <FormControl
+                                disabled={isCustomer}
+                                variant='filled'
+                                style={{ width: '100%' }}
+                            >
                                 <InputLabel
                                     required={ethnicity.required}
                                     htmlFor="grouped-select"
@@ -401,6 +417,7 @@ const Step3 = ({
                             component='fieldset'
                             {...sex}
                             {...field}
+                            disabled={isCustomer}
                             error={!!meta.error}
                             touched={meta.touched}
                             helperText={(meta.error && meta.touched) && meta.error}
@@ -449,6 +466,7 @@ const Step3 = ({
                     >
                         {({ field, meta }) => (
                             <Input
+                                disabled={isCustomer}
                                 {...passportNumber}
                                 onCopy={preventCopyPaste}
                                 onDrag={preventCopyPaste}
@@ -484,6 +502,7 @@ const Step3 = ({
                             >
                                 {({ field, meta }) => (
                                     <Input
+                                        disabled={isCustomer}
                                         onCopy={preventCopyPaste}
                                         onDrag={preventCopyPaste}
                                         onDrop={preventCopyPaste}
@@ -517,6 +536,7 @@ const Step3 = ({
                                 {({ field, form, meta }) => (
                                     <FormControl
                                         error={!!meta.error}
+                                        disabled={isCustomer}
                                         touched={meta.touched}
                                         helperText={(meta.error && meta.touched) && meta.error}
                                         component='fieldset'
@@ -554,6 +574,7 @@ const Step3 = ({
                                     >
                                         {({ field, form, meta }) => (
                                             <FormControl
+                                                disabled={isCustomer}
                                                 component='fieldset'
                                                 style={{ width: '100%' }}
                                                 error={!!meta.error && meta.touched}
@@ -597,6 +618,7 @@ const Step3 = ({
                                             validate={(value) => (!value && get(touched, `passengers[${activePassenger}].vaccineTypeName`, false)) ? 'Input Vaccine Name' : undefined}>
                                             {({ field, meta }) => (
                                                 <Input
+                                                    disabled={isCustomer}
                                                     error={!!meta.error}
                                                     touched={meta.touched}
                                                     helperText={(meta.error && meta.touched) && meta.error}
@@ -616,6 +638,7 @@ const Step3 = ({
                                     >
                                         {({ field, form, meta }) => (
                                             <FormControl
+                                                disabled={isCustomer}
                                                 error={!!meta.error && meta.touched}
                                                 touched={meta.touched}
                                                 helperText={(meta.error && meta.touched) && meta.error}
@@ -728,6 +751,7 @@ const Step3 = ({
                                 <Field name={`passengers[${activePassenger}].postal_code`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].postal_code`, false)) ? 'Input postcode' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
+                                            disabled={isCustomer}
                                             error={!!meta.error}
                                             touched={meta.touched}
                                             helperText={(meta.error && meta.touched) && meta.error}
@@ -743,6 +767,7 @@ const Step3 = ({
                                 <Field name={`passengers[${activePassenger}].street_address`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].street_address`, false)) ? 'Input address' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
+                                            disabled={isCustomer}
                                             error={!!meta.error}
                                             touched={meta.touched}
                                             helperText={(meta.error && meta.touched) && meta.error}
@@ -758,6 +783,7 @@ const Step3 = ({
                                 <Field name={`passengers[${activePassenger}].extended_address`}>
                                     {({ field, meta }) => (
                                         <Input
+                                            disabled={isCustomer}
                                             error={!!meta.error}
                                             touched={meta.touched}
                                             helperText={(meta.error && meta.touched) && meta.error}
@@ -773,6 +799,7 @@ const Step3 = ({
                                 <Field name={`passengers[${activePassenger}].locality`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].locality`, false)) ? 'Input city' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
+                                            disabled={isCustomer}
                                             error={!!meta.error}
                                             touched={meta.touched}
                                             helperText={(meta.error && meta.touched) && meta.error}
@@ -788,6 +815,7 @@ const Step3 = ({
                                 <Field name={`passengers[${activePassenger}].region`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].region`, false)) ? 'Input county' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
+                                            disabled={isCustomer}
                                             error={!!meta.error}
                                             touched={meta.touched}
                                             helperText={(meta.error && meta.touched) && meta.error}

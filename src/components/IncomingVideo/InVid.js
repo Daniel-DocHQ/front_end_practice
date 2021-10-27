@@ -1,9 +1,12 @@
-import { Grid } from '@material-ui/core';
+import { Grid, setRef } from '@material-ui/core';
 import React, { useState, useRef, useEffect } from 'react';
 import DocButton from '../DocButton/DocButton';
+import QrReader from 'react-qr-scanner'
 import './IncomingVideo.scss';
 
 const InVid = ({
+	scanQr,
+	stopScanQr,
 	takePhoto,
 	participant,
 	storeImage,
@@ -13,6 +16,7 @@ const InVid = ({
 	const canvasRef = useRef();
 	const [isHidden, setIsHidden] = useState(false);
 	const [bufferPhoto, setBufferPhoto] = useState();
+	const [qrResult, setQrResult] = useState();
 	const [videoTracks, setVideoTracks] = useState([]);
 	const [audioTracks, setAudioTracks] = useState([]);
 	const videoRef = useRef();
@@ -24,6 +28,11 @@ const InVid = ({
 		}
 	}, [takePhoto]);
 
+	useEffect(() => {
+		if (qrResult) {
+			stopScanQr();
+		}
+	}, [qrResult]);
 
 	const cleanBufferPhoto = () => setBufferPhoto();
 
@@ -112,6 +121,37 @@ const InVid = ({
 					<video className='answer-video' ref={videoRef} autoPlay playsInline></video>
 					<audio ref={audioRef} autoPlay={true} />
 				</div>
+				{(videoRef.current && scanQr) && (
+					<QrReader
+						style={{ display: 'none' }}
+						initialStream={videoRef.current}
+						onError={(err) => console.error(err)}
+						showViewFinder={false}
+						onScan={(data) => {
+							console.log(data);
+						}}
+					/>
+				)}
+				{!!qrResult && (
+					<div className="captured-image-box">
+						<p className="captured-text">{currentBookingUserName} - Captured Image:</p>
+						<Grid container justify="space-between" spacing={2}>
+							<Grid item xs={6}>
+								<h3>{qrResult}</h3>
+							</Grid>
+							<Grid item container direction="column" justify="space-between" xs={6}>
+								<Grid item>
+									<DocButton
+										text='Close'
+										color='green'
+										style={{ width: '100%', margin: '10px 0px' }}
+										onClick={() => setQrResult()}
+									/>
+								</Grid>
+							</Grid>
+						</Grid>
+					</div>
+				)}
 				{!!bufferPhoto && (
 					<div className="captured-image-box">
 						<p className="captured-text">{currentBookingUserName} - Captured Image:</p>

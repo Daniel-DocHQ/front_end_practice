@@ -1009,7 +1009,7 @@ const AppointmentDetails = ({
 								color='pink'
 								text='Yes'
 								onClick={async () => {
-									await bookingService.deleteBooking(appointment.id, token).catch(() => ToastsStore.error('Something went wrong'));
+									await bookingService.deleteBooking(appointment.id, token, "practitioner", 'delete').catch(() => ToastsStore.error('Something went wrong'));
 									refetchData();
 									setIsVisible(false);
 								}}

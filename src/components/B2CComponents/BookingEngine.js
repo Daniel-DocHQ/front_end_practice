@@ -441,11 +441,11 @@ const BookingEngine = ({ skipBooking = false }) => {
 							</div>
 							<div className="row center">
 								<LinkButton
-								text='Buy Now!'
-								color='green'
-								linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
-							/>
-								</div>
+									text='Buy Now!'
+									color='green'
+									linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+								/>
+							</div>
 						</>
 					)}
 				</>
@@ -456,11 +456,11 @@ const BookingEngine = ({ skipBooking = false }) => {
 					</div>
 					<div className="row center">
 						<LinkButton
-						text='Buy Now!'
-						color='green'
-						linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
-					/>
-						</div>
+							text='Buy Now!'
+							color='green'
+							linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+						/>
+					</div>
 				</>
 			)}
 		</BigWhiteContainer>

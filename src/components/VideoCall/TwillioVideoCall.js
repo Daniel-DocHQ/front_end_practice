@@ -43,6 +43,7 @@ function TwillioVideoCall ({
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
 	const [isVideoClosed, setIsVideoClosed] = useState(false);
+	const [scanQr, setScanQr] = useState(false);
 	const [isAppointmentUnfinished, setIsAppointmentUnfinished] = useState(false);
 	const [takePhoto, setTakePhoto] = useState(false);
 	const statusChanges = status_changes || [];
@@ -308,6 +309,7 @@ function TwillioVideoCall ({
 						updateMuted={handleToggleAudio}
 						capturePhoto={capturePhoto}
 						handlePause={handlePause}
+						handleScanQr={() => setScanQr(true)}
 						isNurse={typeof isNurse !== 'undefined' ? isNurse : false}
 						handleDisconnect={handleDisconnect}
 						currentBookingUserName={currentBookingUserName}
@@ -319,7 +321,9 @@ function TwillioVideoCall ({
 							participants.map((participant, indx) => (
 								<InVid
 									key={indx}
+									scanQr={scanQr}
 									takePhoto={takePhoto}
+									stopScanQr={() => setScanQr(false)}
 									participant={participant}
 									updateImageData={updateImage}
 									storeImage={uploadImageForUser}

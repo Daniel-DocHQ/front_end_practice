@@ -23,6 +23,7 @@ const Step0 = ({
     items = [],
     isPharmacy,
     isBookingSkip,
+    isCustomer,
     bookingUsersQuantity,
 }) => {
     const [approvedProducts, setApprovedProducts] = useState([]);
@@ -138,6 +139,7 @@ const Step0 = ({
                                     helperText={(meta.error && meta.touched) && meta.error}
                                     aria-label={productField.name}
                                     name={productField.name}
+                                    disabled={isCustomer}
                                     value={field.value}
                                     {...productField}
                                     {...field}
@@ -189,6 +191,7 @@ const Step0 = ({
                                     options={[{ name: 'NHS Test Kit' }, ...approvedProducts]}
                                     getOptionLabel={({ name }) => name}
                                     style={{ width: 300 }}
+                                    disabled={isCustomer}
                                     getOptionDisabled={({ name }) => name === 'NHS Test Kit'}
                                     onChange={(event, newValue) => {
                                         form.setFieldValue(selectedKit.name, newValue);
@@ -222,7 +225,7 @@ const Step0 = ({
                             <Input
                                 error={!!meta.error}
                                 touched={meta.touched}
-                                disabled={!!testType && !!testType.sku ? CERTIFICATE_PRODUCTS.includes(testType.sku) : false}
+                                disabled={(!!testType && !!testType.sku ? CERTIFICATE_PRODUCTS.includes(testType.sku) : false) || isCustomer}
                                 helperText={(meta.error && meta.touched) && meta.error}
                                 inputProps={{ min: 1 }}
                                 {...numberOfPeople}

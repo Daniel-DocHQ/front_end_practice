@@ -1,5 +1,6 @@
 import React from 'react';
 import './Controls.scss';
+
 const Controls = ({
 	isPause = false,
 	isMuted,
@@ -8,18 +9,21 @@ const Controls = ({
 	isNurse,
 	handleDisconnect,
 	handlePause,
+	handleScanQr,
 	captureDisabled,
 	currentBookingUserName,
 }) => (
 	<>
 		<div className="top-container">
-			{(isNurse && isPause) && (
+			{(isNurse) && (
 				<div className='control-container'>
-					<div className='control-item' onClick={handlePause}>
-						<i className='fa fa-pause'></i>
-					</div>
-					<div style={{ width: 50 }}>
-						{/* <i className='fas fa-comment-alt'></i> */}
+					{isPause && (
+						<div className='control-item' onClick={handlePause}>
+							<i className='fa fa-pause'></i>
+						</div>
+					)}
+					<div style={{ width: 50 }} className='control-item' onClick={handleScanQr}>
+						<i className='fa fa-qrcode'></i>
 					</div>
 				</div>
 			)}
