@@ -305,11 +305,12 @@ function TwillioVideoCall ({
 					{typeof isNurse !== 'undefined' && !isNurse ? <PatientHeader /> : null}
 					<Controls
 						isMuted={isMuted}
+						scanQr={scanQr}
 						isPause={!!hideVideoAppointment}
 						updateMuted={handleToggleAudio}
 						capturePhoto={capturePhoto}
 						handlePause={handlePause}
-						handleScanQr={() => setScanQr(true)}
+						handleScanQr={() => setScanQr(!scanQr)}
 						isNurse={typeof isNurse !== 'undefined' ? isNurse : false}
 						handleDisconnect={handleDisconnect}
 						currentBookingUserName={currentBookingUserName}

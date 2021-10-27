@@ -1,7 +1,8 @@
-import { Grid, setRef } from '@material-ui/core';
+import { Grid, Typography, Tooltip } from '@material-ui/core';
 import React, { useState, useRef, useEffect } from 'react';
+import jsQR from "jsqr";
 import DocButton from '../DocButton/DocButton';
-import QrReader from 'react-qr-scanner'
+import copyToClipboard from '../../helpers/copyToClipboard';
 import './IncomingVideo.scss';
 
 const InVid = ({
@@ -14,8 +15,10 @@ const InVid = ({
 }) => {
 	const containerRef = useRef();
 	const canvasRef = useRef();
+	const qrCodeRef = useRef(null);
 	const [isHidden, setIsHidden] = useState(false);
 	const [bufferPhoto, setBufferPhoto] = useState();
+	const [scanQrInterval, setScanQrInterval] = useState();
 	const [qrResult, setQrResult] = useState();
 	const [videoTracks, setVideoTracks] = useState([]);
 	const [audioTracks, setAudioTracks] = useState([]);
@@ -37,7 +40,6 @@ const InVid = ({
 	const cleanBufferPhoto = () => setBufferPhoto();
 
 	function handleCapture() {
-		console.log(canvasRef, canvasRef.current, videoRef, videoRef.current);
 		const context = canvasRef.current.getContext('2d');
 		context.drawImage(videoRef.current, 0, 0, 1280, 720);
 		setBufferPhoto(canvasRef.current.toDataURL('image/webp'));
@@ -88,6 +90,32 @@ const InVid = ({
 		}
 	}, [videoTracks]);
 
+	const scanningQr = () => {
+        setScanQrInterval(setInterval(() => {
+			if (scanQr) {
+				const context = canvasRef.current.getContext('2d');
+				context.drawImage(videoRef.current, 0, 0, 1280, 720);
+				const pixels = context.getImageData(0, 0, 1280, 720);
+				const imageData = pixels.data;
+				const code = jsQR(imageData, 1280, 720);
+				if (code) {
+					setQrResult(code);
+					return () => clearInterval(scanQrInterval);
+				};
+			}
+		}, 1000));
+		return () => clearInterval(scanQrInterval);
+    };
+
+	useEffect(() => {
+		if (scanQr && videoRef.current) {
+			scanningQr();
+		} else if (scanQrInterval)  {
+			clearInterval(scanQrInterval);
+			setScanQrInterval();
+		}
+	}, [scanQr]);
+
 	useEffect(() => {
 		const audioTrack = audioTracks[0];
 		if (audioTrack) {
@@ -121,25 +149,23 @@ const InVid = ({
 					<video className='answer-video' ref={videoRef} autoPlay playsInline></video>
 					<audio ref={audioRef} autoPlay={true} />
 				</div>
-				{(videoRef.current && scanQr) && (
-					<QrReader
-						style={{ display: 'none' }}
-						initialStream={videoRef.current}
-						onError={(err) => console.error(err)}
-						showViewFinder={false}
-						onScan={(data) => {
-							console.log(data);
-						}}
-					/>
-				)}
 				{!!qrResult && (
 					<div className="captured-image-box">
-						<p className="captured-text">{currentBookingUserName} - Captured Image:</p>
+						<p className="captured-text">QR code scanned successfully:</p>
 						<Grid container justify="space-between" spacing={2}>
-							<Grid item xs={6}>
-								<h3>{qrResult}</h3>
+							<Grid item xs={12}>
+							<Tooltip title="Click to copy">
+								<Typography
+									noWrap
+									ref={qrCodeRef}
+									onClick={() => copyToClipboard(qrCodeRef)}
+									className='qrcode-text'
+								>
+									{qrResult.data}
+								</Typography>
+							</Tooltip>
 							</Grid>
-							<Grid item container direction="column" justify="space-between" xs={6}>
+							<Grid item container direction="column" justify="space-between" xs={12}>
 								<Grid item>
 									<DocButton
 										text='Close'

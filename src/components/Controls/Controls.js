@@ -4,6 +4,7 @@ import './Controls.scss';
 const Controls = ({
 	isPause = false,
 	isMuted,
+	scanQr,
 	updateMuted,
 	capturePhoto,
 	isNurse,
@@ -22,7 +23,7 @@ const Controls = ({
 							<i className='fa fa-pause'></i>
 						</div>
 					)}
-					<div style={{ width: 50 }} className='control-item' onClick={handleScanQr}>
+					<div style={{ width: 50 }} className={`control-item ${scanQr ? 'scanning' : ''}`} onClick={handleScanQr}>
 						<i className='fa fa-qrcode'></i>
 					</div>
 				</div>
