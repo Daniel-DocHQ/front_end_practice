@@ -103,7 +103,7 @@ const InVid = ({
 					return () => clearInterval(scanQrInterval);
 				};
 			}
-		}, 1000));
+		}, 500));
 		return () => clearInterval(scanQrInterval);
     };
 

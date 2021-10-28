@@ -49,7 +49,7 @@ const useOflValidationSchema = (activeStep) => (
             .test('checkCode', 'Invalid code. You have chosen another test type',
               function checkCode(tst, value) {
                 const { product } = this.parent;
-                return !!value ? product === FIT_TO_FLY_ANTIGEN ? String(value).match(/^(FLA)*/) : String(value).match(/^(FLP)*/) : true;
+                return !!value ? product === FIT_TO_FLY_ANTIGEN ? String(value).match(/^(F2F)*/) : String(value).match(/^(D2)*/) : true;
               }
             )
             .test('checkCodeBE', 'Your code is invalid',

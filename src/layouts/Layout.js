@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Layout = ({ title, children }) => {
+const Layout = ({ title, logo = null, children }) => {
 	const classes = useStyles();
 	const contextValue = useContext(AuthContext);
 	const { isAuthenticated, user, logout, token } = contextValue;
@@ -70,6 +70,7 @@ const Layout = ({ title, children }) => {
 				token={token}
 				title={title}
 				logout={logout}
+				logo={logo}
 				{...contextValue}
 				isAuthenticated={isAuthenticated}
 			/>

@@ -3,7 +3,7 @@ import './OutgoingVideo.scss';
 //import Controls from "../Controls/Controls";
 
 const OutVid = ({ participant }) => {
-	const [isHidden, setIsHidden] = useState(true);
+	const [isHidden, setIsHidden] = useState(false);
 
 	const [videoTracks, setVideoTracks] = useState([]);
 	const [audioTracks, setAudioTracks] = useState([]);
