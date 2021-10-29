@@ -14,7 +14,6 @@ const TopNavigation = ({
 	role,
 	logout,
 	token,
-	logo,
 	...rest
 }) => {
 	const isVista = window.location.href.includes('vista');
@@ -45,11 +44,6 @@ const TopNavigation = ({
 						logout={logout}
 					/>
 				</>
-			)}
-			{logo && (
-				<div className='partner-logo'>
-					<img src={logo} alt='logo' className='vista-logo' />
-				</div>
 			)}
 		</div>
 	);

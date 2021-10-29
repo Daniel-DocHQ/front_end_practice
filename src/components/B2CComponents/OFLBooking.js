@@ -11,11 +11,13 @@ import bookingService from '../../services/bookingService';
 import adminService from '../../services/adminService';
 import COUNTRIES from '../../helpers/countries';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR, FIT_TO_FLY_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
+import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
 import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
 import OFLBookingForm from './OFLBookingForm';
 import useOflValidationSchema from './oflValidationSchema';
+
+const oflLogo = require('../../assets/images/oh-logo.png');
 
 const OFLBooking = () => {
     const [shortToken, setShortToken] = useState();
@@ -95,6 +97,10 @@ const OFLBooking = () => {
 
     return (
 		<BigWhiteContainer>
+            <img src={oflLogo} style={{ height: 50 }} />
+            <h3>
+                COVID-19 Booking form for Ocean Holidays customers
+            </h3>
             <Formik
                 initialValues={{
                     ...formInitialValues,

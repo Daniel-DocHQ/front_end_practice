@@ -66,8 +66,6 @@ import SAProductView from '../screens/super-admin-portal/SAProductView';
 import SACreateProduct from '../screens/super-admin-portal/SACreateProduct';
 import CustomerEditBookedAppointment from '../screens/b2c-portal/CustomerEditBookedAppointment';
 
-const oflLogo = require('../assets/images/oh-logo.png');
-
 const { isSupported } = require('twilio-video');
 
 const RouteContainer = () => {
@@ -255,7 +253,7 @@ const RouteHandler = () => {
 				</Layout>
 			</PrivateRoute>
 			<Route path='/book_test_OFL' requiredRole='b2c'>
-				<Layout title="Book an appointment" logo={oflLogo}>
+				<Layout title="Book an appointment">
 					<OFLBookingAppointment />
 				</Layout>
 			</Route>
