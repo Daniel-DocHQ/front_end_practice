@@ -23,7 +23,7 @@ const BookingEngineForm = ({
     status,
     dropTimer,
     timer,
-    isCustomer = false,
+    isCustomerEdit = false,
     createdAppointmentId,
     isPharmacy = false,
     isBookingSkip = false,
@@ -34,14 +34,13 @@ const BookingEngineForm = ({
     const { values: { numberOfPeople }} = useFormikContext();
 
     const stepsComponents = [
-        <Step0
+        ...(isCustomerEdit ? [] : [<Step0
             items={items}
             isEdit={isEdit}
-            isCustomer={isCustomer}
             isPharmacy={isPharmacy}
             isBookingSkip={isBookingSkip}
             bookingUsersQuantity={bookingUsersQuantity}
-        />,
+        />]),
         <Step1 />,
         ...(isBookingSkip ? [] : [
             <Step2
@@ -52,12 +51,11 @@ const BookingEngineForm = ({
                 timer={timer}
             />,
         ]),
-        <Step3
-            isCustomer={isCustomer}
+        ...(isCustomerEdit ? [] : [<Step3
             activePassenger={activePassenger}
             isPharmacy={isPharmacy}
             isEdit={isEdit}
-        />,
+        />]),
         <Step4
             isBookingSkip={isBookingSkip}
             status={status}
@@ -89,11 +87,19 @@ const BookingEngineForm = ({
                                 )}
                                 {isLastStep ? (
                                     <>
-                                        <LinkButton
-                                            text={isBookingSkip ? 'Activate your kit' : 'Back to Home'}
-                                            color='green'
-                                            linkSrc={isBookingSkip ? `/register-kit/${createdAppointmentId}` : isEdit ? '/customer_services/dashboard' : process.env.REACT_APP_WEBSITE_LINK}
-                                        />
+                                        {isCustomerEdit ? (
+                                            <LinkButton
+                                                text="Buy new one"
+                                                color='green'
+                                                linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+                                            />
+                                        ) : (
+                                            <LinkButton
+                                                text={isBookingSkip ? 'Activate your kit' : 'Back to Home'}
+                                                color='green'
+                                                linkSrc={isBookingSkip ? `/register-kit/${createdAppointmentId}` : isEdit ? '/customer_services/dashboard' : process.env.REACT_APP_WEBSITE_LINK}
+                                            />
+                                        )}
                                         {(totalAvailableQuantity > numberOfPeople && !isEdit) && (
                                             <DocButton
                                                 style={{ marginLeft: 10 }}

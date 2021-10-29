@@ -280,7 +280,7 @@ const RouteHandler = () => {
 				</Layout>
 			</Route>
 			<Route path='/b2c/edit-appointment'>
-				<Layout title='Edit Appointment'>
+				<Layout title='Edit/Delete Appointment'>
 					<CustomerEditBookedAppointment />
 				</Layout>
 			</Route>

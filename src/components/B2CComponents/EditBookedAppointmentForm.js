@@ -21,12 +21,13 @@ import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import CountdownTimer from '../CountdownTimer';
 import DocModal from '../DocModal/DocModal';
 import DocButton from '../DocButton/DocButton';
+import { Divider } from '@material-ui/core';
 
-const BookingEngine = ({ isCustomer = false }) => {
+const BookingEngine = ({ isCustomerEdit = false }) => {
 	const { token } = useContext(AuthContext);
 	const [items, setItems] = useState([]);
 	const [timerStart, setTimerStart] = useState();
-	const [isVisible, setIsVisible] = useState(false);
+	const [isAppointmentStartsIn24Hours, setIsAppointmentStartsIn24Hours] = useState(false);
 	const [isDeleteVisible, setIsDeleteVisible] = useState(false);
 	const [isLoading, setLoading] = useState(false);
 	const [appointment, setAppointment] = useState();
@@ -51,10 +52,10 @@ const BookingEngine = ({ isCustomer = false }) => {
 	const bookingUsersProduct = items.find(({ id }) => bookingUsersProductId === id) || get(items, '[0]', {});
 	const usersTimeZoneObj = cityTimezones.cityMapping.find(({ timezone }) => timezone === usersTimeZone);
 	const steps = [
-        'How many people will take the test?',
+        ...(isCustomerEdit ? [] : ['How many people will take the test?']),
         'Travel Details',
         'Booking Appointment',
-        'Passenger Details',
+        ...(isCustomerEdit ? [] : ['Passenger Details']),
         'Summary',
         'Booking Confirmation',
     ];
@@ -92,7 +93,7 @@ const BookingEngine = ({ isCustomer = false }) => {
 						const { appointment } = result;
 						setAppointment(appointment);
 						if (differenceInHours(new Date(appointment.start_time), new Date()) <= 24)
-							setIsVisible(true);
+							setIsAppointmentStartsIn24Hours(true);
 					} else {
 						ToastsStore.error(`Cannot find appointment details`);
 					}
@@ -129,6 +130,7 @@ const BookingEngine = ({ isCustomer = false }) => {
 			{!!appointment && !!bookingUsersQuantity ? (
 				<>
 					<DocModal
+						title={isAppointmentStartsIn24Hours ? "Thank you" : 'Delete Appointment'}
 						isVisible={isDeleteVisible}
 						onClose={() => setIsDeleteVisible(false)}
 						content={
@@ -139,51 +141,71 @@ const BookingEngine = ({ isCustomer = false }) => {
 									alignItems: 'center',
 								}}
 							>
-								<p>
-									Are you sure you want to delete this appointment?
-								</p>
-								<div className="row space-between">
-									<DocButton
-										color='green'
-										text='No'
-										onClick={() => setIsDeleteVisible(false)}
-									/>
-									<DocButton
-										color='pink'
-										text='Yes'
-										onClick={async () => {
-											await bookingService.deleteBooking(appointment.id, token, "patient", 'delete').catch(() => console.log('error'));
-											setIsDeleteVisible(false);
-											await getData();
-										}}
-									/>
-								</div>
+								{isAppointmentStartsIn24Hours ? (
+									<>
+										<p>
+											Thank you for notifying the practitioner that you are not going to attend the appointment.
+										</p>
+										<LinkButton
+											text='Buy new one'
+											color='green'
+											linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+										/>
+									</>
+								) : (
+									<>
+										<p>
+											Are you sure you want to <b>DELETE</b> your appointment?
+										</p>
+										<div className="row center">
+											<DocButton
+												color='green'
+												text='No'
+												style={{ marginRight: 20 }}
+												onClick={async () => {
+													setIsDeleteVisible(false)
+												}}
+											/>
+											<DocButton
+												color='pink'
+												text='Yes'
+												style={{ marginRight: 20 }}
+												onClick={async () => {
+													await bookingService.deleteBooking(appointment.id, token, "patient", 'delete').catch(() => console.log('error'));
+													setIsDeleteVisible(false);
+													getData();
+												}}
+											/>
+										</div>
+									</>
+								)}
 							</div>
 						}
 					/>
-					{(isCustomer && isVisible) ? (
+					{(isCustomerEdit && isAppointmentStartsIn24Hours) ? (
 						<>
 							<div className="row center">
-								This appointment is due to start in less than 24h from now.<br />
+								<p style={{ textAlign: 'center' }}>
+									Unfortunately, you cannot edit or delete your appointment as it is due to start in less that 24h.<br /><br />
+									Do you still want to notify the practitioner that your are not going to attend?
+								</p>
 							</div>
 							<div className="row center">
 								<DocButton
-									color='pink'
-									text='Delete'
-									style={{ marginRight: 20 }}
-									onClick={() => setIsDeleteVisible(true)}
-								/>
-								<LinkButton
-									text='Buy new one!'
 									color='green'
-									linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
+									text='Notify Practitioner'
+									style={{ marginRight: 20 }}
+									onClick={async () => {
+										await bookingService.deleteBooking(appointment.id, token, "patient", 'delete').catch(() => console.log('error'));
+										setIsDeleteVisible(true);
+									}}
 								/>
 							</div>
 						</>
 					) : (
 						<DocModal
-							isVisible={isVisible}
-							onClose={() => setIsVisible(false)}
+							isVisible={isAppointmentStartsIn24Hours}
+							onClose={() => setIsAppointmentStartsIn24Hours(false)}
 							content={
 								<div
 									style={{
@@ -206,24 +228,39 @@ const BookingEngine = ({ isCustomer = false }) => {
 										<DocButton
 											color='pink'
 											text='Yes'
-											onClick={() => setIsVisible(false)}
+											onClick={() => setIsAppointmentStartsIn24Hours(false)}
 										/>
 									</div>
 								</div>
 							}
 						/>
 					)}
-					{(isCustomer && !isVisible) && (
-						<div className="row flex-end">
-							<DocButton
-								color='pink'
-								text='Delete'
-								style={{ marginRight: 20 }}
-								onClick={() => setIsDeleteVisible(true)}
-							/>
+					{(isCustomerEdit && !isAppointmentStartsIn24Hours) && (
+						<div style={{ padding: '0 20px'}}>
+							<h4>
+								This appointment is due to start in more than 24h.<br />
+								You can still delete your appointment so you can book another one in future using the same booking link you have got in the order confirmation email.
+							</h4>
+							<div className="row center">
+								<div className="row">
+									<h4>
+										Do you want to delete your appointment?
+									</h4>
+								</div>
+								<DocButton
+									color='pink'
+									text='Delete'
+									style={{ marginRight: 20 }}
+									onClick={() => setIsDeleteVisible(true)}
+								/>
+							</div>
+							<Divider />
+							<h4>
+								Do you want to edit your appointment?
+							</h4>
 						</div>
 					)}
-					{!isVisible && (
+					{!isAppointmentStartsIn24Hours && (
 						<Formik
 							initialValues={{
 								...formInitialValues,
@@ -279,7 +316,7 @@ const BookingEngine = ({ isCustomer = false }) => {
 							}}
 							validationSchema={currentValidationSchema}
 							onSubmit={async (values, actions) => {
-								if (activeStep === 2) {
+								if (steps[activeStep] === 'Booking Appointment') {
 									const { selectedSlot } = values;
 									await bookingService.updateAppointmentStatus(
 										selectedSlot.id,
@@ -294,7 +331,7 @@ const BookingEngine = ({ isCustomer = false }) => {
 									actions.setSubmitting(false);
 									actions.setErrors({});
 									handleNext();
-								} else if (activeStep === 3) {
+								} else if (steps[activeStep] === 'Passenger Details') {
 									const {
 										numberOfPeople,
 										passengers,
@@ -318,7 +355,7 @@ const BookingEngine = ({ isCustomer = false }) => {
 										actions.setTouched({});
 										actions.setErrors({});
 									}
-								} else if (activeStep === 4) {
+								} else if (steps[activeStep] === 'Summary') {
 									const {
 										selectedSlot,
 										travelDate,
@@ -385,7 +422,7 @@ const BookingEngine = ({ isCustomer = false }) => {
 											if (result.success && result.confirmation) {
 												handleNext();
 												setTimerStart();
-												await bookingService.deleteBooking(appointment.id, token, isCustomer ? "patient" : "practitioner", 'edit').catch(() => console.log('error'));
+												await bookingService.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit').catch(() => console.log('error'));
 											} else {
 												setStatus({
 													severity: 'error',
@@ -409,7 +446,7 @@ const BookingEngine = ({ isCustomer = false }) => {
 						>
 							<BookingEngineForm
 								isEdit
-								isCustomer={isCustomer}
+								isCustomerEdit={isCustomerEdit}
 								status={status}
 								items={items}
 								activePassenger={activePassenger}
@@ -447,7 +484,7 @@ const BookingEngine = ({ isCustomer = false }) => {
 						<h3>Appointment doesn’t exist</h3>
 					</div>
 					<div className="row center">
-						{isCustomer ? (
+						{isCustomerEdit ? (
 							<LinkButton
 								text='Buy new one!'
 								color='green'
@@ -462,6 +499,11 @@ const BookingEngine = ({ isCustomer = false }) => {
 						)}
 					</div>
 				</>
+			)}
+			{(isCustomerEdit) && (
+				<h4 style={{ textAlign: 'center', marginTop: 40 }}>
+					If you have any questions, please contact us at <b>covidtesthelp@dochq.co.uk</b> or at 03300 880645 from 7 AM to 7 PM days per week
+				</h4>
 			)}
 		</BigWhiteContainer>
 	);

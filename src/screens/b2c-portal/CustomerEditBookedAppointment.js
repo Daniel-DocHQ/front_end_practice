@@ -5,7 +5,7 @@ import BigWhiteContainer from '../../components/Containers/BigWhiteContainer';
 const CustomerEditBookedAppointment = () => (
 	<React.Fragment>
 		<BigWhiteContainer>
-			<BookingEngine isCustomer />
+			<BookingEngine isCustomerEdit />
 		</BigWhiteContainer>
 	</React.Fragment>
 );
