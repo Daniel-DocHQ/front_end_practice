@@ -481,12 +481,15 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 			) : (
 				<>
 					<div className="row center">
-						<h3>Appointment doesn’t exist</h3>
+						<h3>
+							Your appointment has been successfully deleted.<br />
+							When you are ready to book a new appointment, simply use the booking link you got on your order confirmation email.
+						</h3>
 					</div>
 					<div className="row center">
 						{isCustomerEdit ? (
 							<LinkButton
-								text='Buy new one!'
+								text='Buy new one'
 								color='green'
 								linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
 							/>
