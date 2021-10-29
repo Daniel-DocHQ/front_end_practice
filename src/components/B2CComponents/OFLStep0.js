@@ -1,13 +1,20 @@
 import React from 'react';
 import { FieldArray, Field, useFormikContext } from 'formik';
 import {
+    Radio,
+    FormLabel,
+    RadioGroup,
+    FormControlLabel,
+	FormControl,
+    Divider,
+    FormHelperText,
     IconButton,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
-import { FIT_TO_FLY_ANTIGEN, PRE_DEPARTURE_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
+import { DAY_2_ANTIGEN, FIT_TO_FLY_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
 const OFLStep0 = ({
@@ -29,7 +36,7 @@ const OFLStep0 = ({
 
 	return (
         <>
-            {/* <h4 style={{ margin: 0, paddingTop: 20 }}>
+            <h4 style={{ margin: 0, paddingTop: 20 }}>
                 What test are you booking?
             </h4>
             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
@@ -61,15 +68,15 @@ const OFLStep0 = ({
                                     })}
                                 >
                                     <FormControlLabel value={FIT_TO_FLY_ANTIGEN} control={<Radio />} label="Fit to fly Antigen" />
-                                    <FormControlLabel value={PRE_DEPARTURE_ANTIGEN} control={<Radio />} label="Pre-departure Antigen Test" />
+                                    <FormControlLabel value={DAY_2_ANTIGEN} control={<Radio />} label="Day 2 Antigen Test" />
                                 </RadioGroup>
                                 <FormHelperText>{(meta.error && meta.touched) && meta.error}</FormHelperText>
                             </FormControl>
                         )}
                     </Field>
                 </div>
-            </div> */}
-            {/* <Divider style={{ width: '22%' }} /> */}
+            </div>
+            <Divider style={{ width: '22%' }} />
             {!!product && (
                 <>
                     <h4 style={{ margin: 0, paddingTop: 20 }}>
@@ -126,7 +133,7 @@ const OFLStep0 = ({
                                                 <Input
                                                     error={!!meta.error && meta.touched}
                                                     touched={meta.touched}
-                                                    placeholder={product === PRE_DEPARTURE_ANTIGEN ? purchaseCode.predeparturePlaceholder : purchaseCode.fitToFlyPlaceholder}
+                                                    placeholder={product === FIT_TO_FLY_ANTIGEN ? purchaseCode.fitToFlyPlaceholder : purchaseCode.day2Antigen}
                                                     helperText={(meta.error && meta.touched) && meta.error}
                                                     {...purchaseCode}
                                                     {...field}

@@ -98,7 +98,7 @@ const OFLBooking = () => {
             <Formik
                 initialValues={{
                     ...formInitialValues,
-                    product: FIT_TO_FLY_ANTIGEN,
+                    product: '',
                     purchaseCode: [{ code: ''}],
                     numberOfPeople: 1,
                     testType: {},

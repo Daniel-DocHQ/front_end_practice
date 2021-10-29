@@ -47,7 +47,7 @@ const TopNavigation = ({
 				</>
 			)}
 			{logo && (
-				<div className='practice-logo'>
+				<div className='partner-logo'>
 					<img src={logo} alt='logo' className='vista-logo' />
 				</div>
 			)}

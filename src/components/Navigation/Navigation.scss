@@ -41,6 +41,13 @@
 			height: 42px;
 		}
 	}
+
+	.partner-logo {
+		padding-left: 4px;
+		> img {
+			height: 42px;
+		}
+	}
 	.claimable-notification {
 		position: absolute;
 		right: 90px;
@@ -133,7 +140,15 @@
 // Tablet
 
 @media only screen and (max-width: 800px) {
+	.partner-logo {
+		position: absolute;
+		right: 10px;
+		> img {
+			height: 42px;
+		}
+	}
 	.practice-logo {
+		top: 10px;
 		padding-left: 30px !important;
 	}
 }
@@ -143,10 +158,18 @@
 	.page-title {
 		display: none;
 	}
+	.partner-logo {
+		position: absolute;
+		right: 10px;
+		> img {
+			height: 42px;
+		}
+	}
 	.practice-logo {
 		padding-left: 0px !important;
 		position: absolute;
 		left: 50%;
+		top: 10px;
 		transform: translateX(-50%);
 	}
 }
