@@ -238,6 +238,7 @@ const BookingEngine = ({ isCustomer = false }) => {
 									quantity: 4,
 									title: bookingUsersProduct.title,
 									type: bookingUsersProduct.type,
+									sku: bookingUsersProduct.sku,
 								},
 								product: bookingUsersProduct.id,
 								city: usersTimeZoneObj,
