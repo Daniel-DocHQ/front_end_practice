@@ -466,7 +466,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 								Your appointment is available for the next&nbsp;
 								<CountdownTimer
 									timerStart={timerStart.getTime()}
-									timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 1)).getTime()}
+									timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 30)).getTime()}
 									onTimeEnd={() => {
 										setTimerStart();
 										setActiveStep(2);
