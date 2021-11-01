@@ -73,6 +73,10 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 		passportNumber: '',
 		passportNumberConfirmation: '',
 		test_type: bookingUsersTestType,
+		vaccineStatus: '',
+        vaccineNumber: '',
+        vaccineTypeName: '',
+        vaccineType: '',
 	};
 
 	function handleBack() {
@@ -297,6 +301,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 									...rest
 								}) => {
 									const parsedPhoneNumber = parsePhoneNumber(phone);
+									const vaccineInformation = get(rest, 'vaccine_information');
 
 									return ({
 										...passengerInitialValues,
@@ -311,6 +316,11 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
 										countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountryCode,
 										short_token,
+										...(!!vaccineInformation ? {
+											vaccineStatus: get(vaccineInformation, 'status', ''),
+											vaccineNumber: get(vaccineInformation, 'number', ''),
+											vaccineType: get(vaccineInformation, 'type', ''),
+										} : {}),
 										...rest,
 									});
 								}),
@@ -376,6 +386,10 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										phone,
 										countryCode,
 										short_token,
+										vaccineNumber,
+										vaccineStatus,
+										vaccineType,
+										vaccineTypeName,
 										metadata,
 										...rest
 									}) => ({
@@ -385,6 +399,13 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										last_name: lastName,
 										date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
 										phone: `${countryCode.label}${phone.trim()}`,
+										...(!!get(rest, 'vaccine_information') ? {
+											vaccine_information: {
+												number: vaccineNumber,
+												status: vaccineStatus,
+												type: vaccineType === 'Other' ? vaccineTypeName : vaccineType,
+											}
+										} : {}),
 										metadata: {
 											...metadata,
 											travel_date: moment(
