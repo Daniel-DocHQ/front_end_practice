@@ -389,46 +389,46 @@ const BookingEngine = ({ skipBooking = false }) => {
 									}
 								}}
 							>
-							<>
-								<div className="fixed-box">
-									{(activeStep < 4 && activeStep > 0) && (
-										<Summary
-											activeStep={activeStep}
-											defaultTimezone={defaultTimeZone}
-										/>
-									)}
-									{timerStart && (
-										<div className="countdown-timer">
-											<p>
-												Your appointment is available for the next&nbsp;
-												<CountdownTimer
-													timerStart={timerStart.getTime()}
-													timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 30)).getTime()}
-													onTimeEnd={() => {
-														setTimerStart();
-														setActiveStep(2);
-														setActivePassenger(0);
-													}}
-												/> min<br />
-												If you do not complete the booking you might need to select another appointment
-											</p>
-										</div>
-									)}
-								</div>
-								<BookingEngineForm
-									activePassenger={activePassenger}
-									activeStep={activeStep}
-									defaultTimezone={defaultTimeZone}
-									handleBack={handleBack}
-									status={status}
-									steps={steps}
-									items={items}
-									timer={timerStart}
-									createdAppointmentId={createdAppointmentId}
-									isBookingSkip={isBookingSkip}
-									totalAvailableQuantity={totalAvailableQuantity}
-									dropTimer={() => setTimerStart()}
-								/>
+								<>
+									<div className="fixed-box">
+										{(activeStep < 4 && activeStep > 0) && (
+											<Summary
+												activeStep={activeStep}
+												defaultTimezone={defaultTimeZone}
+											/>
+										)}
+										{timerStart && (
+											<div className="countdown-timer">
+												<p>
+													Your appointment is available for the next&nbsp;
+													<CountdownTimer
+														timerStart={timerStart.getTime()}
+														timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 30)).getTime()}
+														onTimeEnd={() => {
+															setTimerStart();
+															setActiveStep(2);
+															setActivePassenger(0);
+														}}
+													/> min<br />
+													If you do not complete the booking you might need to select another appointment
+												</p>
+											</div>
+										)}
+									</div>
+									<BookingEngineForm
+										activePassenger={activePassenger}
+										activeStep={activeStep}
+										defaultTimezone={defaultTimeZone}
+										handleBack={handleBack}
+										status={status}
+										steps={steps}
+										items={items}
+										timer={timerStart}
+										createdAppointmentId={createdAppointmentId}
+										isBookingSkip={isBookingSkip}
+										totalAvailableQuantity={totalAvailableQuantity}
+										dropTimer={() => setTimerStart()}
+									/>
 								</>
 							</Formik>
 						</>

@@ -46,11 +46,18 @@ const useLufthansaValidationSchema = (activeStep) => (
           .of(
           Yup.object().shape({
             code: Yup.string().required('Input your code')
-              .test('checkCode', 'Invalid code. You have chosen another test type',
-                function checkCode(value) {
-                  const { product } = this.parent;
-                  return !!value ? product === FIT_TO_FLY_ANTIGEN ? String(value).match(/^(EANT|EAIR)*/) : String(value).match(/^(EPCR)*/) : true;
-                }
+              .test(
+                {
+                  name: 'checkCode',
+                  exclusive: false,
+                  params: { },
+                  message: 'Invalid code. You have chosen another test type',
+                  test: function (value, ctx) {
+                    const [patent1, patent2] = ctx.from;
+                    const regex = new RegExp(patent2.value.product === FIT_TO_FLY_ANTIGEN ? /^(EANT|EAIR)[A-Z, 0-9]*/ : /^(EPCR)[A-Z, 0-9]*/);
+                    return !!value ? regex.test(value) : true;
+                  },
+                },
               )
               .test('checkCodeBE', 'Your code is invalid',
                 function checkCodeBE(value) {

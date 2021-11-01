@@ -11,7 +11,7 @@ import bookingService from '../../services/bookingService';
 import adminService from '../../services/adminService';
 import COUNTRIES from '../../helpers/countries';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
+import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR, FIT_TO_FLY_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
 import CountdownTimer from '../CountdownTimer';
 import Summary from './Summary';
 import OFLBookingForm from './OFLBookingForm';
@@ -32,8 +32,8 @@ const OFLBooking = () => {
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = useOflValidationSchema(activeStep);
 	const steps = [
-		'Travel Details',
 		'Number of travellers',
+		'Travel Details',
 		'Booking Appointment',
 		'Passenger Details',
 		'Summary',
@@ -133,6 +133,18 @@ const OFLBooking = () => {
                         actions.setSubmitting(false);
                         actions.setErrors({});
                         handleNext();
+                    } else if (steps[activeStep] === 'Number of travellers') {
+                        const {
+                            testType: { sku },
+                        } = values;
+                        if (sku === FIT_TO_FLY_ANTIGEN)
+                            actions.setValues({
+                                ...values,
+                                timezone: defaultTimeZone.timezone,
+                                city: defaultTimeZone,
+                            });
+                        handleNext();
+
                     } else if (steps[activeStep] === 'Passenger Details') {
                         const {
                             numberOfPeople,

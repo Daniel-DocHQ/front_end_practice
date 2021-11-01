@@ -129,7 +129,7 @@ const OFLStep0 = ({
                                 <div className='row space-between' style={{ flexWrap: 'wrap', width: '60%' }}>
                                     <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                                         <Field name={`${purchaseCode.name}[${indx}].code`}>
-                                            {({ field, meta }) => (
+                                            {({ field, form, meta }) => (
                                                 <Input
                                                     error={!!meta.error && meta.touched}
                                                     touched={meta.touched}
@@ -137,6 +137,7 @@ const OFLStep0 = ({
                                                     helperText={(meta.error && meta.touched) && meta.error}
                                                     {...purchaseCode}
                                                     {...field}
+                                                    onChange={(({ target: { value } }) => form.setFieldValue(field.name, value.toUpperCase()))}
                                                     label={`${purchaseCode.label} ${indx + 1}`}
                                                 />
                                             )}

@@ -35,31 +35,50 @@ const checkPurchaseCodeInfo = async (value) => {
 const useOflValidationSchema = (activeStep) => (
   [
     Yup.object().shape({
-      [city.name]: Yup.object().shape({
-        timezone: Yup.string(),
-      }).required('Select city'),
-      [travelDate.name]: Yup.date(),
-      [travelTime.name]: Yup.date(),
-      }),
-    Yup.object().shape({
+      [product.name]: Yup.string().required('Select test kit to book appointment'),
+      [numberOfPeople.name]: Yup.number().required('Input number of people').min(1, 'Minimum 1 person for appointment').max(4, 'Maximum 4 people per appointment'),
       [purchaseCode.name]: Yup.array()
         .of(
         Yup.object().shape({
           code: Yup.string().required('Input your code')
-            .test('checkCode', 'Invalid code. You have chosen another test type',
-              function checkCode(tst, value) {
-                const { product } = this.parent;
-                return !!value ? product === FIT_TO_FLY_ANTIGEN ? String(value).match(/^(F2F)*/) : String(value).match(/^(D2)*/) : true;
-              }
+            .test(
+              {
+                name: 'checkCodeF2F',
+                exclusive: false,
+                params: { },
+                message: 'Invalid code. This code is not a Fit to Fly code. Please enter a code starting with F2F.',
+                test: function (value, ctx) {
+                  const [patent1, patent2] = ctx.from;
+                  const regex = new RegExp(/^(F2F)[A-Z, 0-9]*/);
+                  return (!!value && patent2.value.product === FIT_TO_FLY_ANTIGEN) ? regex.test(value) : true;
+                },
+              },
+            )
+            .test(
+              {
+                name: 'checkCodeD2T',
+                exclusive: false,
+                params: { },
+                message: 'Invalid code. This code is not a Fit to Fly code. Please enter a code starting with D2T.',
+                test: function (value, ctx) {
+                  const [patent1, patent2] = ctx.from;
+                  const regex = new RegExp(/^(D2T)[A-Z, 0-9]*/);
+                  return (!!value && patent2.value.product !== FIT_TO_FLY_ANTIGEN) ? regex.test(value) : true;
+                },
+              },
             )
             .test('checkCodeBE', 'Your code is invalid',
               function checkCodeBE(value) {
               return !!value ? checkPurchaseCodeInfo(value) : true;
             }),
-        }))
-        .min(1, 'Minimum 1 person'),
-      [product.name]: Yup.string().required('Select test kit to book appointment'),
-      [numberOfPeople.name]: Yup.number().required('Input number of people').min(1, 'Minimum 1 person for appointment').max(4, 'Maximum 4 people per appointment')
+        })).min(1, 'Minimum 1 person'),
+    }),
+    Yup.object().shape({
+      [city.name]: Yup.object().shape({
+        timezone: Yup.string(),
+      }).required('Select city'),
+      [travelDate.name]: Yup.date(),
+      [travelTime.name]: Yup.date(),
     }),
     Yup.object().shape({
     [selectedSlot.name]: Yup.object().typeError('You should select appointment time').shape({

@@ -34,8 +34,8 @@ const OFLBookingForm = ({
     const { values: { numberOfPeople } } = useFormikContext();
 
     const stepsComponents = [
-        <Step1 isPharmacy />,
         <OFLStep0 products={products} />,
+        <Step1 isPharmacy />,
         <Step2
             isEdit={isEdit}
             defaultTimezone={defaultTimezone}

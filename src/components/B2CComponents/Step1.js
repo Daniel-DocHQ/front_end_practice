@@ -91,7 +91,7 @@ const Step1 = ({ isPharmacy }) => {
 				<div className='row'>
 					<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
 						<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-							Where are you travelling from?
+							What is your flight time zone?
 						</h4>
 						<Field name={city.name}>
 							{({ field, meta, form }) => (

@@ -99,7 +99,7 @@ const bookingFormModel = {
             pcrPlaceholder: 'PCR000',
             predeparturePlaceholder: 'FLPXXXXXXXX',
             fitToFlyPlaceholder: 'F2FXXXXXXXX',
-            day2Antigen: 'D2XXXXXXXX',
+            day2Antigen: 'D2TXXXXXXX',
             required: true,
             type: 'text',
         },

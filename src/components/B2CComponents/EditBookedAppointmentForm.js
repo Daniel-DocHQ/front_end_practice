@@ -22,6 +22,7 @@ import CountdownTimer from '../CountdownTimer';
 import DocModal from '../DocModal/DocModal';
 import DocButton from '../DocButton/DocButton';
 import { Divider } from '@material-ui/core';
+import Summary from './Summary';
 
 const BookingEngine = ({ isCustomerEdit = false }) => {
 	const { token } = useContext(AuthContext);
@@ -444,38 +445,48 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 								}
 							}}
 						>
-							<BookingEngineForm
-								isEdit
-								isCustomerEdit={isCustomerEdit}
-								status={status}
-								items={items}
-								activePassenger={activePassenger}
-								activeStep={activeStep}
-								handleBack={handleBack}
-								defaultTimezone={defaultTimeZone}
-								bookingUsersQuantity={bookingUsersQuantity}
-								steps={steps}
-								timer={timerStart}
-								dropTimer={() => setTimerStart()}
-							/>
+							<>
+								<div className="fixed-box">
+									{(activeStep < 4 && activeStep > 0) && (
+										<Summary
+											activeStep={activeStep}
+											defaultTimezone={defaultTimeZone}
+										/>
+									)}
+									{timerStart && (
+										<div className="countdown-timer">
+											<p>
+												Your appointment is available for the next&nbsp;
+												<CountdownTimer
+													timerStart={timerStart.getTime()}
+													timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 30)).getTime()}
+													onTimeEnd={() => {
+														setTimerStart();
+														setActiveStep(2);
+														setActivePassenger(0);
+													}}
+												/> min<br />
+												If you do not complete the booking you might need to select another appointment
+											</p>
+										</div>
+									)}
+								</div>
+								<BookingEngineForm
+									isEdit
+									isCustomerEdit={isCustomerEdit}
+									status={status}
+									items={items}
+									activePassenger={activePassenger}
+									activeStep={activeStep}
+									handleBack={handleBack}
+									defaultTimezone={defaultTimeZone}
+									bookingUsersQuantity={bookingUsersQuantity}
+									steps={steps}
+									timer={timerStart}
+									dropTimer={() => setTimerStart()}
+								/>
+							</>
 						</Formik>
-					)}
-					{timerStart && (
-						<div className="countdown-timer">
-							<p>
-								Your appointment is available for the next&nbsp;
-								<CountdownTimer
-									timerStart={timerStart.getTime()}
-									timerStop={new Date(new Date(timerStart).setMinutes(timerStart.getMinutes() + 30)).getTime()}
-									onTimeEnd={() => {
-										setTimerStart();
-										setActiveStep(2);
-										setActivePassenger(0);
-									}}
-								/> min<br />
-								If you do not complete the booking you might need to select another appointment
-							</p>
-						</div>
 					)}
 				</>
 			) : (
