@@ -208,6 +208,7 @@ const Step0 = ({
             )}
             <h4 style={{ margin: 0, paddingTop: 20 }}>
                 How many people will take the test?<br />
+                You can book up to 4 people on this appointment.<br />
                 {!isBookingSkip && (
                     <span className="red-bold-text">Please note that all people have to be in one single location</span>
                 )}

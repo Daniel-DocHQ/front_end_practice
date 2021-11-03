@@ -63,6 +63,7 @@ const CertificatesAaron = ({
 
 	const [canCreateCertificate, setCanCreateCertificate] = useState(true);
 	const isResultRejected = result === 'Rejected';
+	const isClientNotThere = reasonForRejected === 'Client not there';
 	const isOtherOption = reasonForRejected === 'Other';
 
 	function isValid(obj) {
@@ -73,10 +74,10 @@ const CertificatesAaron = ({
 			!!obj.email &&
 			!!obj.date_of_birth &&
 			!!obj.sex &&
-			!!obj.security_checked &&
 			!!obj.result &&
 			!!obj.passport_number &&
 			!!obj.kit_provider &&
+			((isResultRejected && isClientNotThere) ? true : !!obj.security_checked) &&
 			((isDay2Antigen && !isResultRejected) ? !!obj.kit_id : true) &&
 			(isResultRejected ? !!obj.reject_notes : (doneBy8x8 ? doneBy8x8 : !!img))
 		);
@@ -366,17 +367,21 @@ const CertificatesAaron = ({
 						<p className='error'>Enter patient passport number</p>
 					</div>
 				)}
-				<div className='row'>
-					<MaterialCheckbox
-						value={security_checked}
-						onChange={setSecurity_checked}
-						labelComponent='ID document checked'
-					/>
-				</div>
-				{attemptedSubmit && !security_checked && (
-					<div className='row no-margin'>
-						<p className='error'>You must confirm security has been checked</p>
-					</div>
+				{!(isResultRejected && isClientNotThere) && (
+					<>
+						<div className='row'>
+							<MaterialCheckbox
+								value={security_checked}
+								onChange={setSecurity_checked}
+								labelComponent='ID document checked'
+							/>
+						</div>
+						{attemptedSubmit && !security_checked && (
+							<div className='row no-margin'>
+								<p className='error'>You must confirm security has been checked</p>
+							</div>
+						)}
+					</>
 				)}
 				<div className='row'>
 					<Autocomplete
@@ -398,18 +403,20 @@ const CertificatesAaron = ({
 						/>}
 					/>
 				</div>
-				<div className='row'>
-					<TextInputElement
-						value={kitId}
-						id='kit-id'
-						label='Kit ID'
-						inputProps={{ minLength: '5' }}
-						required={isDay2Antigen && !isResultRejected}
-						placeholder='Eg: 20P456632'
-						onChange={(value) => setKitId(value.toUpperCase())}
-						updateStatus={updateErrors}
-					/>
-				</div>
+				{isDay2Antigen && !isResultRejected && (
+					<div className='row'>
+						<TextInputElement
+							required
+							value={kitId}
+							id='kit-id'
+							label='Kit ID'
+							inputProps={{ minLength: '5' }}
+							placeholder='Eg: 20P456632'
+							onChange={(value) => setKitId(value.toUpperCase())}
+							updateStatus={updateErrors}
+						/>
+					</div>
+				)}
 				{attemptedSubmit && errors.includes('kit id') && (
 					<div className='row no-margin'>
 						<p className='error'>Enter patient Kit ID</p>

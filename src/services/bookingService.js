@@ -456,7 +456,6 @@ function releaseAppointment(auth_token, slot_id) {
 }
 function sendResult(auth_token, appointment_id, body, patientId) {
 	return new Promise((resolve, reject) => {
-		body.product = !!body.kitProvider ? body.kitProvider : '';
 		body.metadata = { ...body };
 		if (auth_token && appointment_id && patientId) {
 			axios({

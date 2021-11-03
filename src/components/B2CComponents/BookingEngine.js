@@ -305,7 +305,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 												locality: town,
 												bundle_id: parseInt(bundle_id),
 												product_id: parseInt(id),
-												selected_kit: selectedKit,
+												...(!!selectedKit ? { selected_kit: selectedKit } : {}),
 												...(isAdditionalProduct ? {
 													vaccine_information: {
 														number: vaccineNumber,
