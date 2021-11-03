@@ -317,6 +317,8 @@ const Step3 = ({
                                         error = 'Input date of birth';
                                     } else if (!date.isValid()) {
                                         error = 'Invalid Date';
+                                    } else if (date.isBefore(moment("1921-01-01"))) {
+                                        error = 'You are selecting a date that is more than 100 years old. Please enter a valid date of birth.';
                                     }
                                     return error;
                                 }}
@@ -330,6 +332,7 @@ const Step3 = ({
                                         inputVariant='filled'
                                         helperText={(meta.error && meta.touched) && meta.error}
                                         variant="filled"
+                                        minDate={new Date("1921-01-01")}
                                         format="dd/MM/yyyy"
                                         KeyboardButtonProps={{
                                             'aria-label': 'change date',
