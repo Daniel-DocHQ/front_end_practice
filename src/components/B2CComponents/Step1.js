@@ -119,10 +119,10 @@ const Step1 = ({ isPharmacy }) => {
 					</div>
 				</div>
 			)}
-			<div className='no-margin col'>
+			<div className='no-margin col' style={{ maxWidth: 400 }}>
 				<ThemeProvider theme={pickerTheme}>
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
-						<Grid container>
+						<Grid container justify="space-between">
 							<Grid item xs={12} md={3}>
 								<div className='appointment-calendar-container'>
 									<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
@@ -178,10 +178,10 @@ const Step1 = ({ isPharmacy }) => {
 			</div>
 			{isBundle && (
 				<>
-					<div className='no-margin col'>
+					<div className='no-margin col' style={{ maxWidth: 400 }}>
 						<ThemeProvider theme={pickerTheme}>
 							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-								<Grid container>
+								<Grid container justify="space-between">
 									<Grid item xs={12} md={3}>
 										<div className='appointment-calendar-container'>
 											<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
