@@ -181,50 +181,54 @@ const Step1 = ({ isPharmacy }) => {
 					<div className='no-margin col'>
 						<ThemeProvider theme={pickerTheme}>
 							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-								<div className='row'>
-									<div className='appointment-calendar-container'>
-										<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-											Select Arrival Date (UK)
-										</h4>
-										<Field name={landingDate.name}>
-											{({ field, form }) => (
-												<KeyboardDatePicker
-												{...field}
-												{...landingDate}
-												disablePast={!isBundle}
-												inputVariant='filled'
-												format="dd/MM/yyyy"
-												KeyboardButtonProps={{
-													'aria-label': 'change date',
-												}}
-												onChange={(value) => {
-													form.setFieldValue(field.name, value);
-													form.setFieldValue('appointmentDate', value);
-												}}
-											/>
-											)}
-										</Field>
-									</div>
-									<div className='appointment-calendar-container'>
-										<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-											Select Arrival Time (UK)
-										</h4>
-										<Field name={landingTime.name}>
-											{({ field, form }) => (
-												<KeyboardTimePicker
-												autoOk
-												{...field}
-												{...landingTime}
-												inputVariant='filled'
-												onChange={(value) => form.setFieldValue(field.name, value)}
-												KeyboardButtonProps={{
-													'aria-label': 'change time',
-												}}
-											/>
-											)}
-										</Field>
-									</div>
-								</div>
+								<Grid container>
+									<Grid item xs={12} md={3}>
+										<div className='appointment-calendar-container'>
+											<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+												Select Arrival Date (UK)
+											</h4>
+											<Field name={landingDate.name}>
+												{({ field, form }) => (
+													<KeyboardDatePicker
+													{...field}
+													{...landingDate}
+													disablePast={!isBundle}
+													inputVariant='filled'
+													format="dd/MM/yyyy"
+													KeyboardButtonProps={{
+														'aria-label': 'change date',
+													}}
+													onChange={(value) => {
+														form.setFieldValue(field.name, value);
+														form.setFieldValue('appointmentDate', value);
+													}}
+												/>
+												)}
+											</Field>
+										</div>
+									</Grid>
+									<Grid item xs={12} md={3}>
+										<div className='appointment-calendar-container'>
+											<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+												Select Arrival Time (UK)
+											</h4>
+											<Field name={landingTime.name}>
+												{({ field, form }) => (
+													<KeyboardTimePicker
+													autoOk
+													{...field}
+													{...landingTime}
+													inputVariant='filled'
+													onChange={(value) => form.setFieldValue(field.name, value)}
+													KeyboardButtonProps={{
+														'aria-label': 'change time',
+													}}
+												/>
+												)}
+											</Field>
+										</div>
+									</Grid>
+								</Grid>
 							</MuiPickersUtilsProvider>
 						</ThemeProvider>
 					</div>

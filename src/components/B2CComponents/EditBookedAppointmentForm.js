@@ -27,6 +27,7 @@ import Summary from './Summary';
 const BookingEngine = ({ isCustomerEdit = false }) => {
 	const { token } = useContext(AuthContext);
 	const [items, setItems] = useState([]);
+	const [flightDetails, setFlightDetails] = useState();
 	const [timerStart, setTimerStart] = useState();
 	const [isAppointmentStartsIn24Hours, setIsAppointmentStartsIn24Hours] = useState(false);
 	const [isDeleteVisible, setIsDeleteVisible] = useState(false);
@@ -44,8 +45,9 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = useValidationSchema(activeStep);
 	const usersTravelDate = get(bookingUsers, '[0].metadata.travel_date', new Date ());
-	const usersLandingDate = get(bookingUsers, '[0].metadata.landing_date', '');
-	const usersFlightNumber = get(bookingUsers, '[0].metadata.flight_number', '');
+	const usersLandingDate = get(flightDetails, 'transport_arrival_date_time', '');
+	const usersFlightNumber = get(flightDetails, 'transport_number', '');
+	const usersTransportType = get(flightDetails, 'transport_type', '');
 	const usersTimeZone = get(bookingUsers, '[0].tz_location', defaultTimeZone.timezone);
 	const bookingUsersQuantity = get(bookingUsers, 'length', 0);
 	const bookingUsersTestType = get(bookingUsers, '[0].test_type', 'Antigen');
@@ -100,17 +102,24 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 						if (differenceInHours(new Date(appointment.start_time), new Date()) <= 24)
 							setIsAppointmentStartsIn24Hours(true);
 					} else {
-						ToastsStore.error(`Cannot find appointment details`);
+						ToastsStore.error(result.error);
 					}
 				})
-				.catch(() => ToastsStore.error(`Cannot find appointment details`));
+				.catch(err => ToastsStore.error(err.error))
 			await adminService.getOrderProducts(short_token)
 				.then(data => {
 					if (data.success) {
 						setItems(data.order);
 					}
 				})
-				.catch(err => ToastsStore.error('Error fetching order information'))
+				.catch(err => ToastsStore.error(err.error))
+			await adminService.getFlightDetails(short_token)
+				.then(data => {
+					if (data.success) {
+						setFlightDetails(data.flightDetails);
+					}
+				})
+				.catch(err => ToastsStore.error(err.error))
 		}
 		setLoading(false);
 	};
@@ -118,7 +127,6 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 	useEffect(() => {
 		getData();
 	}, []);
-
 
 	if (isLoading) {
 		return (
@@ -275,6 +283,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 									landingDate: new Date(usersLandingDate),
 									landingTime: new Date(usersLandingDate),
 									transportNumber: usersFlightNumber,
+									transportType: usersTransportType,
 								} : {}),
 								testType: {
 									quantity: 4,

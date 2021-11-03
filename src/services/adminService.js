@@ -1003,6 +1003,39 @@ const adminService = {
 			}
 		});
 	},
+	getFlightDetails(order_short_token) {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: 'get',
+				url: `${baseUrl}/v1/flight-order/${order_short_token}`,
+			})
+				.then(response => {
+					if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+						resolve({
+							success: true,
+							flightDetails: response.data,
+						});
+					} else if ((response.status === 200 || response.status === 404) && response.data === null) {
+						resolve({
+							success: true,
+							data: null,
+						});
+					} else {
+						resolve({
+							success: false,
+							error: response.data.message || 'Something went wrong',
+						});
+					}
+				})
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
+		});
+	},
 	getOrderDetails(orderId, token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
