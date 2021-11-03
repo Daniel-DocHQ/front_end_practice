@@ -512,7 +512,7 @@ const Step3 = ({
                         <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                             <Field
                                 name={`passengers[${activePassenger}].${vaccineStatus.name}`}
-                                validate={(value) => (!value && get(touched, `passengers[${activePassenger}].${vaccineStatus.name}`, false)) ? `Select ${vaccineStatus.label}` : undefined}
+                                validate={(value) => (!value && !!touched && !!touched.passengers) ? `Select ${vaccineStatus.label}` : undefined}
                             >
                                 {({ field, form, meta }) => (
                                     <FormControl
