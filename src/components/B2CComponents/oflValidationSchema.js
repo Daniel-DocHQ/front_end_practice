@@ -62,7 +62,7 @@ const useOflValidationSchema = (activeStep) => (
                 message: 'Invalid code. This code is not a Fit to Fly code. Please enter a code starting with D2T.',
                 test: function (value, ctx) {
                   const [patent1, patent2] = ctx.from;
-                  const regex = new RegExp(/^(D2T)[A-Z, 0-9]*/);
+                  const regex = new RegExp(/^(D2T|D2D)[A-Z, 0-9]*/);
                   return (!!value && patent2.value.product !== FIT_TO_FLY_ANTIGEN) ? regex.test(value) : true;
                 },
               },
