@@ -330,6 +330,7 @@ const Step3 = ({
                                         error={!!meta.error}
                                         touched={meta.touched}
                                         inputVariant='filled'
+                                        maxDate={new Date()}
                                         helperText={(meta.error && meta.touched) && meta.error}
                                         variant="filled"
                                         minDate={new Date("1921-01-01")}
