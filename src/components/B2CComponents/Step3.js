@@ -285,8 +285,10 @@ const Step3 = ({
                             if (get(touched, `passengers[${activePassenger}].phone`, false)) {
                                 if (!value) {
                                     error = 'Input phone';
-                                } else if (!isValidPhoneNumber(countryCode + value)) {
+                                } else if (value.includes('+') || value.substring(0, 2) === '00') {
                                     error = 'Invalid phone number. Input phone without country code';
+                                } else if (!isValidPhoneNumber(countryCode + value)) {
+                                    error = 'Invalid phone number';
                                 }
                             }
                             return error;

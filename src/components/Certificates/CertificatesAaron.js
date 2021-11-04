@@ -188,7 +188,7 @@ const CertificatesAaron = ({
 			sex,
 			security_checked,
 			result,
-			kit_id: kitId,
+			...(!!kitId ? { kit_id: kitId } : {}),
 			passport_number: passportId,
 			kit_provider: kitProvider.name,
 			specificity: kitProvider.specificity,
@@ -257,7 +257,7 @@ const CertificatesAaron = ({
 				sex,
 				security_checked,
 				result: '',
-				kit_id: kitId,
+				...(!!kitId ? { kit_id: kitId } : {}),
 				passport_number: passportId,
 				kit_provider: !!kitProvider && !!kitProvider.name ? kitProvider.name : kitProvider,
 			};
