@@ -538,7 +538,7 @@ const Step3 = ({
                                             <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                                             <FormControlLabel value="no" control={<Radio />} label="No" />
                                         </RadioGroup>
-                                        <FormHelperText className="pink-text">{(meta.error && meta.touched) && meta.error}</FormHelperText>
+                                        <FormHelperText>{(meta.error && meta.touched) && meta.error}</FormHelperText>
                                     </FormControl>
                                 )}
                             </Field>
@@ -550,10 +550,11 @@ const Step3 = ({
                                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                                     <Field
                                         name={`passengers[${activePassenger}].${vaccineType.name}`}
-                                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].${vaccineType.name}`, false)) ? `Select ${vaccineType.label}` : undefined}
+                                        validate={(value) => (!value && !!touched && !!touched.passengers) ? `Select ${vaccineType.label}` : undefined}
                                     >
                                         {({ field, form, meta }) => (
                                             <FormControl
+                                                required
                                                 component='fieldset'
                                                 style={{ width: '100%' }}
                                                 error={!!meta.error && meta.touched}
@@ -612,10 +613,11 @@ const Step3 = ({
                                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                                     <Field
                                         name={`passengers[${activePassenger}].${vaccineNumber.name}`}
-                                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].${vaccineNumber.name}`, false)) ? `Select ${vaccineNumber.label}` : undefined}
+                                        validate={(value) => (!value && !!touched && !!touched.passengers) ? `Select ${vaccineNumber.label}` : undefined}
                                     >
                                         {({ field, form, meta }) => (
                                             <FormControl
+                                                required
                                                 error={!!meta.error && meta.touched}
                                                 touched={meta.touched}
                                                 helperText={(meta.error && meta.touched) && meta.error}
