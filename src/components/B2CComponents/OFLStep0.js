@@ -14,7 +14,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
-import { DAY_2_ANTIGEN, FIT_TO_FLY_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
+import { DAY_2_ANTIGEN, FIT_TO_FLY_ANTIGEN, DAY_2_ANTIGEN_US } from '../../helpers/productsWithAdditionalInfo';
 import './BookingEngine.scss';
 
 const OFLStep0 = ({
@@ -69,6 +69,7 @@ const OFLStep0 = ({
                                 >
                                     <FormControlLabel value={FIT_TO_FLY_ANTIGEN} control={<Radio />} label="Fit to fly Antigen" />
                                     <FormControlLabel value={DAY_2_ANTIGEN} control={<Radio />} label="Day 2 Antigen Test" />
+                                    <FormControlLabel value={DAY_2_ANTIGEN_US} control={<Radio />} label="Day 2 Antigen Test (US)" />
                                 </RadioGroup>
                                 <FormHelperText>{(meta.error && meta.touched) && meta.error}</FormHelperText>
                             </FormControl>
@@ -133,7 +134,7 @@ const OFLStep0 = ({
                                                 <Input
                                                     error={!!meta.error && meta.touched}
                                                     touched={meta.touched}
-                                                    placeholder={product === FIT_TO_FLY_ANTIGEN ? purchaseCode.fitToFlyPlaceholder : purchaseCode.day2Antigen}
+                                                    placeholder={product === FIT_TO_FLY_ANTIGEN ? purchaseCode.fitToFlyPlaceholder : product === DAY_2_ANTIGEN ? purchaseCode.day2Antigen : purchaseCode.day2AntigenUs}
                                                     helperText={(meta.error && meta.touched) && meta.error}
                                                     {...purchaseCode}
                                                     {...field}

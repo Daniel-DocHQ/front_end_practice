@@ -8,7 +8,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import bookingService from '../../services/bookingService';
 import bookingFormModel from './bookingFormModel';
 import { ddMMyyyy, formatTimeSlotWithTimeZone } from '../../helpers/formatDate';
-import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR } from '../../helpers/productsWithAdditionalInfo';
+import { PRODUCTS_WITH_ADDITIONAL_INFO, FIT_TO_FLY_PCR, DAY_2_ANTIGEN_US } from '../../helpers/productsWithAdditionalInfo';
 import DocButton from '../DocButton/DocButton';
 import ADDITIONAL_PRODUCT_TEXT from './additionalProductText';
 import Slot from './Slot';
@@ -135,6 +135,7 @@ const Step2 = ({
 	const isPCR = sku === FIT_TO_FLY_PCR;
 	const isSelectedSlotToday = !!selectedSlotValue && new Date(selectedSlotValue.start_time).setHours(0, 0, 0, 0) === new Date(selectedDate).setHours(0, 0, 0, 0);
 	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
+	const isDay2AntigenUS = sku === DAY_2_ANTIGEN_US;
 	const filteredAppointments = (isSelectedSlotToday && !!timer)
 		? [...appointments, selectedSlotValue].sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime())
 		: [...appointments];
@@ -250,7 +251,7 @@ const Step2 = ({
 										{...field}
 										disablePast
 										variant='static'
-										maxDate={isPCR ? maxDate : (isBundle ? undefined : travelDate)}
+										maxDate={isPCR ? maxDate : ((isBundle || isDay2AntigenUS) ? undefined : travelDate)}
 										label={appointmentDate.label}
 										onChange={(value) => form.setFieldValue(field.name, value)}
 										shouldDisableDate={isPCR

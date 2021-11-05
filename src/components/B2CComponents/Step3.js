@@ -167,7 +167,7 @@ const Step3 = ({
             )}
             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                    <Field name={`passengers[${activePassenger}].firstName`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].firstName`, false)) ? 'Input first name' : undefined}>
+                    <Field name={`passengers[${activePassenger}].firstName`} validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].firstName`, false)) ? 'Input first name' : undefined}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
@@ -182,7 +182,7 @@ const Step3 = ({
 			</div>
 			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
 				<div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                    <Field name={`passengers[${activePassenger}].lastName`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].lastName`, false)) ? 'Input last name' : undefined}>
+                    <Field name={`passengers[${activePassenger}].lastName`} validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].lastName`, false)) ? 'Input last name' : undefined}>
                         {({ field, meta }) => (
                             <Input
                                 error={!!meta.error}
@@ -448,7 +448,7 @@ const Step3 = ({
                 <div style={{ maxWidth: '40%', minWidth: '440px' }}>
                     <Field
                         name={`passengers[${activePassenger}].passportNumber`}
-                        validate={(value) => (!value && get(touched, `passengers[${activePassenger}].passportNumber`, false) ? 'Input Passport/National identity card number' : undefined)}
+                        validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].passportNumber`, false) ? 'Input Passport/National identity card number' : undefined)}
                     >
                         {({ field, meta }) => (
                             <Input
@@ -477,7 +477,7 @@ const Step3 = ({
                                 name={`passengers[${activePassenger}].passportNumberConfirmation`}
                                 validate={(value) => {
                                     let error;
-                                    if (!value && get(touched, `passengers[${activePassenger}].passportNumberConfirmation`, false)) {
+                                    if (!(value || '').trim() && get(touched, `passengers[${activePassenger}].passportNumberConfirmation`, false)) {
                                         error = 'Input Passport/National identity card number confirmation';
                                     } else if (value !== passengers[activePassenger].passportNumber) {
                                         error = 'Passport/Travel ID documents should match';
@@ -664,7 +664,7 @@ const Step3 = ({
                         </h6>
                         <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                             <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                <Field name={`passengers[${activePassenger}].street_address`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].street_address`, false)) ? 'Input address' : undefined}>
+                                <Field name={`passengers[${activePassenger}].street_address`} validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].street_address`, false)) ? 'Input address' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
                                             error={!!meta.error}
@@ -694,7 +694,7 @@ const Step3 = ({
                         </div>
                         <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                             <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                <Field name={`passengers[${activePassenger}].locality`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].locality`, false)) ? 'Input city' : undefined}>
+                                <Field name={`passengers[${activePassenger}].locality`} validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].locality`, false)) ? 'Input city' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
                                             error={!!meta.error}
@@ -709,7 +709,7 @@ const Step3 = ({
                         </div>
                         <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                             <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                <Field name={`passengers[${activePassenger}].country`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].country`, false)) ? 'Input country' : undefined}>
+                                <Field name={`passengers[${activePassenger}].country`} validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].country`, false)) ? 'Input country' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
                                             error={!!meta.error}
@@ -730,7 +730,7 @@ const Step3 = ({
                         </h4>
                         <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                             <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                <Field name={`passengers[${activePassenger}].postal_code`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].postal_code`, false)) ? 'Input postcode' : undefined}>
+                                <Field name={`passengers[${activePassenger}].postal_code`} validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].postal_code`, false)) ? 'Input postcode' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
                                             error={!!meta.error}
@@ -745,7 +745,7 @@ const Step3 = ({
                         </div>
                         <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                             <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                <Field name={`passengers[${activePassenger}].street_address`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].street_address`, false)) ? 'Input address' : undefined}>
+                                <Field name={`passengers[${activePassenger}].street_address`} validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].street_address`, false)) ? 'Input address' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
                                             error={!!meta.error}
@@ -775,7 +775,7 @@ const Step3 = ({
                         </div>
                         <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                             <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                <Field name={`passengers[${activePassenger}].locality`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].locality`, false)) ? 'Input city' : undefined}>
+                                <Field name={`passengers[${activePassenger}].locality`} validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].locality`, false)) ? 'Input city' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
                                             error={!!meta.error}
@@ -790,7 +790,7 @@ const Step3 = ({
                         </div>
                         <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                             <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                <Field name={`passengers[${activePassenger}].region`} validate={(value) => (!value && get(touched, `passengers[${activePassenger}].region`, false)) ? 'Input county' : undefined}>
+                                <Field name={`passengers[${activePassenger}].region`} validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].region`, false)) ? 'Input county' : undefined}>
                                     {({ field, meta }) => (
                                         <Input
                                             error={!!meta.error}

@@ -23,7 +23,17 @@ import bookingService from '../../services/bookingService';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import Input from '../FormComponents/Input';
-import { DAY_2_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
+import {
+	DAY_2_ANTIGEN,
+	DAY_2_ANTIGEN_US,
+	DAY_2_ANTIGEN_CONSULT,
+} from '../../helpers/productsWithAdditionalInfo';
+
+const DAY_2_TESTS = [
+	DAY_2_ANTIGEN,
+	DAY_2_ANTIGEN_CONSULT,
+	DAY_2_ANTIGEN_US,
+];
 
 const CertificatesAaron = ({
 	img,
@@ -36,7 +46,7 @@ const CertificatesAaron = ({
 	submitCallback = null,
 	kitProvider: preselectedKidProvider,
 }) => {
-	const isDay2Antigen = sku === DAY_2_ANTIGEN;
+	const isDay2Antigen = DAY_2_TESTS.includes(sku);
 	const isVideoAppointment = submitCallback === null;
 	const { user, token } = useContext(AuthContext);
 	const [populated, setPopulated] = useState(false);

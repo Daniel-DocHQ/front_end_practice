@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { FIT_TO_FLY_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
+import { DAY_2_ANTIGEN, DAY_2_ANTIGEN_US, FIT_TO_FLY_ANTIGEN } from '../../helpers/productsWithAdditionalInfo';
 import adminService from '../../services/adminService';
 import bookingFormModel from './bookingFormModel';
 
@@ -59,11 +59,24 @@ const useOflValidationSchema = (activeStep) => (
                 name: 'checkCodeD2T',
                 exclusive: false,
                 params: { },
-                message: 'Invalid code. This code is not a Fit to Fly code. Please enter a code starting with D2T.',
+                message: 'Invalid code. This code is not a Fit to Fly code. Please enter a code starting with D2T or D2D.',
                 test: function (value, ctx) {
                   const [patent1, patent2] = ctx.from;
                   const regex = new RegExp(/^(D2T|D2D)[A-Z, 0-9]*/);
-                  return (!!value && patent2.value.product !== FIT_TO_FLY_ANTIGEN) ? regex.test(value) : true;
+                  return (!!value && patent2.value.product === DAY_2_ANTIGEN) ? regex.test(value) : true;
+                },
+              },
+            )
+            .test(
+              {
+                name: 'checkCodeD2US',
+                exclusive: false,
+                params: { },
+                message: 'Invalid code. This code is not a Fit to Fly code. Please enter a code starting with D2US.',
+                test: function (value, ctx) {
+                  const [patent1, patent2] = ctx.from;
+                  const regex = new RegExp(/^(D2US)[A-Z, 0-9]*/);
+                  return (!!value && patent2.value.product === DAY_2_ANTIGEN_US) ? regex.test(value) : true;
                 },
               },
             )

@@ -1,3 +1,7 @@
+export const DAY_2_ANTIGEN_CONSULT = 'RECONSULT-ANT-DAY-2';
+export const DAY_2_ANTIGEN_US = 'DAY-2-US-ANT-001';
+export const DAY_2_ANTIGEN = 'DAY-2-UK-ANT-001'; // Day 2 Antigen Test Kit
+
 export const PRODUCTS_WITH_ADDITIONAL_INFO = [
 	'SYN-UK-PCR-SNS-004', // Test to Release
 	'SYN-UK-PCR-SNS-003', // Day 8 PCR Test
@@ -9,8 +13,8 @@ export const PRODUCTS_WITH_ADDITIONAL_INFO = [
 	'SPORT-UK-PCR-SNS-002', // Day 2 PCR Test Sports
 	'YN-UK-PCR-SNS-002', // Amber Bundle UEFA
 	'SPORT-UK-PCR-SNS-003', //Test to Release PCR Sports
-	'DAY-2-UK-ANT-001', // Day 2 Antigen Test Kit
-	'RECONSULT-ANT-DAY-2',
+	DAY_2_ANTIGEN_CONSULT,
+	DAY_2_ANTIGEN,
 ];
 
 export const VIDEO_CONSULTATION_PRODUCTS = [
@@ -30,7 +34,6 @@ export const VACCINES = [
 export const ANTIGEN_CONSULTATION = 'CONSULT-ANT';
 export const PCR_CONSULTATION = 'CONSULT-PCR';
 export const CERTIFICATE_PRODUCT = 'COVID-TEST-CERTIFICATE';
-export const DAY_2_ANTIGEN = 'DAY-2-UK-ANT-001';
 
 export const MASK_SKU = 'AGIS-FACE-MASK';
 
