@@ -89,7 +89,7 @@ const Step1 = ({ isPharmacy }) => {
 			)}
 			{!isPCR && (
 				<div className='row'>
-					<div style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
+					<div className="autocomplete" style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
 						<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
 							What is your flight time zone?
 						</h4>

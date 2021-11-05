@@ -598,7 +598,7 @@ const Step3 = ({
                                         </h4>
                                         <Field
                                             name={`passengers[${activePassenger}].${vaccineTypeName.name}`}
-                                            validate={(value) => (!value && get(touched, `passengers[${activePassenger}].vaccineTypeName`, false)) ? 'Input Vaccine Name' : undefined}>
+                                            validate={(value) => (!(value || '').trim() && get(touched, `passengers[${activePassenger}].vaccineTypeName`, false)) ? 'Input Vaccine Name' : undefined}>
                                             {({ field, meta }) => (
                                                 <Input
                                                     error={!!meta.error}
