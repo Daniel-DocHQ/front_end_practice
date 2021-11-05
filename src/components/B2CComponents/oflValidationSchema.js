@@ -69,13 +69,13 @@ const useOflValidationSchema = (activeStep) => (
             )
             .test(
               {
-                name: 'checkCodeD2US',
+                name: 'checkCodeUS2',
                 exclusive: false,
                 params: { },
-                message: 'Invalid code. This code is not a Fit to Fly code. Please enter a code starting with D2US.',
+                message: 'Invalid code. This code is not a Fit to Fly code. Please enter a code starting with US2.',
                 test: function (value, ctx) {
                   const [patent1, patent2] = ctx.from;
-                  const regex = new RegExp(/^(D2US)[A-Z, 0-9]*/);
+                  const regex = new RegExp(/^(US2)[A-Z, 0-9]*/);
                   return (!!value && patent2.value.product === DAY_2_ANTIGEN_US) ? regex.test(value) : true;
                 },
               },
