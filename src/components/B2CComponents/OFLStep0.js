@@ -67,8 +67,8 @@ const OFLStep0 = ({
                                         form.setFieldValue('testType', product);
                                     })}
                                 >
-                                    <FormControlLabel value={FIT_TO_FLY_ANTIGEN} control={<Radio />} label="Fit to fly Antigen" />
-                                    <FormControlLabel value={DAY_2_ANTIGEN} control={<Radio />} label="Day 2 Antigen Test" />
+                                    <FormControlLabel value={FIT_TO_FLY_ANTIGEN} control={<Radio />} label="Fit to Fly Antigen Test" />
+                                    <FormControlLabel value={DAY_2_ANTIGEN} control={<Radio />} label="Day 2 Antigen Test (UK)" />
                                     <FormControlLabel value={DAY_2_ANTIGEN_US} control={<Radio />} label="Day 2 Antigen Test (US)" />
                                 </RadioGroup>
                                 <FormHelperText>{(meta.error && meta.touched) && meta.error}</FormHelperText>
