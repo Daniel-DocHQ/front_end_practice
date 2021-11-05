@@ -269,7 +269,7 @@ const Step1 = ({ isPharmacy }) => {
 							<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
 								{transportNumberLabel}
 							</h4>
-							<Field name={transportNumber.name} validate={(value) => (!value && touched.transportNumber) ? `Input ${transportNumberLabel}` : undefined}>
+							<Field name={transportNumber.name} validate={(value) => (!(value || '').trim() && touched.transportNumber) ? `Input ${transportNumberLabel}` : undefined}>
 								{({ field, meta }) => (
 									<Input
 										{...field}
