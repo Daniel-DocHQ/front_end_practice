@@ -25,14 +25,12 @@ import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import Input from '../FormComponents/Input';
 import {
 	DAY_2_ANTIGEN,
-	DAY_2_ANTIGEN_US,
 	DAY_2_ANTIGEN_CONSULT,
 } from '../../helpers/productsWithAdditionalInfo';
 
 const DAY_2_TESTS = [
 	DAY_2_ANTIGEN,
 	DAY_2_ANTIGEN_CONSULT,
-	DAY_2_ANTIGEN_US,
 ];
 
 const CertificatesAaron = ({
