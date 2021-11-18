@@ -25,7 +25,8 @@ import { Divider } from '@material-ui/core';
 import Summary from './Summary';
 
 const BookingEngine = ({ isCustomerEdit = false }) => {
-	const { token } = useContext(AuthContext);
+	const { token: auth_token } = useContext(AuthContext);
+	const token = auth_token || 'token';
 	const [items, setItems] = useState([]);
 	const [flightDetails, setFlightDetails] = useState();
 	const [timerStart, setTimerStart] = useState();
