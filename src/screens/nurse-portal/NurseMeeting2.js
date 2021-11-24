@@ -516,7 +516,9 @@ const SubmitPatientResult = ({
 	const sendSampleTaken = async () => {
 		if (sampleTaken) {
 			sendResult({
-				kit_id: kitId,
+				...((!!kitId && !customerNotThere) && {
+					kit_id: kitId,
+				}),
 				...((isSampleTakenInvalid) && {
 					invalid_notes: resultNotes,
 				}),
