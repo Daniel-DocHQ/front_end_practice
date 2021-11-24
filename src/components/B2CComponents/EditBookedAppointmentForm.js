@@ -452,26 +452,35 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										type: appointment.type,
 										booking_users,
 									};
-									await bookingService
-										.paymentRequest(selectedSlot.id, body)
-										.then(async (result) => {
-											if (result.success && result.confirmation) {
-												handleNext();
-												setTimerStart();
-												await bookingService.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit').catch(() => console.log('error'));
-											} else {
-												setStatus({
-													severity: 'error',
-													message: result.message,
-												});
-											}
-										})
-										.catch(({ error }) => {
+									await bookingService.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit')
+									.then(async (result) => {
+										if (result.success) {
+											await bookingService
+												.paymentRequest(selectedSlot.id, body)
+												.then(async (result) => {
+													if (result.success && result.confirmation) {
+														handleNext();
+														setTimerStart();
+													} else {
+														setStatus({
+															severity: 'error',
+															message: result.message,
+														});
+													}
+												})
+										} else {
 											setStatus({
 												severity: 'error',
-												message: error,
-											})
-										});
+												message: result.message,
+											});
+										}
+									})
+									.catch(({ error }) => {
+										setStatus({
+											severity: 'error',
+											message: error,
+										})
+									});
 								} else {
 									actions.setTouched({});
 									actions.setSubmitting(false);

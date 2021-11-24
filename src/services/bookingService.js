@@ -292,7 +292,13 @@ function deleteBooking(slot_id, auth_token, actor, action) {
 						});
 					}
 				})
-				.catch(err => reject({ success: false, error: 'Server Error Occurred' }));
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, status: err.response.status });
+					} else {
+						reject({ status: err.response.status, success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
 		} else if (typeof auth_token === 'undefined') {
 			reject({ success: false, error: 'Unable to authenticate user.', authenticated: false });
 		} else {
