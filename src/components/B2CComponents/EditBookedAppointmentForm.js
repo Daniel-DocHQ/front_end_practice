@@ -156,16 +156,11 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 								}}
 							>
 								{isAppointmentStartsIn24Hours ? (
-									<>
 										<p>
-											Thank you for notifying the practitioner that you are not going to attend the appointment.
+											Thank you for notifying the practitioner that you are not going to attend the appointment.<br />
+											If you want to buy a new consultation, please follow the instructions in the confirmation email you have just received.<br />
+											You can reuse the same test kit up to 6 months after the purchase date.
 										</p>
-										<LinkButton
-											text='Buy new one'
-											color='green'
-											linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
-										/>
-									</>
 								) : (
 									<>
 										<p>
