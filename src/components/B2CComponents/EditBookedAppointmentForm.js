@@ -185,9 +185,12 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 												text='Yes'
 												style={{ marginRight: 20 }}
 												onClick={async () => {
-													await bookingService.deleteBooking(appointment.id, token, "patient", 'delete').catch(() => console.log('error'));
-													setIsDeleteVisible(false);
-													getData();
+													await bookingService.deleteBooking(appointment.id, token, "patient", 'delete')
+													.then(() => {
+														setIsDeleteVisible(false);
+														getData();
+													})
+													.catch(({ error }) => ToastsStore.error(error));
 												}}
 											/>
 										</div>
@@ -211,8 +214,9 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 									text='Notify Practitioner'
 									style={{ marginRight: 20 }}
 									onClick={async () => {
-										await bookingService.deleteBooking(appointment.id, token, "patient", 'delete').catch(() => console.log('error'));
-										setIsDeleteVisible(true);
+										await bookingService.deleteBooking(appointment.id, token, "patient", 'delete')
+										.then(() => setIsDeleteVisible(true))
+										.catch(({ error }) => ToastsStore.error(error));
 									}}
 								/>
 							</div>
