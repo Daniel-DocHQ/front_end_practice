@@ -9,6 +9,4 @@ export const DISCOUNT_USER_NAMES = [
 
 export const PRODUCT_USER_NAMES = [
 	'Super Admin',
-	'Silva Quattrocchi',
-	'Madhur Srivastava',
 ];
