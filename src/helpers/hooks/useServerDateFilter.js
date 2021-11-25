@@ -99,7 +99,7 @@ export const useServerDateFilter = ({
         const interval = setInterval(() => {
 			getData();
             setFilter('today');
-		}, 60000 * 5);
+		}, 60000);
 		return () => clearInterval(interval);
     };
 
