@@ -1,6 +1,7 @@
 export const DAY_2_ANTIGEN_CONSULT = 'RECONSULT-ANT-DAY-2';
 export const DAY_2_ANTIGEN_US = 'DAY-2-US-ANT-001';
 export const DAY_2_ANTIGEN = 'DAY-2-UK-ANT-001'; // Day 2 Antigen Test Kit
+const RECONSULT_PCR_DAY_2 = 'RECONSULT-PCR-DAY-2';
 
 export const PRODUCTS_WITH_ADDITIONAL_INFO = [
 	'SYN-UK-PCR-SNS-004', // Test to Release
@@ -15,12 +16,14 @@ export const PRODUCTS_WITH_ADDITIONAL_INFO = [
 	'SPORT-UK-PCR-SNS-003', //Test to Release PCR Sports
 	DAY_2_ANTIGEN_CONSULT,
 	DAY_2_ANTIGEN,
+	RECONSULT_PCR_DAY_2,
 ];
 
 export const VIDEO_CONSULTATION_PRODUCTS = [
 	'RECONSULT-ANT', // Antigen
     'RECONSULT-PCR', // PCR
 	'RECONSULT-ANT-DAY-2', // Antigen day 2
+	RECONSULT_PCR_DAY_2,
 ];
 
 export const VACCINES = [
