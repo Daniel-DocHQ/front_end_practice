@@ -156,16 +156,11 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 								}}
 							>
 								{isAppointmentStartsIn24Hours ? (
-									<>
 										<p>
-											Thank you for notifying the practitioner that you are not going to attend the appointment.
+											Thank you for notifying the practitioner that you are not going to attend the appointment.<br />
+											If you want to buy a new consultation, please follow the instructions in the confirmation email you have just received.<br />
+											You can reuse the same test kit up to 6 months after the purchase date.
 										</p>
-										<LinkButton
-											text='Buy new one'
-											color='green'
-											linkSrc={`${process.env.REACT_APP_WEBSITE_LINK}/shop`}
-										/>
-									</>
 								) : (
 									<>
 										<p>
@@ -185,9 +180,12 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 												text='Yes'
 												style={{ marginRight: 20 }}
 												onClick={async () => {
-													await bookingService.deleteBooking(appointment.id, token, "patient", 'delete').catch(() => console.log('error'));
-													setIsDeleteVisible(false);
-													getData();
+													await bookingService.deleteBooking(appointment.id, token, "patient", 'delete')
+													.then(() => {
+														setIsDeleteVisible(false);
+														getData();
+													})
+													.catch(({ error }) => ToastsStore.error(error));
 												}}
 											/>
 										</div>
@@ -211,8 +209,9 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 									text='Notify Practitioner'
 									style={{ marginRight: 20 }}
 									onClick={async () => {
-										await bookingService.deleteBooking(appointment.id, token, "patient", 'delete').catch(() => console.log('error'));
-										setIsDeleteVisible(true);
+										await bookingService.deleteBooking(appointment.id, token, "patient", 'delete')
+										.then(() => setIsDeleteVisible(true))
+										.catch(({ error }) => ToastsStore.error(error));
 									}}
 								/>
 							</div>
