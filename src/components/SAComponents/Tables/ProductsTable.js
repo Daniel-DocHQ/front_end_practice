@@ -107,7 +107,8 @@ const ProductsTable = ({ reload, token, products = [] }) => {
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <TableCell align='left' style={styles.tableText}>Title</TableCell>
+                                <TableCell align='left' style={styles.tableText}>ID</TableCell>
+                                <TableCell align='center' style={styles.tableText}>Title</TableCell>
                                 <TableCell align='center' style={styles.tableText}>Price</TableCell>
                                 <TableCell align='center' style={styles.tableText}>SKU</TableCell>
                                 <TableCell align='center' style={styles.tableText}>Type</TableCell>
@@ -123,6 +124,12 @@ const ProductsTable = ({ reload, token, products = [] }) => {
                                     <TableRow key={product.id}>
                                         <TableCell
                                             align='left'
+                                            style={{ ...styles.tableText }}
+                                        >
+                                            {get(product, 'id', '')}
+                                        </TableCell>
+                                        <TableCell
+                                            align='center'
                                             style={{ ...styles.tableText }}
                                         >
                                             {get(product, 'title', '')}
