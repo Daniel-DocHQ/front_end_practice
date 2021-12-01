@@ -14,6 +14,7 @@ const {
     city,
     tocAccept,
     purchaseCode,
+    landingDate,
   }
 } = bookingFormModel;
 
@@ -38,6 +39,7 @@ const useValidationSchema = (activeStep, isBookingSkip = false, isPharmacy = fal
       }).required('Select city'),
       [travelDate.name]: Yup.date(),
       [travelTime.name]: Yup.date(),
+      [landingDate.name]: Yup.date(),
     }),
     ...(isBookingSkip ? [] : [
       Yup.object().shape({
