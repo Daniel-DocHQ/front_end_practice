@@ -109,6 +109,7 @@ const OrderDetails = ({
 	const [orderDetail, setOrderDetail] = useState({});
 	const [discountValue, setDiscountValue] = useState();
 	const [appointments, setAppointments] = useState([]);
+	const [products, setProducts] = useState([]);
 	const [approvedTestKits, setApprovedTestKits] = useState([]);
 	const [reloadInfo, setReloadInfo] = useState(false);
 	const [addingNote, setAddingNote] = useState(false);
@@ -163,6 +164,12 @@ const OrderDetails = ({
 				}).catch((error) => {
 					setApprovedTestKits([]);
 				});
+			await adminService.getProducts()
+				.then(result => {
+					if (result.success && result.products) {
+						setProducts(result.products);
+					}
+				}).catch(err => console.log(err));
 		}
 		setLoading(false);
 
@@ -556,6 +563,7 @@ const OrderDetails = ({
 										token={token}
 										app={app}
 										call={call}
+										products={products}
 										setCall={setCall}
 										reloadInfo={reloadInfo}
 										orderItems={get(orderDetail, 'items', []).filter(({ product: { type } }) => type !== 'Virtual')}
@@ -759,6 +767,7 @@ const AppointmentDetails = ({
 	appointmentIndx,
 	refetchData,
 	token,
+	products,
 	swabbingMethod,
 	orderItems = [],
 	shortToken,
@@ -825,7 +834,7 @@ const AppointmentDetails = ({
 				{!!product_id && (
 					<ListItem>
 						<ListItemText>
-							<b>Selected Product</b>: {get(orderItems.find(({ product_id }) => product_id === appointment.booking_user.product_id), 'product.title', '')}
+							<b>Selected Product</b>: {get(orderItems.find(({ product_id }) => product_id === appointment.booking_user.product_id), 'product.title', '') || get(products.find(({ id }) => id === appointment.booking_user.product_id), 'title', '')}
 						</ListItemText>
 					</ListItem>
 				)}
