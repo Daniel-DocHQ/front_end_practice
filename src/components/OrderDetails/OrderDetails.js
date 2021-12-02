@@ -106,6 +106,15 @@ const OrderDetails = ({
 	shortInfo = false,
 }) => {
 	const classes = useStyles();
+	const orderId = get(order, 'id', '')
+	let orders = [
+		orderId,
+	];
+	if (orderId.slice(-4) === '_x_x')
+		orders.push(orderId.substring(0, orderId.length - 2), orderId.substring(0, orderId.length - 4))
+	else if (orderId.slice(-2) === '_x')
+		orders.push(orderId.substring(0, orderId.length - 2), orderId + '_x')
+	else orders.push(orderId + '_x', orderId + '_x_x')
 	const [orderDetail, setOrderDetail] = useState({});
 	const [discountValue, setDiscountValue] = useState();
 	const [appointments, setAppointments] = useState([]);
@@ -128,7 +137,6 @@ const OrderDetails = ({
         call,
         setCall,
     } = useVonageApp('Customer Service');
-
 	const fetchData = async () => {
 		if (!!order && !!order.id) {
 			await adminService.getOrderDetails(order.id, token).then(res => {
@@ -148,12 +156,14 @@ const OrderDetails = ({
 				}).catch(res => {
 					setError(<>{res.message}</>)
 				});
-			await bookingService.getAppointmentsByShortToken(order.id)
-				.then(result => {
-					if (result.success && result.appointments) {
-						setAppointments(result.appointments);
-					}
-				}).catch(err => console.log(err));
+			const appointmentsArr = [];
+			orders.forEach(async (orderItemId) => {
+				const result = await bookingService.getAppointmentsByShortToken(orderItemId);
+				if (result.success && result.appointments)
+					appointmentsArr.push(...result.appointments)
+				else console.log(result.error)
+			})
+			setAppointments(appointmentsArr);
 			await adminService.getApprovedProducts()
             	.then(result => {
 					if (result.success && result.kits) {
