@@ -28,6 +28,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 	const { token: auth_token } = useContext(AuthContext);
 	const token = auth_token || 'token';
 	const [items, setItems] = useState([]);
+	const [products, setProducts] = useState([]);
 	const [flightDetails, setFlightDetails] = useState();
 	const [timerStart, setTimerStart] = useState();
 	const [isAppointmentStartsIn24Hours, setIsAppointmentStartsIn24Hours] = useState(false);
@@ -114,6 +115,13 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 					}
 				})
 				.catch(err => ToastsStore.error(err.error))
+			await adminService.getProducts()
+				.then(result => {
+					if (result.success && result.products) {
+						setProducts(result.products);
+					}
+				})
+				.catch(err => ToastsStore.error(err.error))
 			await adminService.getFlightDetails(short_token)
 				.then(data => {
 					if (data.success) {
@@ -128,6 +136,14 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 	useEffect(() => {
 		getData();
 	}, []);
+
+	useEffect(() => {
+		if (!!items.length && !!products.length) {
+			const product = products.find(({ id }) => id === bookingUsersProductId)
+			if (!get(items.find(({ id }) => id === product.id), 'id'))
+				setItems([...items, product]);
+		}
+	}, [products]);
 
 	if (isLoading) {
 		return (
