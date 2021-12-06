@@ -62,9 +62,34 @@ const NurseMeeting2 = ({
 	hideVideoAppointment,
 }) => {
 	const token = useToken();
+	return (
+		<AppointmentContextProvider token={token} appointmentId={appointmentId}>
+			<ProductProvider
+				isVideo={isVideo}
+				token={token}
+				isHackLink={isHackLink}
+				hideVideoAppointment={hideVideoAppointment}
+			>
+			</ProductProvider>
+		</AppointmentContextProvider>
+	);
+};
+
+export default NurseMeeting2;
+
+const ProductProvider = ({
+	token,
+	isVideo,
+	isHackLink,
+	hideVideoAppointment,
+}) => {
 	const [videoCallToken, setVideoCallToken] = useState();
 	const [kitProvider, setKitProvider] = useState();
+	const [product, setProduct] = useState();
 	const [approvedTestKits, setApprovedTestKits] = useState([]);
+	const { booking_users } = useContext(AppointmentContext);
+	const productSku = get(product, 'sku', '');
+	const productTitle = get(product, 'title', '');
 
 	const getApprovedProducts = async () => {
         await adminService.getApprovedProducts()
@@ -81,12 +106,29 @@ const NurseMeeting2 = ({
             });
     };
 
+	const getProduct = async () => {
+        await adminService.getProduct(booking_users[0].product_id, token)
+			.then(data => {
+				if (data.success) {
+					setProduct(data.product);
+				} else {
+					ToastsStore.error(data.error);
+				}
+			})
+			.catch(err => ToastsStore.error(err.err));
+    };
+
 	useEffect(() => {
 		getApprovedProducts();
 	}, []);
 
+	useEffect(() => {
+		if (!!booking_users && !!booking_users.length)
+			getProduct();
+	}, [booking_users]);
+
 	return (
-		<AppointmentContextProvider token={token} appointmentId={appointmentId}>
+		<>
 			<div className='row flex-start items-start'>
 				{isVideo && (
 					<div className='patient-video'>
@@ -104,6 +146,7 @@ const NurseMeeting2 = ({
 				<div className={`patient-notes-container ${isVideo ? '' : 'face-to-face'}`}>
 					<TabContainer
 						authToken={token}
+						productTitle={productTitle}
 						kitProvider={kitProvider}
 						isJoined={!!videoCallToken}
 						setKitProvider={setKitProvider}
@@ -112,20 +155,19 @@ const NurseMeeting2 = ({
 				</div>
 			</div>
 			<CertificatesContainer
-				token={token}
 				kitProvider={kitProvider}
 				approvedTestKits={approvedTestKits}
+				productSku={productSku}
 			/>
-		</AppointmentContextProvider>
+		</>
 	);
 };
-
-export default NurseMeeting2;
 
 const TabContainer = ({
 	authToken,
 	isJoined,
 	kitProvider,
+	productTitle,
 	setKitProvider,
 	approvedTestKits,
 }) => {
@@ -143,7 +185,7 @@ const TabContainer = ({
 	const [customerNotThere, setCustomerNotThere] = useState({});
 	const patients = !!booking_users ? [...booking_users] : [];
 	let patient = !!patients.length ? patients[0] : {};
-	patient = {...patient, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})}
+	patient = {...patient, productTitle, ...getValueFromObject(patient, 'metadata', {}), ...getValueFromObject(patient, 'metadata.appointment_address', {})};
 	const appointmentDetails = useAppointmentDetails();
 	const increaseStep = useCallback(() => {
 		setValue((oldValue) => oldValue + 1);
@@ -339,6 +381,12 @@ const PatientDetails = ({
 			</div>
 			<div className='column'>
 				<Collapse in={checked}>
+					{patient.productTitle && (
+						<div className='row space-between no-margin'>
+							<p className='tab-row-text title-info'>Product:</p>
+							<p className='tab-row-text'>{patient.productTitle}</p>
+						</div>
+					)}
 					{isManyPatients ? (
 						patients.map((item, indx) => (
 							!!item.last_name && !!item.first_name && (
@@ -1422,22 +1470,8 @@ const AppointmentActions = ({
 	);
 };
 
-const CertificatesContainer = ({ token, kitProvider, approvedTestKits }) => {
-	const [productSku, setProductSku] = useState();
-	const { displayCertificates, booking_users, img, appointmentId, uploadImage } = useContext(AppointmentContext);
-
-	useEffect(() => {
-		if (!!booking_users && !!booking_users.length)
-			adminService.getProduct(booking_users[0].product_id, token)
-				.then(data => {
-					if (data.success) {
-						setProductSku(data.product.sku);
-					} else {
-						ToastsStore.error(data.error);
-					}
-				})
-				.catch(err => ToastsStore.error(err.err));
-	}, [booking_users]);
+const CertificatesContainer = ({ kitProvider, approvedTestKits, productSku }) => {
+	const { displayCertificates, img, appointmentId, booking_users, uploadImage } = useContext(AppointmentContext);
 
 	return displayCertificates ? (
 		<div

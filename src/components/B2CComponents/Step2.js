@@ -136,10 +136,10 @@ const Step2 = ({
 	const isSelectedSlotToday = !!selectedSlotValue && new Date(selectedSlotValue.start_time).setHours(0, 0, 0, 0) === new Date(selectedDate).setHours(0, 0, 0, 0);
 	const isBundle = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 	const isDay2AntigenUS = sku === DAY_2_ANTIGEN_US;
-	const filteredAppointments = (isSelectedSlotToday && !!timer)
-		? [...appointments, selectedSlotValue].sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime())
-		: [...appointments];
 	const timezone = (isBundle || isPCR) ? defaultTimezone.timezone : timezoneValue;
+	const filteredAppointments = ((isSelectedSlotToday && !!timer)
+		? [...appointments, selectedSlotValue].sort(({ start_time: aStartTime }, { start_time: bStartTime }) => new Date(aStartTime).getTime() - new Date(bStartTime).getTime())
+		: [...appointments]).filter(({ start_time }) => (moment(new Date(start_time)).tz(timezone).format('D') === (selectedDate.getDate() + '')));
 	const maxDate = new Date(new Date(new Date(travelDate).setHours(travelTime.getHours() - 57)).setMinutes(travelTime.getMinutes()));
 	const startDateTime = new Date(new Date(maxDate).setHours(maxDate.getHours() - 15));
 	const startDate = new Date(startDateTime).setHours(0,0,0,0);

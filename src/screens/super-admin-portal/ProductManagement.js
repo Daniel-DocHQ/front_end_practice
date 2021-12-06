@@ -23,7 +23,7 @@ const ProductManagement = ({ token, role, isAuthenticated, user }) => {
 	}
 
 	const getProducts = async () => (
-		adminService
+		await adminService
 			.getProducts(token)
 			.then(data => {
 				if (data.success) {

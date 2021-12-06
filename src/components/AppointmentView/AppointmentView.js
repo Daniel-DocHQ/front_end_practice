@@ -14,11 +14,13 @@ import BigWhiteContainer from '../Containers/BigWhiteContainer';
 import nurseSvc from '../../services/nurseService';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import AppointmentNotes from './AppointmentNotes';
+import adminService from '../../services/adminService';
 import './AppointmentView.scss';
 
 const AppointmentView = (props) => {
     const timezone = get(Intl.DateTimeFormat().resolvedOptions(), 'timeZone', 'local time');
     const [appointment, setAppointment] = useState();
+    const [productTitle, setProductTitle] = useState('');
     const [loading, setLoading] = useState(false);
     const params = getURLParams(window.location.href);
 	const appointmentId = params['appointmentId'];
@@ -34,14 +36,24 @@ const AppointmentView = (props) => {
         setLoading(true);
         await nurseSvc
             .getAppointmentDetails(appointmentId, token)
-            .then(result => {
-                if (result.success && result.appointment) {
-                    setAppointment(result.appointment);
-                } else {
-                    ToastsStore.error(`Cannot find appointment details`);
-                }
-            })
-            .catch(() => ToastsStore.error(`Cannot find appointment details`))
+                .then(async (result) => {
+                    if (result.success && result.appointment) {
+                        setAppointment(result.appointment);
+                        await adminService
+                            .getProduct(result.appointment.booking_user.product_id,token)
+                                .then(data => {
+                                    if (data.success) {
+                                        setProductTitle(data.product.title);
+                                    } else {
+                                        ToastsStore.error(data.error);
+                                    }
+                                })
+                                .catch((err) => ToastsStore.error(err.error))
+                    } else {
+                        ToastsStore.error(`Cannot find appointment details`);
+                    }
+                })
+                .catch(() => ToastsStore.error(`Cannot find appointment details`))
         setLoading(false);
     };
 
@@ -68,7 +80,7 @@ const AppointmentView = (props) => {
                     <Box pb={6}>
                         <Grid container justify="space-between">
                             <Grid item xs={3}>
-                                <AppointmentInfo appointment={appointment} />
+                                <AppointmentInfo appointment={appointment} productTitle={productTitle} />
                             </Grid>
                             <Grid item xs={3}>
                                 <AddressInfo appointment={appointment} />
@@ -78,7 +90,7 @@ const AppointmentView = (props) => {
                     <Box pb={6}>
                         <Grid container spacing={8}>
                             {patients.map((patient) => (
-                                <Grid item xs={3}>
+                                <Grid key={patient.id} item xs={3}>
                                     <PatientInfo patient={patient} />
                                 </Grid>
                             ))}
@@ -114,7 +126,7 @@ const AppointmentView = (props) => {
 
 export default memo(AppointmentView);
 
-const AppointmentInfo = ({ appointment }) => {
+const AppointmentInfo = ({ appointment, productTitle }) => {
     const appointmentStartTime = new Date(get(appointment, 'start_time', undefined));
     const appointmentEndTime = new Date(get(appointment, 'end_time', undefined));
 
@@ -124,6 +136,9 @@ const AppointmentInfo = ({ appointment }) => {
             <Typography className="row-text"><b>Appointment Time: </b>{format(appointmentStartTime, 'p')} - {format(appointmentEndTime, 'p')}</Typography>
             <Typography className="row-text"><b>Number of people: </b>{get(appointment, 'booking_users.length', '')}</Typography>
             <Box pt={2}>
+                {productTitle && (
+                    <Typography className="row-text"><b>Product: </b>{productTitle}</Typography>
+                )}
                 <Typography className="row-text"><b>Test Type: </b>{get(appointment, 'booking_user.metadata.test_type', '')}</Typography>
             </Box>
         </Box>
