@@ -50,6 +50,7 @@ import nurseSvc from '../../services/nurseService';
 import VonageVoiceCall from '../VoiceCall/VonageVoiceCall';
 import useVonageApp from '../../helpers/hooks/useVonageApp';
 import { MASK_SKU } from '../../helpers/productsWithAdditionalInfo';
+import { FULFILLMENT_USER_NAMES } from '../../helpers/permissions';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -102,14 +103,17 @@ const OrderDetails = ({
 	user,
 	token,
 	order,
+	role,
 	closeHandler,
 	shortInfo = false,
 }) => {
 	const classes = useStyles();
-	const orderId = get(order, 'id', '')
+	const orderId = get(order, 'id', '');
 	let orders = [
 		orderId,
 	];
+	const userName = `${user.first_name} ${user.last_name}`;
+	const isFulfillmentAvailable = role === 'super_admin' && !!user && FULFILLMENT_USER_NAMES.includes(userName)
 	if (orderId.slice(-4) === '_x_x')
 		orders.push(orderId.substring(0, orderId.length - 2), orderId.substring(0, orderId.length - 4))
 	else if (orderId.slice(-2) === '_x')
@@ -393,6 +397,10 @@ const OrderDetails = ({
 													<TableCell align="right">Discount Price</TableCell>
 												</>
 											)}
+											<TableCell align="right">Fulfilled</TableCell>
+											{isFulfillmentAvailable && (
+												<TableCell align="right">Update Fulfillment</TableCell>
+											)}
 										</TableRow>
 									</TableHead>
 									<TableBody>
@@ -413,6 +421,19 @@ const OrderDetails = ({
 															£{(discountValue.type === 'percentage' && row.product.sku !== MASK_SKU) ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : row.product.sku === MASK_SKU ? row.product.price.toFixed(2) : ''}
 														</TableCell>
 													</>
+												)}
+												<TableCell align="right">{get(row, 'fulfilled', 0)}</TableCell>
+												{isFulfillmentAvailable && (
+													<TableCell align="right">
+														<UpdateFulFillmentControl
+															token={token}
+															order_id={row.order_id}
+															product_id={row.product_id}
+															bundle_id={row.bundle_id}
+															fulfilled={row.fulfilled || 0}
+															reload={reloadInfo}
+														/>
+													</TableCell>
 												)}
 											</TableRow>
 										))}
@@ -591,8 +612,55 @@ const OrderDetails = ({
 				)}
 			</Container>
 		</div>
-	)
-}
+	);
+};
+
+const UpdateFulFillmentControl = ({
+	order_id,
+	product_id,
+	bundle_id,
+	fulfilled,
+	token,
+	reload,
+}) => {
+	const [newFulfillment, setNewFulfillment] = useState(+fulfilled);
+
+	return (
+		<Box display="flex" justifyContent="space-around" alignItems="center">
+			<TextField
+				autoFocus
+				margin="dense"
+				id="fulfillment"
+				label="New Fulfillment"
+				type="number"
+				inputProps={{
+					min: 0,
+				}}
+				value={newFulfillment}
+				onChange={(e)=>setNewFulfillment(e.target.value)}
+			/>
+			<DocButton
+				text="Update"
+				color="green"
+				onClick={async () => await adminService.updateFulfillment({
+					orderId: order_id,
+					data: {
+						order_id,
+						product_id,
+						bundle_id,
+						fulfilled: +newFulfillment,
+					},
+					token,
+				}).then((result) => {
+					if (result.success) {
+						ToastsStore.success('Fulfillment has been updated successfully!');
+						reload();
+					}
+				}).catch(err => ToastsStore.error(err.error))}
+			/>
+		</Box>
+	);
+};
 
 const PatientDetails = ({
 	patient,
