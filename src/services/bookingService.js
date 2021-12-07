@@ -178,7 +178,7 @@ function getAvailableDates(startDate, endDate, auth_token) {
 	});
 }
 
-function paymentRequest(slotId, data, auth_token) {
+function paymentRequest(slotId, data, auth_token, ignoreFulfillment = false) {
 	//TODO should be in component
 	const params = getURLParams(window.location.href);
 
@@ -201,7 +201,7 @@ function paymentRequest(slotId, data, auth_token) {
             data.type = !!slotId ? data.type : "self_swab";
 
 			axios({
-				url: !!slotId ? `${baseURL}/${slotId}/payment` : `${baseURL}/`,
+				url: !!slotId ? `${baseURL}/${slotId}/payment${ignoreFulfillment ? '?ignore_fulfillment=true' : ''}` : `${baseURL}/`,
 				method: 'POST',
 				headers: headers,
 				data: data,

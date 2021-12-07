@@ -467,11 +467,11 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										type: appointment.type,
 										booking_users,
 									};
-									await bookingService.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit')
+									await bookingService.paymentRequest(selectedSlot.id, body, null, true)
 									.then(async (result) => {
 										if (result.success) {
 											await bookingService
-												.paymentRequest(selectedSlot.id, body)
+												.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit')
 												.then(async (result) => {
 													if (result.success && result.confirmation) {
 														handleNext();
