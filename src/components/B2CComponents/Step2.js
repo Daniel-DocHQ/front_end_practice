@@ -211,7 +211,13 @@ const Step2 = ({
 				});
 		} else {
 			await bookingService
-				.getSlots(selectedDate, isPharmacy, isEuro)
+				.getSlotsByTime({
+					date_time: moment(new Date(selectedDate)).subtract(1, 'day').tz(timezone).format().replace('+', '%2B'),
+					date_time_to: moment(new Date(selectedDate)).add(1, 'day').tz(timezone).format().replace('+', '%2B'),
+					language: isEuro ? 'DE': 'EN',
+					isPharmacy,
+					isEuro,
+				})
 				.then(result => {
 					if (result.success && result.appointments) {
 						const newAppointments = result.appointments;
