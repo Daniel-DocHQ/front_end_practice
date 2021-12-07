@@ -70,7 +70,7 @@ const SAProductView = ({ token, role, isAuthenticated, user }) => {
 				validationSchema={Yup.object().shape({
 					title: Yup.string().required('Input title'),
 					country: Yup.string().required('Input country'),
-					price: Yup.number().required('Input price'),
+					price: Yup.number().min(1, 'Minimal price is 1').required('Input price'),
 				})}
 				onSubmit={async (values) => {
 					await adminService.editProduct(id, token, values).then((response) => {
