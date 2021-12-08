@@ -473,7 +473,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 											await bookingService
 												.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit')
 												.then(async (result) => {
-													if (result.success && result.confirmation) {
+													if (result.success) {
 														handleNext();
 														setTimerStart();
 													} else {
