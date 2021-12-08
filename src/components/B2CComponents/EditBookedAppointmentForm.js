@@ -138,7 +138,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 	}, []);
 
 	useEffect(() => {
-		if (!!items.length && !!products.length) {
+		if (!!bookingUsersProductId && !!items.length && !!products.length) {
 			const product = products.find(({ id }) => id === bookingUsersProductId)
 			if (!get(items.find(({ id }) => id === product.id), 'id'))
 				setItems([...items, product]);
@@ -472,7 +472,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										if (result.success) {
 											await bookingService
 												.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit')
-												.then(async (result) => {
+												.then((result) => {
 													if (result.success) {
 														handleNext();
 														setTimerStart();
