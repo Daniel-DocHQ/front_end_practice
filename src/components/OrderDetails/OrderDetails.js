@@ -637,7 +637,7 @@ const UpdateFulFillmentControl = ({
 					min: 0,
 				}}
 				value={newFulfillment}
-				onChange={(e)=>setNewFulfillment(e.target.value)}
+				onChange={(e) => setNewFulfillment(e.target.value)}
 			/>
 			<DocButton
 				text="Update"
@@ -1159,36 +1159,34 @@ const CancelOrder = ({ order, open, onClose, loading, setLoading, token }) => {
 		aria-labelledby="alert-dialog-title"
 		aria-describedby="alert-dialog-description"
 	>
-			<DialogTitle id="alert-dialog-title">{"Cancel order?"}</DialogTitle>
-			<DialogContent>
-				<DialogContentText id="alert-dialog-description">
-					Upon canceling an order a refund will be issued to the customer for the amount on the order
-					any shipping manifests will be called off and the order will not ship.
-					If you are certain you want to cancel the order, please enter the order's email address ({order.billing_detail.email})
-				</DialogContentText>
-				<TextField
-					autoFocus
-					margin="dense"
-					id="name"
-					label="Email Address"
-					type="email"
-					value={emailAddress}
-					onChange={(e)=>setEmailAddress(e.target.value)}
-					fullWidth
-				/>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={onClose} color="primary">
-						Close
-					</Button>
-					<Button onClick={cancelOrder} color="primary">
-						Submit
-					</Button>
-				</DialogActions>
-			</Dialog>
+		<DialogTitle id="alert-dialog-title">{"Cancel order?"}</DialogTitle>
+		<DialogContent>
+			<DialogContentText id="alert-dialog-description">
+				Upon canceling an order a refund will be issued to the customer for the amount on the order
+				any shipping manifests will be called off and the order will not ship.
+				If you are certain you want to cancel the order, please enter the order's email address ({order.billing_detail.email})
+			</DialogContentText>
+			<TextField
+				autoFocus
+				margin="dense"
+				id="name"
+				label="Email Address"
+				type="email"
+				value={emailAddress}
+				onChange={(e)=>setEmailAddress(e.target.value)}
+				fullWidth
+			/>
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={onClose} color="primary">
+					Close
+				</Button>
+				<Button onClick={cancelOrder} color="primary">
+					Submit
+				</Button>
+			</DialogActions>
+		</Dialog>
 	)
 }
 
 export default OrderDetails;
-
-

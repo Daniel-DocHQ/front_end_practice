@@ -47,13 +47,14 @@ const RegisterKit = () => {
     const [error, setError] = useState(false);
     const [booking, setBooking] = useState({});
     const [order, setOrder] = useState({});
+    const bookingUsers = get(booking, 'booking_users', []).filter((item) => get(item, 'metadata.sample_taken', '') !== 'valid');
     const [status, setStatus] = useState(); // { severity, message }
     const orderNumber = get(booking, 'booking_user.metadata.short_token');
     const productId = get(booking, 'booking_user.product_id', '');
     const kitType = get(items.find(({ id }) => id === productId), 'title', '');
     const virtualProduct = items.find(({ type }) => type === 'Virtual')
     const isHotelSwabMethod = get(virtualProduct, 'sku', '') === 'FACE-2-FACE-HOTEL';
-    const allSubmitted = (booking.booking_users || []).filter((usr) => !get(usr, 'metadata.activated_by_user', false)).length === 0;
+    const allSubmitted = (bookingUsers || []).filter((usr) => !get(usr, 'metadata.activated_by_user', false)).length === 0;
 
     const handleSubmit = async ({
         kitId,
@@ -206,7 +207,7 @@ const RegisterKit = () => {
                 status={status}
                 setStatus={setStatus}
                 dataSending={dataSending}
-                bookingUsers={booking.booking_users}
+                bookingUsers={bookingUsers}
                 orderNumber={orderNumber}
                 hotel={get(order, 'shipping_address.address_1', '')}
                 isHotelSwabMethod={isHotelSwabMethod}
