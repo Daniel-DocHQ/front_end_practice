@@ -74,7 +74,7 @@ const OrderList = props => {
     const classes = useStyles();
     const params = getURLParams(window.location.href);
 	const discount = params['discount'] || '';
-    const { user, token } = useContext(AuthContext);
+    const { role, user, token } = useContext(AuthContext);
     const [rows, setRows] = useState([]);
     const [pageSize, setPageSize] = useState(50);
     const [page, setPage] = useState(0);
@@ -187,7 +187,7 @@ const OrderList = props => {
             </Grid>
 
             <Drawer anchor="right" open={detailsOpen} onClose={toggleDrawer}>
-                <OrderDetails user={user} token={token} order={orderDetail} closeHandler={toggleDrawer}/>
+                <OrderDetails role={!!role ? role.name : '' } user={user} token={token} order={orderDetail} closeHandler={toggleDrawer}/>
             </Drawer>
         </Container>
     )

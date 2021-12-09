@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 const PickupManagement = () => {
     const classes = useStyles();
     const { id } = useParams();
-    const { user, token } = useContext(AuthContext);
+    const { user, role, token } = useContext(AuthContext);
     const [collected, setCollected] = useState(false);
     const [collectionInfo, setCollectionInfo] = useState();
     // const [rows, setRows] = useState([]);
@@ -216,6 +216,7 @@ const PickupManagement = () => {
                     <OrderDetails
                         shortInfo
                         user={user}
+                        role={role}
                         token={token}
                         order={orderDetail}
                         closeHandler={() => {

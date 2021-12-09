@@ -50,6 +50,7 @@ import nurseSvc from '../../services/nurseService';
 import VonageVoiceCall from '../VoiceCall/VonageVoiceCall';
 import useVonageApp from '../../helpers/hooks/useVonageApp';
 import { MASK_SKU } from '../../helpers/productsWithAdditionalInfo';
+import { FULFILLMENT_USER_NAMES } from '../../helpers/permissions';
 
 const orderUrl = process.env.REACT_APP_API_URL;
 
@@ -102,14 +103,17 @@ const OrderDetails = ({
 	user,
 	token,
 	order,
+	role,
 	closeHandler,
 	shortInfo = false,
 }) => {
 	const classes = useStyles();
-	const orderId = get(order, 'id', '')
+	const orderId = get(order, 'id', '');
 	let orders = [
 		orderId,
 	];
+	const userName = `${user.first_name} ${user.last_name}`;
+	const isFulfillmentAvailable = role === 'super_admin' && !!user && FULFILLMENT_USER_NAMES.includes(userName)
 	if (orderId.slice(-4) === '_x_x')
 		orders.push(orderId.substring(0, orderId.length - 2), orderId.substring(0, orderId.length - 4))
 	else if (orderId.slice(-2) === '_x')
@@ -393,6 +397,10 @@ const OrderDetails = ({
 													<TableCell align="right">Discount Price</TableCell>
 												</>
 											)}
+											<TableCell align="right">Fulfilled</TableCell>
+											{isFulfillmentAvailable && (
+												<TableCell align="right">Update Fulfillment</TableCell>
+											)}
 										</TableRow>
 									</TableHead>
 									<TableBody>
@@ -413,6 +421,19 @@ const OrderDetails = ({
 															£{(discountValue.type === 'percentage' && row.product.sku !== MASK_SKU) ? (row.product.price - (row.product.price * (discountValue.value / 100))).toFixed(2) : row.product.sku === MASK_SKU ? row.product.price.toFixed(2) : ''}
 														</TableCell>
 													</>
+												)}
+												<TableCell align="right">{get(row, 'fulfilled', 0)}</TableCell>
+												{isFulfillmentAvailable && (
+													<TableCell align="right">
+														<UpdateFulFillmentControl
+															token={token}
+															order_id={row.order_id}
+															product_id={row.product_id}
+															bundle_id={row.bundle_id}
+															fulfilled={row.fulfilled || 0}
+															reload={reloadInfo}
+														/>
+													</TableCell>
 												)}
 											</TableRow>
 										))}
@@ -591,8 +612,55 @@ const OrderDetails = ({
 				)}
 			</Container>
 		</div>
-	)
-}
+	);
+};
+
+const UpdateFulFillmentControl = ({
+	order_id,
+	product_id,
+	bundle_id,
+	fulfilled,
+	token,
+	reload,
+}) => {
+	const [newFulfillment, setNewFulfillment] = useState(+fulfilled);
+
+	return (
+		<Box display="flex" justifyContent="space-around" alignItems="center">
+			<TextField
+				autoFocus
+				margin="dense"
+				id="fulfillment"
+				label="New Fulfillment"
+				type="number"
+				inputProps={{
+					min: 0,
+				}}
+				value={newFulfillment}
+				onChange={(e) => setNewFulfillment(e.target.value)}
+			/>
+			<DocButton
+				text="Update"
+				color="green"
+				onClick={async () => await adminService.updateFulfillment({
+					orderId: order_id,
+					data: {
+						order_id,
+						product_id,
+						bundle_id,
+						fulfilled: +newFulfillment,
+					},
+					token,
+				}).then((result) => {
+					if (result.success) {
+						ToastsStore.success('Fulfillment has been updated successfully!');
+						reload();
+					}
+				}).catch(err => ToastsStore.error(err.error))}
+			/>
+		</Box>
+	);
+};
 
 const PatientDetails = ({
 	patient,
@@ -1091,36 +1159,34 @@ const CancelOrder = ({ order, open, onClose, loading, setLoading, token }) => {
 		aria-labelledby="alert-dialog-title"
 		aria-describedby="alert-dialog-description"
 	>
-			<DialogTitle id="alert-dialog-title">{"Cancel order?"}</DialogTitle>
-			<DialogContent>
-				<DialogContentText id="alert-dialog-description">
-					Upon canceling an order a refund will be issued to the customer for the amount on the order
-					any shipping manifests will be called off and the order will not ship.
-					If you are certain you want to cancel the order, please enter the order's email address ({order.billing_detail.email})
-				</DialogContentText>
-				<TextField
-					autoFocus
-					margin="dense"
-					id="name"
-					label="Email Address"
-					type="email"
-					value={emailAddress}
-					onChange={(e)=>setEmailAddress(e.target.value)}
-					fullWidth
-				/>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={onClose} color="primary">
-						Close
-					</Button>
-					<Button onClick={cancelOrder} color="primary">
-						Submit
-					</Button>
-				</DialogActions>
-			</Dialog>
+		<DialogTitle id="alert-dialog-title">{"Cancel order?"}</DialogTitle>
+		<DialogContent>
+			<DialogContentText id="alert-dialog-description">
+				Upon canceling an order a refund will be issued to the customer for the amount on the order
+				any shipping manifests will be called off and the order will not ship.
+				If you are certain you want to cancel the order, please enter the order's email address ({order.billing_detail.email})
+			</DialogContentText>
+			<TextField
+				autoFocus
+				margin="dense"
+				id="name"
+				label="Email Address"
+				type="email"
+				value={emailAddress}
+				onChange={(e)=>setEmailAddress(e.target.value)}
+				fullWidth
+			/>
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={onClose} color="primary">
+					Close
+				</Button>
+				<Button onClick={cancelOrder} color="primary">
+					Submit
+				</Button>
+			</DialogActions>
+		</Dialog>
 	)
 }
 
 export default OrderDetails;
-
-

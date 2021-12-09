@@ -138,7 +138,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 	}, []);
 
 	useEffect(() => {
-		if (!!items.length && !!products.length) {
+		if (!!bookingUsersProductId && !!items.length && !!products.length) {
 			const product = products.find(({ id }) => id === bookingUsersProductId)
 			if (!get(items.find(({ id }) => id === product.id), 'id'))
 				setItems([...items, product]);
@@ -467,13 +467,13 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										type: appointment.type,
 										booking_users,
 									};
-									await bookingService.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit')
+									await bookingService.paymentRequest(selectedSlot.id, body, null, true)
 									.then(async (result) => {
 										if (result.success) {
 											await bookingService
-												.paymentRequest(selectedSlot.id, body)
-												.then(async (result) => {
-													if (result.success && result.confirmation) {
+												.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit')
+												.then((result) => {
+													if (result.success) {
 														handleNext();
 														setTimerStart();
 													} else {

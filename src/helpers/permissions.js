@@ -12,3 +12,11 @@ export const PRODUCT_USER_NAMES = [
 	'Silva Quattrocchi',
 	'Madhur Srivastava',
 ];
+
+export const FULFILLMENT_USER_NAMES = [
+	'Super Admin',
+	'Silva Quattrocchi',
+	'Madhur Srivastava',
+        'Graham Carter',
+	'Ben Huffey',
+];
