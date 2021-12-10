@@ -378,7 +378,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 											.catch(({ error }) => {
 												setStatus({
 													severity: 'error',
-													message: error,
+													message: error === 'Something went wrong, please try again.' ? 'Unfortunately, this time slot has been already taken. Please choose another one. Thank you!' : error,
 												})
 											});
 									} else {
