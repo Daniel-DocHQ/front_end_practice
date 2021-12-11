@@ -464,14 +464,13 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										},
 									}));
 									const body = {
-										type: appointment.type,
 										booking_users,
 									};
-									await bookingService.paymentRequest(selectedSlot.id, body, null, true)
+									await bookingService.editAppointment(appointment.id, body, token)
 									.then(async (result) => {
 										if (result.success) {
 											await bookingService
-												.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit')
+												.rescheduleAppointment(appointment.id, selectedSlot.id, token)
 												.then((result) => {
 													if (result.success) {
 														handleNext();
