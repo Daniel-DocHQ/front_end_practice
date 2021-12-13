@@ -214,7 +214,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 						<>
 							<div className="row center">
 								<p style={{ textAlign: 'center' }}>
-									Product: {bookingUsersProduct.title}
+									Product: {bookingUsersProduct.title}<br />
 									Unfortunately, you cannot edit or delete your appointment as it is due to start in less that 24h.<br /><br />
 									Do you still want to notify the practitioner that your are not going to attend?
 								</p>
