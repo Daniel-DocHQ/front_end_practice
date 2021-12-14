@@ -92,9 +92,6 @@ const ProductForm = ({
                                         helperText={(meta.error && meta.touched) && meta.error}
                                         label="Price"
                                         id="price"
-                                        inputProps={{
-                                            min: 1,
-                                        }}
                                         type="number"
                                         disabled={!isEdit}
                                         variant="standard"
