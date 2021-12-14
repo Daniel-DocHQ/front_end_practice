@@ -316,7 +316,6 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 								timezone: usersTimeZoneObj.timezone,
 								numberOfPeople: bookingUsersQuantity,
 								passengers: bookingUsers.map(({
-									id,
 									first_name,
 									date_of_birth,
 									last_name,
