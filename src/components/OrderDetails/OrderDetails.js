@@ -911,7 +911,7 @@ const AppointmentDetails = ({
 				{!!flightDate && (
 					<ListItem>
 						<ListItemText>
-							<b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p', { timeZone: location })} ({location})
+							<b>Flight Date</b>: {format(new Date(flightDate), 'dd/MM/yyyy p')} ({timezone})
 						</ListItemText>
 					</ListItem>
 				)}
