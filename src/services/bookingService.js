@@ -21,6 +21,8 @@ const bookingService = {
 	getAppointmentsByShortToken,
 	setVideoToken,
 	joinAppointment,
+	rescheduleAppointment,
+	editAppointment,
 };
 
 // Booking engine
@@ -205,6 +207,93 @@ function paymentRequest(slotId, data, auth_token, ignoreFulfillment = false) {
 				method: 'POST',
 				headers: headers,
 				data: data,
+			})
+				.then(response => {
+					if (response.status === 200 || response.data.status === 'ok') {
+						resolve({ success: true, confirmation: response.data });
+					} else if (response.status === 204) {
+						resolve({ success: true, confirmation: {}, error: response.data.message, });
+					} else if (response.status === 403) {
+						reject({
+							success: false,
+							error: response.data.message,
+							authenticated: false,
+						});
+					} else {
+						reject({
+							success: false,
+							error: response.data.message,
+						});
+					}
+				})
+				.catch(errResp => {
+					if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+						reject({ success: false, error: errResp.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.'});
+					}
+				});
+		} else {
+			resolve({ success: false, error: 'Missing Details' });
+		}
+	});
+}
+function editAppointment(slotId, data, auth_token) {
+	return new Promise((resolve, reject) => {
+		if (data) {
+			const headers = { 'Content-type': 'application,json' };
+			if (auth_token) {
+				headers.Authorization = `Bearer ${auth_token}`;
+            }
+
+			axios({
+				url: `${baseURL}/${slotId}`,
+				method: 'PATCH',
+				headers: headers,
+				data: data,
+			})
+				.then(response => {
+					if (response.status === 200 || response.data.status === 'ok') {
+						resolve({ success: true, confirmation: response.data });
+					} else if (response.status === 204) {
+						resolve({ success: true, confirmation: {}, error: response.data.message, });
+					} else if (response.status === 403) {
+						reject({
+							success: false,
+							error: response.data.message,
+							authenticated: false,
+						});
+					} else {
+						reject({
+							success: false,
+							error: response.data.message,
+						});
+					}
+				})
+				.catch(errResp => {
+					if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+						reject({ success: false, error: errResp.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.'});
+					}
+				});
+		} else {
+			resolve({ success: false, error: 'Missing Details' });
+		}
+	});
+}
+function rescheduleAppointment(oldSlotId, newSlotId, auth_token) {
+	return new Promise((resolve, reject) => {
+		if (oldSlotId && newSlotId) {
+			const headers = { 'Content-type': 'application,json' };
+			if (auth_token) {
+				headers.Authorization = `Bearer ${auth_token}`;
+            }
+
+			axios({
+				url: `${baseURL}/${oldSlotId}/reschedule/${newSlotId}`,
+				method: 'POST',
+				headers: headers,
 			})
 				.then(response => {
 					if (response.status === 200 || response.data.status === 'ok') {

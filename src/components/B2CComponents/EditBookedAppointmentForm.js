@@ -214,7 +214,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 						<>
 							<div className="row center">
 								<p style={{ textAlign: 'center' }}>
-									Product: {bookingUsersProduct.title}
+									Product: {bookingUsersProduct.title}<br />
 									Unfortunately, you cannot edit or delete your appointment as it is due to start in less that 24h.<br /><br />
 									Do you still want to notify the practitioner that your are not going to attend?
 								</p>
@@ -306,7 +306,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 									transportType: usersTransportType,
 								} : {}),
 								testType: {
-									quantity: 4,
+									quantity: bookingUsersQuantity,
 									title: bookingUsersProduct.title,
 									type: bookingUsersProduct.type,
 									sku: bookingUsersProduct.sku,
@@ -316,7 +316,6 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 								timezone: usersTimeZoneObj.timezone,
 								numberOfPeople: bookingUsersQuantity,
 								passengers: bookingUsers.map(({
-									id,
 									first_name,
 									date_of_birth,
 									last_name,
@@ -464,14 +463,13 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										},
 									}));
 									const body = {
-										type: appointment.type,
 										booking_users,
 									};
-									await bookingService.paymentRequest(selectedSlot.id, body, null, true)
+									await bookingService.editAppointment(appointment.id, body, token)
 									.then(async (result) => {
 										if (result.success) {
 											await bookingService
-												.deleteBooking(appointment.id, token, isCustomerEdit ? "patient" : "practitioner", 'edit')
+												.rescheduleAppointment(appointment.id, selectedSlot.id, token)
 												.then((result) => {
 													if (result.success) {
 														handleNext();
