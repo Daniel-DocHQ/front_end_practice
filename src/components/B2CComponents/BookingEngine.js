@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { get } from 'lodash';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { format } from 'date-fns';
 import parsePhoneNumber from 'libphonenumber-js'
 import cityTimezones from 'city-timezones';
@@ -272,6 +272,15 @@ const BookingEngine = ({ skipBooking = false }) => {
 											tocAccept,
 											selectedKit,
 										} = values;
+										const travelDateInTz = moment(
+											new Date(
+												travelDate.getFullYear(),
+												travelDate.getMonth(),
+												travelDate.getDate(),
+												travelTime.getHours(),
+												travelTime.getMinutes(),
+												0,
+											)).tz(timezoneValue, true).format();
 										const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
 										const isPCR = sku === FIT_TO_FLY_PCR;
 										const booking_users = Array.from(Array(passengers.length).keys()).map((item) => {
@@ -288,7 +297,6 @@ const BookingEngine = ({ skipBooking = false }) => {
 												vaccineTypeName,
 												...rest
 											} = passengers[item];
-
 											return ({
 												first_name: firstName,
 												last_name: lastName,
@@ -319,15 +327,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 													short_token,
 													order_id: parseInt(orderId),
 													passport_number: passportNumber,
-													travel_date: moment(
-														new Date(
-															travelDate.getFullYear(),
-															travelDate.getMonth(),
-															travelDate.getDate(),
-															travelTime.getHours(),
-															travelTime.getMinutes(),
-															0,
-														)).format(),
+													travel_date: travelDateInTz,
 													test_type: type,
 												},
 												...rest,
@@ -346,17 +346,9 @@ const BookingEngine = ({ skipBooking = false }) => {
 														landingTime.getHours(),
 														landingTime.getMinutes(),
 														0,
-													)).format(),
+													)).tz(timezoneValue, true).format(),
 												transport_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
-												transport_departure_date_time: moment(
-													new Date(
-														travelDate.getFullYear(),
-														travelDate.getMonth(),
-														travelDate.getDate(),
-														travelTime.getHours(),
-														travelTime.getMinutes(),
-														0,
-													)).format(),
+												transport_departure_date_time: travelDateInTz,
 												transport_number: transportNumber,
 												transport_type: transportType,
 											},

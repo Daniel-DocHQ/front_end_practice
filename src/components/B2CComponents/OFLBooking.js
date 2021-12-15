@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { get } from 'lodash';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { format } from 'date-fns';
 import cityTimezones from 'city-timezones';
 import { ToastsStore } from 'react-toasts';
@@ -190,6 +190,15 @@ const OFLBooking = () => {
                             purchaseCode,
                             tocAccept,
                         } = values;
+                        const travelDateInTz = moment(
+                            new Date(
+                                travelDate.getFullYear(),
+                                travelDate.getMonth(),
+                                travelDate.getDate(),
+                                travelTime.getHours(),
+                                travelTime.getMinutes(),
+                                0,
+                            )).tz(timezoneValue, true).format();
                         const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
                         const isPCR = sku === FIT_TO_FLY_PCR;
                         let shortTokenValue = shortToken;
@@ -294,15 +303,7 @@ const OFLBooking = () => {
                                     short_token: shortTokenValue,
                                     product_id: parseInt(id),
                                     passport_number: passportNumber,
-                                    travel_date: moment(
-                                        new Date(
-                                            travelDate.getFullYear(),
-                                            travelDate.getMonth(),
-                                            travelDate.getDate(),
-                                            travelTime.getHours(),
-                                            travelTime.getMinutes(),
-                                            0,
-                                        )).format(),
+                                    travel_date: travelDateInTz,
                                     test_type: type,
                                 },
                                 ...rest,
@@ -320,7 +321,7 @@ const OFLBooking = () => {
                             type: 'video_gp_euro',
                             booking_users,
                             flight_details: {
-                                transport_arrival_country: isAdditionalProduct ? 'UK' : timezoneValue,
+                                transport_arrival_country: isAdditionalProduct ? 'GB' : timezoneValue,
                                 transport_arrival_date_time: moment(
                                     new Date(
                                         landingDate.getFullYear(),
@@ -329,17 +330,9 @@ const OFLBooking = () => {
                                         landingTime.getHours(),
                                         landingTime.getMinutes(),
                                         0,
-                                    )).format(),
-                                transport_departure_country: isAdditionalProduct ? city.iso2 : 'UK',
-                                transport_departure_date_time: moment(
-                                    new Date(
-                                        travelDate.getFullYear(),
-                                        travelDate.getMonth(),
-                                        travelDate.getDate(),
-                                        travelTime.getHours(),
-                                        travelTime.getMinutes(),
-                                        0,
-                                    )).format(),
+                                    )).tz(timezoneValue, true).format(),
+                                transport_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
+                                transport_departure_date_time: travelDateInTz,
                                 transport_number: transportNumber,
                                 transport_type: transportType,
                             },
