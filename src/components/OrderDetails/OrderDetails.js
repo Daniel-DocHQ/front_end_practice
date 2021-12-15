@@ -431,7 +431,7 @@ const OrderDetails = ({
 															product_id={row.product_id}
 															bundle_id={row.bundle_id}
 															fulfilled={row.fulfilled || 0}
-															reload={reloadInfo}
+															reload={refetchData}
 														/>
 													</TableCell>
 												)}
