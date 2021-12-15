@@ -670,6 +670,7 @@ const PatientDetails = ({
 	approvedTestKits,
 }) => {
 	const [isEditShow, setIsEditShow] = useState(false);
+	const bookingId = get(patient, 'id', '');
 	const firstName = get(patient, 'metadata.forename', '') || patient.first_name;
 	const lastName = get(patient, 'metadata.surname', '') || patient.last_name;
 	const email = get(patient, 'metadata.email', '') || patient.email;
@@ -692,6 +693,11 @@ const PatientDetails = ({
 	return (
 		<>
 			<List component="div" disablePadding>
+				<ListItem>
+					<ListItemText>
+						<b>Booking user ID</b>: {bookingId}
+					</ListItemText>
+				</ListItem>
 				<ListItem>
 					<ListItemText>
 						<b>Name</b>: {firstName} {lastName}
