@@ -306,7 +306,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 									transportType: usersTransportType,
 								} : {}),
 								testType: {
-									quantity: 4,
+									quantity: bookingUsersQuantity,
 									title: bookingUsersProduct.title,
 									type: bookingUsersProduct.type,
 									sku: bookingUsersProduct.sku,
