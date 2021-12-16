@@ -83,43 +83,43 @@ const Step4 = ({ isBookingSkip, status, defaultTimezone }) => {
 			}, i) => (
 				<div key={i}>
 					<div>
-						<div className='row no-margin'>
+						<div className='row no-margin' id={`passenger-name-${i + 1}`}>
 							<p>
 								<strong>Passenger Name {i + 1}:&nbsp;</strong>
 								{firstName} {lastName}
 							</p>
 						</div>
-						<div className='row no-margin'>
+						<div className='row no-margin' id={`passenger-email-${i + 1}`}>
 							<p>
 								<strong>Email:&nbsp;</strong>
 								{email}
 							</p>
 						</div>
-						<div className='row no-margin'>
+						<div className='row no-margin' id={`passenger-phone-${i + 1}`}>
 							<p>
 								<strong>Phone:&nbsp;</strong>
 								{countryCode.label}{phone.trim()}
 							</p>
 						</div>
-						<div className='row no-margin'>
+						<div className='row no-margin' id={`passenger-date-of-birth-${i + 1}`}>
 							<p>
 								<strong>Date Of Birth:&nbsp;</strong>
 								{format(dateOfBirth, 'dd/MM/yyyy')}
 							</p>
 						</div>
-						<div className='row no-margin'>
+						<div className='row no-margin' id={`passenger-ethnicity-${i + 1}`}>
 							<p>
 								<strong>Ethnicity:&nbsp;</strong>
 								{ethnicity}
 							</p>
 						</div>
-						<div className='row no-margin'>
+						<div className='row no-margin' id={`passenger-sex-${i + 1}`}>
 							<p>
 								<strong>Sex:&nbsp;</strong>
 								{sex}
 							</p>
 						</div>
-						<div className='row no-margin'>
+						<div className='row no-margin' id={`passenger-passport-${i + 1}`}>
 							<p>
 								<strong>Passport/National identity card number:&nbsp;</strong>
 								{passportNumber}
