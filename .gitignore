@@ -13,7 +13,6 @@ cypress/videos*
 cypress/fixtures/test-data.json
 cypress/fixtures/user.json
 cypress/fixtures/customize_test.json
-cypress/fixtures/product_list.json
 cypress/fixtures/order_list.json
 
 # production
