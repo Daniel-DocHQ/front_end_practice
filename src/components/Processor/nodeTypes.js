@@ -845,6 +845,23 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ]
     })
     .addNodeType({
+        type: "getOncologicaKit",
+        label: "Get Oncologica Result",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.string({
+                name: "result",
+                label: "Result ID",
+            })
+        ],
+        outputs: ports => [
+            ports.data({
+                name: "data",
+                label: "Oncologica Result Data",
+            })
+        ]
+    })
+    .addNodeType({
         type: "getSynlabReceipt",
         label: "Get Synlab Receipt",
         initalWidth: 160,
