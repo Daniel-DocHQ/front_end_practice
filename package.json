@@ -86,7 +86,8 @@
     "serve:staging": "docker build -t website . --build-arg DOC_ENVIRONMENT=staging && docker run -p 1338:80 website",
     "server": "node-env-run server --exec nodemon",
     "dev": "run-p server start",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "cy:open": "cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"
