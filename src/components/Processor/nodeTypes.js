@@ -828,6 +828,21 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ],
     })
     .addNodeType({
+        type: "createOncologicaDeclaration",
+        label: "Create Oncologica declaration",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.boolean({
+                name:"create",
+                label: "Create Declaration",
+            }),
+            ports.string({
+                name: "barcode",
+                label: "Barcode",
+            })
+        ],
+    })
+    .addNodeType({
         type: "getSynlabResult",
         label: "Get Synlab Result",
         initalWidth: 160,
