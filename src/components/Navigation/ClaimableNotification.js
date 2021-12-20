@@ -14,7 +14,7 @@ const ClaimableNotification = ({ token, title }) => {
         await adminService.getAppointmentsSearch({
             dateRange: {
                 start_time: moment().utc(0).startOf('day').format(),
-                end_time:  moment().utc(0).add(7, 'day').endOf('day').format(),
+                end_time:  moment().utc(0).add(3, 'day').endOf('day').format(),
             },
             token,
             status: 'CLAIMABLE',
