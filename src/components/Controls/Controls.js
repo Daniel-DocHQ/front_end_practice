@@ -1,3 +1,4 @@
+import { Select, FormControl, InputLabel, MenuItem } from '@material-ui/core';
 import React from 'react';
 import './Controls.scss';
 
@@ -5,9 +6,12 @@ const Controls = ({
 	isPause = false,
 	isMuted,
 	scanQr,
+	userMediaDevices,
 	updateMuted,
 	capturePhoto,
 	isNurse,
+	videoDevice,
+	updateVideoDevice,
 	handleDisconnect,
 	handlePause,
 	handleScanQr,
@@ -16,7 +20,7 @@ const Controls = ({
 }) => (
 	<>
 		<div className="top-container">
-			{(isNurse) && (
+			{(isNurse) ? (
 				<div className='control-container'>
 					{isPause && (
 						<div className='control-item' onClick={handlePause}>
@@ -27,6 +31,22 @@ const Controls = ({
 						<i className='fa fa-qrcode'></i>
 					</div>
 				</div>
+			) : (
+				userMediaDevices.length > 1 && (
+					<div className='select-container'>
+						<FormControl className='select-form'>
+							<InputLabel id="demo-simple-select-label">Camera</InputLabel>
+							<Select
+								value={videoDevice}
+								onChange={updateVideoDevice}
+							>
+								{userMediaDevices.map((value) => (
+									<MenuItem key={value.deviceId} value={value.deviceId}>{value.label}</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</div>
+				)
 			)}
 		</div>
 		<div className="top-container right">

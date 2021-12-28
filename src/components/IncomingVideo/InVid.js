@@ -11,6 +11,7 @@ const InVid = ({
 	takePhoto,
 	participant,
 	storeImage,
+	localVideoTracks,
 	currentBookingUserName,
 }) => {
 	const containerRef = useRef();
@@ -78,7 +79,7 @@ const InVid = ({
 			setAudioTracks([]);
 			participant.removeAllListeners();
 		};
-	}, [participant]);
+	}, [participant, localVideoTracks]);
 
 	useEffect(() => {
 		const videoTrack = videoTracks[0];

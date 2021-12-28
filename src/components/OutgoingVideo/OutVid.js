@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './OutgoingVideo.scss';
-//import Controls from "../Controls/Controls";
 
-const OutVid = ({ participant }) => {
+const OutVid = ({ participant, localVideoTracks }) => {
 	const [isHidden, setIsHidden] = useState(false);
 
 	const [videoTracks, setVideoTracks] = useState([]);
@@ -16,7 +15,8 @@ const OutVid = ({ participant }) => {
 			.filter(track => track !== null);
 
 	useEffect(() => {
-		setVideoTracks(trackpubsToTracks(participant.videoTracks));
+		const participantVideoTracks = trackpubsToTracks(participant.videoTracks);
+		setVideoTracks(participantVideoTracks.length ? participantVideoTracks : localVideoTracks);
 		setAudioTracks(trackpubsToTracks(participant.audioTracks));
 
 		const trackSubscribed = track => {
@@ -43,7 +43,7 @@ const OutVid = ({ participant }) => {
 			setAudioTracks([]);
 			participant.removeAllListeners();
 		};
-	}, [participant]);
+	}, [participant, localVideoTracks]);
 
 	useEffect(() => {
 		const videoTrack = videoTracks[0];

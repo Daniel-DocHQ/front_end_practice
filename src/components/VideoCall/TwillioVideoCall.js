@@ -38,7 +38,10 @@ function TwillioVideoCall ({
 	const patients = useBookingUsers();
 	const [counter, setCounter] = useState(0);
 	const [room, setRoom] = useState(null);
+	const [videoDevice, setVideoDevice] = useState('');
+	const [videoTracks, setVideoTracks] = useState([]);
 	const [participants, setParticipants] = useState([]);
+	const [userMediaDevices, setUserMediaDevices] = useState([]);
 	const [isMuted, setIsMuted] = useState(false);
 	const [bookingUsers, setBookingUsers] = useState(isNurse ? [...patients] : []);
 	const [isCloseCallVisible, setIsCloseCallVisible] = useState(false);
@@ -82,6 +85,9 @@ function TwillioVideoCall ({
 		}
 		disconnectRoom();
 	};
+	const getDevices = (mediaDevices) => {
+		setUserMediaDevices([...mediaDevices.filter(({ kind }) => kind === 'videoinput')]);
+	}
 	function capturePhoto() {
 		setTakePhoto(true);
 		setTimeout(() => {
@@ -99,24 +105,95 @@ function TwillioVideoCall ({
 	function updateImage(data) {
 		updateImageData(data);
 	}
-
+	const attachTracks = (tracks) => {
+		tracks.forEach(function(track) {
+			if (track) {
+				setVideoTracks(videoTracks => [track, ...videoTracks]);
+			}
+		});
+	};
+	const detachTracks = (tracks) => {
+		tracks.forEach(function(track) {
+		  if (track) {
+			setVideoTracks(videoTracks => videoTracks.filter(v => v !== track));
+		  }
+		});
+	}
+	function stopTracks(tracks) {
+		tracks.forEach(function(track) {
+			if (track) { track.stop(); }
+		});
+	}
+	const updateVideoDevice = (device) => {
+		const localParticipant = room.localParticipant;
+		const tracks = Array.from(localParticipant.videoTracks.values()).map(
+			function(trackPublication) {
+				return trackPublication.track;
+			}
+		);
+		localParticipant.unpublishTracks(tracks);
+		detachTracks(tracks);
+		stopTracks(tracks);
+		Video.createLocalVideoTrack({
+			deviceId: { exact: device }
+		}).then((localVideoTrack) => {
+			localParticipant.publishTrack(localVideoTrack);
+			attachTracks([localVideoTrack]);
+		});
+		setVideoDevice(device);
+	};
 	const updateAppointmentStatus = (status) =>
 		bookingService.updateAppointmentStatus(appointmentId, { status }, authToken)
 		.then((resp) => !!resp.error ? ToastsStore.error(resp.error, 10000) : null)
 		.catch(err => ToastsStore.error(err.error, 10000));
 
+	const participantConnected = participant => {
+		setMessage(isNurse ? 'Patient Connected' : 'Medical Professional Connected');
+		setParticipants(prevParticipants => [...prevParticipants, participant]);
+	};
+	const participantDisconnected = participant => {
+		setMessage(isNurse ? 'Patient Disconnected' : 'Medical Professional Left');
+		if (isNurse) updateAppointmentStatus('PATIENT_LEFT');
+		setParticipants(prevParticipants => prevParticipants.filter(p => p !== participant));
+	};
+	const handleDisconnect = async () => {
+		if (isNurse) {
+			await nurseSvc
+				.getAppointmentDetails(appointmentId, token)
+				.then(result => {
+					if (result.success && result.appointment) {
+						const { booking_users } = result.appointment;
+						if ([...booking_users].filter((patient) => (!get(patient, 'metadata.result') && !get(patient, 'metadata.sample_taken'))).length) {
+							setIsAppointmentUnfinished(true);
+						} else {
+							setIsAppointmentUnfinished(false);
+						}
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				});
+		}
+		setIsCloseCallVisible(true);
+	};
+	const handlePause = async () => {
+		await updateAppointmentStatus('ON_HOLD');
+		handleHideVideoAppointment();
+	}
+	const handleToggleAudio = () => {
+		if (!!room && !!room.localParticipant) {
+			room.localParticipant.audioTracks.forEach(track => {
+				if (track.track.isEnabled) {
+					track.track.disable();
+				} else {
+					track.track.enable();
+				}
+				setIsMuted(!track.track.isEnabled);
+			});
+		}
+	};
+
 	useEffect(() => {
-		const participantConnected = participant => {
-			setMessage(isNurse ? 'Patient Connected' : 'Medical Professional Connected');
-			setParticipants(prevParticipants => [...prevParticipants, participant]);
-		};
-
-		const participantDisconnected = participant => {
-			setMessage(isNurse ? 'Patient Disconnected' : 'Medical Professional Left');
-			if (isNurse) updateAppointmentStatus('PATIENT_LEFT');
-			setParticipants(prevParticipants => prevParticipants.filter(p => p !== participant));
-		};
-
 		Video.connect(token, {
 			name: appointmentId,
 			audio: true,
@@ -127,6 +204,9 @@ function TwillioVideoCall ({
 			setRoom(room);
 			room.on('participantConnected', participantConnected);
 			room.on('participantDisconnected', participantDisconnected);
+			room.on('trackSubscribed', function(track) {
+				attachTracks([track]);
+			  });
 			room.participants.forEach(participantConnected);
 		});
 
@@ -134,6 +214,7 @@ function TwillioVideoCall ({
 	}, [token]);
 
 	useEffect(() => {
+		if (!isNurse) navigator.mediaDevices.enumerateDevices().then(getDevices);
 		return () => {
 			disconnectRoom();
 			setTimeout(async () => {
@@ -189,44 +270,6 @@ function TwillioVideoCall ({
 		}
 	}, [counter, isEarly]);
 
-	const handleDisconnect = async () => {
-		if (isNurse) {
-			await nurseSvc
-				.getAppointmentDetails(appointmentId, token)
-				.then(result => {
-					if (result.success && result.appointment) {
-						const { booking_users } = result.appointment;
-						if ([...booking_users].filter((patient) => (!get(patient, 'metadata.result') && !get(patient, 'metadata.sample_taken'))).length) {
-							setIsAppointmentUnfinished(true);
-						} else {
-							setIsAppointmentUnfinished(false);
-						}
-					}
-				})
-				.catch(err => {
-					console.log(err)
-				});
-		}
-		setIsCloseCallVisible(true);
-	};
-
-	const handlePause = async () => {
-		await updateAppointmentStatus('ON_HOLD');
-		handleHideVideoAppointment();
-	}
-
-	const handleToggleAudio = () => {
-		if (!!room && !!room.localParticipant) {
-			room.localParticipant.audioTracks.forEach(track => {
-				if (track.track.isEnabled) {
-					track.track.disable();
-				} else {
-					track.track.enable();
-				}
-				setIsMuted(!track.track.isEnabled);
-			});
-		}
-	};
 	return isSupported ? (
 		<React.Fragment>
 			<DocModal
@@ -306,6 +349,9 @@ function TwillioVideoCall ({
 					<Controls
 						isMuted={isMuted}
 						scanQr={scanQr}
+						videoDevice={videoDevice}
+						updateVideoDevice={({target: { value }}) => updateVideoDevice(value)}
+						userMediaDevices={userMediaDevices}
 						isPause={!!hideVideoAppointment}
 						updateMuted={handleToggleAudio}
 						capturePhoto={capturePhoto}
@@ -317,7 +363,7 @@ function TwillioVideoCall ({
 						captureDisabled={captureDisabled || !bookingUsers.length || !displayCertificates}
 					/>
 					<React.Fragment>
-						{room && <OutVid participant={room.localParticipant} />}
+						{room && <OutVid participant={room.localParticipant} localVideoTracks={videoTracks} />}
 						{participants.length !== 0 &&
 							participants.map((participant, indx) => (
 								<InVid
@@ -326,6 +372,7 @@ function TwillioVideoCall ({
 									takePhoto={takePhoto}
 									stopScanQr={() => setScanQr(false)}
 									participant={participant}
+									localVideoTracks={videoTracks}
 									updateImageData={updateImage}
 									storeImage={uploadImageForUser}
 									currentBookingUserName={currentBookingUserName}
