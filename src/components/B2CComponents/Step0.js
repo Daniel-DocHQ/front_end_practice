@@ -186,10 +186,10 @@ const Step0 = ({
                             {({ field, meta, form }) => (
                                 <Autocomplete
                                     {...field}
-                                    options={[{ name: 'NHS Test Kit' }, ...approvedProducts]}
+                                    options={[{ name: 'NHS Test Kit (are not allowed)' }, ...approvedProducts]}
                                     getOptionLabel={({ name }) => name}
                                     style={{ width: 300 }}
-                                    getOptionDisabled={({ name }) => name === 'NHS Test Kit'}
+                                    getOptionDisabled={({ name }) => name === 'NHS Test Kit (are not allowed)'}
                                     onChange={(event, newValue) => {
                                         form.setFieldValue(selectedKit.name, newValue);
                                     }}

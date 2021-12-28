@@ -18,8 +18,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-
 import CreateNewTask from '../../components/Processor/CreateNewTask/CreateNewTask.js';
 
 const processor = process.env.REACT_APP_PROCESSOR_URL;
@@ -136,7 +134,6 @@ const ProcessorManagement = () => {
         })
     }
 
-
     useEffect(() => {
         Promise.all([
             taskList(),
@@ -169,7 +166,7 @@ const ProcessorManagement = () => {
         .then(() => {
             setLoading(false);
         })
-        .catch(console.error) 
+        .catch(console.error)
     }, [])
 
     const getOrgName = (id) => {
@@ -203,10 +200,10 @@ const ProcessorManagement = () => {
             <Grid container spacing={3}>
                 <Grid item xs={12} className={classes.rightAlign}>
                     <CreateNewTask
-                    baseURL={processor}
-                    orgList={orgList}
-                    eventList={eventList}
-                />
+                        baseURL={processor}
+                        orgList={orgList}
+                        eventList={eventList}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <TableContainer component={Paper}>
@@ -224,21 +221,21 @@ const ProcessorManagement = () => {
                         <TableBody>
                           {rows.map((row) => (
                             <TableRow key={row.id}>
-                              <TableCell component="th" scope="row">{row.event}</TableCell>
-                              <TableCell align="right">{getOrgName(row.organisation_id)}</TableCell>
-                              <TableCell align="right">{row.description}</TableCell>
-                              <TableCell align="right">
-                                <Switch
-                                    checked={row.enabled}
-                                    onChange={handleChange}
-                                    name="checked"
-                                    inputProps={{ 'aria-label': 'secondary checkbox', 'data-id': row.id }}
-                                />
-                              </TableCell>
-                              <TableCell align="right">
-                                  <Button variant="contained" className={classes.editBtn}component={ Link } to={`/super_admin/processor/edit/${row.id}`}>Edit</Button>
-                                  <DeleteButton value={row.id} onClick={handleDeleteOpen}/>
-                              </TableCell>
+                                <TableCell component="th" scope="row">{row.event}</TableCell>
+                                <TableCell align="right">{getOrgName(row.organisation_id)}</TableCell>
+                                <TableCell align="right">{row.description}</TableCell>
+                                <TableCell align="right">
+                                    <Switch
+                                        checked={row.enabled}
+                                        onChange={handleChange}
+                                        name="checked"
+                                        inputProps={{ 'aria-label': 'secondary checkbox', 'data-id': row.id }}
+                                    />
+                                </TableCell>
+                                <TableCell align="right">
+                                    <Button variant="contained" className={classes.editBtn}component={ Link } to={`/super_admin/processor/edit/${row.id}`}>Edit</Button>
+                                    <DeleteButton value={row.id} onClick={handleDeleteOpen}/>
+                                </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
