@@ -4,6 +4,36 @@ const baseUrl = process.env.REACT_APP_API_URL;
 const bookingUrl = process.env.REACT_APP_BOOKING_URL;
 
 const adminService = {
+	updateOrderPayment(id, body) {
+		return new Promise((resolve, reject) => {
+			if (body) {
+				axios({
+					url: `${baseUrl}/v1/order/${id}/process`,
+					method: 'PATCH',
+					data: body,
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({ success: true, order_details: response.data });
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				reject({ success: false, error: 'Missing details' });
+			}
+		});
+	},
 	getAppointments(token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {
