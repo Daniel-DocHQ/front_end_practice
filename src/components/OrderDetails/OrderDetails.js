@@ -194,7 +194,7 @@ const OrderDetails = ({
 	}, [reloadInfo]);
 
 	const updateNotes = (notes) => {
-		adminService.updateOrderNotes({
+		adminService.updateOrder({
 			...orderDetail,
 			order_notes: [
 				{
@@ -300,7 +300,11 @@ const OrderDetails = ({
 												color="green"
 												style={{ marginLeft: 10 }}
 												onClick={async () => {
-													await adminService.updateOrderPayment(orderDetail.id, { payment_flag: 'Complete', id: orderDetail.id })
+													await adminService.updateOrder({
+														...orderDetail,
+														payment_flag: 'Complete',
+														shipping_flag: 'Processing',
+													}, orderDetail.id, token)
 													.then((result) => {
 														if (result.success) refetchData();
 													})
