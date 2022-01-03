@@ -38,6 +38,9 @@
   align-items: center;
   justify-content: space-around;
 }
+.red-icon {
+  color: var(--doc-pink);
+}
 .select-form {
   width: 100%;
   background-color: rgba(239, 239, 240, 0.6);
@@ -77,6 +80,7 @@
   transition: all linear 0.5s;
   position: absolute;
   bottom: 0px;
+  z-index: 2;
 }
   .photo-controller {
     display: flex;

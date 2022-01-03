@@ -67,18 +67,17 @@ const Controls = ({
 			) : null}
 		</div>
 		<div className="controls-container">
-			{!isMuted && (
+			{isMuted ? (
+				<div className='control-item' onClick={updateMuted}>
+					<i className={`fa fa-microphone${isMuted && '-slash red-icon'}`}></i>
+				</div>
+			) : (
 				<div className='control-item' onClick={updateMuted}>
 					<i className='fa fa-microphone'></i>
 				</div>
 			)}
-			{isMuted && (
-				<div className='control-item' onClick={updateMuted}>
-					<i className='fa fa-microphone-slash' style={{ color: 'var(--doc-pink)' }}></i>
-				</div>
-			)}
 			<div className='control-item' onClick={handleDisconnect}>
-				<i className='fa fa-phone' style={{ color: 'var(--doc-pink)' }}></i>
+				<i className='fa fa-phone red-icon'></i>
 			</div>
 		</div>
 	</>
