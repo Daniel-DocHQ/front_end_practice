@@ -26,18 +26,6 @@ const InVid = ({
 	const videoRef = useRef();
 	const audioRef = useRef();
 
-	useEffect(() => {
-		if (takePhoto) {
-			handleCapture();
-		}
-	}, [takePhoto]);
-
-	useEffect(() => {
-		if (qrResult) {
-			stopScanQr();
-		}
-	}, [qrResult]);
-
 	const cleanBufferPhoto = () => setBufferPhoto();
 
 	function handleCapture() {
@@ -51,9 +39,30 @@ const InVid = ({
 			.map(publication => publication.track)
 			.filter(track => track !== null);
 
+	const scanningQr = () => {
+        setScanQrInterval(setInterval(() => {
+			if (scanQr) {
+				const context = canvasRef.current.getContext('2d');
+				context.drawImage(videoRef.current, 0, 0, 1280, 720);
+				const pixels = context.getImageData(0, 0, 1280, 720);
+				const imageData = pixels.data;
+				const code = jsQR(imageData, 1280, 720);
+				if (code) {
+					setQrResult(code);
+					return () => clearInterval(scanQrInterval);
+				};
+			}
+		}, 500));
+		return () => clearInterval(scanQrInterval);
+    };
+
+	const updateTracks = (updatedParticipant) => {
+		setVideoTracks(trackpubsToTracks(updatedParticipant.videoTracks));
+		setAudioTracks(trackpubsToTracks(updatedParticipant.audioTracks));
+	};
+
 	useEffect(() => {
-		setVideoTracks(trackpubsToTracks(participant.videoTracks));
-		setAudioTracks(trackpubsToTracks(participant.audioTracks));
+		updateTracks(participant);
 
 		const trackSubscribed = track => {
 			if (track.kind === 'video') {
@@ -79,7 +88,33 @@ const InVid = ({
 			setAudioTracks([]);
 			participant.removeAllListeners();
 		};
-	}, [participant, localVideoTracks]);
+	}, [participant]);
+
+	useEffect(() => {
+		if (localVideoTracks.length)
+			updateTracks(participant);
+	}, [localVideoTracks]);
+
+	useEffect(() => {
+		if (takePhoto) {
+			handleCapture();
+		}
+	}, [takePhoto]);
+
+	useEffect(() => {
+		if (qrResult) {
+			stopScanQr();
+		}
+	}, [qrResult]);
+
+	useEffect(() => {
+		if (scanQr && videoRef.current) {
+			scanningQr();
+		} else if (scanQrInterval)  {
+			clearInterval(scanQrInterval);
+			setScanQrInterval();
+		}
+	}, [scanQr]);
 
 	useEffect(() => {
 		const videoTrack = videoTracks[0];
@@ -90,32 +125,6 @@ const InVid = ({
 			};
 		}
 	}, [videoTracks]);
-
-	const scanningQr = () => {
-        setScanQrInterval(setInterval(() => {
-			if (scanQr) {
-				const context = canvasRef.current.getContext('2d');
-				context.drawImage(videoRef.current, 0, 0, 1280, 720);
-				const pixels = context.getImageData(0, 0, 1280, 720);
-				const imageData = pixels.data;
-				const code = jsQR(imageData, 1280, 720);
-				if (code) {
-					setQrResult(code);
-					return () => clearInterval(scanQrInterval);
-				};
-			}
-		}, 500));
-		return () => clearInterval(scanQrInterval);
-    };
-
-	useEffect(() => {
-		if (scanQr && videoRef.current) {
-			scanningQr();
-		} else if (scanQrInterval)  {
-			clearInterval(scanQrInterval);
-			setScanQrInterval();
-		}
-	}, [scanQr]);
 
 	useEffect(() => {
 		const audioTrack = audioTracks[0];

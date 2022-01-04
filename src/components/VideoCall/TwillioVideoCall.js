@@ -50,6 +50,7 @@ function TwillioVideoCall ({
 	const [isAppointmentUnfinished, setIsAppointmentUnfinished] = useState(false);
 	const [takePhoto, setTakePhoto] = useState(false);
 	const statusChanges = status_changes || [];
+	const isSomeoneConnected = participants.length > 0;
 	const lastStatus = (get(statusChanges, `${[statusChanges.length - 1]}`, ''));
 	const currentBookingUserName = `${get(bookingUsers, '[0].first_name', '')} ${get(bookingUsers, '[0].last_name', '')}`;
 	const [message, setMessage] = useState(
@@ -147,15 +148,6 @@ function TwillioVideoCall ({
 		.then((resp) => !!resp.error ? ToastsStore.error(resp.error, 10000) : null)
 		.catch(err => ToastsStore.error(err.error, 10000));
 
-	const participantConnected = participant => {
-		setMessage(isNurse ? 'Patient Connected' : 'Medical Professional Connected');
-		setParticipants(prevParticipants => [...prevParticipants, participant]);
-	};
-	const participantDisconnected = participant => {
-		setMessage(isNurse ? 'Patient Disconnected' : 'Medical Professional Left');
-		if (isNurse) updateAppointmentStatus('PATIENT_LEFT');
-		setParticipants(prevParticipants => prevParticipants.filter(p => p !== participant));
-	};
 	const handleDisconnect = async () => {
 		if (isNurse) {
 			await nurseSvc
@@ -194,6 +186,16 @@ function TwillioVideoCall ({
 	};
 
 	useEffect(() => {
+		const participantConnected = participant => {
+			setMessage(isNurse ? 'Patient Connected' : 'Medical Professional Connected');
+			setParticipants(prevParticipants => [...prevParticipants, participant]);
+		};
+		const participantDisconnected = participant => {
+			setMessage(isNurse ? 'Patient Disconnected' : 'Medical Professional Left');
+			if (isNurse) updateAppointmentStatus('PATIENT_LEFT');
+			setParticipants(prevParticipants => prevParticipants.filter(p => p !== participant));
+		};
+
 		Video.connect(token, {
 			name: appointmentId,
 			audio: true,
@@ -206,7 +208,10 @@ function TwillioVideoCall ({
 			room.on('participantDisconnected', participantDisconnected);
 			room.on('trackSubscribed', function(track) {
 				attachTracks([track]);
-			  });
+			});
+			room.on('trackUnsubscribed', function(track) {
+				detachTracks([track]);
+			});
 			room.participants.forEach(participantConnected);
 		});
 
@@ -238,7 +243,7 @@ function TwillioVideoCall ({
 	}, []);
 
 	useEffect(() => {
-		if (!isNurse && timeBeforeStart > 0) { // 3 min until show message
+		if (!isNurse && timeBeforeStart > 0 && !isSomeoneConnected) { // 3 min until show message
 			const interval = setInterval(() => {
 				const timeDifference = new Date(appointmentInfo.start_time).getTime() - new Date().getTime();
 				setTimeBeforeStart(timeDifference);
@@ -255,7 +260,7 @@ function TwillioVideoCall ({
 	}, [timeBeforeStart, isEarly]);
 
 	useEffect(() => {
-		if (counter < 180 && !isNurse && !isEarly) { // 3 min until show message
+		if (counter < 180 && !isNurse && !isEarly && !isSomeoneConnected) { // 3 min until show message
 			const interval = setInterval(() => {
 				setCounter((prev) => prev + 1);
 			}, 1000);
@@ -363,8 +368,13 @@ function TwillioVideoCall ({
 						captureDisabled={captureDisabled || !bookingUsers.length || !displayCertificates}
 					/>
 					<React.Fragment>
-						{room && <OutVid participant={room.localParticipant} localVideoTracks={videoTracks} />}
-						{participants.length !== 0 &&
+						{room && (
+							<OutVid
+								participant={room.localParticipant}
+								localVideoTracks={videoTracks}
+							/>
+						)}
+						{isSomeoneConnected &&
 							participants.map((participant, indx) => (
 								<InVid
 									key={indx}

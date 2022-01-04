@@ -14,11 +14,14 @@ const OutVid = ({ participant, localVideoTracks }) => {
 			.map(publication => publication.track)
 			.filter(track => track !== null);
 
-	useEffect(() => {
-		const participantVideoTracks = trackpubsToTracks(participant.videoTracks);
-		setVideoTracks(participantVideoTracks.length ? participantVideoTracks : localVideoTracks);
-		setAudioTracks(trackpubsToTracks(participant.audioTracks));
+	const updateTracks = (updatedParticipant, updatedLocalVideoTracks) => {
+		const participantVideoTracks = trackpubsToTracks(updatedParticipant.videoTracks);
+		setVideoTracks(participantVideoTracks.length ? participantVideoTracks : updatedLocalVideoTracks);
+		setAudioTracks(trackpubsToTracks(updatedParticipant.audioTracks));
+	};
 
+	useEffect(() => {
+		updateTracks(participant, localVideoTracks);
 		const trackSubscribed = track => {
 			if (track.kind === 'video') {
 				setVideoTracks(videoTracks => [...videoTracks, track]);
@@ -43,7 +46,12 @@ const OutVid = ({ participant, localVideoTracks }) => {
 			setAudioTracks([]);
 			participant.removeAllListeners();
 		};
-	}, [participant, localVideoTracks]);
+	}, [participant]);
+
+	useEffect(() => {
+		if (localVideoTracks.length)
+			updateTracks(participant, localVideoTracks);
+	}, [localVideoTracks]);
 
 	useEffect(() => {
 		const videoTrack = videoTracks[0];
