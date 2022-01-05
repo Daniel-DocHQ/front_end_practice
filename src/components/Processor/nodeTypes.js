@@ -828,6 +828,21 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
         ],
     })
     .addNodeType({
+        type: "createOncologicaDeclaration",
+        label: "Create Oncologica declaration",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.boolean({
+                name:"create",
+                label: "Create Declaration",
+            }),
+            ports.string({
+                name: "barcode",
+                label: "Barcode",
+            })
+        ],
+    })
+    .addNodeType({
         type: "getSynlabResult",
         label: "Get Synlab Result",
         initalWidth: 160,
@@ -841,6 +856,23 @@ export const getNodeTypes = (templateOptions, issueCertificateListOptions, produ
             ports.data({
                 name: "data",
                 label: "Synlab Result Data",
+            })
+        ]
+    })
+    .addNodeType({
+        type: "getOncologicaKit",
+        label: "Get Oncologica Result",
+        initalWidth: 160,
+        inputs: ports => [
+            ports.string({
+                name: "result",
+                label: "Result ID",
+            })
+        ],
+        outputs: ports => [
+            ports.data({
+                name: "data",
+                label: "Oncologica Result Data",
             })
         ]
     })

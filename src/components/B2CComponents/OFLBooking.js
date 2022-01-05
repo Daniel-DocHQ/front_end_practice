@@ -198,7 +198,7 @@ const OFLBooking = () => {
                                 travelTime.getHours(),
                                 travelTime.getMinutes(),
                                 0,
-                            )).tz(timezoneValue, true).format();
+                            )).tz(timezoneValue || defaultTimeZone.timezone, true).format();
                         const isAdditionalProduct = PRODUCTS_WITH_ADDITIONAL_INFO.includes(sku);
                         const isPCR = sku === FIT_TO_FLY_PCR;
                         let shortTokenValue = shortToken;
@@ -330,7 +330,7 @@ const OFLBooking = () => {
                                         landingTime.getHours(),
                                         landingTime.getMinutes(),
                                         0,
-                                    )).tz(timezoneValue, true).format(),
+                                    )).tz(timezoneValue || defaultTimeZone.timezone, true).format(),
                                 transport_departure_country: isAdditionalProduct ? city.iso2 : 'GB',
                                 transport_departure_date_time: travelDateInTz,
                                 transport_number: transportNumber,
