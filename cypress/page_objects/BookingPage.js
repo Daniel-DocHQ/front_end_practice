@@ -55,7 +55,7 @@ export default class BookingPage{
 	// this is required to make appointment booking possible for any product
 	get_date_plus_day(custom_date, day_from_today = 0) { // 0 - today, 1 - tomorrow, 2 - aftertomorrow, etc.
 		if(custom_date.length < 2 || custom_date == null)
-			return (String(today.getDate() + day_from_today).padStart(2, '0'))+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+			return (String(today.getDate() + day_from_today).padStart(2, '0'))+'-'+(String(today.getMonth()+1).padStart(2, '0'))+'-'+today.getFullYear();
 		else
 			{	// add day_from_today to custom_date
 				let modified_date = +(custom_date.slice(0, 2))
@@ -119,14 +119,18 @@ export default class BookingPage{
 		else	// all other products like pre-dep tests and ftt (except ftt pcr)
 		{
 			// appointment for these products is booked n days before [departure_date]
-			let booking_date = this.get_date_plus_day(date, 1)
+			let booking_date = this.get_date_plus_day(date, 0) //changed to 0 for pre dep fix
 			cy.get(".MuiIconButton-label").contains(`${+(booking_date.slice(0, 2))}`).first().click({force: true})
 			cy.get('.appointment-slot-container').find('div.slot-container > div').first().click({force: true})
 			return booking_date;
 		}
 	}
 
+
 	fill_pessengers_data(user_index, prod_index){
+		const vaccine_name = user.users[user_index].vaccine.name;
+		const vaccine_shots = user.users[user_index].vaccine.shots;
+
 		cy.get('#first-name').focus().clear().fill(user.users[user_index].first_name)
 	    cy.get('#last-name').clear().fill(user.users[user_index].last_name)						// to randomize replace with:
 	    cy.get('#email').clear().fill(test_data[1].email) 										//user.users[user_index].email 
@@ -143,8 +147,9 @@ export default class BookingPage{
 			switch(test_data[2].vaccine_status){
 				case 'yes': {
 					cy.get(`input[value="yes"]`).check('yes', { force: true })
-	    			cy.get(`input[name="passengers[${user_index}].vaccineType"]`).check(user.users[user_index].vaccine.name)
-	    			cy.get(`input[name="passengers[${user_index}].vaccineNumber"]`).check(user.users[user_index].vaccine.shots)
+					cy.get(`input[name="passengers[${user_index}].vaccineType"]`).check(`${vaccine_name}`)
+      				cy.get(`input[name="passengers[${user_index}].vaccineNumber"]`).check(`${vaccine_shots}`)
+
 				}
 				case 'no': {
 					cy.get(`input[value="no"]`).check('no', { force: true })

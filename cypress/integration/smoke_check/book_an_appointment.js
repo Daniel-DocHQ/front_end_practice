@@ -102,7 +102,6 @@ describe(`B2C - Booking Appointment for ${Object.keys(products)[prod_index]}`, (
 	    		cy.get('.green').click()
 	    		cy.wait(1500)
 			}
-     		cy.pause()
   		})
 
 		it('Accept T&C and Summary', () => {
@@ -114,8 +113,8 @@ describe(`B2C - Booking Appointment for ${Object.keys(products)[prod_index]}`, (
     			cy.get(`#passenger-name-${user_index+1}`).should('include.text', user.users[user_index].first_name+' '+user.users[user_index].last_name)
     			cy.get(`#passenger-email-${user_index+1} > p`).should('include.text', test_data[1].email) 								//user.users[user_index].email
     			cy.get(`#passenger-phone-${user_index+1}`).should('include.text', test_data[1].country_code+''+test_data[1].phone) 		//user.users[user_index].phone
-    			cy.get(`#passenger-date-of-birth-${user_index+1} > p`).should('include.text', user.users[user_index].date_of_birth)
-    			//cy.get(`#passenger-sex-${user_index+1}`).should('include.text', user.users[user_index].sex)		/*** there is a bug with sex: when autotest is making an order, MALE type is always choosen no amtter what data is paste ***/
+    			//cy.get(`#passenger-date-of-birth-${user_index+1} > p`).should('include.text', user.users[user_index].date_of_birth)
+    			//cy.get(`#passenger-sex-${user_index+1}`).should('include.text', user.users[user_index].sex)		/*** there is a bug with sex: when autotest is making an order, MALE type is always choosen no matter what data is paste ***/
 				cy.get(`#passenger-passport-${user_index+1}`).should('include.text', `23${user_index}5678`)
     		}
 

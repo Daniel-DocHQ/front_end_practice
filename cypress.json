@@ -6,5 +6,8 @@
     "tui_practitioner.password": "Pa55w0rd"
   },
   "viewportWidth": 1920,
-  "viewportHeight": 1080
+  "viewportHeight": 1080,
+  
+  "chromeWebSecurity": false,
+  "retries": 2
 }

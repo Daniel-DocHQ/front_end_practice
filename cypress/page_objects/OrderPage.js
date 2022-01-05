@@ -87,31 +87,29 @@ export default class OrderPage {
     	cy.get('input[name="SATelephone"]').clear().fill(phone)
 	}
 
+
 	// Payment section is filled with fake card data
 	fill_payment_data() {
-		const card_name = (user.users[user_index].first_name+' '+user.users[user_index].last_name)
-		const card_num = "4111111111111111", card_expiry = "08/28", card_cvv = "567"
-    	cy.get('input[name="name_on_card"]').clear().fill(card_name)
-    	cy.get('input[name="card_number"]').clear().fill(card_num)
-    	cy.get('input[name="expiry"]').clear().fill(card_expiry)
-    	cy.get('input[name="cvv"]').clear().fill(card_cvv)
+		
+		const card_num = "4000000000001000", card_expiry = "12/22", card_cvv = "123"
+
+		cy.getIframe('#braintree-hosted-field-number').find('input[name="credit-card-number"]').fill(card_num)
+  		cy.getIframe('#braintree-hosted-field-expirationDate').find('input[name="expiration"]').fill(card_expiry)
+		cy.getIframe('#braintree-hosted-field-cvv').find('input[name="cvv"]').fill(card_cvv)
 	}
 
 
 	// Writing short-token and prosucts names with quantities to 
 	// order_list.json file for further use in booking appointment tests.
 	write_order_data() {
-	
-
-	cy.get(':nth-child(2) > b').then((token) => {
-		cy.readFile('cypress/fixtures/order_list.json').then((obj) => {
-			// delete covid-certificate from products object as it doesn't need for booking
-			if("cov-19_certificate" in products_data) delete products_data["cov-19_certificate"];
-
-			obj[token.text()] = products_data
-			cy.writeFile('cypress/fixtures/order_list.json', obj)
-		})
-	  })
+		cy.get(':nth-child(2) > b').then((token) => {
+			cy.readFile('cypress/fixtures/order_list.json').then((obj) => {
+				// delete covid-certificate from products object as it doesn't need for booking
+				if("cov-19_certificate" in products_data) delete products_data["cov-19_certificate"];
+				obj[token.text()] = products_data
+				cy.writeFile('cypress/fixtures/order_list.json', obj)
+			})
+	  	})
 	}
 
 	

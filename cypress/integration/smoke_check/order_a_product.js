@@ -65,19 +65,31 @@ describe("B2C - Purchasing products", () => {
 		// Discount code
     	// let discount = "1RAR38F"
     	// cy.get('input[name="discountCode"]').fill(discount)
+		cy.get('.green').contains('Next').click()
+    	cy.wait(1500)
 	})
   
 
   	it('Payment details can be submitted', () => {
 
-		cy.intercept({method: 'POST', url: 'https://api-staging.dochq.co.uk/v1/order'}).as('submit_order')
+		//cy.intercept({method: 'POST', url: 'https://api-staging.dochq.co.uk/v1/order'}).as('submit_order')
+		// As payment block doesn't appear from time to time, click on "Load Pymayment Info" button instead
+		//try{
+		//	cy.get('.pink').contains('Load Payment').click()
+		//	cy.wait(1000)
+		//}
+		//catch{
+		//	cy.wait(3000)
+		//}
+
+
+		cy.get('.pink').contains('Load Payment').click()
+		cy.wait(3000)
 		// Default fake card data
 		Order.fill_payment_data()
-	
+		
     	cy.get('.green').contains('Pay Now').click()
-		cy.wait('@submit_order')
-    	cy.get('@submit_order').then( xhr => { expect(xhr.response.statusCode).eq(200) })
-    	cy.wait(2000)
+		cy.wait(2000)
   	})
 
 
