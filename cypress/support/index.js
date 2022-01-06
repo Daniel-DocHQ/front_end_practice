@@ -17,4 +17,29 @@
 import './commands'
 
 // Alternatively you can use CommonJS syntax:
+
+//fs.writeFile('../fixtures/user.json', users_json, function writeJSON(err) {
+//  if (err) return console.log(err);
+//  console.log(JSON.stringify(users_json));
+//  console.log('writing to ' + 'user.json');
+//});
+
+
+//cy.writeFile('cypress/fixtures/user.json', users_json)
+
 // require('./commands')
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false here prevents Cypress from
+  // failing the test
+  return false
+})
+
+module.exports = (on, config) => {
+  on("before:browser:launch", (browser = {}, args) => {
+    if (browser.name === "chrome") {
+      args.push("--disable-site-isolation-trials");
+      return args;
+    }
+  });
+};

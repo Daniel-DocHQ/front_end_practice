@@ -1,37 +1,101 @@
 {
-  "booking_users": [
-    {
-      "country": "GB",
-      "first_name": "Te",
-      "last_name": "Customer",
-      "date_of_birth": "01/01/1990",
-      "metadata": {
-        "short_token": "do_7447579745",
-        "passport_number": "123456789",
-        "test_type": "Antigen"
-      },
-      "email": "stagingtestingaccounts@dochq.co.uk",
-      "phone": "03300880645",
-      "ethnicity": "Computer",
-      "sex": "Male"
+    "booking_user": {
+        "acceptancies": null,
+        "country": "GB",
+        "date_of_birth": "1997-04-03T00:00:00Z",
+        "email": "Daniel.Albul@dochq.co.uk",
+        "ethnicity": "White British",
+        "first_name": "Daniel",
+        "id": "oDsFSthaiFFNywx",
+        "language": "EN",
+        "last_name": "Albul",
+        "locality": "Edinburgh",
+        "marketing_accept": "",
+        "metadata": {
+            "order_id": 1074.0,
+            "passport_number": "123",
+            "product_id": 68.0,
+            "short_token": "HQSYN2721646",
+            "source": "dochq",
+            "test_type": "Antigen",
+            "travel_date": "2021-11-06T22:00:00+02:00"
+        },
+        "phone": "+380638302847",
+        "postal_code": "EH1 3BG",
+        "product_id": 68,
+        "region": "Scotland",
+        "sex": "Male",
+        "share_accept": "",
+        "street_address": "9 Waterloo Pl",
+        "toc_accept": "true",
+        "tz_location": "Europe/London",
+        "vaccine_information": {
+            "status": "no"
+        }
     },
-    {
-      "country": "GB",
-      "first_name": "Testing",
-      "last_name": "Customer 2",
-      "date_of_birth": "01/01/1990",
-      "metadata": {
-        "short_token": "do_7447579745",
-        "passport_number": "123456789",
-        "test_type": "Antigen"
-      },
-      "email": "stagingtestingaccounts@dochq.co.uk",
-      "phone": "03300880645",
-      "ethnicity": "Computer",
-      "sex": "Male"
-    }
-  ],
-  "travel_date": "2021-05-07T10:50:24.676Z",
-  "travel_time": "2021-05-07T10:50:24.676Z",
-  "service": "video_gp_dochq"
+    "booking_users": [
+        {
+            "acceptancies": null,
+            "country": "GB",
+            "date_of_birth": "1997-04-03T00:00:00Z",
+            "email": "Daniel.Albul@dochq.co.uk",
+            "ethnicity": "White British",
+            "first_name": "Daniel",
+            "id": "oDsFSthaiFFNywx",
+            "language": "EN",
+            "last_name": "Albul",
+            "locality": "Edinburgh",
+            "marketing_accept": "",
+            "metadata": {
+                "order_id": 1074.0,
+                "passport_number": "123",
+                "product_id": 68.0,
+                "short_token": "HQSYN2721646",
+                "source": "dochq",
+                "test_type": "Antigen",
+                "travel_date": "2021-11-06T22:00:00+02:00"
+            },
+            "phone": "+380638302847",
+            "postal_code": "EH1 3BG",
+            "product_id": 68,
+            "region": "Scotland",
+            "sex": "Male",
+            "share_accept": "",
+            "street_address": "9 Waterloo Pl",
+            "toc_accept": "true",
+            "tz_location": "Europe/London",
+            "vaccine_information": {
+                "status": "no"
+            }
+        }
+    ],
+    "claimable_slot": false,
+    "end_time": "2021-11-07T10:20:00Z",
+    "id": "zpvFxBsJ7AuhO7BYbBwAP",
+    "languages": [
+        "EN",
+        "DE"
+    ],
+    "organisation": {
+        "name": "DocHQ"
+    },
+    "payment_id": [
+        "AAAAA"
+    ],
+    "provider": "Rotacloud",
+    "provider_appointment_index": "DOCHQBOOKINGIND",
+    "provider_booking_reference": "DOCHQBOOKINGREF",
+    "provider_data": "89977953",
+    "start_time": "2021-11-07T10:00:00Z",
+    "status": "WAITING",
+    "status_changes": [
+        {
+            "changed_to": "LOCKED",
+            "created_at": "2021-11-06T19:49:18Z"
+        }
+    ],
+    "status_last_updated": "2021-11-06T19:49:18Z",
+    "testing_kit_id": "Unknown",
+    "type": "video_gp_dochq",
+    "user": "9"
 }

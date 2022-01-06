@@ -1,5 +1,4 @@
 {
-  "baseUrl": "http://localhost:3000",
   "env": {
     "super_admin.email": "super_admin@dochq.co.uk",
     "super_admin.password": "Pa55w0rd",
@@ -7,5 +6,8 @@
     "tui_practitioner.password": "Pa55w0rd"
   },
   "viewportWidth": 1920,
-  "viewportHeight": 1080
+  "viewportHeight": 1080,
+  
+  "chromeWebSecurity": false,
+  "retries": 2
 }
