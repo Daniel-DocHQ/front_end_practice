@@ -61,7 +61,7 @@ export default class BookingPage{
 				let modified_date = +(custom_date.slice(0, 2))
 				modified_date += day_from_today
 				if(modified_date < 10) modified_date = '0' + modified_date;
-				modified_date += '-'+(today.getMonth()+1)+'-'+today.getFullYear();	
+				modified_date += '-'+(String(today.getMonth()+1).padStart(2, '0'))+'-'+today.getFullYear();	
 				return modified_date // example: if day_from_today = 2, then custom_date "05-02-2022" will become "07-02-2022"
 			}
 	}
@@ -104,15 +104,17 @@ export default class BookingPage{
 		if(product_titles[prod_index].includes('2' || '8')) // for all 'Day 2/3/8/5 whatever Test'
 		{	
 			let booking_date = this.get_date_plus_day(date, 2)
-			cy.get(".MuiIconButton-label").contains(`${+(booking_date.slice(0, 2))}`).first().click({force: true})
+			let day_to_pick = +(booking_date.slice(0, 2))
+			cy.get(".MuiIconButton-label").contains(new RegExp("^" + day_to_pick + "$", "g")).first().click({force: true}) // regex to ensure that we pick exactly our date
 			cy.get('.appointment-slot-container').find('div.slot-container > div').first().click({force: true})
 			return booking_date;
 		}
 		else if(product_titles[prod_index].includes('Fit to Travel [PCR]'))
 		{
 			// if your [departure_date] day is 19th of December, appointments will be available on 16th or 17th
-			let booking_date = this.get_date_plus_day(date, 1) 
-			cy.get(".MuiIconButton-label").contains(`${+(booking_date.slice(0, 2))}`).first().click({force: true})
+			let booking_date = this.get_date_plus_day(date, 1)
+			let day_to_pick = +(booking_date.slice(0, 2))
+			cy.get(".MuiIconButton-label").contains(new RegExp("^" + day_to_pick + "$", "g")).first().click({force: true})
 			cy.get('.appointment-slot-container').find('div.slot-container > div').first().click({force: true})
 			return booking_date;
 		}
@@ -120,7 +122,8 @@ export default class BookingPage{
 		{
 			// appointment for these products is booked n days before [departure_date]
 			let booking_date = this.get_date_plus_day(date, 0) //changed to 0 for pre dep fix
-			cy.get(".MuiIconButton-label").contains(`${+(booking_date.slice(0, 2))}`).first().click({force: true})
+			let day_to_pick = +(booking_date.slice(0, 2))
+			cy.get(".MuiIconButton-label").contains(new RegExp("^" + day_to_pick + "$", "g")).first().click({force: true})
 			cy.get('.appointment-slot-container').find('div.slot-container > div').first().click({force: true})
 			return booking_date;
 		}
