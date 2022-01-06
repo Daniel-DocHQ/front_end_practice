@@ -148,6 +148,40 @@ const SAHomepageCards = ({ token, user }) => {
 				/>
 			),
 		},
+		{
+			display: true,
+			title: 'Countries Management',
+			icon: <img src={BookAppointmentIcon} alt='Countries Management' />,
+			content: (
+				<React.Fragment>
+					<p>Countries Management</p>
+				</React.Fragment>
+			),
+			actions: (
+				<LinkButton
+					color='green'
+					text='View'
+					linkSrc='/super_admin/countries-management'
+				/>
+			),
+		},
+		{
+			display: true,
+			title: 'Drugs Management',
+			icon: <img src={BookAppointmentIcon} alt='Drugs Management' />,
+			content: (
+				<React.Fragment>
+					<p>Drugs Management</p>
+				</React.Fragment>
+			),
+			actions: (
+				<LinkButton
+					color='green'
+					text='View'
+					linkSrc='/super_admin/drugs-management'
+				/>
+			),
+		},
 	];
 	const [cards, setCards] = useState([]);
 	useEffect(() => {
