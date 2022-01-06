@@ -65,6 +65,12 @@ import SAPickupManagement from '../screens/super-admin-portal/SAPickupManagement
 import SAProductView from '../screens/super-admin-portal/SAProductView';
 import SACreateProduct from '../screens/super-admin-portal/SACreateProduct';
 import CustomerEditBookedAppointment from '../screens/b2c-portal/CustomerEditBookedAppointment';
+import SACountriesManagement from '../screens/super-admin-portal/SACountriesManagement';
+import SADrugsManagement from '../screens/super-admin-portal/SADrugsManagement';
+import CreateDrug from '../screens/super-admin-portal/CreateDrug';
+import CreateCountry from '../screens/super-admin-portal/CreateCountry';
+import SACountryView from '../screens/super-admin-portal/SACountryView';
+import SADrugView from '../screens/super-admin-portal/SADrugView';
 
 const { isSupported } = require('twilio-video');
 
@@ -338,6 +344,36 @@ const RouteHandler = () => {
 			<PrivateRoute path='/super_admin/discount-management' requiredRole='super_admin'>
 				<Layout title='Discount List'>
 					<SADiscountManagement />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/countries-management' requiredRole='super_admin'>
+				<Layout title='Countries List'>
+					<SACountriesManagement />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/country/:id' requiredRole='super_admin'>
+				<Layout title='Countries View'>
+					<SACountryView />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/new-country' requiredRole='super_admin'>
+				<Layout title='Create Country'>
+					<CreateCountry />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/drugs-management' requiredRole='super_admin'>
+				<Layout title='Drugs List'>
+					<SADrugsManagement />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/drug/:id' requiredRole='super_admin'>
+				<Layout title='Drug View'>
+					<SADrugView />
+				</Layout>
+			</PrivateRoute>
+			<PrivateRoute path='/super_admin/new-drug' requiredRole='super_admin'>
+				<Layout title='Create Drug'>
+					<CreateDrug />
 				</Layout>
 			</PrivateRoute>
 			<PrivateRoute path='/super_admin/dropbox-list' requiredRole='super_admin'>

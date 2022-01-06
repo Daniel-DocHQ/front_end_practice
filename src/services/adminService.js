@@ -37,6 +37,142 @@ const adminService = {
 			}
 		});
 	},
+	getCountries(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/country`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+				.then(response => {
+					if ((response.status === 200 || response.data.status === 'ok') && response.data && response.data.countries) {
+						resolve({
+							success: true,
+							countries: response.data.countries,
+						});
+					} else {
+						resolve({
+							success: false,
+							error: response.data.message || 'Something went wrong',
+						});
+					}
+				})
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	getCountry(token, id) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/country/${id}`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+				.then(response => {
+					if ((response.status === 200 || response.data.status === 'ok') && response.data && response.data) {
+						resolve({
+							success: true,
+							country: response.data,
+						});
+					} else {
+						resolve({
+							success: false,
+							error: response.data.message || 'Something went wrong',
+						});
+					}
+				})
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	getDrugs(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/drug`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+				.then(response => {
+					if ((response.status === 200 || response.data.status === 'ok') && response.data && response.data.items) {
+						resolve({
+							success: true,
+							drugs: response.data.items,
+						});
+					} else {
+						resolve({
+							success: false,
+							error: response.data.message || 'Something went wrong',
+						});
+					}
+				})
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	getDrug(token, id) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/drug/${id}`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+				.then(response => {
+					if ((response.status === 200 || response.data.status === 'ok') && response.data && response.data) {
+						resolve({
+							success: true,
+							drug: response.data,
+						});
+					} else {
+						resolve({
+							success: false,
+							error: response.data.message || 'Something went wrong',
+						});
+					}
+				})
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getApprovedProducts() {
 		return new Promise((resolve, reject) => {
 			axios.get(`${baseUrl}/v1/approved_kits`)
@@ -166,6 +302,200 @@ const adminService = {
 			} else {
 				// return unauthorized
 				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	editDrug(token, id, value) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.put(`${baseUrl}/v1/drug/${id}`, value, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	editCountry(token, id, value) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.put(`${baseUrl}/v1/country/${id}`, value, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	createDrug(token, data) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.post(`${baseUrl}/v1/drug`, data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: response.data.message || 'Something went wrong',
+							});
+						}
+					})
+					.catch(err => {
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	createCountry(token, data) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios.post(`${baseUrl}/v1/country`, data, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({
+								success: true,
+								data: response.data,
+							});
+						} else {
+							resolve({
+								success: false,
+								error: response.data.message || 'Something went wrong',
+							});
+						}
+					})
+					.catch(err => {
+						if (err && err.response && err.response.data && err.response.data.message) {
+							reject({ success: false, error: err.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.' });
+						}
+					});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
+	deleteCountry(token, id) {
+		return new Promise((resolve, reject) => {
+			if (token && id) {
+				axios({
+					url: `${baseUrl}/v1/country/${id}`,
+					method: 'DELETE',
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({ success: true });
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				reject({ success: false, error: 'Missing details' });
+			}
+		});
+	},
+	deleteDrug(token, id) {
+		return new Promise((resolve, reject) => {
+			if (token && id) {
+				axios({
+					url: `${baseUrl}/v1/drug/${id}`,
+					method: 'DELETE',
+				})
+					.then(response => {
+						if ((response.status === 200 || response.data.status === 'ok') && response.data) {
+							resolve({ success: true });
+						} else {
+							reject({
+								success: false,
+								error: response.data.message,
+							});
+						}
+					})
+					.catch(errResp => {
+						if (errResp && errResp.response && errResp.response.data && errResp.response.data.message) {
+							reject({ success: false, error: errResp.response.data.message, });
+						} else {
+							reject({ success: false, error: 'Something went wrong, please try again.'});
+						}
+					});
+			} else {
+				reject({ success: false, error: 'Missing details' });
 			}
 		});
 	},
