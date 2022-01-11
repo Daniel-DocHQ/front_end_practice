@@ -37,6 +37,40 @@ const adminService = {
 			}
 		});
 	},
+	getTags(token) {
+		return new Promise((resolve, reject) => {
+			if (typeof token !== 'undefined') {
+				axios({
+					method: 'get',
+					url: `${baseUrl}/v1/tag`,
+					headers: { Authorization: `Bearer ${token}` },
+				})
+				.then(response => {
+					if ((response.status === 200 || response.data.status === 'ok') && response.data && response.data.tags) {
+						resolve({
+							success: true,
+							tags: response.data.tags,
+						});
+					} else {
+						resolve({
+							success: false,
+							error: response.data.message || 'Something went wrong',
+						});
+					}
+				})
+				.catch(err => {
+					if (err && err.response && err.response.data && err.response.data.message) {
+						reject({ success: false, error: err.response.data.message, });
+					} else {
+						reject({ success: false, error: 'Something went wrong, please try again.' });
+					}
+				});
+			} else {
+				// return unauthorized
+				resolve({ success: false, authenticated: false });
+			}
+		});
+	},
 	getCountries(token) {
 		return new Promise((resolve, reject) => {
 			if (typeof token !== 'undefined') {

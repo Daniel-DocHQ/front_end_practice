@@ -66,6 +66,7 @@ const SAProductView = ({ token, role, isAuthenticated, user }) => {
 			<Formik
 				initialValues={{
 					...product,
+					tags: get(product, 'tags', []),
 				}}
 				validationSchema={Yup.object().shape({
 					title: Yup.string().required('Input title'),
@@ -84,7 +85,12 @@ const SAProductView = ({ token, role, isAuthenticated, user }) => {
 					.catch((err) => ToastsStore.error(err.error));
 				}}
 			>
-				<ProductForm isView isEdit={isEdit} setIsEdit={setIsEdit} />
+				<ProductForm
+					isView
+					token={token}
+					isEdit={isEdit}
+					setIsEdit={setIsEdit}
+				/>
 			</Formik>
 		</BigWhiteContainer>
 	);

@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Field } from 'formik';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid, InputLabel, Select, FormControl, MenuItem } from '@material-ui/core';
 import LinkButton from '../DocButton/LinkButton';
 import DocButton from '../DocButton/DocButton';
 import Input from '../FormComponents/Input';
+import adminService from '../../services/adminService';
 
 const ProductForm = ({
+    token,
     isView = false,
     isEdit,
     setIsEdit,
     ...restProps
 }) => {
+    const [tagsOptions, setTagsOptions] = useState([]);
+
+    const getTagsOptions = async () => {
+        await adminService.getTags(token)
+        .then((result) => {
+            if (result.success && result.tags)
+                setTagsOptions(result.tags);
+        }).catch((err) => console.log(err.error))
+    }
+
+    useEffect(() => {
+        getTagsOptions();
+    }, []);
+
 	return (
         <Form {...restProps}>
             <Box p={8}>
@@ -80,6 +96,40 @@ const ProductForm = ({
                                         type="text"
                                         {...field}
                                     />
+                                )}
+                            </Field>
+                        </div>
+                        <div className="row">
+                            <Field name="tags">
+                                {({ field, meta }) => (
+                                    <FormControl
+                                        variant='filled'
+                                        style={{ width: '100%' }}
+                                    >
+                                        <InputLabel
+                                            htmlFor="grouped-select"
+                                        >
+                                            Tags
+                                        </InputLabel>
+                                        <Select
+                                            multiple
+                                            error={!!meta.error}
+                                            touched={meta.touched}
+                                            disabled={!isEdit}
+                                            placeholder="Tags"
+                                            helperText={(meta.error && meta.touched) && meta.error}
+                                            {...field}
+                                        >
+                                            {tagsOptions.map((name) => (
+                                                <MenuItem
+                                                    key={name}
+                                                    value={name}
+                                                >
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 )}
                             </Field>
                         </div>

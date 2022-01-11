@@ -33,6 +33,7 @@ const SACreateProduct = ({ token, role, isAuthenticated, user }) => {
                         description: '',
                         country: 'UK',
                         active: 1,
+                        tags: [],
                     }}
                     validationSchema={Yup.object().shape({
                         title: Yup.string().required('Input title'),
@@ -50,7 +51,7 @@ const SACreateProduct = ({ token, role, isAuthenticated, user }) => {
                         .catch((err) => ToastsStore.error(err.error));
                     }}
                 >
-                    <ProductForm isEdit />
+                    <ProductForm isEdit token={token} />
                 </Formik>
             </BigWhiteContainer>
         </ProductAppBar>
