@@ -13,6 +13,7 @@ const InVid = ({
 	storeImage,
 	localVideoTracks,
 	currentBookingUserName,
+	currentBookingUserId,
 }) => {
 	const containerRef = useRef();
 	const canvasRef = useRef();
@@ -31,6 +32,11 @@ const InVid = ({
 	function handleCapture() {
 		const context = canvasRef.current.getContext('2d');
 		context.drawImage(videoRef.current, 0, 0, 1280, 720);
+		context.fillStyle = "white";
+		context.globalAlpha = 0.6;
+		context.font = 'bold 32px serif';
+		context.textBaseline = "middle";
+		context.fillText(currentBookingUserId, 1280 - 280, 720 - 20, 280);
 		setBufferPhoto(canvasRef.current.toDataURL('image/webp'));
 	}
 

@@ -53,6 +53,7 @@ function TwillioVideoCall ({
 	const isSomeoneConnected = participants.length > 0;
 	const lastStatus = (get(statusChanges, `${[statusChanges.length - 1]}`, ''));
 	const currentBookingUserName = `${get(bookingUsers, '[0].first_name', '')} ${get(bookingUsers, '[0].last_name', '')}`;
+	const currentBookingUserId = get(bookingUsers, '[0].id', '');
 	const [message, setMessage] = useState(
 		isNurse
 			? (!!lastStatus && lastStatus.changed_to === 'PATIENT_ATTENDED') ? `Patient joined at ${format(new Date(lastStatus.created_at), 'dd/MM/yyyy pp')}` : 'Your patient will be with you shortly'
@@ -386,6 +387,7 @@ function TwillioVideoCall ({
 									updateImageData={updateImage}
 									storeImage={uploadImageForUser}
 									currentBookingUserName={currentBookingUserName}
+									currentBookingUserId={currentBookingUserId}
 								/>
 							))}
 					</React.Fragment>

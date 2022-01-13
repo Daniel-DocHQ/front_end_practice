@@ -47,6 +47,7 @@ const PharmacyBookingEngine = () => {
         email: '',
         countryCode: defaultCountryCode,
         phone: '',
+        nhs: '',
         dateOfBirth: null,
         ethnicity: '',
         sex: '',
@@ -272,6 +273,7 @@ const PharmacyBookingEngine = () => {
                         }
                         const booking_users = Array.from(Array(numberOfPeople).keys()).map((item) => {
                             const {
+                                nhs,
                                 firstName,
                                 lastName,
                                 dateOfBirth,
@@ -309,6 +311,7 @@ const PharmacyBookingEngine = () => {
                                     passport_number: passportNumber,
                                     travel_date: travelDateInTz,
                                     test_type: type,
+                                    ...(!!nhs ? { nhs: nhs } : {}),
                                 },
                                 ...rest,
                             });

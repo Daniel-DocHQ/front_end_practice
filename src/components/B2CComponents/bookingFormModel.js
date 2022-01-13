@@ -20,6 +20,7 @@ const bookingFormModel = {
                 dateOfBirth: null,
                 ethnicity: '',
                 sex: '',
+                nhs: '',
                 passportNumber: '',
                 fillWithBookingUser: '',
                 passportNumberConfirmation: '',
@@ -274,6 +275,13 @@ const bookingFormModel = {
             placeholder: 'E.g.: 503300123',
             type: 'text',
             required: true,
+        },
+        nhs: {
+            name: 'nhs',
+            label: 'NHS Number',
+            id: 'nhs',
+            placeholder: 'E.g.: 1234567890',
+            type: 'text',
         },
         appointmentDate: {
             name: 'appointmentDate',

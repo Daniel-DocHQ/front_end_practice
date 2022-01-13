@@ -60,6 +60,7 @@ const CertificatesAaron = ({
 	const [security_checked, setSecurity_checked] = useState(false);
 	const [kitProvider, setKitProvider] = useState(preselectedKidProvider);
 	const [result, setResult] = useState('');
+	const [batch, setBatch] = useState('');
 	const [reasonForRejected, setReasonForRejected] = useState('');
 	const [passportId, setPassportId] = useState('');
 	const [kitId, setKitId] = useState('');
@@ -87,7 +88,7 @@ const CertificatesAaron = ({
 			!!obj.passport_number &&
 			!!obj.kit_provider &&
 			((isResultRejected && isClientNotThere) ? true : !!obj.security_checked) &&
-			((isDay2Antigen && !isResultRejected) ? !!obj.kit_id : true) &&
+			((isDay2Antigen && !isResultRejected) ? !!obj.kit_id && !!obj.batch : true) &&
 			(isResultRejected ? !!obj.reject_notes : (doneBy8x8 ? doneBy8x8 : !!img))
 		);
 	}
@@ -111,6 +112,7 @@ const CertificatesAaron = ({
 	useEffect(() => {
 		if (isResultRejected) {
 			updateErrors(true, 'kit id');
+			updateErrors(true, 'batch');
 		}
 	}, [result]);
 
@@ -198,6 +200,7 @@ const CertificatesAaron = ({
 			security_checked,
 			result,
 			...(!!kitId ? { kit_id: kitId } : {}),
+			...(!!batch ? { batch } : {}),
 			passport_number: passportId,
 			kit_provider: kitProvider.name,
 			specificity: kitProvider.specificity,
@@ -267,12 +270,13 @@ const CertificatesAaron = ({
 				security_checked,
 				result: '',
 				...(!!kitId ? { kit_id: kitId } : {}),
+				...(!!batch ? { batch } : {}),
 				passport_number: passportId,
 				kit_provider: !!kitProvider && !!kitProvider.name ? kitProvider.name : kitProvider,
 			};
 			updatePatientInfo(body);
 		}
-	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId, kitId]);
+	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId, kitId, batch]);
 
 	return ((!!patient_data && populated) || (!patient_data && !populated)) &&  (
 		<React.Fragment>
@@ -413,23 +417,47 @@ const CertificatesAaron = ({
 					/>
 				</div>
 				{isDay2Antigen && !isResultRejected && (
-					<div className='row'>
-						<TextInputElement
-							required
-							value={kitId}
-							id='kit-id'
-							label='Kit ID'
-							inputProps={{ minLength: '5' }}
-							placeholder='Eg: 20P456632'
-							onChange={(value) => setKitId(value.toUpperCase())}
-							updateStatus={updateErrors}
-						/>
-					</div>
-				)}
-				{attemptedSubmit && errors.includes('kit id') && (
-					<div className='row no-margin'>
-						<p className='error'>Enter patient Kit ID</p>
-					</div>
+					<>
+						<div className='row'>
+							<TextInputElement
+								required
+								value={kitId}
+								id='kit-id'
+								label='Kit ID'
+								inputProps={{ minLength: '5' }}
+								placeholder='Eg: 20P456632'
+								onChange={(value) => setKitId(value.toUpperCase())}
+								updateStatus={updateErrors}
+							/>
+						</div>
+						{attemptedSubmit && errors.includes('kit id') && (
+							<div className='row no-margin'>
+								<p className='error'>Enter patient Kit ID</p>
+							</div>
+						)}
+						<div className='row'>
+							<FormControl variant='filled' style={{ width: '100%' }}>
+								<InputLabel id='test-result-label'>Batch Number</InputLabel>
+								<Select
+									labelId='test-result-label'
+									id='test-result'
+									label='Batch Number'
+									onChange={e => setBatch(e.target.value)}
+									value={batch}
+									required
+									updateStatus={updateErrors}
+								>
+									<MenuItem value='COV1070091'>COV1070091</MenuItem>
+									<MenuItem value='COV1110041'>COV1110041</MenuItem>
+								</Select>
+							</FormControl>
+						</div>
+						{attemptedSubmit && !batch && (
+							<div className='row no-margin'>
+								<p className='error'>Enter patient Batch Number</p>
+							</div>
+						)}
+					</>
 				)}
 				<div className='row'>
 					<FormControl variant='filled' style={{ width: '100%' }}>

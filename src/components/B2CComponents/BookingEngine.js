@@ -73,6 +73,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 		dateOfBirth: null,
 		ethnicity: '',
 		sex: '',
+		nhs: '',
 		passportNumber: '',
 		passportNumberConfirmation: '',
 		vaccineStatus: '',
@@ -285,6 +286,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 										const isPCR = sku === FIT_TO_FLY_PCR;
 										const booking_users = Array.from(Array(passengers.length).keys()).map((item) => {
 											const {
+												nhs,
 												firstName,
 												lastName,
 												dateOfBirth,
@@ -329,6 +331,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 													passport_number: passportNumber,
 													travel_date: travelDateInTz,
 													test_type: type,
+													...(!!nhs ? { nhs: nhs } : {}),
 												},
 												...rest,
 											});

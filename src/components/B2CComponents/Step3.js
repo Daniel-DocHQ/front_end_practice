@@ -6,7 +6,6 @@ import {
 	Radio,
 	RadioGroup,
     InputLabel,
-    ListSubheader,
     Select,
     MenuItem,
 	makeStyles,
@@ -19,7 +18,7 @@ import {
 } from '@material-ui/pickers';
 import { get } from 'lodash';
 import moment from 'moment';
-import parsePhoneNumber, { isValidPhoneNumber } from 'libphonenumber-js'
+import { isValidPhoneNumber } from 'libphonenumber-js'
 import DateFnsUtils from '@date-io/date-fns';
 import { ThemeProvider } from '@material-ui/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -96,6 +95,7 @@ const Step3 = ({
             locality,
             region,
             country,
+            nhs,
         },
     } = bookingFormModel;
 
@@ -506,6 +506,28 @@ const Step3 = ({
                         Please enter the number of the document you will be using for travelling.<br />
                         Please make sure you have entered the correct Passport/National identity card number.<br />
                         After you submit this number, you will not be able to change it at any point.
+                    </p>
+                    <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                        <div style={{ maxWidth: '40%', minWidth: '440px' }}>
+                            <Field
+                                name={`passengers[${activePassenger}].nhs`}
+                            >
+                                {({ field, meta }) => (
+                                    <Input
+                                        {...nhs}
+                                        error={!!meta.error}
+                                        touched={meta.touched}
+                                        helperText={(meta.error && meta.touched) && meta.error}
+                                        {...field}
+                                    />
+                                )}
+                            </Field>
+                        </div>
+                    </div>
+                    <p style={{ maxWidth: '50%', fontWeight: 'bold' }}>
+                        Each NHS Number is made up of 10 digits, shown like this: 123 456 7890(this is an example number).
+                        If you have an old medical card, it will have an old style NHS number made up of both letters and numbers.
+                        This has now been replaced for all patients by a new NHS Number made up entirely of numbers.
                     </p>
                 </>
             )}

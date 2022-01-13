@@ -168,6 +168,9 @@ const AddressInfo = ({ appointment }) => {
 };
 
 const PatientInfo = ({ patient }) => {
+    const id = get(patient, 'id', '');
+    const batch = get(patient, 'metadata.batch', '');
+    const nhs = get(patient, 'metadata.nhs', '');
     const firstName = get(patient, 'metadata.first_name', '') || get(patient, 'first_name', '');
     const lastName = get(patient, 'metadata.last_name', '') || get(patient, 'last_name', '');
     const email = get(patient, 'metadata.email', '') || get(patient, 'email', '');
@@ -187,6 +190,8 @@ const PatientInfo = ({ patient }) => {
 
     return (
         <Box>
+            {id && (<Typography className="row-text"><b>Booking user ID: </b>{id}</Typography>)}
+            {batch && (<Typography className="row-text"><b>Batch Number: </b>{batch}</Typography>)}
             {firstName && (<Typography className="row-text"><b>Name: </b>{firstName}</Typography>)}
             {lastName && (<Typography className="row-text"><b>Surname: </b>{lastName}</Typography>)}
             {email && (<Typography className="row-text"><b>Email Address: </b>{email}</Typography>)}
@@ -195,6 +200,7 @@ const PatientInfo = ({ patient }) => {
             {ethnicity && (<Typography className="row-text"><b>Ethnicity: </b>{ethnicity}</Typography>)}
             {sex && (<Typography className="row-text"><b>Sex: </b>{sex}</Typography>)}
             {passportNumber && (<Typography className="row-text"><b>ID Document Number: </b>{passportNumber}</Typography>)}
+            {nhs && (<Typography className="row-text"><b>NHS Number: </b>{nhs}</Typography>)}
             {kitId && (<Typography className="row-text"><b>Kit ID: </b>{kitId}</Typography>)}
             {samplingDate && (<Typography className="row-text"><b>Sampling Date and Time: </b>{new Date(samplingDate).toUTCString()}</Typography>)}
             {reportedDate && (<Typography className="row-text"><b>Reported Date and Time: </b>{new Date(reportedDate).toUTCString()}</Typography>)}

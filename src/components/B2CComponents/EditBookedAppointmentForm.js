@@ -72,6 +72,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 		phone: '',
 		dateOfBirth: null,
 		ethnicity: '',
+		nhs: '',
 		countryCode: defaultCountryCode,
 		sex: '',
 		passportNumber: '',
@@ -406,6 +407,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										timezone
 									} = values;
 									const booking_users = passengers.map(({
+										nhs,
 										firstName,
 										lastName,
 										dateOfBirth,
@@ -436,6 +438,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										} : {}),
 										metadata: {
 											...metadata,
+											...(!!nhs ? { nhs: nhs } : {}),
 											travel_date: moment(
 												new Date(
 													travelDate.getFullYear(),
