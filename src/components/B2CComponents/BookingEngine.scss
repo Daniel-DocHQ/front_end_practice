@@ -31,6 +31,11 @@
 		}
 	}
 }
+.step-0-box {
+	.MuiCheckbox-colorSecondary.Mui-checked {
+		color: var(--doc-green);
+	}
+}
 .additional-option-text {
 	font-size: 12;
 	font-style: italic;

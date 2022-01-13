@@ -55,7 +55,7 @@ const bookingFormModel = {
         },
         isAppointmentAddressSame: {
             name: 'isAppointmentAddressSame',
-            label: 'Is Appointment/Isolation address the same as shipping address?',
+            label: 'Appointment/Isolation address is the same as shipping address',
             id: 'isAppointmentAddressSame',
         },
         fillWithBookingUser: {

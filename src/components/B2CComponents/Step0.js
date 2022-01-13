@@ -132,7 +132,7 @@ const Step0 = ({
             )}
         </>
     ) : (
-        <>
+        <div className='step-0-box'>
             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                 <div style={{ maxWidth: '40%', minWidth: '320px' }}>
                     <Field
@@ -362,7 +362,7 @@ const Step0 = ({
                     )}
                 </>
             )}
-        </>
+        </div>
 	));
 };
 
