@@ -272,6 +272,8 @@ const BookingEngine = ({ skipBooking = false }) => {
 											city,
 											tocAccept,
 											selectedKit,
+											appointmentAddress,
+											isAppointmentAddressSame,
 										} = values;
 										const travelDateInTz = moment(
 											new Date(
@@ -331,6 +333,15 @@ const BookingEngine = ({ skipBooking = false }) => {
 													passport_number: passportNumber,
 													travel_date: travelDateInTz,
 													test_type: type,
+													appointment_address: {
+														...(isAppointmentAddressSame ? {
+															street_address: address_1,
+															extended_address: address_2,
+															locality: town,
+															postal_code: postcode,
+															region: county,
+														} : appointmentAddress),
+													},
 													...(!!nhs ? { nhs: nhs } : {}),
 												},
 												...rest,

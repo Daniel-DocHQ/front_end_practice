@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Autocomplete } from '@material-ui/lab';
 import { useDebounce } from 'react-use';
+import { get } from 'lodash';
 import { Field, useFormikContext } from 'formik';
 import {
     Radio,
@@ -8,6 +9,8 @@ import {
     RadioGroup,
     FormControlLabel,
 	FormControl,
+    Checkbox,
+    FormGroup,
 } from '@material-ui/core';
 import Input from '../FormComponents/Input';
 import bookingFormModel from './bookingFormModel';
@@ -32,6 +35,12 @@ const Step0 = ({
             numberOfPeople,
             purchaseCode,
             selectedKit,
+            isAppointmentAddressSame,
+            streetAddress,
+            extendedAddress,
+            locality,
+            country,
+            postalCode,
         }
     } = bookingFormModel;
     const {
@@ -39,8 +48,10 @@ const Step0 = ({
             product: productValue,
             purchaseCodeError,
             purchaseCode: purchaseCodeValue,
+            isAppointmentAddressSame: isAppointmentAddressSameValue,
             testType,
         },
+        touched,
         setFieldValue,
     } = useFormikContext();
     const filteredItems = items.filter(({ type }) => type !== 'Virtual');
@@ -236,6 +247,121 @@ const Step0 = ({
                     </h4>
                 </div>
             </div>
+            {(!isPharmacy && !isEdit) && (
+                <>
+                    <div className='row'>
+                        <Field name={isAppointmentAddressSame.name}>
+                            {({ field, form, meta }) => (
+                                <FormControl
+                                    component='fieldset'
+                                >
+                                    <FormGroup>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    {...isAppointmentAddressSame}
+                                                    {...field}
+                                                    error={!!meta.error}
+                                                    touched={meta.touched}
+                                                    helperText={(meta.error && meta.touched) && meta.error}
+                                                    onChange={event => form.setFieldValue(isAppointmentAddressSame.name, event.target.checked)}
+                                                    checked={field.value}
+                                                />
+                                            }
+                                            label={isAppointmentAddressSame.label}
+                                        />
+                                    </FormGroup>
+                                </FormControl>
+                            )}
+                        </Field>
+                    </div>
+                    {!isAppointmentAddressSameValue && (
+                        <>
+                            <h4 style={{ margin: 0, paddingTop: 20 }}>
+                                Address Information
+                            </h4>
+                            <h6 className="grey-text" style={{ margin: 0, fontSize: 12 }}>
+                                Please enter your address at the time of the appointment.
+                            </h6>
+                            <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                                    <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                        <Field name={`appointmentAddress.postalCode`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.postal_code`, false)) ? 'Input postcode' : undefined}>
+                                            {({ field, meta }) => (
+                                                <Input
+                                                    error={!!meta.error}
+                                                    touched={meta.touched}
+                                                    helperText={(meta.error && meta.touched) && meta.error}
+                                                    {...postalCode}
+                                                    {...field}
+                                                />
+                                            )}
+                                        </Field>
+                                    </div>
+                                </div>
+                            <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                                <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                    <Field name={`appointmentAddress.address1`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.street_address`, false)) ? 'Input address' : undefined}>
+                                        {({ field, meta }) => (
+                                            <Input
+                                                error={!!meta.error}
+                                                touched={meta.touched}
+                                                helperText={(meta.error && meta.touched) && meta.error}
+                                                {...streetAddress}
+                                                {...field}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                            </div>
+                            <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                                <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                    <Field name={`appointmentAddress.address2`}>
+                                        {({ field, meta }) => (
+                                            <Input
+                                                error={!!meta.error}
+                                                touched={meta.touched}
+                                                helperText={(meta.error && meta.touched) && meta.error}
+                                                {...extendedAddress}
+                                                {...field}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                            </div>
+                            <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                                <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                    <Field name={`appointmentAddress.locality`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.locality`, false)) ? 'Input city' : undefined}>
+                                        {({ field, meta }) => (
+                                            <Input
+                                                error={!!meta.error}
+                                                touched={meta.touched}
+                                                helperText={(meta.error && meta.touched) && meta.error}
+                                                {...locality}
+                                                {...field}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                            </div>
+                            <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+                                <div style={{ maxWidth: '40%', minWidth: '340px' }}>
+                                    <Field name={`appointmentAddress.country`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.country`, false)) ? 'Input country' : undefined}>
+                                        {({ field, meta }) => (
+                                            <Input
+                                                error={!!meta.error}
+                                                touched={meta.touched}
+                                                helperText={(meta.error && meta.touched) && meta.error}
+                                                {...country}
+                                                {...field}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </>
+            )}
         </>
 	));
 };

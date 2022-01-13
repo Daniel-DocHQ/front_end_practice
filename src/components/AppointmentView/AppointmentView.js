@@ -169,7 +169,7 @@ const AddressInfo = ({ appointment }) => {
 
 const PatientInfo = ({ patient }) => {
     const id = get(patient, 'id', '');
-    const batch = get(patient, 'metadata.batch', '');
+    const lotId = get(patient, 'metadata.lotId', '');
     const nhs = get(patient, 'metadata.nhs', '');
     const firstName = get(patient, 'metadata.first_name', '') || get(patient, 'first_name', '');
     const lastName = get(patient, 'metadata.last_name', '') || get(patient, 'last_name', '');
@@ -183,15 +183,13 @@ const PatientInfo = ({ patient }) => {
     const rejectedNotes = get(patient, 'metadata.reject_notes', '');
     const invalidNotes = get(patient, 'metadata.invalid_notes', '');
     const sampleTaken = get(patient, 'metadata.sample_taken', '');
-    const kitProvider = get(patient, 'metadata.kitProvider', '');
+    const kitProvider = get(patient, 'metadata.kit_provider', '');
     const kitId = get(patient, 'metadata.kit_id', '');
     const samplingDate = get(patient, 'metadata.date_sampled', '') || get(patient, 'metadata.sample_date', '');
     const reportedDate = get(patient, 'metadata.date_reported', '');
 
     return (
         <Box>
-            {id && (<Typography className="row-text"><b>Booking user ID: </b>{id}</Typography>)}
-            {batch && (<Typography className="row-text"><b>Batch Number: </b>{batch}</Typography>)}
             {firstName && (<Typography className="row-text"><b>Name: </b>{firstName}</Typography>)}
             {lastName && (<Typography className="row-text"><b>Surname: </b>{lastName}</Typography>)}
             {email && (<Typography className="row-text"><b>Email Address: </b>{email}</Typography>)}
@@ -201,15 +199,13 @@ const PatientInfo = ({ patient }) => {
             {sex && (<Typography className="row-text"><b>Sex: </b>{sex}</Typography>)}
             {passportNumber && (<Typography className="row-text"><b>ID Document Number: </b>{passportNumber}</Typography>)}
             {nhs && (<Typography className="row-text"><b>NHS Number: </b>{nhs}</Typography>)}
+            {id && (<Typography className="row-text"><b>Booking Reference Number: </b>{id}</Typography>)}
+            {kitProvider && (<Typography className="row-text"><b>KIT provider: </b>{kitProvider}</Typography>)}
+            {lotId && (<Typography className="row-text"><b>Lot ID: </b>{lotId}</Typography>)}
             {kitId && (<Typography className="row-text"><b>Kit ID: </b>{kitId}</Typography>)}
             {samplingDate && (<Typography className="row-text"><b>Sampling Date and Time: </b>{new Date(samplingDate).toUTCString()}</Typography>)}
             {reportedDate && (<Typography className="row-text"><b>Reported Date and Time: </b>{new Date(reportedDate).toUTCString()}</Typography>)}
             <Box pt={2}>
-                {kitProvider && (
-                    <Typography className="row-text">
-                        <b>KIT provider: </b>{kitProvider}
-                    </Typography>
-                )}
                 {sampleTaken && (
                     <Typography className="row-text">
                         <b>Sample: </b>

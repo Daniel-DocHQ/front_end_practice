@@ -4,12 +4,20 @@ const bookingFormModel = {
     formInitialValues: {
         numberOfPeople: 1,
         product: 0,
+        isAppointmentAddressSame: true,
         testType: {},
         city: undefined,
         timezone: undefined,
         bookingUsers: [],
         travelDate: new Date(),
         travelTime: new Date(),
+        appointmentAddress: {
+            postalCode: '',
+            extendedAddress: '',
+            streetAddress: '',
+            country: '',
+            locality: '',
+        },
         passengers: [
             {
                 firstName: '',
@@ -44,6 +52,11 @@ const bookingFormModel = {
             type: 'text',
             placeholder: 'Select Approved Kit',
             required: true,
+        },
+        isAppointmentAddressSame: {
+            name: 'isAppointmentAddressSame',
+            label: 'Is Appointment/Isolation address the same as shipping address?',
+            id: 'isAppointmentAddressSame',
         },
         fillWithBookingUser: {
             name: 'fillWithBookingUser',

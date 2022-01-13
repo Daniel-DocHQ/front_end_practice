@@ -91,7 +91,7 @@ const Step1 = ({ isPharmacy }) => {
 				<div className='row'>
 					<div className="autocomplete" style={{ maxWidth: '40%', minWidth: '250px', zIndex: 3 }}>
 						<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
-							What is your flight time zone?
+							What is your city/country of origin?
 						</h4>
 						<Field name={city.name}>
 							{({ field, meta, form }) => (
@@ -116,6 +116,9 @@ const Step1 = ({ isPharmacy }) => {
 								/>
 							)}
 						</Field>
+						<h5 style={{ margin: 0, paddingTop: 10 }}>
+							If you do not find your departure city in the list, simply select the nearest city in the list.
+						</h5>
 					</div>
 				</div>
 			)}

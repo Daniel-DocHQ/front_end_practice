@@ -331,6 +331,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 								}) => {
 									const parsedPhoneNumber = parsePhoneNumber(phone);
 									const vaccineInformation = get(rest, 'vaccine_information');
+									const nhsValue = get(restMetadata, 'nhs', '');
 
 									return ({
 										...passengerInitialValues,
@@ -342,6 +343,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										metadata: {
 											...restMetadata,
 										},
+										nhs: nhsValue,
 										phone: !!parsedPhoneNumber ? parsedPhoneNumber.nationalNumber : phone,
 										countryCode: !!parsedPhoneNumber ? COUNTRIES.find(({ code, label }) => (code === parsedPhoneNumber.country && label === `+${parsedPhoneNumber.countryCallingCode}`)): defaultCountryCode,
 										short_token,

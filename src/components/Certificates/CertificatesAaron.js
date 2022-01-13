@@ -60,7 +60,7 @@ const CertificatesAaron = ({
 	const [security_checked, setSecurity_checked] = useState(false);
 	const [kitProvider, setKitProvider] = useState(preselectedKidProvider);
 	const [result, setResult] = useState('');
-	const [batch, setBatch] = useState('');
+	const [lotId, setLotId] = useState('');
 	const [reasonForRejected, setReasonForRejected] = useState('');
 	const [passportId, setPassportId] = useState('');
 	const [kitId, setKitId] = useState('');
@@ -88,7 +88,7 @@ const CertificatesAaron = ({
 			!!obj.passport_number &&
 			!!obj.kit_provider &&
 			((isResultRejected && isClientNotThere) ? true : !!obj.security_checked) &&
-			((isDay2Antigen && !isResultRejected) ? !!obj.kit_id && !!obj.batch : true) &&
+			((isDay2Antigen && !isResultRejected) ? !!obj.kit_id && !!obj.lotId : true) &&
 			(isResultRejected ? !!obj.reject_notes : (doneBy8x8 ? doneBy8x8 : !!img))
 		);
 	}
@@ -112,7 +112,7 @@ const CertificatesAaron = ({
 	useEffect(() => {
 		if (isResultRejected) {
 			updateErrors(true, 'kit id');
-			updateErrors(true, 'batch');
+			updateErrors(true, 'lotId');
 		}
 	}, [result]);
 
@@ -147,6 +147,7 @@ const CertificatesAaron = ({
 		const usersKitProvider = get(patient_data, 'metadata.kit_provider', '') || get(patient_data, 'selected_kit', '');
 		const email = get(patient_data, 'metadata.email', '') || patient_data.email;
 		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
+		const patientLotId = get(patient_data, 'metadata.lotId', '');
 		const dob = get(patient_data, 'metadata.date_of_birth', '') || patient_data.date_of_birth;
 		const patientKitId = get(patient_data, 'metadata.kit_id', '') || patient_data.kit_id;
 		const securityChecked = get(patient_data, 'metadata.security_checked', false);
@@ -159,6 +160,9 @@ const CertificatesAaron = ({
 		}
 		if (firstName) {
 			setForename(firstName);
+		}
+		if (patientLotId) {
+			setLotId(patientLotId);
 		}
 		if (securityChecked) {
 			setSecurity_checked(securityChecked);
@@ -200,7 +204,7 @@ const CertificatesAaron = ({
 			security_checked,
 			result,
 			...(!!kitId ? { kit_id: kitId } : {}),
-			...(!!batch ? { batch } : {}),
+			...(!!lotId ? { lotId } : {}),
 			passport_number: passportId,
 			kit_provider: kitProvider.name,
 			specificity: kitProvider.specificity,
@@ -237,6 +241,7 @@ const CertificatesAaron = ({
 						if (isVideoAppointment && !!img) {
 							uploadImage(
 								appointmentId,
+								patientId,
 								img,
 								`${patientId}_${shortToken}_${moment.utc(dob, "DD/MM/YYYY").format()}_${moment().utc(0).format()}`,
 								token,
@@ -270,13 +275,13 @@ const CertificatesAaron = ({
 				security_checked,
 				result: '',
 				...(!!kitId ? { kit_id: kitId } : {}),
-				...(!!batch ? { batch } : {}),
+				...(!!lotId ? { lotId } : {}),
 				passport_number: passportId,
 				kit_provider: !!kitProvider && !!kitProvider.name ? kitProvider.name : kitProvider,
 			};
 			updatePatientInfo(body);
 		}
-	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId, kitId, batch]);
+	}, 300, [forename, surname, email, dob, sex, security_checked, kitProvider, passportId, kitId, lotId]);
 
 	return ((!!patient_data && populated) || (!patient_data && !populated)) &&  (
 		<React.Fragment>
@@ -397,6 +402,16 @@ const CertificatesAaron = ({
 					</>
 				)}
 				<div className='row'>
+					<TextInputElement
+						required
+						value={patientId}
+						id='booking-reference-number'
+						label='Booking Reference Number'
+						onChange={() => null}
+						inputProps={{ minLength: '5' }}
+					/>
+				</div>
+				<div className='row'>
 					<Autocomplete
 						required
 						style={{ width: '100%' }}
@@ -419,6 +434,28 @@ const CertificatesAaron = ({
 				{isDay2Antigen && !isResultRejected && (
 					<>
 						<div className='row'>
+							<FormControl variant='filled' style={{ width: '100%' }}>
+								<InputLabel id='test-result-label' required>Lot ID</InputLabel>
+								<Select
+									labelId='test-result-label'
+									id='test-result'
+									label='Lot ID'
+									onChange={e => setLotId(e.target.value)}
+									value={lotId}
+									required
+									updateStatus={updateErrors}
+								>
+									<MenuItem value='COV1070091'>COV1070091</MenuItem>
+									<MenuItem value='COV1110041'>COV1110041</MenuItem>
+								</Select>
+							</FormControl>
+						</div>
+						{attemptedSubmit && !lotId && (
+							<div className='row no-margin'>
+								<p className='error'>Enter patient Kit Lot ID</p>
+							</div>
+						)}
+						<div className='row'>
 							<TextInputElement
 								required
 								value={kitId}
@@ -435,33 +472,11 @@ const CertificatesAaron = ({
 								<p className='error'>Enter patient Kit ID</p>
 							</div>
 						)}
-						<div className='row'>
-							<FormControl variant='filled' style={{ width: '100%' }}>
-								<InputLabel id='test-result-label'>Batch Number</InputLabel>
-								<Select
-									labelId='test-result-label'
-									id='test-result'
-									label='Batch Number'
-									onChange={e => setBatch(e.target.value)}
-									value={batch}
-									required
-									updateStatus={updateErrors}
-								>
-									<MenuItem value='COV1070091'>COV1070091</MenuItem>
-									<MenuItem value='COV1110041'>COV1110041</MenuItem>
-								</Select>
-							</FormControl>
-						</div>
-						{attemptedSubmit && !batch && (
-							<div className='row no-margin'>
-								<p className='error'>Enter patient Batch Number</p>
-							</div>
-						)}
 					</>
 				)}
 				<div className='row'>
 					<FormControl variant='filled' style={{ width: '100%' }}>
-						<InputLabel id='test-result-label'>Test Result</InputLabel>
+						<InputLabel id='test-result-label' required>Test Result</InputLabel>
 						<Select
 							labelId='test-result-label'
 							id='test-result'

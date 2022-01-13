@@ -22,7 +22,7 @@
     "@sentry/browser": "^6.2.5",
     "@sentry/react": "^6.2.5",
     "@sentry/tracing": "^6.2.5",
-    "axios": "0.19.x",
+    "axios": "^0.24.0",
     "city-timezones": "^1.2.0",
     "date-fns": "2.14.x",
     "date-fns-tz": "^1.1.4",
