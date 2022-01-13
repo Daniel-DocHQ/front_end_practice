@@ -70,6 +70,7 @@ const CertificatesAaron = ({
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [canCreateCertificate, setCanCreateCertificate] = useState(true);
+	const shortToken = get(patient_data, 'metadata.short_token', '');
 	const isResultRejected = result === 'Rejected';
 	const isClientNotThere = reasonForRejected === 'Client not there';
 	const isOtherOption = reasonForRejected === 'Other';
@@ -234,7 +235,7 @@ const CertificatesAaron = ({
 							uploadImage(
 								appointmentId,
 								img,
-								`${appointmentId} - ${forename} ${surname} - ${moment().utc(0).format()}`,
+								`${patientId}_${shortToken}_${moment.utc(dob, "DD/MM/YYYY").format()}_${moment().utc(0).format()}`,
 								token,
 							);
 						}
