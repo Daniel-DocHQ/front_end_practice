@@ -39,7 +39,7 @@ const Step0 = ({
             streetAddress,
             extendedAddress,
             locality,
-            country,
+            county,
             postalCode,
         }
     } = bookingFormModel;
@@ -285,7 +285,7 @@ const Step0 = ({
                             </h6>
                             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                                     <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                        <Field name={`appointmentAddress.postalCode`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.postal_code`, false)) ? 'Input postcode' : undefined}>
+                                        <Field name={`appointmentAddress.postalCode`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.postalCode`, false)) ? 'Input postcode' : undefined}>
                                             {({ field, meta }) => (
                                                 <Input
                                                     error={!!meta.error}
@@ -300,7 +300,7 @@ const Step0 = ({
                                 </div>
                             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                                 <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                    <Field name={`appointmentAddress.address1`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.street_address`, false)) ? 'Input address' : undefined}>
+                                    <Field name={`appointmentAddress.streetAddress`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.streetAddress`, false)) ? 'Input address' : undefined}>
                                         {({ field, meta }) => (
                                             <Input
                                                 error={!!meta.error}
@@ -315,7 +315,7 @@ const Step0 = ({
                             </div>
                             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                                 <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                    <Field name={`appointmentAddress.address2`}>
+                                    <Field name={`appointmentAddress.extendedAddress`}>
                                         {({ field, meta }) => (
                                             <Input
                                                 error={!!meta.error}
@@ -345,13 +345,13 @@ const Step0 = ({
                             </div>
                             <div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
                                 <div style={{ maxWidth: '40%', minWidth: '340px' }}>
-                                    <Field name={`appointmentAddress.country`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.country`, false)) ? 'Input country' : undefined}>
+                                    <Field name={`appointmentAddress.county`} validate={(value) => (!(value || '').trim() && get(touched, `appointmentAddress.county`, false)) ? 'Input county' : undefined}>
                                         {({ field, meta }) => (
                                             <Input
                                                 error={!!meta.error}
                                                 touched={meta.touched}
                                                 helperText={(meta.error && meta.touched) && meta.error}
-                                                {...country}
+                                                {...county}
                                                 {...field}
                                             />
                                         )}

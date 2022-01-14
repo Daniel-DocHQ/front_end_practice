@@ -15,7 +15,7 @@ const bookingFormModel = {
             postalCode: '',
             extendedAddress: '',
             streetAddress: '',
-            country: '',
+            county: '',
             locality: '',
         },
         passengers: [
@@ -95,6 +95,13 @@ const bookingFormModel = {
             name: 'region',
             label: 'County',
             id: 'region',
+            required: true,
+            type: 'text',
+        },
+        county: {
+            name: 'county',
+            label: 'County',
+            id: 'county',
             required: true,
             type: 'text',
         },

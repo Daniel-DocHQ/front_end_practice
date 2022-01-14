@@ -302,19 +302,27 @@ const BookingEngine = ({ skipBooking = false }) => {
 												...rest
 											} = passengers[item];
 											return ({
+												...(isAppointmentAddressSame ? {
+													street_address: address_1,
+													extended_address: address_2,
+													locality: town,
+													postal_code: postcode,
+													region: county,
+												} : {
+													street_address: appointmentAddress.streetAddress,
+													extended_address: appointmentAddress.extendedAddress,
+													locality: appointmentAddress.locality,
+													postal_code: appointmentAddress.postalCode,
+													region: appointmentAddress.county,
+												}),
 												first_name: firstName,
 												last_name: lastName,
 												tz_location: (isAdditionalProduct || isPCR) ? defaultTimeZone.timezone : timezoneValue,
 												date_of_birth: moment.utc(format(dateOfBirth, 'dd/MM/yyyy'), 'DD/MM/YYYY').format(),
-												street_address: address_1,
 												language: 'EN',
-												extended_address: address_2,
-												postal_code: postcode,
 												phone: `${countryCode.label}${phone.trim()}`,
-												region: county,
 												country: 'GB',
 												toc_accept: tocAccept,
-												locality: town,
 												bundle_id: parseInt(bundle_id),
 												product_id: parseInt(id),
 												...(!!selectedKit ? { selected_kit: selectedKit } : {}),
@@ -333,15 +341,6 @@ const BookingEngine = ({ skipBooking = false }) => {
 													passport_number: passportNumber,
 													travel_date: travelDateInTz,
 													test_type: type,
-													appointment_address: {
-														...(isAppointmentAddressSame ? {
-															street_address: address_1,
-															extended_address: address_2,
-															locality: town,
-															postal_code: postcode,
-															region: county,
-														} : appointmentAddress),
-													},
 													...(!!nhs ? { nhs: nhs } : {}),
 												},
 												...rest,
