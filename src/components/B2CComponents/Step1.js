@@ -9,6 +9,7 @@ import {
 	FormControlLabel,
 	FormControl,
 	Grid,
+	Tooltip,
 } from '@material-ui/core';
 import {
 	MuiPickersUtilsProvider,
@@ -180,7 +181,12 @@ const Step1 = ({ isPharmacy }) => {
 					</MuiPickersUtilsProvider>
 				</ThemeProvider>
 				<h5 style={{ margin: 0, paddingTop: 10 }}>
-					The date on which you last departed from or transited through a country or territory outside of the Common Travel Area*
+					The date on which you last departed from or transited through a country or territory outside of the&nbsp;
+					<Tooltip
+						title="The Common Travel Area is an open borders area comprising the United Kingdom, the Republic of Ireland, the Isle of Man, and the Channel Islands. The British Overseas Territories are not included."
+					>
+						<span className='underline'>Common Travel Area</span>
+					</Tooltip>.
 				</h5>
 			</div>
 			{isBundle && (
@@ -239,7 +245,12 @@ const Step1 = ({ isPharmacy }) => {
 							</MuiPickersUtilsProvider>
 						</ThemeProvider>
 						<h5 style={{ margin: 0, paddingTop: 10 }}>
-							Date on which you arrived or will arrive in UK from a country or territory outside the Common Travel Area*
+							Date on which you arrived or will arrive in UK from a country or territory outside the&nbsp;
+							<Tooltip
+								title="The Common Travel Area is an open borders area comprising the United Kingdom, the Republic of Ireland, the Isle of Man, and the Channel Islands. The British Overseas Territories are not included."
+							>
+								<span className='underline'>Common Travel Area</span>
+							</Tooltip>.
 						</h5>
 					</div>
 				</>
