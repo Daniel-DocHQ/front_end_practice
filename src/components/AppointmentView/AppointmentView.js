@@ -169,7 +169,7 @@ const AddressInfo = ({ appointment }) => {
 
 const PatientInfo = ({ patient }) => {
     const id = get(patient, 'id', '');
-    const lotId = get(patient, 'metadata.lotId', '');
+    const lotId = get(patient, 'metadata.lot_id', '');
     const nhs = get(patient, 'metadata.nhs', '');
     const firstName = get(patient, 'metadata.first_name', '') || get(patient, 'first_name', '');
     const lastName = get(patient, 'metadata.last_name', '') || get(patient, 'last_name', '');

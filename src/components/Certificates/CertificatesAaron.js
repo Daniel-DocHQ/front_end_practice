@@ -89,7 +89,7 @@ const CertificatesAaron = ({
 			!!obj.passport_number &&
 			!!obj.kit_provider &&
 			((isResultRejected && isClientNotThere) ? true : !!obj.security_checked) &&
-			((isDay2Antigen && !isResultRejected) ? !!obj.kit_id && !!obj.lotId : true) &&
+			((isDay2Antigen && !isResultRejected) ? !!obj.kit_id && !!obj.lot_id : true) &&
 			(isResultRejected ? !!obj.reject_notes : (doneBy8x8 ? doneBy8x8 : !!img))
 		);
 	}
@@ -148,7 +148,7 @@ const CertificatesAaron = ({
 		const usersKitProvider = get(patient_data, 'metadata.kit_provider', '') || get(patient_data, 'selected_kit', '');
 		const email = get(patient_data, 'metadata.email', '') || patient_data.email;
 		const sex = get(patient_data, 'metadata.sex', '') || patient_data.sex;
-		const patientLotId = get(patient_data, 'metadata.lotId', '');
+		const patientLotId = get(patient_data, 'metadata.lot_id', '');
 		const dob = get(patient_data, 'metadata.date_of_birth', '') || patient_data.date_of_birth;
 		const patientKitId = get(patient_data, 'metadata.kit_id', '') || patient_data.kit_id;
 		const securityChecked = get(patient_data, 'metadata.security_checked', false);
@@ -205,7 +205,7 @@ const CertificatesAaron = ({
 			security_checked,
 			result,
 			...(!!kitId ? { kit_id: kitId } : {}),
-			...(!!lotId ? { lotId } : {}),
+			...(!!lotId ? { lot_id: lotId } : {}),
 			passport_number: passportId,
 			kit_provider: kitProvider.name,
 			specificity: kitProvider.specificity,
@@ -276,7 +276,7 @@ const CertificatesAaron = ({
 				security_checked,
 				result: '',
 				...(!!kitId ? { kit_id: kitId } : {}),
-				...(!!lotId ? { lotId } : {}),
+				...(!!lotId ? { lot_id: lotId } : {}),
 				passport_number: passportId,
 				kit_provider: !!kitProvider && !!kitProvider.name ? kitProvider.name : kitProvider,
 			};
