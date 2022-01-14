@@ -188,6 +188,7 @@ const OFLBooking = () => {
                             landingDate,
                             landingTime,
                             city,
+                            transit,
                             purchaseCode,
                             tocAccept,
                         } = values;
@@ -300,6 +301,7 @@ const OFLBooking = () => {
                                     }
                                 } : {}),
                                 metadata: {
+                                    transit,
                                     source: 'ofl',
                                     discount: purchaseCode[item],
                                     short_token: shortTokenValue,

@@ -271,6 +271,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 											landingTime,
 											city,
 											tocAccept,
+											transit,
 											selectedKit,
 											appointmentAddress,
 											isAppointmentAddressSame,
@@ -335,6 +336,7 @@ const BookingEngine = ({ skipBooking = false }) => {
 												} : {}),
 												metadata: {
 													source,
+													transit,
 													product_id: parseInt(id),
 													short_token,
 													order_id: parseInt(orderId),

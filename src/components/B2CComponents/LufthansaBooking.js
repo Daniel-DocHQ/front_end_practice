@@ -166,6 +166,7 @@ const LufthansaBooking = () => {
                             landingDate,
                             landingTime,
                             city,
+                            transit,
                             purchaseCode,
                             tocAccept,
                         } = values;
@@ -278,6 +279,7 @@ const LufthansaBooking = () => {
                                     }
                                 } : {}),
                                 metadata: {
+                                    transit,
                                     source: 'euro',
                                     discount: purchaseCode[item],
                                     short_token: shortTokenValue,
