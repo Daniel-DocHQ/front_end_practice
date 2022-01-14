@@ -31,6 +31,8 @@ const InVid = ({
 
 	function handleCapture() {
 		const context = canvasRef.current.getContext('2d');
+		context.clearRect(0, 0, 1280, 720);
+		context.globalAlpha = 1;
 		context.drawImage(videoRef.current, 0, 0, 1280, 720);
 		context.fillStyle = "white";
 		context.globalAlpha = 0.6;
