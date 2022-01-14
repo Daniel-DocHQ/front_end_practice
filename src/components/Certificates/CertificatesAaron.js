@@ -36,6 +36,7 @@ const DAY_2_TESTS = [
 const CertificatesAaron = ({
 	img,
 	sku,
+	lotIds = [],
 	uploadImage,
 	patient_data,
 	appointmentId,
@@ -445,8 +446,10 @@ const CertificatesAaron = ({
 									required
 									updateStatus={updateErrors}
 								>
-									<MenuItem value='COV1070091'>COV1070091</MenuItem>
-									<MenuItem value='COV1110041'>COV1110041</MenuItem>
+									{lotIds.map((name) => (
+										<MenuItem key={name} value={name}>{name}</MenuItem>
+
+									))}
 								</Select>
 							</FormControl>
 						</div>

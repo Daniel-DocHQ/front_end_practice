@@ -155,6 +155,7 @@ const ProductProvider = ({
 				</div>
 			</div>
 			<CertificatesContainer
+				token={token}
 				kitProvider={kitProvider}
 				approvedTestKits={approvedTestKits}
 				productSku={productSku}
@@ -1470,8 +1471,22 @@ const AppointmentActions = ({
 	);
 };
 
-const CertificatesContainer = ({ kitProvider, approvedTestKits, productSku }) => {
+const CertificatesContainer = ({ token, kitProvider, approvedTestKits, productSku }) => {
+	const [lotIds, setLotIds] = useState([]);
 	const { displayCertificates, img, appointmentId, booking_users, uploadImage } = useContext(AppointmentContext);
+
+	const getLotIds = async () => (
+		await adminService.getLotIds(token)
+			.then(result => {
+				if (result.success && result.lotIds)
+					setLotIds(result.lotIds)
+			})
+			.catch(err => console.log(err.error))
+	);
+
+	useEffect(() => {
+		getLotIds();
+	}, []);
 
 	return displayCertificates ? (
 		<div
@@ -1482,9 +1497,10 @@ const CertificatesContainer = ({ kitProvider, approvedTestKits, productSku }) =>
 				alignItems: 'flex-start !important',
 			}}
 		>
-			{!!booking_users &&
+			{(!!booking_users && !!lotIds.length) && (
 				booking_users.map((user, i) => <CertificatesAaron
 					key={i}
+					lotIds={lotIds}
 					sku={productSku}
 					approvedTestKits={approvedTestKits}
 					uploadImage={uploadImage}
@@ -1492,7 +1508,8 @@ const CertificatesContainer = ({ kitProvider, approvedTestKits, productSku }) =>
 					img={get(img, `[${i}]`, '')}
 					patient_data={user}
 					kitProvider={kitProvider}
-				/>)}
+				/>
+			))}
 		</div>
 	) : null;
 };
