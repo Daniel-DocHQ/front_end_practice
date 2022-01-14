@@ -113,7 +113,7 @@ const OrderDetails = ({
 		orderId,
 	];
 	const userName = `${user.first_name} ${user.last_name}`;
-	const isFulfillmentAvailable = role === 'super_admin' && !!user && FULFILLMENT_USER_NAMES.includes(userName)
+	const isSuperAdminFunctionsAvailable = role === 'super_admin' && !!user && FULFILLMENT_USER_NAMES.includes(userName)
 	if (orderId.slice(-4) === '_x_x')
 		orders.push(orderId.substring(0, orderId.length - 2), orderId.substring(0, orderId.length - 4))
 	else if (orderId.slice(-2) === '_x')
@@ -194,7 +194,7 @@ const OrderDetails = ({
 	}, [reloadInfo]);
 
 	const updateNotes = (notes) => {
-		adminService.updateOrderNotes({
+		adminService.updateOrder({
 			...orderDetail,
 			order_notes: [
 				{
@@ -294,6 +294,24 @@ const OrderDetails = ({
 								<ListItem>
 									<ListItemText>
 										<b>Payment status</b>: {orderDetail.payment_flag}
+										{(orderDetail.payment_flag === 'Failed' && isSuperAdminFunctionsAvailable) && (
+											<DocButton
+												text="Update to Complete"
+												color="green"
+												style={{ marginLeft: 10 }}
+												onClick={async () => {
+													await adminService.updateOrder({
+														...orderDetail,
+														payment_flag: 'Complete',
+														shipping_flag: 'Processing',
+													}, orderDetail.id, token)
+													.then((result) => {
+														if (result.success) refetchData();
+													})
+													.catch((err) => ToastsStore.error(err.error));
+												}}
+											/>
+										)}
 									</ListItemText>
 								</ListItem>
 							</List>
@@ -398,7 +416,7 @@ const OrderDetails = ({
 												</>
 											)}
 											<TableCell align="right">Fulfilled</TableCell>
-											{isFulfillmentAvailable && (
+											{isSuperAdminFunctionsAvailable && (
 												<TableCell align="right">Update Fulfillment</TableCell>
 											)}
 										</TableRow>
@@ -423,7 +441,7 @@ const OrderDetails = ({
 													</>
 												)}
 												<TableCell align="right">{get(row, 'fulfilled', 0)}</TableCell>
-												{isFulfillmentAvailable && (
+												{isSuperAdminFunctionsAvailable && (
 													<TableCell align="right">
 														<UpdateFulFillmentControl
 															token={token}
