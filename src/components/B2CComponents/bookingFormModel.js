@@ -11,11 +11,12 @@ const bookingFormModel = {
         bookingUsers: [],
         travelDate: new Date(),
         travelTime: new Date(),
+        transit: '',
         appointmentAddress: {
             postalCode: '',
             extendedAddress: '',
             streetAddress: '',
-            country: '',
+            county: '',
             locality: '',
         },
         passengers: [
@@ -98,6 +99,13 @@ const bookingFormModel = {
             required: true,
             type: 'text',
         },
+        county: {
+            name: 'county',
+            label: 'County',
+            id: 'county',
+            required: true,
+            type: 'text',
+        },
         country: {
             name: 'country',
             label: 'Country',
@@ -146,6 +154,13 @@ const bookingFormModel = {
             type: 'text',
             placeholder: 'Select Country of Origin',
             required: true,
+        },
+        transit: {
+            name: 'transit',
+            label: 'Transit',
+            id: 'transit',
+            type: 'text',
+            placeholder: 'Transit',
         },
         pcrTest: {
             name: 'pcrTest',

@@ -34,6 +34,7 @@ const Step1 = ({ isPharmacy }) => {
 			travelTime,
 			landingDate,
 			landingTime,
+			transit,
 			city,
 		}
 	} = bookingFormModel;
@@ -52,7 +53,7 @@ const Step1 = ({ isPharmacy }) => {
 	const transportNumberLabel = `${transportTypeValue === 'Other' ? 'Transport' : transportTypeValue} Number`;
 
 	return (
-		<React.Fragment>
+		<div className="step-1-box">
 			{/* {!isPCR && (
 				<>
 					<div className='row'>
@@ -178,6 +179,9 @@ const Step1 = ({ isPharmacy }) => {
 						</Grid>
 					</MuiPickersUtilsProvider>
 				</ThemeProvider>
+				<h5 style={{ margin: 0, paddingTop: 10 }}>
+					The date on which you last departed from or transited through a country or territory outside of the Common Travel Area*
+				</h5>
 			</div>
 			{isBundle && (
 				<>
@@ -234,7 +238,36 @@ const Step1 = ({ isPharmacy }) => {
 								</Grid>
 							</MuiPickersUtilsProvider>
 						</ThemeProvider>
+						<h5 style={{ margin: 0, paddingTop: 10 }}>
+							Date on which you arrived or will arrive in UK from a country or territory outside the Common Travel Area*
+						</h5>
 					</div>
+				</>
+			)}
+			<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
+				<div style={{ maxWidth: '40%', minWidth: '300px' }}>
+					<h4 style={{ margin: 0, padding: "20px 0 10px 0" }}>
+						{transit.label}
+					</h4>
+					<Field name={transit.name}>
+						{({ field, meta }) => (
+							<Input
+								{...field}
+								{...transit}
+								label={transit.label}
+								error={!!meta.error}
+								touched={meta.touched}
+								helperText={(meta.error && meta.touched) && meta.error}
+							/>
+						)}
+					</Field>
+				</div>
+			</div>
+			<h5 style={{ margin: 0, paddingBottom: 10 }}>
+				The country or territory you were, or will be travelling from when you arrived in the UK, and any country or territory you transited through as part of that journey.
+			</h5>
+			{isBundle && (
+				<>
 					<div className='row' style={{ flexWrap: 'wrap', width: '60%' }}>
 						<div style={{ maxWidth: '40%', minWidth: '320px' }}>
 							<Field
@@ -288,7 +321,7 @@ const Step1 = ({ isPharmacy }) => {
 					</div>
 				</>
 			)}
-		</React.Fragment>
+		</div>
 	);
 };
 

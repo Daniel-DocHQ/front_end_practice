@@ -47,6 +47,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 	const defaultCountryCode = COUNTRIES.find(({ country }) => country === 'United Kingdom');
 	const currentValidationSchema = useValidationSchema(activeStep);
 	const usersTravelDate = get(bookingUsers, '[0].metadata.travel_date', new Date ());
+	const usersTransit = get(bookingUsers, '[0].metadata.transit', '');
 	const usersLandingDate = get(flightDetails, 'transport_arrival_date_time', '');
 	const usersFlightNumber = get(flightDetails, 'transport_number', '');
 	const usersTransportType = get(flightDetails, 'transport_type', '');
@@ -298,6 +299,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 						<Formik
 							initialValues={{
 								...formInitialValues,
+								transit: usersTransit,
 								travelDate: new Date(usersTravelDate),
 								travelTime: new Date(usersTravelDate),
 								...(!!usersLandingDate ? {
@@ -406,7 +408,8 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 										landingDate,
 										landingTime,
 										transportNumber,
-										timezone
+										timezone,
+										transit,
 									} = values;
 									const booking_users = passengers.map(({
 										nhs,
@@ -452,6 +455,7 @@ const BookingEngine = ({ isCustomerEdit = false }) => {
 												)).format(),
 											passport_number: passportNumber,
 											test_type,
+											transit,
 											short_token,
 											...(!!usersLandingDate ? {
 												landing_date: moment(

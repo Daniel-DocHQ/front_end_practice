@@ -195,6 +195,7 @@ const PharmacyBookingEngine = () => {
                             city,
                             purchaseCode,
                             tocAccept,
+                            transit,
                         } = values;
                         const travelDateInTz = moment(
                             new Date(
@@ -305,18 +306,13 @@ const PharmacyBookingEngine = () => {
                                     }
                                 } : {}),
                                 metadata: {
+                                    transit,
                                     source: 'Pharmacy',
                                     short_token: shortTokenValue,
                                     product_id: parseInt(id),
                                     passport_number: passportNumber,
                                     travel_date: travelDateInTz,
                                     test_type: type,
-                                    appointment_address: {
-                                        postcode: passengers[0].postal_code,
-                                        address_1: passengers[0].street_address,
-                                        town: passengers[0].locality,
-                                        county: passengers[0].region,
-                                    },
                                     ...(!!nhs ? { nhs: nhs } : {}),
                                 },
                                 ...rest,

@@ -166,6 +166,7 @@ const LufthansaBooking = () => {
                             landingDate,
                             landingTime,
                             city,
+                            transit,
                             purchaseCode,
                             tocAccept,
                         } = values;
@@ -278,6 +279,7 @@ const LufthansaBooking = () => {
                                     }
                                 } : {}),
                                 metadata: {
+                                    transit,
                                     source: 'euro',
                                     discount: purchaseCode[item],
                                     short_token: shortTokenValue,
@@ -285,11 +287,6 @@ const LufthansaBooking = () => {
                                     passport_number: passportNumber,
                                     travel_date: travelDateInTz,
                                     test_type: type,
-                                    appointment_address: {
-                                        country: passengers[0].country,
-                                        address_1: passengers[0].street_address,
-                                        town: passengers[0].locality,
-                                    },
                                     ...(!!nhs ? { nhs: nhs } : {}),
                                 },
                                 ...rest,
