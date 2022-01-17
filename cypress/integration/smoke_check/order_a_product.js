@@ -73,18 +73,18 @@ describe("B2C - Purchasing products", () => {
   	it('Payment details can be submitted', () => {
 
 		//cy.intercept({method: 'POST', url: 'https://api-staging.dochq.co.uk/v1/order'}).as('submit_order')
-		// As payment block doesn't appear from time to time, click on "Load Pymayment Info" button instead
-		//try{
-		//	cy.get('.pink').contains('Load Payment').click()
-		//	cy.wait(1000)
-		//}
-		//catch{
-		//	cy.wait(3000)
-		//}
+		
 
+		// As payment block doesn't appear from time to time, click on "Load Payment Info" button instead or wait it to appear
+		cy.get('body').then(($body) => {
 
-		cy.get('.pink').contains('Load Payment').click()
-		cy.wait(3000)
+			if ($body.find('Load Payment').length) {
+				cy.get('.pink').contains('Load Payment').click()
+			} else {
+				cy.wait(3000)
+			}
+		})
+
 		// Default fake card data
 		Order.fill_payment_data()
 		
