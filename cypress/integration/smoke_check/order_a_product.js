@@ -1,4 +1,3 @@
-/// <reference types="Cypress" />
 
 //MAKING A CUSTOMIZED ORDER OF ANY PRODUCT
 //PLEASE USE customize_test.json FOR TEST SETUP

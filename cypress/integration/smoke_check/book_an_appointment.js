@@ -1,4 +1,3 @@
-/// <reference types="Cypress" />
 
 //MAKING A CUSTOMIZED BOOKING OF ANY ORDERz
 //PLEASE USE customize_test.json FOR TEST SETUP
