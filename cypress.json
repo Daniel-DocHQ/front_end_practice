@@ -9,5 +9,8 @@
   "viewportHeight": 1080,
   
   "chromeWebSecurity": false,
-  "retries": 2
+  "retries": 2,
+  "compilerOptions": {
+    "types": ["cypress"]
+  }
 }
