@@ -1,5 +1,5 @@
 import prod from '../fixtures/product_list.json'
-import {getNotNullItems} from '../support/utils.js'
+import {getNotNullItems} from '../support/utils/utils.js'
 import {users_json} from '../support/user_data_generator.js'
 
 // Get random user data from user_data_generator.js script
