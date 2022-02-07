@@ -1,34 +1,34 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-
 import 'cypress-fill-command'
-
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import accounts from '../fixtures/accounts'
 
 Cypress.Commands.add('getIframe', (iframe) => {
     return cy.get(iframe)
         .its('0.contentDocument.body')
         .should('be.visible')
         .then(cy.wrap);
+})
+
+Cypress.Commands.add('login', (user) => {		
+    
+    let email = accounts[user].email;
+    let password = accounts[user].password;
+
+	cy.visit('https://myhealth-staging.dochq.co.uk/login')
+	cy.intercept({method: 'GET', url: 'https://ui-identity-editor-staging.dochq.co.uk/login?client=dochqhealth',}).as('login_page')
+	cy.get('.login-container').find('button.green').click()
+	cy.wait('@login_page')
+	cy.wait(1000)
+
+	cy.get('input[type="email"]').type(email)
+	cy.get('input[type="password"]').type(password)
+
+	cy.get('button').contains('Login').click({force:true})
+	cy.wait(2000)
+})
+
+Cypress.Commands.add('logout', () => {
+    cy.contains('Login').should('not.exist')
+    cy.get('.personal-profile').click()
+    cy.wait(1000)
+    cy.contains('Logout').click()
 })
