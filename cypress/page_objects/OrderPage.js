@@ -7,19 +7,29 @@ let user = JSON.parse(users_json)
 let user_index = 0, adults_num = 1, children_num = 0
 let products_data
 
-
+//
 export default class OrderPage {
 	constructor(test_data) {
-		this.products_list = test_data[0]
+		this.products_list = test_data[0];
+		this.test_params = test_data[1];
 	}
 
+	get_products_ids() {
+		products_data = getNotNullItems(this.products_list)
+		let ids_list = [];
+		for (let i = 0; i < Object.keys(products_data).length; i++) {
+			let product = Object.keys(products_data)[i]
+			ids_list.push(String(prod[product].id))
+		}
+		return ids_list;
+	}
 
  	get_checkout_page_link() {	
 		// Get only not Null products from customize-test.json
 		products_data = getNotNullItems(this.products_list)
-		
-		let items = ""
-		let source = (prod[Object.keys(products_data)[0]].tags[0] == "dochq") ? "source=dochq" : "source=ofl"
+		console.log(products_data)
+		let items = "";
+		let source = `source=${this.test_params.shop_source}`;
 
 		// Get products ids, names, prices and quantities + 
 		for (let i = 0; i < Object.keys(products_data).length; i++) {
@@ -34,11 +44,12 @@ export default class OrderPage {
 
 
 	get_total_products_price() {
-		let total_price = null
-		
+		let total_price = 0;
 		for (let i = 0; i < Object.keys(products_data).length; i++) {
-			let product = Object.keys(products_data)[i]
-			total_price += prod[product].price * Object.values(products_data)[i]
+			let product = Object.keys(products_data)[i];
+			
+			let return_price = prod[product].return ? (prod[product].title.length * 10) : 0;
+			total_price += (prod[product].price + return_price) * Object.values(products_data)[i];
 		}
 		return total_price;
 	}
@@ -76,7 +87,7 @@ export default class OrderPage {
 		cy.get('input[name="SAPostcode"]').clear().fill(postcode)
     	cy.get('input[name="SAAddress_1"]').clear().fill(address_1)
     	cy.get('input[name="SATown"]').clear().fill(city)
-		cy.get('input[name="SACountry"]').then(($country2) => {
+		cy.get('div[name="SACountry"]').find('input').then(($country2) => {
         	if($country2.is(":disabled")){
 				cy.get('input[name="SACounty"]').clear().fill(country)
 			}else{
@@ -102,17 +113,38 @@ export default class OrderPage {
 	// Writing short-token and prosucts names with quantities to 
 	// order_list.json file for further use in booking appointment tests.
 	write_order_data() {
-		cy.get(':nth-child(2) > b').then((token) => {
+		let bookable_products = JSON.parse(JSON.stringify(products_data));
+
+		const basket_length = Object.keys(products_data).length;
+		for (let i = 0; i < basket_length; i++)
+			{
+				let product = Object.keys(products_data)[i];
+				let type = prod[product].type;
+
+				switch (type) {
+					case "certificate":
+					case "standalone":
+					{
+						delete bookable_products[product];
+					} break;
+					case "bundle":
+					{
+						let bundle_items = prod[product].items;
+						for(let k = 0; k < bundle_items.length; k++) {
+							bookable_products[bundle_items[k]] = products_data[product];
+						}
+						delete bookable_products[product];
+					} break;
+					default: console.log('no type');
+				}
+			}
+		cy.get('p > b').then((token) => {
 			cy.readFile('cypress/fixtures/order_list.json').then((obj) => {
-				// delete covid-certificate from products object as it doesn't need for booking
-				if("cov-19_certificate" in products_data) delete products_data["cov-19_certificate"];
-				obj[token.text()] = products_data
-				cy.writeFile('cypress/fixtures/order_list.json', obj)
+				obj[token.text()] = bookable_products;
+				cy.writeFile('cypress/fixtures/order_list.json', obj);
 			})
 	  	})
 	}
-
-	
 	write_user_data() {
 		cy.writeFile('cypress/fixtures/user.json', user)
 	}
