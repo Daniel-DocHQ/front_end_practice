@@ -23,7 +23,9 @@
     "@sentry/react": "^6.2.5",
     "@sentry/tracing": "^6.2.5",
     "axios": "^0.24.0",
+    "chance": "^1.1.8",
     "city-timezones": "^1.2.0",
+    "cypress-fill-command": "^1.0.2",
     "date-fns": "2.14.x",
     "date-fns-tz": "^1.1.4",
     "detectrtc": "1.4.0",
@@ -63,6 +65,7 @@
   },
   "devDependencies": {
     "babel-eslint": "10.1.x",
+    "cypress": "^9.3.1",
     "eslint": "6.6.x",
     "eslint-config-prettier": "6.11.x",
     "eslint-plugin-import": "2.21.x",
