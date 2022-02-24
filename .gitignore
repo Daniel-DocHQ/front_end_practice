@@ -9,11 +9,6 @@
 /coverage
 cypress/screenshots/*
 cypress/videos*
-cypress/fixtures/test-data.json
-cypress/fixtures/user.json
-cypress/fixtures/customize_test.js
-cypress/fixtures/product_list.json
-cypress/fixtures/order_list.json
 
 # production
 /build

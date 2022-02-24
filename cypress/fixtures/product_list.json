@@ -1,0 +1,171 @@
+{
+	"amber_bundle": {
+		"sku": "",
+		"id": "15",
+		"title": [
+			"Day 2 PCR Test",
+			"Day 8 PCR Test"
+		],
+		"price": 195,
+		"return": true,
+		"tags": [
+			"dochq",
+			"ttr"
+		]
+	},
+	"ftt_antigen_dochq": {
+		"id": "19",
+		"title": [
+			"Fit to Travel [Antigen]"
+		],
+		"price": 27.50,
+		"return": false,
+		"tags": [
+			"dochq",
+			"ftf"
+		]
+	},
+	"ftt_pcr": {
+		"id": "12",
+		"title": [
+			"Fit to Travel [PCR]"
+		],
+		"price": 99,
+		"return": true,
+		"tags": [
+			"dochq",
+			"ftf",
+			"phe"
+		]
+	},
+	"ant_consult": {
+		"id": "64",
+		"title": [
+			"Antigen Consultation"
+		],
+		"price": 15,
+		"return": false,
+		"tags": [
+			"dochq",
+			"policy_1",
+			"policy_2",
+			"policy_3",
+			"ftf"
+		]
+	},
+	"cov-19_certificate": {
+		"id": "67",
+		"title": [
+			"COVID-19 Test Certificate"
+		],
+		"price": 10,
+		"return": false,
+		"tags": [
+			"dochq",
+			"policy_1",
+			"policy_2",
+			"policy_3",
+			"ftf"
+		]
+	},
+	"pre_dep_antigen_dochq": {
+		"id": "22",
+		"title": [
+			"Pre Departure Antigen Test [to England]"
+		],
+		"price": 35,
+		"return": false,
+		"tags": [
+			"dochq",
+			"ftf"
+		]
+	},
+	"day2_pcr_kit_dochq": {
+		"id": "63",
+		"title": [
+			"Day 2 PCR Test"
+		],
+		"price": 99,
+		"return": true,
+		"tags": [
+			"dochq",
+			"ttr"
+		]
+	},
+	"day2_ant_kit": {
+		"id": "68",
+		"title": [
+			"Day 2 Antigen Test"
+		],
+		"price": 27.5,
+		"return": false,
+		"tags": [
+			"dochq",
+			"ttr",
+			"day2"
+		]
+	},
+	"ftt_antigen_ofl": {
+		"id": "80",
+		"title": [
+			"Fit to Travel [Antigen]"
+		],
+		"price": 18,
+		"return": false,
+		"tags": [
+			"ftf",
+			"ofl"
+		]
+	},
+	"day2_pcr_kit_ofl": {
+		"id": "85",
+		"title": [
+			"Day 2 PCR Test"
+		],
+		"price": 69,
+		"return": true,
+		"tags": [
+			"ttr",
+			"ofl"
+		]
+	},
+	"day3_ant_kit_ofl": {
+		"id": "82",
+		"title": [
+			"Day 3 Antigen Test (US)"
+		],
+		"price": 24.5,
+		"return": false,
+		"tags": [
+			"ttr",
+			"day3",
+			"ofl"
+		]
+	},
+	"day3_ant_kit_dochq": {
+		"id": "82",
+		"title": [
+			"Day 3 Antigen Test (US)"
+		],
+		"price": 24.5,
+		"return": false,
+		"tags": [
+			"ttr",
+			"day3",
+			"dochq"
+		]
+	},
+	"pre_dep_antigen_ofl": {
+		"id": "39",
+		"title": [
+			"Pre Departure Antigen Test [to England]"
+		],
+		"price": 25,
+		"return": false,
+		"tags": [
+			"policy_3",
+			"ftf",
+			"ofl"
+		]
+	}
+}
