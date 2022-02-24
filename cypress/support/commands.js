@@ -26,6 +26,11 @@ Cypress.Commands.add('getInDocument', { prevSubject: 'document' }, (document, se
     Cypress.$(selector, document),
 )
 
+Cypress.Commands.add('forceVisit', url => {
+    cy.window().then(win => {
+        return win.open(url, '_self');
+    });
+});
 
 Cypress.Commands.add('login', (user) => {
 

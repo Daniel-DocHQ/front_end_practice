@@ -1,0 +1,1424 @@
+[
+  {
+    "active": 1,
+    "bookable": 1,
+    "country": "UK",
+    "description": "FlowFlex Rapid Antigen Test",
+    "id": 9,
+    "lab": "flowflex",
+    "price": 35,
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-003",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "travelgp"
+    ],
+    "title": "FlowFlex Rapid Antigen Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638369821,
+    "description": "This test is required by some countries and some airlines prior to departing from the UK.",
+    "footer": "We aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+    "id": 12,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 261,
+        "product_id": 12,
+        "text": "Not suitable for test time windows of 48 hours or less"
+      },
+      {
+        "colour": "doc-black",
+        "id": 262,
+        "product_id": 12,
+        "text": "Fit to travel certificate will be issued once negative results are reported by the laboratory"
+      }
+    ],
+    "price": 89,
+    "service": "Fit to Travel",
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-001",
+    "sort_order": 1,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "dochq",
+      "ftf",
+      "phe",
+      "travelgp",
+      "outbound",
+      "postal_return",
+      "ctn-shop"
+    ],
+    "title": "Fit to Travel PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Fit to Travel [PCR]",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638351771,
+    "description": "SynLab UK PCR Swab",
+    "id": 13,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 100,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-002",
+    "sort_order": 4,
+    "tags": [
+      "dochq",
+      "ttr",
+      "phe",
+      "travelgp",
+      "postal_return"
+    ],
+    "title": "Day 2 PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Day 2 PCR Test",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "bundle_children": [
+      {
+        "active": 1,
+        "bookable": 1,
+        "card_colour": "doc-green",
+        "country": "UK",
+        "created_at": 1638351771,
+        "description": "SynLab UK PCR Swab",
+        "id": 13,
+        "lab": "synlab",
+        "out_of_stock": 1,
+        "price": 100,
+        "shippable": 1,
+        "sku": "SYN-UK-PCR-SNS-002",
+        "sort_order": 4,
+        "tags": [
+          "dochq",
+          "ttr",
+          "phe",
+          "travelgp",
+          "postal_return"
+        ],
+        "title": "Day 2 PCR Test",
+        "type": "PCR",
+        "vat_exempt": 1,
+        "warehouse_item_name": "Day 2 PCR Test",
+        "weight": 0.075
+      },
+      {
+        "bookable": 1,
+        "card_colour": "doc-green",
+        "country": "UK",
+        "created_at": 1641631149,
+        "description": "SynLab UK PCR Swab",
+        "id": 14,
+        "lab": "synlab",
+        "out_of_stock": 1,
+        "price": 89,
+        "shippable": 1,
+        "sku": "SYN-UK-PCR-SNS-003",
+        "sort_order": 8,
+        "tags": [
+          "dochq",
+          "ttr",
+          "phe",
+          "travelgp",
+          "postal_return"
+        ],
+        "title": "Day 8 PCR Test",
+        "type": "PCR",
+        "vat_exempt": 1,
+        "warehouse_item_name": "Day 8 PCR Test",
+        "weight": 0.075
+      }
+    ],
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1641631149,
+    "description": "If you are arriving in to the UK and you have not been fully vaccinated by a UK recognised vaccination programme, you will require a Day 2 and a Day 8 Covid-19 PCR test.",
+    "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.\n\nWe aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+    "id": 15,
+    "lab": "synlab",
+    "modified_at": 1634912300,
+    "points": [
+      {
+        "colour": "doc-pink",
+        "id": 305,
+        "product_id": 15,
+        "text": "As per government guidelines, this item is not cancellable under any circumstances."
+      },
+      {
+        "colour": "doc-black",
+        "id": 306,
+        "product_id": 15,
+        "text": "Includes NGS (next generation sequencing) for variant surveillance on day 2"
+      },
+      {
+        "colour": "doc-black",
+        "id": 307,
+        "product_id": 15,
+        "text": "Certificates will be emailed once results have been processed by the laboratories"
+      }
+    ],
+    "price": 175,
+    "service": "Unvaccinated People Test ",
+    "shippable": 1,
+    "sku": "AMBER-BUNDLE",
+    "sort_order": 9,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "dochq",
+      "ttr",
+      "phe",
+      "day2",
+      "travelgp",
+      "inbound",
+      "postal_return",
+      "ctn-shop"
+    ],
+    "title": "Day 2 + 8 PCR Test",
+    "type": "Bundle",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Amber Bundle"
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638360463,
+    "description": "This test is required by some countries and some airlines prior to departing from the UK.",
+    "id": 19,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 289,
+        "product_id": 19,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 27.5,
+    "service": "Fit to Travel",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-001",
+    "sort_order": 2,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "dochq",
+      "ftf",
+      "travelgp",
+      "outbound",
+      "ctn-shop"
+    ],
+    "title": "Fit to Travel Antigen Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638372199,
+    "description": "This test is required by all people travelling to UK that not vaccinated and above 18 years old.",
+    "id": 22,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 274,
+        "product_id": 22,
+        "text": "Order your test before your trip and take it in your suitcase"
+      },
+      {
+        "colour": "doc-black",
+        "id": 275,
+        "product_id": 22,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 27.5,
+    "service": "Unvaccinated People Test ",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-002",
+    "sort_order": 3,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "dochq",
+      "ftf",
+      "travelgp",
+      "inbound",
+      "ctn-shop"
+    ],
+    "title": "Pre Departure Antigen Test [to UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "This test is required by some countries and some airlines prior to departing from the UK.",
+    "footer": "We aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+    "id": 34,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 251,
+        "product_id": 34,
+        "text": "Not suitable for test time windows of 48 hours or less"
+      },
+      {
+        "colour": "doc-black",
+        "id": 252,
+        "product_id": 34,
+        "text": "Fit to travel certificate will be issued once negative results are reported by the laboratory"
+      }
+    ],
+    "price": 49,
+    "service": "Fit to Travel",
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-001",
+    "sort_order": 1,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_1",
+      "ftf",
+      "outbound",
+      "postal_return"
+    ],
+    "title": "Fit to Travel PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Fit to Travel [PCR]",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "footer": "We aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+    "id": 35,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 253,
+        "product_id": 35,
+        "text": "Not suitable for test time windows of 48 hours or less"
+      },
+      {
+        "colour": "doc-black",
+        "id": 254,
+        "product_id": 35,
+        "text": "Fit to travel certificate will be issued once negative results are reported by the laboratory"
+      }
+    ],
+    "price": 59,
+    "service": "Fit to Travel",
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-001",
+    "sort_order": 1,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_2",
+      "ftf",
+      "outbound",
+      "postal_return"
+    ],
+    "title": "Fit to Travel PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Fit to Travel [PCR]",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "This test is required by some countries and some airlines prior to departing from the UK.",
+    "footer": "We aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+    "id": 36,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 321,
+        "product_id": 36,
+        "text": "Not suitable for test time windows of 48 hours or less"
+      },
+      {
+        "colour": "doc-black",
+        "id": 322,
+        "product_id": 36,
+        "text": "Fit to travel certificate will be issued once negative results are reported by the laboratory"
+      }
+    ],
+    "price": 69,
+    "service": "Fit to Travel ",
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-001",
+    "sort_order": 1,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_3",
+      "ftf",
+      "outbound",
+      "postal_return"
+    ],
+    "title": "Fit to Travel PCR Test ",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Fit to Travel [PCR]",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "FlowFlex Rapid Antigen Test",
+    "id": 37,
+    "lab": "synlab",
+    "price": 21,
+    "service": "Unvaccinated People Test",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-002",
+    "sort_order": 3,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_1",
+      "ftf",
+      "inbound"
+    ],
+    "title": "Pre Departure Antigen Test [to UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "FlowFlex Rapid Antigen Test",
+    "id": 38,
+    "lab": "synlab",
+    "price": 23,
+    "service": "Unvaccinated People Test",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-002",
+    "sort_order": 3,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_2",
+      "ftf",
+      "inbound"
+    ],
+    "title": "Pre Departure Antigen Test [to UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1640953619,
+    "description": "This test is required by all unvaccinated people that are above 18 years old travelling to the UK.",
+    "id": 39,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 238,
+        "product_id": 39,
+        "text": "Order your test before your trip and take it in your suitcase"
+      },
+      {
+        "colour": "doc-black",
+        "id": 239,
+        "product_id": 39,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 25,
+    "service": "Unvaccinated People Test",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-002",
+    "sort_order": 3,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_3",
+      "ftf",
+      "ofl",
+      "inbound",
+      "ofl-shop"
+    ],
+    "title": "Pre Departure Antigen Test [to UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "FlowFlex Rapid Antigen Test",
+    "id": 40,
+    "lab": "synlab",
+    "price": 21,
+    "service": "Fit to Travel",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-001",
+    "sort_order": 2,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_1",
+      "ftf",
+      "outbound"
+    ],
+    "title": "Fit to Travel Antigen Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "FlowFlex Rapid Antigen Test",
+    "id": 41,
+    "lab": "synlab",
+    "price": 23,
+    "service": "Fit to Travel",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-001",
+    "sort_order": 2,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_2",
+      "ftf",
+      "outbound"
+    ],
+    "title": "Fit to Travel Antigen Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638367039,
+    "description": "This test is required by some countries and some airlines prior to departing from England.",
+    "id": 42,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 324,
+        "product_id": 42,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 25,
+    "service": "Fit to Travel",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-001",
+    "sort_order": 2,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_3",
+      "ftf",
+      "outbound"
+    ],
+    "title": "Fit to Travel Antigen Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 46,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 65,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-002",
+    "sort_order": 9,
+    "tags": [
+      "policy_1",
+      "ttr",
+      "phe",
+      "inbound",
+      "postal_return"
+    ],
+    "title": "Day 2 PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Day 2 PCR Test",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 47,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 70,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-002",
+    "sort_order": 9,
+    "tags": [
+      "policy_2",
+      "ttr",
+      "phe",
+      "inbound",
+      "postal_return"
+    ],
+    "title": "Day 2 PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Day 2 PCR Test",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "country": "UK",
+    "description": "Rebook PCR Test",
+    "id": 58,
+    "lab": "synlab",
+    "modified_at": 1634912376,
+    "price": 15,
+    "sku": "RECONSULT-PCR",
+    "sort_order": 9,
+    "tags": [
+      ""
+    ],
+    "title": "PCR Video Consultation",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "PCR Video Consultation",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "country": "UK",
+    "created_at": 1638969433,
+    "description": "Rebook Antigen Test",
+    "id": 59,
+    "lab": "synlab",
+    "modified_at": 1634913644,
+    "price": 15,
+    "sku": "RECONSULT-ANT",
+    "sort_order": 9,
+    "tags": [
+      "ttr"
+    ],
+    "title": "Antigen Video Consultation",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-light-pink",
+    "country": "UK",
+    "created_at": 1638381102,
+    "description": "Do you already have your own test kit?\nBook your online consultation to get your Fit to Travel certificate.",
+    "footer": "*Do not purchase this service if your kit is not on the UK and EU approved kits list.",
+    "id": 64,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 308,
+        "product_id": 64,
+        "text": "NHS test kits cannot be used"
+      },
+      {
+        "colour": "doc-black",
+        "id": 309,
+        "product_id": 64,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 15,
+    "service": "Fit to Travel",
+    "sku": "CONSULT-ANT",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "policy_1",
+      "policy_2",
+      "policy_3",
+      "ftf",
+      "ofl",
+      "travelgp",
+      "outbound",
+      "ofl-shop",
+      "gtc-shop"
+    ],
+    "title": "Antigen Consultation",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638368890,
+    "description": "AGIS Face Mask",
+    "discount_exempt": 1,
+    "id": 66,
+    "price": 3.12,
+    "shippable": 1,
+    "sku": "AGIS-FACE-MASK",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "travelgp"
+    ],
+    "title": "AGIS Face Mask",
+    "type": "Standalone",
+    "vat_exempt": 0,
+    "warehouse_item_name": "AGIS Face Mask",
+    "weight": 0.04
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638381102,
+    "description": "COVID-19 Test Certificate",
+    "id": 67,
+    "price": 8,
+    "sku": "COVID-TEST-CERTIFICATE",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "policy_1",
+      "policy_2",
+      "policy_3",
+      "ftf",
+      "travelgp",
+      "ofl-shop",
+      "ctn-shop",
+      "gtc-shop"
+    ],
+    "title": "COVID-19 Test Certificate",
+    "type": "Certificate",
+    "vat_exempt": 1,
+    "warehouse_item_name": "COVID-19 Test Certificate",
+    "weight": 0.07
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638201210,
+    "description": "If you are arriving in to the UK from a country not on the red list and you have been fully vaccinated* by a UK recognised vaccination programme you will require a Day 2 Covid-19 Antigen test.",
+    "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.",
+    "id": 68,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-pink",
+        "id": 276,
+        "product_id": 68,
+        "text": "As per government guidelines, this item is not cancellable under any circumstances."
+      },
+      {
+        "colour": "doc-black",
+        "id": 277,
+        "product_id": 68,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 27.5,
+    "service": "Vaccinated People Test",
+    "shippable": 1,
+    "sku": "DAY-2-UK-ANT-001",
+    "sort_order": 9,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "dochq",
+      "ttr",
+      "day2",
+      "travelgp",
+      "inbound",
+      "ctn-shop"
+    ],
+    "title": "Day 2 Antigen Test [UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "Day 2 Antigen Test Kit",
+    "id": 69,
+    "lab": "synlab",
+    "price": 27.5,
+    "service": "Vaccinated People Test",
+    "shippable": 1,
+    "sku": "DAY-2-UK-ANT-001",
+    "sort_order": 9,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_1",
+      "ttr",
+      "day2",
+      "inbound"
+    ],
+    "title": "Day 2 Antigen Test [UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "Day 2 Antigen Test Kit",
+    "id": 70,
+    "lab": "synlab",
+    "price": 22.5,
+    "service": "Vaccinated People Test",
+    "shippable": 1,
+    "sku": "DAY-2-UK-ANT-001",
+    "sort_order": 9,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "policy_2",
+      "ttr",
+      "day2",
+      "inbound"
+    ],
+    "title": "Day 2 Antigen Test [UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638358911,
+    "description": "If you are arriving in to the UK from a country not on the red list and you have been fully vaccinated* by a UK recognised vaccination programme you will require a Day 2 Covid-19 Antigen test.",
+    "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.",
+    "id": 71,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-pink",
+        "id": 70,
+        "product_id": 71,
+        "text": "As per government guidelines, this item is not cancellable under any circumstances."
+      },
+      {
+        "colour": "doc-black",
+        "id": 71,
+        "product_id": 71,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 27.5,
+    "service": "Vaccinated People Test",
+    "shippable": 1,
+    "sku": "DAY-2-UK-ANT-001",
+    "sort_order": 9,
+    "tags": [
+      "policy_3",
+      "ttr",
+      "day2",
+      "inbound"
+    ],
+    "title": "Day 2 Antigen Test [UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "country": "UK",
+    "created_at": 1640965743,
+    "description": "Rebook Day 2 Antigen Test",
+    "id": 72,
+    "lab": "synlab",
+    "modified_at": 1634913644,
+    "price": 15,
+    "sku": "RECONSULT-ANT-DAY-2",
+    "sort_order": 9,
+    "tags": [
+      "ttr"
+    ],
+    "title": "Day 2 Antigen Video Consultation",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "country": "UK",
+    "description": "Fit to Fly PCR",
+    "id": 75,
+    "lab": "2030",
+    "out_of_stock": 1,
+    "price": 10,
+    "shippable": 1,
+    "sku": "2030-F2F-PCR",
+    "sort_order": 9,
+    "tags": [
+      ""
+    ],
+    "title": "Fit to Fly PCR",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Fit to Fly PCR",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "US",
+    "created_at": 1643027893,
+    "description": "US Day 2",
+    "id": 78,
+    "lab": "synlab",
+    "price": 1,
+    "shippable": 1,
+    "sku": "DAY-2-US-ANT-001",
+    "sort_order": 9,
+    "tags": [
+      ""
+    ],
+    "title": "Day 3 Antigen Test [US]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "US",
+    "created_at": 1641815584,
+    "description": "Day 3 Antigen Test (US) Reconsultation",
+    "id": 79,
+    "lab": "synlab",
+    "price": 15,
+    "sku": "RECONSULT-ANT-DAY-3",
+    "sort_order": 9,
+    "tags": [
+      "ofl",
+      "day3",
+      "travelgp"
+    ],
+    "title": "Day 3 Antigen Test [US] Reconsultation",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638887703,
+    "description": "This test is required by some countries and some airlines prior to departing from the UK.",
+    "id": 80,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 149,
+        "product_id": 80,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 18.5,
+    "service": "Fit to Travel",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-001",
+    "sort_order": 2,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "ftf",
+      "ofl",
+      "ofl-shop"
+    ],
+    "title": "Fit to Travel Antigen Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638887703,
+    "description": "If you are arriving in to the UK from a country not on the red list and you have been fully vaccinated* by a UK recognised vaccination programme you will require a Day 2 Covid-19 Antigen test.",
+    "id": 81,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-pink",
+        "id": 236,
+        "product_id": 81,
+        "text": "As per government guidelines, this item is not cancellable under any circumstances"
+      },
+      {
+        "colour": "doc-black",
+        "id": 237,
+        "product_id": 81,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 22.5,
+    "service": "Vaccinated People Test ",
+    "shippable": 1,
+    "sku": "DAY-2-UK-ANT-001",
+    "sort_order": 9,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "day2",
+      "ofl",
+      "inbound",
+      "ofl-shop"
+    ],
+    "title": "Day 2 Antigen Test [UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "US",
+    "created_at": 1638887703,
+    "description": "This test is required by people after landing in the US.",
+    "id": 82,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 204,
+        "product_id": 82,
+        "text": "Supervised test approved for entry into the US"
+      },
+      {
+        "colour": "doc-black",
+        "id": 205,
+        "product_id": 82,
+        "text": "FDA approved test kits"
+      },
+      {
+        "colour": "doc-black",
+        "id": 206,
+        "product_id": 82,
+        "text": "Order your test before your trip and take it in your suitcase"
+      },
+      {
+        "colour": "doc-black",
+        "id": 207,
+        "product_id": 82,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 24.5,
+    "service": "Antigen Test [US]",
+    "shippable": 1,
+    "sku": "DAY-2-US-ANT-001",
+    "sort_order": 9,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "ofl",
+      "day3",
+      "travelgp",
+      "outbound",
+      "ofl-shop"
+    ],
+    "title": "Day 3 Antigen Test [US]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1641212055,
+    "description": "Day 2 PCR Reconsultaiton",
+    "id": 83,
+    "lab": "synlab",
+    "price": 15,
+    "sku": "RECONSULT-PCR-DAY-2",
+    "sort_order": 9,
+    "tags": [
+      "ttr",
+      "day2"
+    ],
+    "title": "Day 2 PCR Reconsultaiton",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Day 2 PCR Reconsultaiton",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638352881,
+    "description": "Upgrade to PCR",
+    "id": 84,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 45,
+    "shippable": 1,
+    "sku": "PCR-DAY-2-UPGRADE",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "ttr",
+      "phe",
+      "day2",
+      "travelgp",
+      "postal_return"
+    ],
+    "title": "Upgrade to PCR",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Day 2 PCR Oncologica day 2 PCR",
+    "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "US",
+    "created_at": 1638887703,
+    "description": "This test is required by people after landing in the US.",
+    "id": 86,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 264,
+        "product_id": 86,
+        "text": "Supervised test approved for entry into the US"
+      },
+      {
+        "colour": "doc-black",
+        "id": 265,
+        "product_id": 86,
+        "text": "FDA approved test kits"
+      },
+      {
+        "colour": "doc-black",
+        "id": 266,
+        "product_id": 86,
+        "text": "Order your test before your trip and take it in your suitcase"
+      },
+      {
+        "colour": "doc-black",
+        "id": 267,
+        "product_id": 86,
+        "text": "Certificate via email in less than 30 minutes"
+      }
+    ],
+    "price": 27.5,
+    "service": "Antigen Test [US]",
+    "shippable": 1,
+    "sku": "DAY-2-US-ANT-001",
+    "sort_order": 9,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "dochq",
+      "day3",
+      "travelgp",
+      "outbound",
+      "ctn-shop"
+    ],
+    "title": "Day 3 Antigen Test  [US]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "card_colour": "doc-light-pink",
+    "country": "UK",
+    "created_at": 1642606193,
+    "description": "Pack of 5 Flowflex SARS-CoV-2 Antigen Rapid Antigen Test Kits.",
+    "id": 87,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 316,
+        "product_id": 87,
+        "text": "UK, EU and FDA approved"
+      },
+      {
+        "colour": "doc-black",
+        "id": 317,
+        "product_id": 87,
+        "text": "CE marked"
+      },
+      {
+        "colour": "doc-black",
+        "id": 318,
+        "product_id": 87,
+        "text": "Approved for Covid-19 self-testing"
+      }
+    ],
+    "price": 35,
+    "service": "Antigen Test Kits",
+    "shippable": 1,
+    "sku": "ANT-001-5X",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "travelgp",
+      "outbound",
+      "ctn-shop",
+      "amex-shop"
+    ],
+    "title": "Pack of 5 Antigen tests",
+    "type": "Standalone",
+    "vat_exempt": 0,
+    "warehouse_item_name": "Antigen Kit - 5 pack",
+    "weight": 0.0865
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-light-pink",
+    "country": "UK",
+    "created_at": 1638381102,
+    "description": "Do you already have your own test kit?\nBook your online consultation to get your Fit to Travel certificate.",
+    "footer": "*Do not purchase this service if your kit is not on the UK and EU approved kits list.",
+    "id": 88,
+    "lab": "synlab",
+    "points": [
+      {
+        "colour": "doc-black",
+        "id": 280,
+        "product_id": 88,
+        "text": "NHS test kits cannot be used"
+      },
+      {
+        "colour": "doc-black",
+        "id": 281,
+        "product_id": 88,
+        "text": "Certificate via email in under 30 minutes"
+      }
+    ],
+    "price": 15,
+    "service": "Fit to Travel",
+    "sku": "CONSULT-ANT",
+    "sort_order": 9,
+    "tags": [
+      "ftf",
+      "outbound",
+      "ctn-shop"
+    ],
+    "title": "Antigen Consultation",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638360463,
+    "description": "This test is required by some countries and some airlines prior to departing from the UK.",
+    "id": 89,
+    "lab": "synlab",
+    "price": 25,
+    "service": "Fit to Travel",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-001",
+    "sort_order": 2,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "ftf",
+      "travelgp",
+      "outbound",
+      "gtc-shop"
+    ],
+    "title": "Fit to Travel Antigen Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "US",
+    "created_at": 1638887703,
+    "description": "This test is required by people after landing in the US.",
+    "id": 90,
+    "lab": "synlab",
+    "price": 25,
+    "service": "Antigen Test [US]",
+    "shippable": 1,
+    "sku": "DAY-2-US-ANT-001",
+    "sort_order": 9,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "day3",
+      "travelgp",
+      "outbound",
+      "gtc-shop"
+    ],
+    "title": "Day 3 Antigen Test  [US]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638372199,
+    "description": "This test is required by all people travelling to UK that not vaccinated and above 18 years old.",
+    "id": 91,
+    "lab": "synlab",
+    "price": 25,
+    "service": "Unvaccinated People Test ",
+    "shippable": 1,
+    "sku": "FLX-UK-ANT-SNS-002",
+    "sort_order": 3,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "ftf",
+      "travelgp",
+      "inbound",
+      "gtc-shop"
+    ],
+    "title": "Pre Departure Antigen Test [to UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638201210,
+    "description": "If you are arriving in to the UK from a country not on the red list and you have been fully vaccinated* by a UK recognised vaccination programme you will require a Day 2 Covid-19 Antigen test.",
+    "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.",
+    "id": 92,
+    "lab": "synlab",
+    "price": 25,
+    "service": "Vaccinated People Test",
+    "shippable": 1,
+    "sku": "DAY-2-UK-ANT-001",
+    "sort_order": 9,
+    "sub_title": "+ Secure Online Consultation",
+    "tags": [
+      "ttr",
+      "day2",
+      "travelgp",
+      "inbound",
+      "gtc-shop"
+    ],
+    "title": "Day 2 Antigen Test [UK]",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  }
+]
