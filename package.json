@@ -1,0 +1,23 @@
+{
+  "name": "front-end-course",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Daniel-DocHQ/front_end_practice.git"
+  },
+  "keywords": [
+    "js",
+    "javascript"
+  ],
+  "author": "Daniel Albul <daniel.albul.biz@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Daniel-DocHQ/front_end_practice/issues"
+  },
+  "homepage": "https://github.com/Daniel-DocHQ/front_end_practice#readme"
+}
