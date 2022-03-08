@@ -17,7 +17,7 @@ let users_arr = new Array(num_users).fill().map(function() {
         date_of_birth: "05051995",
         sex: chance["gender"](),
         address: {
-            country: "England", //chance["country"]({ full: true }),
+            country: "Ukraine", //chance["country"]({ full: true }),
             street: chance["address"](),
             city: chance["city"](),
             postcode: chance["postcode"](), //generate a random U.K. postcode

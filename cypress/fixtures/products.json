@@ -1,5 +1,48 @@
 [
   {
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 5,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 99,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-011",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "travelgp",
+      "postal_return"
+    ],
+    "title": "SynLab UK PCR Swab",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "SynLab UK PCR Swab",
+    "weight": 0.075
+  },
+  {
+    "bookable": 1,
+    "country": "UK",
+    "description": "Healgen Rapid Antigen Test",
+    "id": 8,
+    "lab": "healgen",
+    "price": 35,
+    "shippable": 1,
+    "sku": "HGN-UK-ANT-SNS-001",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "travelgp"
+    ],
+    "title": "Healgen Rapid Antigen Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
     "active": 1,
     "bookable": 1,
     "country": "UK",
@@ -72,19 +115,43 @@
     "card_colour": "doc-green",
     "country": "UK",
     "created_at": 1638351771,
-    "description": "SynLab UK PCR Swab",
+    "description": "If you are arriving in to the UK and you have not been fully vaccinated* by a UK recognised vaccination programme, you will require a Day 2 Covid-19 PCR test.",
+    "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.\n\nWe aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
     "id": 13,
     "lab": "synlab",
     "out_of_stock": 1,
+    "points": [
+      {
+        "colour": "doc-pink",
+        "id": 328,
+        "product_id": 13,
+        "text": "As per government guidelines, this item is not cancellable under any circumstances"
+      },
+      {
+        "colour": "doc-black",
+        "id": 329,
+        "product_id": 13,
+        "text": "Includes NGS (next generation sequencing) for variant surveillance on day 2)"
+      },
+      {
+        "colour": "doc-black",
+        "id": 330,
+        "product_id": 13,
+        "text": "Certificates will be emailed once results have been processed by the laboratories"
+      }
+    ],
     "price": 100,
+    "service": "Unvaccinated People Test",
     "shippable": 1,
     "sku": "SYN-UK-PCR-SNS-002",
     "sort_order": 4,
+    "sub_title": "+ Secure Online Consultation",
     "tags": [
       "dochq",
       "ttr",
       "phe",
       "travelgp",
+      "inbound",
       "postal_return"
     ],
     "title": "Day 2 PCR Test",
@@ -94,7 +161,32 @@
     "weight": 0.075
   },
   {
-    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1641631149,
+    "description": "SynLab UK PCR Swab",
+    "id": 14,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 89,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-003",
+    "sort_order": 8,
+    "tags": [
+      "dochq",
+      "ttr",
+      "phe",
+      "travelgp",
+      "postal_return"
+    ],
+    "title": "Day 8 PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Day 8 PCR Test",
+    "weight": 0.075
+  },
+  {
     "bookable": 1,
     "bundle_children": [
       {
@@ -103,19 +195,23 @@
         "card_colour": "doc-green",
         "country": "UK",
         "created_at": 1638351771,
-        "description": "SynLab UK PCR Swab",
+        "description": "If you are arriving in to the UK and you have not been fully vaccinated* by a UK recognised vaccination programme, you will require a Day 2 Covid-19 PCR test.",
+        "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.\n\nWe aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
         "id": 13,
         "lab": "synlab",
         "out_of_stock": 1,
         "price": 100,
+        "service": "Unvaccinated People Test",
         "shippable": 1,
         "sku": "SYN-UK-PCR-SNS-002",
         "sort_order": 4,
+        "sub_title": "+ Secure Online Consultation",
         "tags": [
           "dochq",
           "ttr",
           "phe",
           "travelgp",
+          "inbound",
           "postal_return"
         ],
         "title": "Day 2 PCR Test",
@@ -277,6 +373,31 @@
     "vat_exempt": 1,
     "warehouse_item_name": "Antigen Kit",
     "weight": 0.025
+  },
+  {
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 26,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 89,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-004",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "ttr",
+      "phe",
+      "travelgp",
+      "postal_return"
+    ],
+    "title": "Test to Release PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Test to Release PCR Test",
+    "weight": 0.075
   },
   {
     "active": 1,
@@ -633,6 +754,100 @@
     "weight": 0.075
   },
   {
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 48,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 75,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-002",
+    "sort_order": 9,
+    "tags": [
+      "policy_3",
+      "ttr",
+      "phe",
+      "inbound",
+      "postal_return"
+    ],
+    "title": "Day 2 PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Day 2 PCR Test",
+    "weight": 0.075
+  },
+  {
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 52,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 49,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-004",
+    "sort_order": 9,
+    "tags": [
+      "policy_1",
+      "ttr",
+      "postal_return"
+    ],
+    "title": "Test to Release PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Test to Release PCR Test",
+    "weight": 0.075
+  },
+  {
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 53,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 59,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-004",
+    "sort_order": 9,
+    "tags": [
+      "policy_2",
+      "ttr",
+      "postal_return"
+    ],
+    "title": "Test to Release PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Test to Release PCR Test",
+    "weight": 0.075
+  },
+  {
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 54,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 69,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-004",
+    "sort_order": 9,
+    "tags": [
+      "policy_3",
+      "ttr",
+      "postal_return"
+    ],
+    "title": "Test to Release PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Test to Release PCR Test",
+    "weight": 0.075
+  },
+  {
     "active": 1,
     "bookable": 1,
     "country": "UK",
@@ -672,6 +887,284 @@
     "vat_exempt": 1,
     "warehouse_item_name": "Antigen Kit",
     "weight": 0.025
+  },
+  {
+    "bookable": 1,
+    "bundle_children": [
+      {
+        "active": 1,
+        "bookable": 1,
+        "card_colour": "doc-green",
+        "country": "UK",
+        "created_at": 1638351771,
+        "description": "If you are arriving in to the UK and you have not been fully vaccinated* by a UK recognised vaccination programme, you will require a Day 2 Covid-19 PCR test.",
+        "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.\n\nWe aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+        "id": 13,
+        "lab": "synlab",
+        "out_of_stock": 1,
+        "price": 100,
+        "service": "Unvaccinated People Test",
+        "shippable": 1,
+        "sku": "SYN-UK-PCR-SNS-002",
+        "sort_order": 4,
+        "sub_title": "+ Secure Online Consultation",
+        "tags": [
+          "dochq",
+          "ttr",
+          "phe",
+          "travelgp",
+          "inbound",
+          "postal_return"
+        ],
+        "title": "Day 2 PCR Test",
+        "type": "PCR",
+        "vat_exempt": 1,
+        "warehouse_item_name": "Day 2 PCR Test",
+        "weight": 0.075
+      }
+    ],
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 60,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 60,
+    "shippable": 1,
+    "sku": "AMBER-V-BUNDLE",
+    "sort_order": 9,
+    "tags": [
+      "policy_1",
+      "ttr",
+      "phe",
+      "inbound",
+      "postal_return"
+    ],
+    "title": "Day 2 PCR Test Kit",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Amber list [Vaccinated]",
+    "weight": 0.075
+  },
+  {
+    "bookable": 1,
+    "bundle_children": [
+      {
+        "active": 1,
+        "bookable": 1,
+        "card_colour": "doc-green",
+        "country": "UK",
+        "created_at": 1638351771,
+        "description": "If you are arriving in to the UK and you have not been fully vaccinated* by a UK recognised vaccination programme, you will require a Day 2 Covid-19 PCR test.",
+        "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.\n\nWe aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+        "id": 13,
+        "lab": "synlab",
+        "out_of_stock": 1,
+        "price": 100,
+        "service": "Unvaccinated People Test",
+        "shippable": 1,
+        "sku": "SYN-UK-PCR-SNS-002",
+        "sort_order": 4,
+        "sub_title": "+ Secure Online Consultation",
+        "tags": [
+          "dochq",
+          "ttr",
+          "phe",
+          "travelgp",
+          "inbound",
+          "postal_return"
+        ],
+        "title": "Day 2 PCR Test",
+        "type": "PCR",
+        "vat_exempt": 1,
+        "warehouse_item_name": "Day 2 PCR Test",
+        "weight": 0.075
+      }
+    ],
+    "card_colour": "doc-green",
+    "country": "UK",
+    "description": "SynLab UK PCR Swab",
+    "id": 61,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "price": 65,
+    "shippable": 1,
+    "sku": "AMBER-V-BUNDLE",
+    "sort_order": 9,
+    "tags": [
+      "policy_2",
+      "ttr",
+      "phe",
+      "inbound",
+      "postal_return"
+    ],
+    "title": "Day 2 PCR Test Kit",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Amber list [Vaccinated]",
+    "weight": 0.075
+  },
+  {
+    "bookable": 1,
+    "bundle_children": [
+      {
+        "active": 1,
+        "bookable": 1,
+        "card_colour": "doc-green",
+        "country": "UK",
+        "created_at": 1638351771,
+        "description": "If you are arriving in to the UK and you have not been fully vaccinated* by a UK recognised vaccination programme, you will require a Day 2 Covid-19 PCR test.",
+        "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.\n\nWe aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+        "id": 13,
+        "lab": "synlab",
+        "out_of_stock": 1,
+        "price": 100,
+        "service": "Unvaccinated People Test",
+        "shippable": 1,
+        "sku": "SYN-UK-PCR-SNS-002",
+        "sort_order": 4,
+        "sub_title": "+ Secure Online Consultation",
+        "tags": [
+          "dochq",
+          "ttr",
+          "phe",
+          "travelgp",
+          "inbound",
+          "postal_return"
+        ],
+        "title": "Day 2 PCR Test",
+        "type": "PCR",
+        "vat_exempt": 1,
+        "warehouse_item_name": "Day 2 PCR Test",
+        "weight": 0.075
+      }
+    ],
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1641912277,
+    "description": "If you are arriving in to the UK from a country not on the red list and you have been fully vaccinated* by a UK recognised vaccination programme you will require a Day 2 Covid-19 PCR test.",
+    "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.\n\nWe aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+    "id": 62,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "points": [
+      {
+        "colour": "doc-pink",
+        "id": 243,
+        "product_id": 62,
+        "text": "As per government guidelines, this item is not cancellable under any circumstances."
+      },
+      {
+        "colour": "doc-black",
+        "id": 244,
+        "product_id": 62,
+        "text": "Includes NGS (next generation sequencing) for variant surveillance on day 2"
+      },
+      {
+        "colour": "doc-black",
+        "id": 245,
+        "product_id": 62,
+        "text": "Certificates will be emailed once results have been processed by the laboratories"
+      }
+    ],
+    "price": 59,
+    "service": "Vaccinated People Test",
+    "shippable": 1,
+    "sku": "AMBER-V-BUNDLE",
+    "sort_order": 9,
+    "tags": [
+      "policy_3",
+      "ttr",
+      "phe",
+      "inbound",
+      "postal_return"
+    ],
+    "title": "Day 2 PCR Test Kit",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Amber list [Vaccinated]",
+    "weight": 0.075
+  },
+  {
+    "bookable": 1,
+    "bundle_children": [
+      {
+        "active": 1,
+        "bookable": 1,
+        "card_colour": "doc-green",
+        "country": "UK",
+        "created_at": 1638351771,
+        "description": "If you are arriving in to the UK and you have not been fully vaccinated* by a UK recognised vaccination programme, you will require a Day 2 Covid-19 PCR test.",
+        "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.\n\nWe aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+        "id": 13,
+        "lab": "synlab",
+        "out_of_stock": 1,
+        "price": 100,
+        "service": "Unvaccinated People Test",
+        "shippable": 1,
+        "sku": "SYN-UK-PCR-SNS-002",
+        "sort_order": 4,
+        "sub_title": "+ Secure Online Consultation",
+        "tags": [
+          "dochq",
+          "ttr",
+          "phe",
+          "travelgp",
+          "inbound",
+          "postal_return"
+        ],
+        "title": "Day 2 PCR Test",
+        "type": "PCR",
+        "vat_exempt": 1,
+        "warehouse_item_name": "Day 2 PCR Test",
+        "weight": 0.075
+      }
+    ],
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638351771,
+    "description": "If you are arriving in to the UK from a country not on the red list and you have been fully vaccinated* by a UK recognised vaccination programme you will require a Day 2 Covid-19 PCR test.",
+    "footer": "We aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+    "id": 63,
+    "lab": "synlab",
+    "out_of_stock": 1,
+    "points": [
+      {
+        "colour": "doc-pink",
+        "id": 246,
+        "product_id": 63,
+        "text": "As per government guidelines, this item is not cancellable under any circumstances."
+      },
+      {
+        "colour": "doc-black",
+        "id": 247,
+        "product_id": 63,
+        "text": "Includes NGS (next generation sequencing) for variant surveillance on day 2"
+      },
+      {
+        "colour": "doc-black",
+        "id": 248,
+        "product_id": 63,
+        "text": "Certificates will be emailed once results have been processed by the laboratories"
+      }
+    ],
+    "price": 89,
+    "service": "Vaccinated People Test",
+    "shippable": 1,
+    "sku": "AMBER-V-BUNDLE",
+    "sort_order": 9,
+    "tags": [
+      "dochq",
+      "ttr",
+      "travelgp",
+      "inbound",
+      "postal_return"
+    ],
+    "title": "Day 2 PCR Test Kit",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Amber list [Vaccinated]",
+    "weight": 0.075
   },
   {
     "active": 1,
@@ -770,7 +1263,6 @@
     "weight": 0.07
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -814,7 +1306,6 @@
     "weight": 0.025
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -840,7 +1331,6 @@
     "weight": 0.025
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -866,7 +1356,6 @@
     "weight": 0.025
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -1028,7 +1517,6 @@
     "weight": 0.025
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -1170,6 +1658,87 @@
     "type": "PCR",
     "vat_exempt": 1,
     "warehouse_item_name": "Day 2 PCR Oncologica day 2 PCR",
+    "weight": 0.075
+  },
+  {
+    "bookable": 1,
+    "bundle_children": [
+      {
+        "active": 1,
+        "bookable": 1,
+        "card_colour": "doc-green",
+        "country": "UK",
+        "created_at": 1638351771,
+        "description": "If you are arriving in to the UK and you have not been fully vaccinated* by a UK recognised vaccination programme, you will require a Day 2 Covid-19 PCR test.",
+        "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.\n\nWe aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+        "id": 13,
+        "lab": "synlab",
+        "out_of_stock": 1,
+        "price": 100,
+        "service": "Unvaccinated People Test",
+        "shippable": 1,
+        "sku": "SYN-UK-PCR-SNS-002",
+        "sort_order": 4,
+        "sub_title": "+ Secure Online Consultation",
+        "tags": [
+          "dochq",
+          "ttr",
+          "phe",
+          "travelgp",
+          "inbound",
+          "postal_return"
+        ],
+        "title": "Day 2 PCR Test",
+        "type": "PCR",
+        "vat_exempt": 1,
+        "warehouse_item_name": "Day 2 PCR Test",
+        "weight": 0.075
+      }
+    ],
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638382123,
+    "description": "If you are arriving in to the UK from a country not on the red list and you have been fully vaccinated* by a UK recognised vaccination programme you will require a Day 2 Covid-19 PCR test.",
+    "footer": "We aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
+    "id": 85,
+    "lab": "synlab",
+    "modified_at": 1638382610,
+    "out_of_stock": 1,
+    "points": [
+      {
+        "colour": "doc-pink",
+        "id": 27,
+        "product_id": 85,
+        "text": "As per government guidelines, this item is not cancellable under any circumstances."
+      },
+      {
+        "colour": "doc-black",
+        "id": 28,
+        "product_id": 85,
+        "text": "Includes NGS (next generation sequencing) for variant surveillance on day 2"
+      },
+      {
+        "colour": "doc-black",
+        "id": 29,
+        "product_id": 85,
+        "text": "Certificates will be emailed once results have been processed by the laboratories"
+      }
+    ],
+    "price": 59,
+    "service": "Vaccinated People Test ",
+    "shippable": 1,
+    "sku": "AMBER-V-BUNDLE",
+    "sort_order": 9,
+    "tags": [
+      "ttr",
+      "ofl",
+      "postal_return",
+      "ofl-shop"
+    ],
+    "title": "Day 2 PCR Test Kit",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Amber list [Vaccinated]",
     "weight": 0.075
   },
   {
@@ -1393,7 +1962,6 @@
     "weight": 0.025
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -1420,5 +1988,65 @@
     "vat_exempt": 1,
     "warehouse_item_name": "Antigen Kit",
     "weight": 0.025
+  },
+  {
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638201210,
+    "id": 93,
+    "lab": "synlab",
+    "price": 27.5,
+    "shippable": 1,
+    "sku": "DAY-2-UK-ANT-001",
+    "sort_order": 9,
+    "tags": [
+      ""
+    ],
+    "title": "Covid-19 Antigen Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638201210,
+    "id": 94,
+    "lab": "synlab",
+    "price": 27.5,
+    "shippable": 1,
+    "sku": "DAY-2-UK-ANT-001",
+    "sort_order": 9,
+    "tags": [
+      ""
+    ],
+    "title": "Covid-19 Antibody Test",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638201210,
+    "id": 95,
+    "lab": "synlab",
+    "price": 27.5,
+    "shippable": 1,
+    "sku": "SYN-UK-PCR-SNS-002",
+    "sort_order": 9,
+    "tags": [
+      ""
+    ],
+    "title": "Covid-19 PCR Test",
+    "type": "PCR",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Day 2 PCR Test",
+    "weight": 0.075
   }
 ]
