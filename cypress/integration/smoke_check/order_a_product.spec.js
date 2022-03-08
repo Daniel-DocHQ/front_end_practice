@@ -38,13 +38,17 @@ describe("B2C - Purchasing products", () => {
 	})
 
 	it('Number of kits match number of pessengers. Fields are functionall.', () => {
+		let products_sum = Order.get_products_sum()
 
 		if ((products_ids.length < 2) && (products_ids.includes('87'))) {
 			cy.wait(1500)
+		//} else if (products_ids.includes('64')) {
+		//	// Select total Number of Kits
+		//	Order.set_total_number_of_pessengers(products_sum/2);
+		//	cy.get('.green').contains('Next').click();
+		//	cy.wait(1500);
 		} else {
-			// Select total Number of Kits
 			Order.set_total_number_of_pessengers(1);
-
 			cy.get('.green').contains('Next').click();
 			cy.wait(1500);
 		}

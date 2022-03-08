@@ -32,6 +32,12 @@ export default class OrderPage {
 		return Object.keys(products_data);
 	}
 
+	get_products_sum() {
+		let prod_arr = Object.values(getNotNullItems(this.products_list))
+		const sum = prod_arr.reduce((partialSum, a) => partialSum + a, 0);
+		return sum;
+	}
+
 	get_checkout_page_link() {
 		// Get only not Null products from customize-test.json
 		products_data = getNotNullItems(this.products_list)
@@ -112,7 +118,7 @@ export default class OrderPage {
 				cy.get('input[name="SACounty"]').clear().fill(country)
 			} else {
 				cy.get('input[name="SACounty"]').clear().fill(country)
-				cy.get('input[name="SACountry"]').clear().fill(country)
+				cy.get($country2).clear().focus().type(`${country}{downarrow}{enter}`)
 			}
 		})
 		cy.get('#country-select').clear().type(`${country_code}{enter}`)
@@ -126,30 +132,30 @@ export default class OrderPage {
 		const card_num = "4111111111111111", card_expiry = "12/24", card_cvv = "123"
 
 		// ------------------------------------- Stripe iframe --------------------------------------------------
-		cy.get('iframe')
-			.eq(1)
-			.iframeLoaded()
-			.its('document')
-			.getInDocument('input[name="number"]').type(card_num)
+		//cy.get('iframe')
+		//	.eq(1)
+		//	.iframeLoaded()
+		//	.its('document')
+		//	.getInDocument('input[name="number"]').type(card_num)
 
-		cy.get('iframe')
-			.eq(1)
-			.iframeLoaded()
-			.its('document')
-			.getInDocument('input[name="expiry"]').type(card_expiry)
+		//cy.get('iframe')
+		//	.eq(1)
+		//	.iframeLoaded()
+		//	.its('document')
+		//	.getInDocument('input[name="expiry"]').type(card_expiry)
 
-		cy.get('iframe')
-			.eq(1)
-			.iframeLoaded()
-			.its('document')
-			.getInDocument('input[name="cvc"]').type(card_cvv)
+		//cy.get('iframe')
+		//	.eq(1)
+		//	.iframeLoaded()
+		//	.its('document')
+		//	.getInDocument('input[name="cvc"]').type(card_cvv)
 
 
-		/* ------------------------------------  Braintree iframe ------------------------------------------------
+		// ------------------------------------  Braintree iframe ------------------------------------------------
 		 cy.getIframe('#braintree-hosted-field-number').find('input[name="credit-card-number"]').fill(card_num)
 		 cy.getIframe('#braintree-hosted-field-expirationDate').find('input[name="expiration"]').fill(card_expiry)
 		 cy.getIframe('#braintree-hosted-field-cvv').find('input[name="cvv"]').fill(card_cvv) 
-		 ------------------------------------------------------------------------------------------------------- */
+		// ------------------------------------------------------------------------------------------------------- */
 	}
 
 

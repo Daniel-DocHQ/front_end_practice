@@ -8,36 +8,60 @@ import BookingPage from '../../page_objects/BookingPage.js'
 import OrderManagement from '../../page_objects/OrderManagePage'
 import {test_data} from '../../fixtures/customize_test.js'
 
+
 const Booking = new BookingPage(test_data);
 const OrderM = new OrderManagement(test_data[1].short_token);
 
-let app_date;
 
+//before(() => {
+//	Booking.get_recent_orders_data();
+//})
+
+let app_date;
+let products;
 // return short_token of last order OR use wanted short_token from order_list.json
 let token;
-let products;
+let total_products = 5;
 
-//if(test_data[1].short_token) {
-//	token = test_data[1].short_token;
-//	OrderM.get_order_details(token)
-//	products = OrderM.get_products_data(token);
-//	console.log(products)
-//} else {
-	token = Booking.get_short_token();
-	products = Booking.get_product_titles(token);
-	console.log(products)
-//}
+//***token = Booking.get_short_token();
+
+//*** products = Booking.get_product_titles(token);
+//***const products = Booking.get_bookbale_products_data(token);
+//***console.log(products)
 
 // returns last order products' titles
 
-let total_products = Object.keys(products).length;
 const custom_date = test_data[1].booking_date
 //let number_of_people = 1, user_index = 0;
 
-for(let prod_index = 0; prod_index < total_products; prod_index++) {
-describe(`B2C - Booking Appointment for ${Object.keys(products)[prod_index]}`, () => {
-		it('Check that booking page of is correct', () => {
 
+
+//	describe("Preparing Data for booking", () => { 				// for ${Object.keys(products)[prod_index]}
+//
+//		
+//		it("Awaiting orders' list for test", () => {
+//			cy.wait(2000)
+//			
+//		})
+//		
+//	})
+	before('get orders data', () => {
+		//Booking.get_recent_orders_data();
+		token = Booking.get_short_token();
+		//*** products = Booking.get_product_titles(token);
+		cy.request('GET', `https://api-staging.dochq.co.uk/v1/order/${token}/product?fulfilled=true`, { timeout: 5000 }).then((res) => {
+			products = res.body;
+			console.log(products)
+			total_products = Object.keys(products).length || 2;
+		})
+	})
+
+let prod_index = 0;
+
+	describe("Booking of Appointment", () => { 				// for ${Object.keys(products)[prod_index]}
+
+		it('Check that booking page of is correct', () => {
+			cy.wait(2000)
     		cy.intercept({method: 'GET', url: `https://api-staging.dochq.co.uk/v1/order/${token}`,}).as('booking_page')
     		cy.visit(`https://myhealth-staging.dochq.co.uk/b2c/book-appointment?short_token=${token}&service=video_gp_dochq`)
 			cy.wait(1500); cy.reload()
@@ -61,8 +85,10 @@ describe(`B2C - Booking Appointment for ${Object.keys(products)[prod_index]}`, (
 
 
 		it('Pick the product and select number of people to take the test', () => {
-			cy.log(products)
-			cy.get('.MuiFormControlLabel-root').contains(Object.keys(products)[prod_index]).then((prod_lable)=> {
+			if (!products[prod_index].quantity) prod_index++;
+
+			console.log(prod_index)
+			cy.get('.MuiFormControlLabel-root').contains(products[prod_index].title).then((prod_lable)=> {
 				// find and pick the product to book
 				cy.get(prod_lable).siblings().find('input[name="product"]').check()
 			})
@@ -72,7 +98,7 @@ describe(`B2C - Booking Appointment for ${Object.keys(products)[prod_index]}`, (
 				cy.get('input[name="selectedKit"]').focus().type('e{downarrow}{enter}')
 				
 			}else{
-				cy.get('#number-of-people').focus().clear().type(Object.values(products)[prod_index])
+				cy.get('#number-of-people').focus().clear().type(products[prod_index].quantity)
 			}
 
 			cy.get('.green').click()
@@ -85,12 +111,12 @@ describe(`B2C - Booking Appointment for ${Object.keys(products)[prod_index]}`, (
 			//`https://dochq-booking-api-staging.dochq.co.uk/?&service=video_gp_dochq&date=${date}`
       		//cy.intercept({method: 'GET', url: link},).as('app_slots')
 			
-			Booking.fill_travel_data(custom_date, prod_index)
+			Booking.fill_travel_data(custom_date, prod_index, products)
 			
       		cy.get('.green').click()
       		cy.wait(1500)
 
-      		app_date = Booking.pick_appointment_slot_and_get_booking_date(custom_date, prod_index)
+			app_date = Booking.pick_appointment_slot_and_get_booking_date(custom_date, prod_index, products)
 		
       		//cy.wait('@app_slots')
       		//cy.get('@app_slots').should( req => {
@@ -108,9 +134,9 @@ describe(`B2C - Booking Appointment for ${Object.keys(products)[prod_index]}`, (
 
 
 	  	it('Passenger details', () => {
-	    	for (let user_index = 0; user_index < Object.values(products)[prod_index]; user_index++) {
+				for (let user_index = 0; user_index < products[prod_index].quantity; user_index++) {
 
-				Booking.fill_pessengers_data(user_index, prod_index)
+				Booking.fill_pessengers_data(user_index, prod_index, products)
 
 
 	    		cy.get('.green').click()
@@ -120,10 +146,10 @@ describe(`B2C - Booking Appointment for ${Object.keys(products)[prod_index]}`, (
 
 		it('Accept T&C and Summary', () => {
 			
-    		cy.get("div > p").contains('Selected Product').parent().should('include.text', Object.keys(products)[prod_index])
+    		cy.get("div > p").contains('Selected Product').parent().should('include.text', products[prod_index].title)
     		//cy.get("div > p").contains('Appointment Date').parent().should('include.text', app_date)
 
-    		for (let user_index = 0; user_index < Object.values(products)[prod_index]; user_index++) {
+    		for (let user_index = 0; user_index < products[prod_index].quantity; user_index++) {
     			cy.get(`#passenger-name-${user_index+1}`).should('include.text', user.users[user_index].first_name+' '+user.users[user_index].last_name)
     			cy.get(`#passenger-email-${user_index+1} > p`).should('include.text', test_data[1].email) 								//user.users[user_index].email
     			cy.get(`#passenger-phone-${user_index+1}`).should('include.text', test_data[1].country_code+''+test_data[1].phone) 		//user.users[user_index].phone
@@ -141,9 +167,8 @@ describe(`B2C - Booking Appointment for ${Object.keys(products)[prod_index]}`, (
 
   		it('Booking confirmation', () => {
     		cy.get(':nth-child(1) > .no-margin').should("have.text","Your Appointment Has Been Booked")
+			if (Object.keys(products).length) Cypress.runner.stop()
   		})
-
 	
-})
+	})
 
-}

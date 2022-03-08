@@ -1,13 +1,14 @@
 import prod from '../fixtures/product_list.json'
 import user from '../fixtures/user.json'
-import order_data from '../fixtures/order_list.json'
+//*** import order_data from '../fixtures/order_list.json'
+import order_list from '../fixtures/order_list.json'
 import {addDays} from '../support/utils/utils.js'
 
 //import {test_data} from '../fixtures/customize_test.js'
 
 let number_of_people = 1, user_index = 0;
 
-let product_index = Object.keys(order_data).length - 1;
+//*** let product_index = Object.keys(order_data).length - 1;
 let product_titles = [];
 
 // if booking_date is set to "null" - default date will be today + day_from_today
@@ -19,10 +20,31 @@ export default class BookingPage{
 		this.test_params = test_data[1];
 	}
 
-	get_short_token() {
-		return Object.keys(order_data)[Object.keys(order_data).length - 1];
+	get_recent_orders_data(email = this.test_params.email, short_id = this.test_params.short_token, size = 50) {
+		if(email){				// get list of all recent orders by email
+			cy.request('GET', `https://api-staging.dochq.co.uk/v1/order?page=0&page_size=${size}&email=${email}`).then((response) => {
+				cy.writeFile('cypress/fixtures/order_list.json', response.body.orders);
+				console.log(response.body.orders)
+			})
+		} else if (short_id){	// get 1 particular order by short_id
+			cy.request('GET', `https://api-staging.dochq.co.uk/v1/order/${short_id}`).then((response) => {
+				cy.writeFile('cypress/fixtures/order_list.json', response.body.orders);
+				console.log(response.body.orders)
+			})
+		}else{					// get all orders by total amount
+			cy.request('GET', `https://api-staging.dochq.co.uk/v1/order?page=0&page_size=${size}`).then((response) => {
+				cy.writeFile('cypress/fixtures/order_list.json', response.body.orders);
+				console.log(response.body.orders)
+			})
+		}
 	}
 
+	get_short_token(order_index = 0) {
+		return order_list[order_index].short_token;
+		//*** return Object.keys(order_data)[Object.keys(order_data).length - 1];
+	}
+
+	/***
 	get_product_titles(short_token) {
 		//Get index of the short_token in the order_list.json object
 		const tokens = Object.keys(order_data);
@@ -44,12 +66,11 @@ export default class BookingPage{
 				product_titles.push(prod[products[i]].title[k])
 			}
 		}
-
+		
 		product_titles.forEach((key, i) => products_with_quantities[key] = quantities[i] || quantities[i-1]);
 		return products_with_quantities;
 	}
-
-
+	*/
 
 	// this is required to make appointment booking possible for any product
 	get_date_plus_day(custom_date, day_from_today = 0) { // 0 - today, 1 - tomorrow, 2 - aftertomorrow, etc.
@@ -71,10 +92,12 @@ export default class BookingPage{
 	}
 
 	
-	fill_travel_data(date, prod_index) {
-		let current_product = Object.keys(order_data[this.get_short_token()])[prod_index];
+	fill_travel_data(date, prod_index, products) {
+		//*** let current_product = Object.keys(order_data[this.get_short_token()])[prod_index];
+		let current_product = products[prod_index];
 		console.log(current_product);
-		let product_sku = prod[current_product].sku;
+		//*** let product_sku = prod[current_product].sku;
+		let product_sku = current_product.sku;
 		console.log(product_sku);
 		switch (product_sku) {
 		case "SYN-UK-PCR-SNS-002":
@@ -102,7 +125,7 @@ export default class BookingPage{
 			let departure_date = this.get_date_plus_day(date, 2);
 			cy.get('input[name="city"]').type(`${this.test_params.flight_timezone}{downarrow}{enter}`);
       		cy.get('input[name="travelDate"]').clear().fill(departure_date);
-			cy.get('input[name="transit"]').fill("transit_test");
+			//cy.get('input[name="transit"]').fill("transit_test");
 		} break;
 
 		case "DAY-2-US-ANT-001":   // Day 3 Antigen test
@@ -127,9 +150,12 @@ export default class BookingPage{
 
 
 
-	pick_appointment_slot_and_get_booking_date(date, prod_index) {
-		let current_product = Object.keys(order_data[this.get_short_token()])[prod_index];
-		let product_sku = prod[current_product].sku;
+	pick_appointment_slot_and_get_booking_date(date, prod_index, products) {
+		//*** let current_product = Object.keys(order_data[this.get_short_token()])[prod_index];
+		let current_product = products[prod_index];
+
+		//*** let product_sku = prod[current_product].sku;
+		let product_sku = current_product.sku;
 
 		switch (product_sku) {
 		case "SYN-UK-PCR-SNS-002":
@@ -169,7 +195,7 @@ export default class BookingPage{
 	}
 
 
-	fill_pessengers_data(user_index, prod_index){
+	fill_pessengers_data(user_index, prod_index, products){
 		const vaccine_name = user.users[user_index].vaccine.name;
 		const vaccine_shots = user.users[user_index].vaccine.shots;
 
@@ -184,8 +210,8 @@ export default class BookingPage{
 	    cy.get('#passport-number').fill(`23${user_index}5678`)
 	    cy.get('#passport-number-confirmation').fill(`23${user_index}5678`)
 		
-		let current_product = Object.keys(order_data[this.get_short_token()])[prod_index];
-		let product_sku = prod[current_product].sku;
+		let current_product = products[prod_index];
+		let product_sku = current_product.sku;
 
 		switch(product_sku){
 			case "DAY-2-UK-ANT-001":
