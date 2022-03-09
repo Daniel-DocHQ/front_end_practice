@@ -3,18 +3,18 @@
 export const test_data =
 	[
 		{ // IDs and quantity of products which will be added in the basket
-			"19": 						2, // "ftt_antigen_dochq":
+			"19": 						0, // "ftt_antigen_dochq":
 			"68": 						0, // "day2_ant_kit":
 			"12": 						0, // "ftt_pcr"
 			"63": 						0, // "day2_pcr_kit_dochq
-			"86": 						2, // "day3_ant_kit_dochq"
+			"86": 						0, // "day3_ant_kit_dochq"
 			"22": 						0, // "pre_dep_antigen_dochq"
 			"15": 						0, // "amber_bundle" (day2pcr + day8pcr)
 			"64":					    0, // "ant_consult" (buy with id-67)
 			"67": 						0, // "cov-19_certificate" (buy with id-64)
 			"80": 						0, // "ftt_antigen_ofl"
 			"39": 						0, // "pre_dep_antigen_ofl"
-			"82": 						0, // "day3_ant_kit_ofl"
+			"82": 						2, // "day3_ant_kit_ofl"
 			"85": 						0, // "day2_pcr_kit_ofl"
 		},
 		{ // Universal discount code

@@ -1753,25 +1753,25 @@
     "points": [
       {
         "colour": "doc-black",
-        "id": 264,
+        "id": 331,
         "product_id": 86,
         "text": "Supervised test approved for entry into the US"
       },
       {
         "colour": "doc-black",
-        "id": 265,
+        "id": 332,
         "product_id": 86,
         "text": "FDA approved test kits"
       },
       {
         "colour": "doc-black",
-        "id": 266,
+        "id": 333,
         "product_id": 86,
         "text": "Order your test before your trip and take it in your suitcase"
       },
       {
         "colour": "doc-black",
-        "id": 267,
+        "id": 334,
         "product_id": 86,
         "text": "Certificate via email in less than 30 minutes"
       }
@@ -1789,7 +1789,7 @@
       "outbound",
       "ctn-shop"
     ],
-    "title": "Day 3 Antigen Test  [US]",
+    "title": "Day 3 Antigen Test [US]",
     "type": "Antigen",
     "vat_exempt": 1,
     "warehouse_item_name": "Antigen Kit",
