@@ -11,6 +11,11 @@ console.log(products_ids)
 
 let url;
 
+before('get products data', () => {
+	Order.get_all_products_data()
+})
+
+
 describe("B2C - Purchasing products", () => {
 
 	it('Order page for the product is loaded successfully', () => {
