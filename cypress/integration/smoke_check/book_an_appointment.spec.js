@@ -13,10 +13,6 @@ const Booking = new BookingPage(test_data);
 const OrderM = new OrderManagement(test_data[1].short_token);
 
 
-//before(() => {
-//	Booking.get_recent_orders_data();
-//})
-
 let app_date;
 let products;
 // return short_token of last order OR use wanted short_token from order_list.json
@@ -35,18 +31,9 @@ const custom_date = test_data[1].booking_date
 //let number_of_people = 1, user_index = 0;
 
 
-
-//	describe("Preparing Data for booking", () => { 				// for ${Object.keys(products)[prod_index]}
-//
-//		
-//		it("Awaiting orders' list for test", () => {
-//			cy.wait(2000)
-//			
-//		})
-//		
-//	})
 	before('get orders data', () => {
-		//Booking.get_recent_orders_data();
+		Booking.get_recent_orders_data()
+
 		token = Booking.get_short_token();
 		//*** products = Booking.get_product_titles(token);
 		cy.request('GET', `https://api-staging.dochq.co.uk/v1/order/${token}/product?fulfilled=true`, { timeout: 5000 }).then((res) => {
@@ -58,7 +45,7 @@ const custom_date = test_data[1].booking_date
 
 let prod_index = 0;
 
-	describe("Booking of Appointment", () => { 				// for ${Object.keys(products)[prod_index]}
+	describe("Booking of Appointment", () => { 
 
 		it('Check that booking page of is correct', () => {
 			cy.wait(2000)
@@ -85,7 +72,7 @@ let prod_index = 0;
 
 
 		it('Pick the product and select number of people to take the test', () => {
-			if (!products[prod_index].quantity) prod_index++;
+			if (!products[prod_index].quantity) prod_index++; // if product is already booked, move to the next product
 
 			console.log(prod_index)
 			cy.get('.MuiFormControlLabel-root').contains(products[prod_index].title).then((prod_lable)=> {
@@ -107,9 +94,6 @@ let prod_index = 0;
 
 
 		it('Travel Details & Picking an appointment slot', () => {
-			//let link = Booking.get_app_slots_request_link(custom_date)
-			//`https://dochq-booking-api-staging.dochq.co.uk/?&service=video_gp_dochq&date=${date}`
-      		//cy.intercept({method: 'GET', url: link},).as('app_slots')
 			
 			Booking.fill_travel_data(custom_date, prod_index, products)
 			
@@ -117,16 +101,6 @@ let prod_index = 0;
       		cy.wait(1500)
 
 			app_date = Booking.pick_appointment_slot_and_get_booking_date(custom_date, prod_index, products)
-		
-      		//cy.wait('@app_slots')
-      		//cy.get('@app_slots').should( req => {
-      		//  expect(req.response.body).to.not.be.null;
-      		//  expect(req.response.headers['content-type']).eq('application/json')
-      		//  if (req.response.statusCode != 200 && expect(req.response.body.message).eq("Not enough results returned"))
-      		//    throw new Error("Check availability of slots")
-      		//  else
-      		//    cy.get('.appointment-slot-container').find('div.slot-container > div').first().click({force: true})
-      		//})
 
       		cy.get('.green').contains("Confirm").click()
       		cy.wait(1500)
@@ -134,10 +108,9 @@ let prod_index = 0;
 
 
 	  	it('Passenger details', () => {
-				for (let user_index = 0; user_index < products[prod_index].quantity; user_index++) {
+			for (let user_index = 0; user_index < products[prod_index].quantity; user_index++) {
 
 				Booking.fill_pessengers_data(user_index, prod_index, products)
-
 
 	    		cy.get('.green').click()
 	    		cy.wait(1500)
