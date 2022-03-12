@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 console.log('Hello');
 
 async function start() {
