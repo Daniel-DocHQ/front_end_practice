@@ -10,7 +10,10 @@
 		"indent": "off",
 		"no-tabs": "off",
 		"quotes": "off",
-		"no-trailing-spaces": "off"
+		"no-trailing-spaces": "off",
+		"comma-dangle": "off",
+		"arrow-parens": "off",
+		"require-jsdoc": "off"
 		
 	},
 	"extends": ["eslint:recommended", "google"]
