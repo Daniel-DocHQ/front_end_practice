@@ -3,7 +3,7 @@
 export const test_data =
 	[
 		{ // IDs and quantity of products which will be added in the basket
-			"19": 						0, // "ftt_antigen_dochq":
+			"19": 						1, // "ftt_antigen_dochq":
 			"68": 						0, // "day2_ant_kit":
 			"12": 						0, // "ftt_pcr"
 			"63": 						0, // "day2_pcr_kit_dochq
@@ -14,7 +14,7 @@ export const test_data =
 			"67": 						0, // "cov-19_certificate" (buy with id-64)
 			"80": 						0, // "ftt_antigen_ofl"
 			"39": 						0, // "pre_dep_antigen_ofl"
-			"82": 						2, // "day3_ant_kit_ofl"
+			"82": 						0, // "day3_ant_kit_ofl"
 			"85": 						0, // "day2_pcr_kit_ofl"
 		},
 		{ // Universal discount code
@@ -27,7 +27,7 @@ export const test_data =
 			"shop_source": 				"dochq",
 			"flight_timezone": 			"London, United Kingdom", //default is London, United Kingdom
 			// Paste your date in format 'dd/mm/yyyy' (make sure shifts are open for this date)
-			"booking_date": 			"03-09-2022",
+			"booking_date": 			"03-17-2022",
 			"vaccine_status": 			"yes"
 		}
 	]
