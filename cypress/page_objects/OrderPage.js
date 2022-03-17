@@ -131,33 +131,37 @@ export default class OrderPage {
 
 		const card_num = "4111111111111111", card_expiry = "12/24", card_cvv = "123"
 
-		// ------------------------------------- Stripe iframe --------------------------------------------------
-		//cy.get('iframe')
-		//	.eq(1)
-		//	.iframeLoaded()
-		//	.its('document')
-		//	.getInDocument('input[name="number"]').type(card_num)
+		cy.get("#payment-iframe").then(($payment) => {
+		
+			if($payment.find("#braintree-iframe").length > 0) {
+				// ------------------------------------  Braintree iframe ------------------------------------------------
+				cy.getIframe('#braintree-hosted-field-number').find('input[name="credit-card-number"]').fill(card_num)
+				cy.getIframe('#braintree-hosted-field-expirationDate').find('input[name="expiration"]').fill(card_expiry)
+				cy.getIframe('#braintree-hosted-field-cvv').find('input[name="cvv"]').fill(card_cvv)
 
-		//cy.get('iframe')
-		//	.eq(1)
-		//	.iframeLoaded()
-		//	.its('document')
-		//	.getInDocument('input[name="expiry"]').type(card_expiry)
-
-		//cy.get('iframe')
-		//	.eq(1)
-		//	.iframeLoaded()
-		//	.its('document')
-		//	.getInDocument('input[name="cvc"]').type(card_cvv)
-
-
-		// ------------------------------------  Braintree iframe ------------------------------------------------
-		 cy.getIframe('#braintree-hosted-field-number').find('input[name="credit-card-number"]').fill(card_num)
-		 cy.getIframe('#braintree-hosted-field-expirationDate').find('input[name="expiration"]').fill(card_expiry)
-		 cy.getIframe('#braintree-hosted-field-cvv').find('input[name="cvv"]').fill(card_cvv) 
-		// ------------------------------------------------------------------------------------------------------- */
+			} else {
+				// ------------------------------------- Stripe iframe --------------------------------------------------
+				cy.get('iframe')
+					.eq(1)
+					.iframeLoaded()
+					.its('document')
+					.getInDocument('input[name="number"]').type(card_num)
+			
+				cy.get('iframe')
+					.eq(1)
+					.iframeLoaded()
+					.its('document')
+					.getInDocument('input[name="expiry"]').type(card_expiry)
+			
+				cy.get('iframe')
+					.eq(1)
+					.iframeLoaded()
+					.its('document')
+					.getInDocument('input[name="cvc"]').type(card_cvv)
+			}
+			
+		})
 	}
-
 
 	// Writing short-token and prosucts names with quantities to 
 	// order_list.json file for further use in booking appointment tests.
