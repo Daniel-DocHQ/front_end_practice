@@ -1,5 +1,31 @@
-$red: rgb(255, 38, 0);
- 
+//@import "normalize.css";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,500;1,100;1,300;1,500&display=swap');
+
+@import "components/header.scss";
+@import "components/toolbar.scss";
+@import "components/formula.scss";
+@import "components/table.scss";
+@import "components/dashboard.scss";
+
+//* {
+//	margin: 0;
+//	padding: 0;
+//	box-sizing: border-box;
+//	border: 0.5px solid red;
+//}
+
 body {
-	background: green;
+	margin: 0;
+	padding: 0;
+	font-family: 'Roboto', sans-serif;
+	font-size: 12px;
+	//box-sizing: border-box;
 }
+
+.excel {
+	color:#888;
+	position: relative;
+	height: 100%;
+	max-width: 100%;
+}
+ 
