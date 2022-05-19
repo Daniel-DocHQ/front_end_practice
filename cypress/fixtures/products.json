@@ -13,7 +13,6 @@
     "sort_order": 9,
     "tags": [
       "dochq",
-      "travelgp",
       "postal_return"
     ],
     "title": "SynLab UK PCR Swab",
@@ -24,17 +23,18 @@
   },
   {
     "bookable": 1,
+    "card_colour": "doc-green",
     "country": "UK",
     "description": "Healgen Rapid Antigen Test",
     "id": 8,
     "lab": "healgen",
+    "out_of_stock": 1,
     "price": 35,
     "shippable": 1,
     "sku": "HGN-UK-ANT-SNS-001",
     "sort_order": 9,
     "tags": [
-      "dochq",
-      "travelgp"
+      "dochq"
     ],
     "title": "Healgen Rapid Antigen Test",
     "type": "Antigen",
@@ -45,6 +45,7 @@
   {
     "active": 1,
     "bookable": 1,
+    "card_colour": "doc-green",
     "country": "UK",
     "description": "FlowFlex Rapid Antigen Test",
     "id": 9,
@@ -77,13 +78,13 @@
     "points": [
       {
         "colour": "doc-black",
-        "id": 261,
+        "id": 352,
         "product_id": 12,
         "text": "Not suitable for test time windows of 48 hours or less"
       },
       {
         "colour": "doc-black",
-        "id": 262,
+        "id": 353,
         "product_id": 12,
         "text": "Fit to travel certificate will be issued once negative results are reported by the laboratory"
       }
@@ -101,7 +102,8 @@
       "travelgp",
       "outbound",
       "postal_return",
-      "ctn-shop"
+      "ctn-shop",
+      "before_flight"
     ],
     "title": "Fit to Travel PCR Test",
     "type": "PCR",
@@ -110,7 +112,6 @@
     "weight": 0.075
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -123,19 +124,19 @@
     "points": [
       {
         "colour": "doc-pink",
-        "id": 328,
+        "id": 374,
         "product_id": 13,
         "text": "As per government guidelines, this item is not cancellable under any circumstances"
       },
       {
         "colour": "doc-black",
-        "id": 329,
+        "id": 375,
         "product_id": 13,
         "text": "Includes NGS (next generation sequencing) for variant surveillance on day 2)"
       },
       {
         "colour": "doc-black",
-        "id": 330,
+        "id": 376,
         "product_id": 13,
         "text": "Certificates will be emailed once results have been processed by the laboratories"
       }
@@ -150,9 +151,10 @@
       "dochq",
       "ttr",
       "phe",
-      "travelgp",
       "inbound",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 PCR Test",
     "type": "PCR",
@@ -161,6 +163,7 @@
     "weight": 0.075
   },
   {
+    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -177,8 +180,9 @@
       "dochq",
       "ttr",
       "phe",
-      "travelgp",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 8 PCR Test",
     "type": "PCR",
@@ -187,10 +191,10 @@
     "weight": 0.075
   },
   {
+    "active": 1,
     "bookable": 1,
     "bundle_children": [
       {
-        "active": 1,
         "bookable": 1,
         "card_colour": "doc-green",
         "country": "UK",
@@ -210,9 +214,10 @@
           "dochq",
           "ttr",
           "phe",
-          "travelgp",
           "inbound",
-          "postal_return"
+          "postal_return",
+          "additional_info",
+          "after_flight"
         ],
         "title": "Day 2 PCR Test",
         "type": "PCR",
@@ -221,6 +226,7 @@
         "weight": 0.075
       },
       {
+        "active": 1,
         "bookable": 1,
         "card_colour": "doc-green",
         "country": "UK",
@@ -237,8 +243,9 @@
           "dochq",
           "ttr",
           "phe",
-          "travelgp",
-          "postal_return"
+          "postal_return",
+          "additional_info",
+          "after_flight"
         ],
         "title": "Day 8 PCR Test",
         "type": "PCR",
@@ -255,22 +262,23 @@
     "id": 15,
     "lab": "synlab",
     "modified_at": 1634912300,
+    "out_of_stock": 1,
     "points": [
       {
         "colour": "doc-pink",
-        "id": 305,
+        "id": 371,
         "product_id": 15,
         "text": "As per government guidelines, this item is not cancellable under any circumstances."
       },
       {
         "colour": "doc-black",
-        "id": 306,
+        "id": 372,
         "product_id": 15,
         "text": "Includes NGS (next generation sequencing) for variant surveillance on day 2"
       },
       {
         "colour": "doc-black",
-        "id": 307,
+        "id": 373,
         "product_id": 15,
         "text": "Certificates will be emailed once results have been processed by the laboratories"
       }
@@ -286,10 +294,11 @@
       "ttr",
       "phe",
       "day2",
-      "travelgp",
       "inbound",
       "postal_return",
-      "ctn-shop"
+      "ctn-shop",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 + 8 PCR Test",
     "type": "Bundle",
@@ -308,7 +317,7 @@
     "points": [
       {
         "colour": "doc-black",
-        "id": 289,
+        "id": 354,
         "product_id": 19,
         "text": "Certificate via email in under 30 minutes"
       }
@@ -324,7 +333,8 @@
       "ftf",
       "travelgp",
       "outbound",
-      "ctn-shop"
+      "ctn-shop",
+      "before_flight"
     ],
     "title": "Fit to Travel Antigen Test",
     "type": "Antigen",
@@ -344,13 +354,13 @@
     "points": [
       {
         "colour": "doc-black",
-        "id": 274,
+        "id": 361,
         "product_id": 22,
         "text": "Order your test before your trip and take it in your suitcase"
       },
       {
         "colour": "doc-black",
-        "id": 275,
+        "id": 362,
         "product_id": 22,
         "text": "Certificate via email in under 30 minutes"
       }
@@ -366,7 +376,9 @@
       "ftf",
       "travelgp",
       "inbound",
-      "ctn-shop"
+      "ctn-shop",
+      "additional_info",
+      "before_flight"
     ],
     "title": "Pre Departure Antigen Test [to UK]",
     "type": "Antigen",
@@ -375,9 +387,11 @@
     "weight": 0.025
   },
   {
+    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
+    "created_at": 1652966377,
     "description": "SynLab UK PCR Swab",
     "id": 26,
     "lab": "synlab",
@@ -390,8 +404,9 @@
       "dochq",
       "ttr",
       "phe",
-      "travelgp",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Test to Release PCR Test",
     "type": "PCR",
@@ -433,7 +448,8 @@
       "policy_1",
       "ftf",
       "outbound",
-      "postal_return"
+      "postal_return",
+      "before_flight"
     ],
     "title": "Fit to Travel PCR Test",
     "type": "PCR",
@@ -475,7 +491,8 @@
       "policy_2",
       "ftf",
       "outbound",
-      "postal_return"
+      "postal_return",
+      "before_flight"
     ],
     "title": "Fit to Travel PCR Test",
     "type": "PCR",
@@ -517,7 +534,8 @@
       "policy_3",
       "ftf",
       "outbound",
-      "postal_return"
+      "postal_return",
+      "before_flight"
     ],
     "title": "Fit to Travel PCR Test ",
     "type": "PCR",
@@ -526,7 +544,6 @@
     "weight": 0.075
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -551,7 +568,6 @@
     "weight": 0.025
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -576,7 +592,6 @@
     "weight": 0.025
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -634,7 +649,8 @@
     "tags": [
       "policy_1",
       "ftf",
-      "outbound"
+      "outbound",
+      "before_flight"
     ],
     "title": "Fit to Travel Antigen Test",
     "type": "Antigen",
@@ -659,7 +675,8 @@
     "tags": [
       "policy_2",
       "ftf",
-      "outbound"
+      "outbound",
+      "before_flight"
     ],
     "title": "Fit to Travel Antigen Test",
     "type": "Antigen",
@@ -693,7 +710,8 @@
     "tags": [
       "policy_3",
       "ftf",
-      "outbound"
+      "outbound",
+      "before_flight"
     ],
     "title": "Fit to Travel Antigen Test",
     "type": "Antigen",
@@ -702,7 +720,6 @@
     "weight": 0.025
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -719,7 +736,9 @@
       "ttr",
       "phe",
       "inbound",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 PCR Test",
     "type": "PCR",
@@ -728,7 +747,6 @@
     "weight": 0.075
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -745,7 +763,9 @@
       "ttr",
       "phe",
       "inbound",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 PCR Test",
     "type": "PCR",
@@ -770,7 +790,9 @@
       "ttr",
       "phe",
       "inbound",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 PCR Test",
     "type": "PCR",
@@ -870,6 +892,7 @@
   {
     "active": 1,
     "bookable": 1,
+    "card_colour": "doc-green",
     "country": "UK",
     "created_at": 1638969433,
     "description": "Rebook Antigen Test",
@@ -880,7 +903,10 @@
     "sku": "RECONSULT-ANT",
     "sort_order": 9,
     "tags": [
-      "ttr"
+      "ftf",
+      "travelgp",
+      "outbound",
+      "before_flight"
     ],
     "title": "Antigen Video Consultation",
     "type": "Antigen",
@@ -892,7 +918,6 @@
     "bookable": 1,
     "bundle_children": [
       {
-        "active": 1,
         "bookable": 1,
         "card_colour": "doc-green",
         "country": "UK",
@@ -912,9 +937,10 @@
           "dochq",
           "ttr",
           "phe",
-          "travelgp",
           "inbound",
-          "postal_return"
+          "postal_return",
+          "additional_info",
+          "after_flight"
         ],
         "title": "Day 2 PCR Test",
         "type": "PCR",
@@ -938,7 +964,9 @@
       "ttr",
       "phe",
       "inbound",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 PCR Test Kit",
     "type": "PCR",
@@ -950,7 +978,6 @@
     "bookable": 1,
     "bundle_children": [
       {
-        "active": 1,
         "bookable": 1,
         "card_colour": "doc-green",
         "country": "UK",
@@ -970,9 +997,10 @@
           "dochq",
           "ttr",
           "phe",
-          "travelgp",
           "inbound",
-          "postal_return"
+          "postal_return",
+          "additional_info",
+          "after_flight"
         ],
         "title": "Day 2 PCR Test",
         "type": "PCR",
@@ -996,7 +1024,9 @@
       "ttr",
       "phe",
       "inbound",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 PCR Test Kit",
     "type": "PCR",
@@ -1008,7 +1038,6 @@
     "bookable": 1,
     "bundle_children": [
       {
-        "active": 1,
         "bookable": 1,
         "card_colour": "doc-green",
         "country": "UK",
@@ -1028,9 +1057,10 @@
           "dochq",
           "ttr",
           "phe",
-          "travelgp",
           "inbound",
-          "postal_return"
+          "postal_return",
+          "additional_info",
+          "after_flight"
         ],
         "title": "Day 2 PCR Test",
         "type": "PCR",
@@ -1050,19 +1080,19 @@
     "points": [
       {
         "colour": "doc-pink",
-        "id": 243,
+        "id": 377,
         "product_id": 62,
         "text": "As per government guidelines, this item is not cancellable under any circumstances."
       },
       {
         "colour": "doc-black",
-        "id": 244,
+        "id": 378,
         "product_id": 62,
         "text": "Includes NGS (next generation sequencing) for variant surveillance on day 2"
       },
       {
         "colour": "doc-black",
-        "id": 245,
+        "id": 379,
         "product_id": 62,
         "text": "Certificates will be emailed once results have been processed by the laboratories"
       }
@@ -1077,7 +1107,9 @@
       "ttr",
       "phe",
       "inbound",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 PCR Test Kit",
     "type": "PCR",
@@ -1086,10 +1118,10 @@
     "weight": 0.075
   },
   {
+    "active": 1,
     "bookable": 1,
     "bundle_children": [
       {
-        "active": 1,
         "bookable": 1,
         "card_colour": "doc-green",
         "country": "UK",
@@ -1109,9 +1141,10 @@
           "dochq",
           "ttr",
           "phe",
-          "travelgp",
           "inbound",
-          "postal_return"
+          "postal_return",
+          "additional_info",
+          "after_flight"
         ],
         "title": "Day 2 PCR Test",
         "type": "PCR",
@@ -1127,23 +1160,22 @@
     "footer": "We aim to provide results 24 hours after receiving samples at the lab, however, we can not accept responsibility for delays caused by Royal Mail.",
     "id": 63,
     "lab": "synlab",
-    "out_of_stock": 1,
     "points": [
       {
         "colour": "doc-pink",
-        "id": 246,
+        "id": 368,
         "product_id": 63,
         "text": "As per government guidelines, this item is not cancellable under any circumstances."
       },
       {
         "colour": "doc-black",
-        "id": 247,
+        "id": 369,
         "product_id": 63,
         "text": "Includes NGS (next generation sequencing) for variant surveillance on day 2"
       },
       {
         "colour": "doc-black",
-        "id": 248,
+        "id": 370,
         "product_id": 63,
         "text": "Certificates will be emailed once results have been processed by the laboratories"
       }
@@ -1156,9 +1188,10 @@
     "tags": [
       "dochq",
       "ttr",
-      "travelgp",
       "inbound",
-      "postal_return"
+      "postal_return",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 PCR Test Kit",
     "type": "PCR",
@@ -1179,13 +1212,13 @@
     "points": [
       {
         "colour": "doc-black",
-        "id": 308,
+        "id": 355,
         "product_id": 64,
         "text": "NHS test kits cannot be used"
       },
       {
         "colour": "doc-black",
-        "id": 309,
+        "id": 356,
         "product_id": 64,
         "text": "Certificate via email in under 30 minutes"
       }
@@ -1204,7 +1237,7 @@
       "travelgp",
       "outbound",
       "ofl-shop",
-      "gtc-shop"
+      "before_flight"
     ],
     "title": "Antigen Consultation",
     "type": "Antigen",
@@ -1220,7 +1253,7 @@
     "description": "AGIS Face Mask",
     "discount_exempt": 1,
     "id": 66,
-    "price": 3.12,
+    "price": 3.9,
     "shippable": 1,
     "sku": "AGIS-FACE-MASK",
     "sort_order": 9,
@@ -1254,7 +1287,7 @@
       "travelgp",
       "ofl-shop",
       "ctn-shop",
-      "gtc-shop"
+      "before_flight"
     ],
     "title": "COVID-19 Test Certificate",
     "type": "Certificate",
@@ -1263,6 +1296,7 @@
     "weight": 0.07
   },
   {
+    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
@@ -1274,13 +1308,13 @@
     "points": [
       {
         "colour": "doc-pink",
-        "id": 276,
+        "id": 363,
         "product_id": 68,
         "text": "As per government guidelines, this item is not cancellable under any circumstances."
       },
       {
         "colour": "doc-black",
-        "id": 277,
+        "id": 364,
         "product_id": 68,
         "text": "Certificate via email in under 30 minutes"
       }
@@ -1297,7 +1331,9 @@
       "day2",
       "travelgp",
       "inbound",
-      "ctn-shop"
+      "ctn-shop",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 Antigen Test [UK]",
     "type": "Antigen",
@@ -1408,7 +1444,9 @@
     "sku": "RECONSULT-ANT-DAY-2",
     "sort_order": 9,
     "tags": [
-      "ttr"
+      "ttr",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 Antigen Video Consultation",
     "type": "Antigen",
@@ -1451,7 +1489,8 @@
     "sku": "DAY-2-US-ANT-001",
     "sort_order": 9,
     "tags": [
-      ""
+      "day3",
+      "after_flight"
     ],
     "title": "Day 3 Antigen Test [US]",
     "type": "Antigen",
@@ -1474,7 +1513,8 @@
     "tags": [
       "ofl",
       "day3",
-      "travelgp"
+      "travelgp",
+      "after_flight"
     ],
     "title": "Day 3 Antigen Test [US] Reconsultation",
     "type": "Antigen",
@@ -1508,7 +1548,8 @@
     "tags": [
       "ftf",
       "ofl",
-      "ofl-shop"
+      "ofl-shop",
+      "before_flight"
     ],
     "title": "Fit to Travel Antigen Test",
     "type": "Antigen",
@@ -1568,25 +1609,25 @@
     "points": [
       {
         "colour": "doc-black",
-        "id": 204,
+        "id": 339,
         "product_id": 82,
         "text": "Supervised test approved for entry into the US"
       },
       {
         "colour": "doc-black",
-        "id": 205,
+        "id": 340,
         "product_id": 82,
         "text": "FDA approved test kits"
       },
       {
         "colour": "doc-black",
-        "id": 206,
+        "id": 341,
         "product_id": 82,
         "text": "Order your test before your trip and take it in your suitcase"
       },
       {
         "colour": "doc-black",
-        "id": 207,
+        "id": 342,
         "product_id": 82,
         "text": "Certificate via email in under 30 minutes"
       }
@@ -1602,7 +1643,8 @@
       "day3",
       "travelgp",
       "outbound",
-      "ofl-shop"
+      "ofl-shop",
+      "after_flight"
     ],
     "title": "Day 3 Antigen Test [US]",
     "type": "Antigen",
@@ -1624,7 +1666,9 @@
     "sort_order": 9,
     "tags": [
       "ttr",
-      "day2"
+      "day2",
+      "additional_info",
+      "after_flight"
     ],
     "title": "Day 2 PCR Reconsultaiton",
     "type": "PCR",
@@ -1664,7 +1708,6 @@
     "bookable": 1,
     "bundle_children": [
       {
-        "active": 1,
         "bookable": 1,
         "card_colour": "doc-green",
         "country": "UK",
@@ -1684,9 +1727,10 @@
           "dochq",
           "ttr",
           "phe",
-          "travelgp",
           "inbound",
-          "postal_return"
+          "postal_return",
+          "additional_info",
+          "after_flight"
         ],
         "title": "Day 2 PCR Test",
         "type": "PCR",
@@ -1753,25 +1797,25 @@
     "points": [
       {
         "colour": "doc-black",
-        "id": 331,
+        "id": 357,
         "product_id": 86,
         "text": "Supervised test approved for entry into the US"
       },
       {
         "colour": "doc-black",
-        "id": 332,
+        "id": 358,
         "product_id": 86,
         "text": "FDA approved test kits"
       },
       {
         "colour": "doc-black",
-        "id": 333,
+        "id": 359,
         "product_id": 86,
         "text": "Order your test before your trip and take it in your suitcase"
       },
       {
         "colour": "doc-black",
-        "id": 334,
+        "id": 360,
         "product_id": 86,
         "text": "Certificate via email in less than 30 minutes"
       }
@@ -1787,7 +1831,8 @@
       "day3",
       "travelgp",
       "outbound",
-      "ctn-shop"
+      "ctn-shop",
+      "after_flight"
     ],
     "title": "Day 3 Antigen Test [US]",
     "type": "Antigen",
@@ -1832,8 +1877,7 @@
       "dochq",
       "travelgp",
       "outbound",
-      "ctn-shop",
-      "amex-shop"
+      "ctn-shop"
     ],
     "title": "Pack of 5 Antigen tests",
     "type": "Standalone",
@@ -1872,7 +1916,8 @@
     "tags": [
       "ftf",
       "outbound",
-      "ctn-shop"
+      "ctn-shop",
+      "before_flight"
     ],
     "title": "Antigen Consultation",
     "type": "Antigen",
@@ -1887,6 +1932,7 @@
     "country": "UK",
     "created_at": 1638360463,
     "description": "This test is required by some countries and some airlines prior to departing from the UK.",
+    "discount_exempt": 1,
     "id": 89,
     "lab": "synlab",
     "price": 25,
@@ -1897,9 +1943,9 @@
     "sub_title": "+ Secure Online Consultation",
     "tags": [
       "ftf",
-      "travelgp",
       "outbound",
-      "gtc-shop"
+      "gtc-shop",
+      "before_flight"
     ],
     "title": "Fit to Travel Antigen Test",
     "type": "Antigen",
@@ -1914,6 +1960,7 @@
     "country": "US",
     "created_at": 1638887703,
     "description": "This test is required by people after landing in the US.",
+    "discount_exempt": 1,
     "id": 90,
     "lab": "synlab",
     "price": 25,
@@ -1924,9 +1971,9 @@
     "sub_title": "+ Secure Online Consultation",
     "tags": [
       "day3",
-      "travelgp",
       "outbound",
-      "gtc-shop"
+      "gtc-shop",
+      "after_flight"
     ],
     "title": "Day 3 Antigen Test  [US]",
     "type": "Antigen",
@@ -1935,14 +1982,15 @@
     "weight": 0.025
   },
   {
-    "active": 1,
     "bookable": 1,
     "card_colour": "doc-green",
     "country": "UK",
     "created_at": 1638372199,
     "description": "This test is required by all people travelling to UK that not vaccinated and above 18 years old.",
+    "discount_exempt": 1,
     "id": 91,
     "lab": "synlab",
+    "out_of_stock": 1,
     "price": 25,
     "service": "Unvaccinated People Test ",
     "shippable": 1,
@@ -1951,8 +1999,6 @@
     "sub_title": "+ Secure Online Consultation",
     "tags": [
       "ftf",
-      "travelgp",
-      "inbound",
       "gtc-shop"
     ],
     "title": "Pre Departure Antigen Test [to UK]",
@@ -1967,6 +2013,7 @@
     "country": "UK",
     "created_at": 1638201210,
     "description": "If you are arriving in to the UK from a country not on the red list and you have been fully vaccinated* by a UK recognised vaccination programme you will require a Day 2 Covid-19 Antigen test.",
+    "discount_exempt": 1,
     "footer": "*You are considered fully vaccinated only 14 days after you have completed your vaccination course.",
     "id": 92,
     "lab": "synlab",
@@ -1979,7 +2026,6 @@
     "tags": [
       "ttr",
       "day2",
-      "travelgp",
       "inbound",
       "gtc-shop"
     ],
@@ -2048,5 +2094,94 @@
     "vat_exempt": 1,
     "warehouse_item_name": "Day 2 PCR Test",
     "weight": 0.075
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638381102,
+    "description": "COVID-19 Test Certificate",
+    "id": 96,
+    "price": 6,
+    "sku": "COVID-TEST-CERTIFICATE",
+    "sort_order": 9,
+    "tags": [
+      "gtc-shop",
+      "before_flight"
+    ],
+    "title": "COVID-19 Test Certificate (GTC)",
+    "type": "Certificate",
+    "vat_exempt": 1,
+    "warehouse_item_name": "COVID-19 Test Certificate",
+    "weight": 0.07
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-light-pink",
+    "country": "UK",
+    "created_at": 1638381102,
+    "description": "Do you already have your own test kit?\nBook your online consultation to get your Fit to Travel certificate.",
+    "footer": "*Do not purchase this service if your kit is not on the UK and EU approved kits list.",
+    "id": 97,
+    "lab": "synlab",
+    "price": 12,
+    "service": "Fit to Travel",
+    "sku": "CONSULT-ANT",
+    "sort_order": 9,
+    "tags": [
+      "outbound",
+      "gtc-shop"
+    ],
+    "title": "Antigen Consultation (GTC)",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-light-pink",
+    "country": "UK",
+    "created_at": 1638381102,
+    "description": "Do you already have your own test kit?\nBook your online consultation to get your Fit to Travel certificate.",
+    "footer": " ",
+    "id": 98,
+    "lab": "synlab",
+    "price": 19,
+    "service": "Fit to Travel",
+    "sku": "CONSULT-ANT",
+    "sort_order": 9,
+    "tags": [
+      "ftf",
+      "dochq-us"
+    ],
+    "title": "Antigen Consultation",
+    "type": "Antigen",
+    "vat_exempt": 1,
+    "warehouse_item_name": "Antigen Kit",
+    "weight": 0.025
+  },
+  {
+    "active": 1,
+    "bookable": 1,
+    "card_colour": "doc-green",
+    "country": "UK",
+    "created_at": 1638381102,
+    "description": "COVID-19 Test Certificate",
+    "id": 99,
+    "price": 10,
+    "sku": "COVID-TEST-CERTIFICATE",
+    "sort_order": 9,
+    "tags": [
+      "dochq-us"
+    ],
+    "title": "COVID-19 Test Certificate",
+    "type": "Certificate",
+    "vat_exempt": 1,
+    "warehouse_item_name": "COVID-19 Test Certificate",
+    "weight": 0.07
   }
 ]

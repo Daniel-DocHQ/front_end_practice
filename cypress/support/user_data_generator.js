@@ -4,6 +4,7 @@ let chance = new Chance(Math.random);
 let num_users = 10
 let vaccine_types = ['Moderna', 'Pfizer', 'Astrazeneca', 'Johnson & Johnson', 'Sputnik']
 let vaccine_shots = ['One dose of vaccine', 'Two doses of vaccine']
+let certificate_results = ['Positive', 'Negative', 'Invalid', 'Rejected']
 let users_arr = new Array(num_users).fill().map(function() {
     return {
         first_name: chance["first"](),
@@ -28,7 +29,8 @@ let users_arr = new Array(num_users).fill().map(function() {
         vaccine: {
             name: vaccine_types[Math.floor(Math.random() * vaccine_types.length)],
             shots: vaccine_shots[Math.floor(Math.random() * vaccine_shots.length)]
-        }
+        },
+        result: certificate_results[Math.floor(Math.random() * certificate_results.length)]
     };
 });
 

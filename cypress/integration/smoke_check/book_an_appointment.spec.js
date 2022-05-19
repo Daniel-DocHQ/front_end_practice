@@ -34,7 +34,7 @@ const custom_date = test_data[1].booking_date
 	before('get orders data', () => {
 		Booking.get_recent_orders_data()
 
-		token = Booking.get_short_token();
+		token = test_data[1].short_token || Booking.get_short_token();
 		//*** products = Booking.get_product_titles(token);
 		cy.request('GET', `https://api-staging.dochq.co.uk/v1/order/${token}/product?fulfilled=true`, { timeout: 5000 }).then((res) => {
 			products = res.body;
@@ -74,13 +74,19 @@ let prod_index = 0;
 		it('Pick the product and select number of people to take the test', () => {
 			if (!products[prod_index].quantity) prod_index++; // if product is already booked, move to the next product
 
-			console.log(prod_index)
-			cy.get('.MuiFormControlLabel-root').contains(products[prod_index].title).then((prod_lable)=> {
-				// find and pick the product to book
-				cy.get(prod_lable).siblings().find('input[name="product"]').check()
-			})
+			if(products.length > 1){
+				console.log(prod_index)
+				if (test_data[1].shop_source == "dochq-us") {
+					cy.pause();
+				} else {
+					cy.get('.MuiFormControlLabel-root').contains(products[prod_index].title).then((prod_lable)=> {
+						// find and pick the product to book
+						cy.get(prod_lable).siblings().find('input[name="product"]').check()
+					})
+				}
+			}
 
-			if(Object.keys(products)[prod_index] == "Antigen Consultation"){
+			if(products[prod_index].title == "Antigen Consultation"){
 				console.log(products)
 				cy.get('input[name="selectedKit"]').focus().type('e{downarrow}{enter}')
 				

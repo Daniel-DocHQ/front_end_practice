@@ -1,6 +1,5 @@
 import prod from '../fixtures/product_list.json'
 import user from '../fixtures/user.json'
-//*** import order_data from '../fixtures/order_list.json'
 import order_list from '../fixtures/order_list.json'
 import {addDays} from '../support/utils/utils.js'
 
@@ -21,8 +20,9 @@ export default class BookingPage{
 	}
 
 	get_recent_orders_data(email = this.test_params.email, short_id = this.test_params.short_token, size = 50) {
+
 		if(email){				// get list of all recent orders by email
-			cy.request('GET', `https://api-staging.dochq.co.uk/v1/order?page=0&page_size=${size}&email=${email}`).then((response) => {
+			cy.request('GET', `https://api-staging.dochq.co.uk/v1/order?page=0&page_size=${size}&email=${email}&incl_initiated=true`).then((response) => {
 				cy.writeFile('cypress/fixtures/order_list.json', response.body.orders);
 				console.log(response.body.orders)
 			})
@@ -79,7 +79,7 @@ export default class BookingPage{
 			return addDays(today, day_from_today);
 		} else {	
 			let date = new Date(custom_date);
-			return addDays(date, day_from_today);
+			return addDays(date, 0);
 		}
 	}
 
@@ -100,51 +100,60 @@ export default class BookingPage{
 		let product_sku = current_product.sku;
 		console.log(product_sku);
 		switch (product_sku) {
-		case "SYN-UK-PCR-SNS-002":
-		case "SYN-UK-PCR-SNS-003":
-		case "DAY-2-UK-ANT-001": // Day 2 PCR Test, Day 8 PCR Test
-		{
-			let departure_date = this.get_date_plus_day(date, 2);
-			cy.get('input[name="city"]').type(`${this.test_params.flight_timezone}{downarrow}{enter}`);
-			cy.get('input[name="travelDate"]').clear().fill(departure_date);
-			cy.get('input[name="transit"]').fill("transit_test");
-			cy.get('input[name="transportNumber"]').fill("FFR543")
+			case "SYN-UK-PCR-SNS-002":
+			case "SYN-UK-PCR-SNS-003":
+			case "DAY-2-UK-ANT-001": // Day 2 PCR Test, Day 8 PCR Test
+			{
+				let landing_date = this.get_date_plus_day(date, 2);
+				cy.get('input[name="city"]').type(`${this.test_params.flight_timezone}{downarrow}{enter}`);
+				cy.get('input[name="landingDate"]').clear().fill(landing_date); //landingDate
+				cy.get('input[name="landingTime"]').clear().fill("08:00 AM")
+				cy.get('input[name="transit"]').fill("Poland");
+				cy.get('input[name="transportNumber"]').fill("FFR543")
+			
+			} break;
 
-		} break;
-		case "SYN-UK-PCR-SNS-001": // Fit to Travel PCR Test
-		{	
-			// setting flight date 4 days from today as FTT PCR appointments available 
-			// between 72 hours and 57 hours prior departure_date.
-			let departure_date = this.get_date_plus_day(date, 4);
-      		cy.get('input[name="travelDate"]').clear().fill(departure_date);
-		} break;
-		case "FLX-UK-ANT-SNS-002": 	// Pre Departure Antigen Test [to UK]
-		case "FLX-UK-ANT-SNS-001": 	// Fit to Travel Antigen Test
-		case "CONSULT-ANT": 		// Antigen Consultation Pre Departure Antigen Test [to UK], Fit to Travel Antigen Test
-		{
-			let departure_date = this.get_date_plus_day(date, 2);
-			cy.get('input[name="city"]').type(`${this.test_params.flight_timezone}{downarrow}{enter}`);
-      		cy.get('input[name="travelDate"]').clear().fill(departure_date);
-			//cy.get('input[name="transit"]').fill("transit_test");
-		} break;
+			case "SYN-UK-PCR-SNS-001": // Fit to Travel PCR Test
+			{	
+				// setting flight date 4 days from today as FTT PCR appointments available 
+				// between 72 hours and 57 hours prior departure_date.
+				let departure_date = this.get_date_plus_day(date, 4);
+      			cy.get('input[name="travelDate"]').clear().fill(departure_date);
+				cy.get('input[name="travelTime"]').clear().fill("10:00 PM")
 
-		case "DAY-2-US-ANT-001":   // Day 3 Antigen test
-		{
-			let departure_date = this.get_date_plus_day(date, 2);
-			cy.get('input[name="city"]').type(`${this.test_params.flight_timezone}{downarrow}{enter}`);
-      		cy.get('input[name="travelDate"]').clear().fill(departure_date);
-		} break;
+			} break;
+
+			case "FLX-UK-ANT-SNS-002": 	// Pre Departure Antigen Test [to UK]
+			{
+				let departure_date = this.get_date_plus_day(date, 2);
+				cy.get('input[name="city"]').type(`${this.test_params.flight_timezone}{downarrow}{enter}`);
+      			cy.get('input[name="travelDate"]').clear().fill(departure_date);
+				cy.get('input[name="travelTime"]').clear().fill("11:00 PM")
+				cy.get('input[name="transit"]').fill("Poland");
+				cy.get('input[name="transportNumber"]').fill("FFR543")
+
+			} break;
+
+			case "FLX-UK-ANT-SNS-001": 	// Fit to Travel Antigen Test
+			case "CONSULT-ANT": 		// Antigen Consultation Pre Departure Antigen Test [to UK], Fit to Travel Antigen Test
+			{
+				let departure_date = this.get_date_plus_day(date, 2);
+				cy.get('input[name="city"]').type(`${this.test_params.flight_timezone}{downarrow}{enter}`);
+      			cy.get('input[name="travelDate"]').clear().fill(departure_date);
+				cy.get('input[name="travelTime"]').clear().fill("11:00 PM")
+			}
+			break;
+
+			case "DAY-2-US-ANT-001":   // Day 3 Antigen test, Day 2 Antigen Test [UK]
+			{
+				let landing_date = this.get_date_plus_day(date, 2);
+				cy.get('input[name="city"]').type(`${this.test_params.flight_timezone}{downarrow}{enter}`);
+      			cy.get('input[name="landingDate"]').clear().fill(landing_date);
+				cy.get('input[name="landingTime"]').clear().fill("08:00 AM")
+
+			} break;
 		
-		//case "DAY-2-UK-ANT-001": // Day 2 Antigen Test [UK]
-		//{
-		//	let departure_date = this.get_date_plus_day(date, 2);
-		//	cy.get('input[name="city"]').type(`${this.test_params.flight_timezone}{downarrow}{enter}`);
-      	//	cy.get('input[name="travelDate"]').clear().fill(departure_date);
-		//	cy.get('input[name="transit"]').fill("transit_test");
-		//	cy.get('input[name="transportNumber"]').fill("FFR543")
-		//} break;
-
-		default: console.log('Something went wrong');
+			default: console.log('Something went wrong');
 		}
 	}
 
@@ -171,7 +180,7 @@ export default class BookingPage{
 		case "SYN-UK-PCR-SNS-001":
 		{
 			// if your [departure_date] day is 19th of December, appointments will be available on 16th or 17th
-			let booking_date = this.get_date_plus_day(date, 1)
+			let booking_date = this.get_date_plus_day(date, 2)
 			let day_to_pick = +(booking_date.slice(0, 2))
 			cy.get(".MuiIconButton-label").contains(new RegExp("^" + day_to_pick + "$", "g")).first().click({force: true})
 			cy.get('.appointment-slot-container').find('div.slot-container > div').first().click({force: true})
@@ -183,7 +192,7 @@ export default class BookingPage{
 		case "CONSULT-ANT": 		// Antigen Consultation Pre Departure Antigen Test [to UK], Fit to Travel Antigen Test
 		{
 			// appointment for these products is booked n days before [departure_date]
-			let booking_date = this.get_date_plus_day(date, 0); //changed to 0 for pre dep fix
+			let booking_date = this.get_date_plus_day(date, 1);
 			let day_to_pick = +(booking_date.slice(0, 2));
 			cy.get(".MuiIconButton-label").contains(new RegExp("^" + day_to_pick + "$", "g")).first().click({force: true})
 
@@ -200,10 +209,10 @@ export default class BookingPage{
 		const vaccine_shots = user.users[user_index].vaccine.shots;
 
 		cy.get('#first-name').focus().clear().fill(user.users[user_index].first_name)
-	    cy.get('#last-name').clear().fill(user.users[user_index].last_name)						// to randomize replace with:
-	    cy.get('#email').clear().fill(this.test_params.email) 										//user.users[user_index].email 
-	    cy.get('#country-select-demo').clear().type(`${this.test_params.country_code}{enter}`)		//user.users[user_index].country_code
-	    cy.get('#phone').clear().fill(this.test_params.phone)										//user.users[user_index].phone
+	    cy.get('#last-name').clear().fill(user.users[user_index].last_name)							// to randomize replace with:
+	    cy.get('#email').clear().fill(this.test_params.email) 										//  - user.users[user_index].email 
+	    cy.get('#country-select-demo').clear().type(`${this.test_params.country_code}{enter}`)		//  - user.users[user_index].country_code
+	    cy.get('#phone').clear().fill(this.test_params.phone)										//  - user.users[user_index].phone
 	    cy.get('#date-of-birth').fill(user.users[user_index].date_of_birth)
 	    cy.get('#ethnicity').type("{downarrow}{enter}")
 	    cy.get(`fieldset[name="passengers[${user_index}].sex"]`).type(user.users[user_index].sex)
@@ -214,10 +223,11 @@ export default class BookingPage{
 		let product_sku = current_product.sku;
 
 		switch(product_sku){
+			case "FLX-UK-ANT-SNS-002":
 			case "DAY-2-UK-ANT-001":
 			case "SYN-UK-PCR-SNS-003":
 			case "SYN-UK-PCR-SNS-002":
-			//case ""
+			
 			{	//Vaccine Status check
 				switch(this.test_params.vaccine_status){
 					case 'yes': {
