@@ -13,6 +13,7 @@ export class Excel {
       const $el = $.create("div", Component.className);
       const component = new Component($el);
 
+      // DEBUG
       // if (component.name) {
       //   window["c" + component.name] = component;
       // }
