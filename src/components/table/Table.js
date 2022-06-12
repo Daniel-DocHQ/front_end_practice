@@ -1,24 +1,25 @@
 import { ExcelComponent } from "../../core/ExcelComponent";
 import { createTable } from "./table.template";
+import { resizeHandler } from "./table.resize";
+import { shouldResize } from "./table.functions";
 
 export class Table extends ExcelComponent {
   static className = "excel__table";
-
   constructor($root) {
     super($root, {
       name: "Table",
-      listeners: ["input"],
+      listeners: ["mousedown", "mouseup"],
     });
   }
 
   toHTML() {
-    const rows = createTable(100);
-    // Appending each row from list of rows to excel__table <div>
-    return rows.forEach((row) => this.$root.append(row));
+    return createTable(100);
   }
 
-  onInput(event) {
-    console.log(this.$root); //
-    console.log(`${this.className} onInput`, event);
+  onMousedown(event) {
+    // Recising columns and Rows
+    if (shouldResize(event)) {
+      resizeHandler(event);
+    }
   }
 }
