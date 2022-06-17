@@ -34,7 +34,7 @@ describe("B2C - Purchasing products", () => {
 		//cy.get('[style="align-items: flex-end;"] > div > h3').contains('Total Price').should('include.text', total_price);
 
 		//if((products_ids.length < 2) && (products_ids.includes('87'))){
-		//	cy.get('.green').contains('Next').click();
+		//  cy.get('.green').contains('Next').click();
 		//}else{
 		// Aknowledge that order needs 5 days to be delivered
 		cy.get('input[type="checkbox"]').check({ force: true });
@@ -48,10 +48,10 @@ describe("B2C - Purchasing products", () => {
 		if ((products_ids.length < 2) && (products_ids.includes('87'))) {
 			cy.wait(1500)
 		//} else if (products_ids.includes('64')) {
-		//	// Select total Number of Kits
-		//	Order.set_total_number_of_pessengers(products_sum/2);
-		//	cy.get('.green').contains('Next').click();
-		//	cy.wait(1500);
+		//  // Select total Number of Kits
+		//  Order.set_total_number_of_pessengers(products_sum/2);
+		//  cy.get('.green').contains('Next').click();
+		//  cy.wait(1500);
 		} else {
 			Order.set_total_number_of_pessengers(1);
 			cy.get('.green').contains('Next').click();
@@ -105,7 +105,7 @@ describe("B2C - Purchasing products", () => {
 		//cy.request('GET', '/confirmation?shortToken*').as('@order_id');
 		//cy.wait('@order_id')
 		//cy.get('@order_id').then(({request}) => {
-		//	url = request.url;
+		//  url = request.url;
 		//})
 		//
 		//console.log(url)

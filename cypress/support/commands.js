@@ -1,5 +1,6 @@
 import 'cypress-fill-command'
-import accounts from '../fixtures/accounts'
+import '@testing-library/cypress/add-commands'
+import accounts from '../fixtures/accounts.json'
 
 Cypress.Commands.add('getIframe', (iframe) => {
 
@@ -32,12 +33,12 @@ Cypress.Commands.add('forceVisit', url => {
     });
 });
 
-Cypress.Commands.add('login', (user) => {
+Cypress.Commands.add('myhealth_login', (user) => {
 
     let email = accounts[user].email;
     let password = accounts[user].password;
 
-    cy.visit('https://myhealth-staging.dochq.co.uk/login')
+    cy.visit('https://myhealth-staging.dochq.co.uk/login', { timeout: 10000 })
     cy.intercept({ method: 'GET', url: 'https://ui-identity-editor-staging.dochq.co.uk/login?client=dochqhealth', }).as('login_page')
     cy.get('.login-container').find('button.green').click()
     cy.wait('@login_page')
@@ -50,9 +51,29 @@ Cypress.Commands.add('login', (user) => {
     cy.wait(2000)
 })
 
-Cypress.Commands.add('logout', () => {
+Cypress.Commands.add('myhealth_logout', () => {
     cy.contains('Login').should('not.exist')
     cy.get('.personal-profile').click()
     cy.wait(1000)
     cy.contains('Logout').click()
 })
+
+
+Cypress.Commands.add('admin_login', (email, password) => {
+    cy.visit('https://admin-staging.dochq.co.uk/login', { timeout: 70000 })
+    
+    cy.get('input[type="email"]').focus().clear().type(email)
+    cy.get('input[type="password"]').focus().clear().type(password)
+
+    cy.get('button').contains('Login').click({ force: true })
+    cy.wait(2000)
+})
+
+Cypress.Commands.add('admin_logout', () => {
+    cy.contains('Login').should('not.exist')
+    cy.get('.personal-profile').click()
+    cy.wait(1000)
+    cy.contains('Logout').click()
+})
+
+

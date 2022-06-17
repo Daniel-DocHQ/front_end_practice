@@ -1,0 +1,108 @@
+[
+  {
+    "booking_user": {
+      "acceptancies": null,
+      "country": "GB",
+      "date_of_birth": "1995-05-05T00:00:00Z",
+      "email": "Daniel.Albul@dochq.co.uk",
+      "ethnicity": "White Irish",
+      "first_name": "Leona",
+      "id": "PkyWBtQMGqZFHqbROV4V2bZraXKmdYlk3RBW",
+      "language": "EN",
+      "last_name": "Fujii",
+      "locality": "Loctofu",
+      "marketing_accept": "",
+      "metadata": {
+        "order_id": 2142,
+        "passport_number": "2305678",
+        "product_id": 22,
+        "short_token": "DOCHQ_8170668",
+        "source": "dochq",
+        "test_type": "Antigen",
+        "transit": "",
+        "travel_date": "2022-06-10T23:00:00+03:00"
+      },
+      "phone": "+380638302847",
+      "postal_code": "DN0 5RX",
+      "product_id": 22,
+      "region": "Ukraine",
+      "sex": "Male",
+      "share_accept": "",
+      "street_address": "781 Vaed Pike",
+      "toc_accept": "true",
+      "tz_location": "Europe/Kiev"
+    },
+    "booking_users": [
+      {
+        "acceptancies": null,
+        "country": "GB",
+        "date_of_birth": "1995-05-05T00:00:00Z",
+        "email": "Daniel.Albul@dochq.co.uk",
+        "ethnicity": "White Irish",
+        "first_name": "Leona",
+        "id": "PkyWBtQMGqZFHqbROV4V2bZraXKmdYlk3RBW",
+        "language": "EN",
+        "last_name": "Fujii",
+        "locality": "Loctofu",
+        "marketing_accept": "",
+        "metadata": {
+          "order_id": 2142,
+          "passport_number": "2305678",
+          "product_id": 22,
+          "short_token": "DOCHQ_8170668",
+          "source": "dochq",
+          "test_type": "Antigen",
+          "transit": "",
+          "travel_date": "2022-06-10T23:00:00+03:00"
+        },
+        "phone": "+380638302847",
+        "postal_code": "DN0 5RX",
+        "product_id": 22,
+        "region": "Ukraine",
+        "sex": "Male",
+        "share_accept": "",
+        "street_address": "781 Vaed Pike",
+        "toc_accept": "true",
+        "tz_location": "Europe/Kiev"
+      }
+    ],
+    "claimable_slot": false,
+    "end_time": "2022-06-08T22:00:00Z",
+    "flight_details": null,
+    "id": "b0WvEgAFY0LWAN7CfcipS",
+    "languages": [
+      "EN",
+      "DE"
+    ],
+    "organisation": {
+      "name": "DocHQ"
+    },
+    "payment_id": [
+      "AAAAA"
+    ],
+    "provider": "Rotacloud",
+    "provider_appointment_index": "DOCHQBOOKINGIND",
+    "provider_booking_reference": "DOCHQBOOKINGREF",
+    "provider_data": "108328781",
+    "start_time": "2022-06-08T21:40:00Z",
+    "status": "WAITING",
+    "status_changes": [
+      {
+        "changed_to": "UNAVAILABLE",
+        "created_at": "2022-06-03T14:58:50Z"
+      },
+      {
+        "changed_to": "LOCKED",
+        "created_at": "2022-06-08T09:56:23Z"
+      },
+      {
+        "changed_to": "WAITING",
+        "created_at": "2022-06-08T09:56:29Z"
+      }
+    ],
+    "status_last_updated": "2022-06-08T09:56:23Z",
+    "testing_kit_id": "Unknown",
+    "type": "video_gp_dochq",
+    "user": "15"
+  }
+]

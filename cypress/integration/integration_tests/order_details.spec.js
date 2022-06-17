@@ -5,14 +5,14 @@ import OrderManagement from '../../page_objects/OrderManagePage.js'
 import BookingPage from '../../page_objects/BookingPage.js'
 
 
-const OrderM = new OrderManagement();
+const OrderM = new OrderManagement();   
 const OrderInfo = new BookingPage(test_data);
 
 describe("Get Order Details", () => {
 
-  	it('Login as Super Admin', () => {
-  		cy.login('super_admin');
-  	})
+    it('Login as Super Admin', () => {
+        cy.myhealth_login('super_admin');
+    })
 
 	it('Find order in the list', () => {
 		//returns custom short_token or takes the last order from order_list
@@ -28,10 +28,10 @@ describe("Get Order Details", () => {
 		OrderM.get_order_details({short_id : short_token});
 		// Assert order info
 		cy.wait('@order_details').then( req => {
-        		expect(req.response.statusCode).eq(200)
-        		expect(req.response.headers['content-type']).eq('application/json')
-        		expect(req.response.body).to.not.be.null;
-        		cy.log(req.response.body);
+                expect(req.response.statusCode).eq(200)
+                expect(req.response.headers['content-type']).eq('application/json')
+                expect(req.response.body).to.not.be.null;
+                cy.log(req.response.body);
 		})
 
 		// Get products titles and quantities

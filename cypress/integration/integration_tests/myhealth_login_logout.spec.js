@@ -1,13 +1,12 @@
 
+import accounts from '../../fixtures/accounts.json'
 
 describe("Login to myhealth dashboard", () => {
 
 
 	it("check login", () => {
-		let email = accounts['super_admin'].email;
-		let password = accounts['super_admin'].password;
-
-		cy.login(email, password)
+	
+		cy.login('super_admin')
 	})
 
 	it("check logout", () => {
